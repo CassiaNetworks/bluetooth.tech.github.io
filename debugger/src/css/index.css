@@ -1,0 +1,319 @@
+body {
+	min-width: 960px;
+	overflow: auto;
+	font-size: 14px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+.fr{
+	float: right;
+}
+.reboot{
+	margin-left: 20px;
+}
+.lang{
+	width:100px;
+	
+}
+.layui-elem-field legend {
+	text-align: center;
+	font-size: 1.5rem;
+}
+
+.top {
+	margin-bottom: 10px;
+}
+
+.box {
+	display: flex;
+}
+
+.layui-form-label {
+	/*width: auto;*/
+}
+
+.box>div {
+	flex: auto;
+	border: 1px solid black;
+	/*height: 400px;*/
+
+}
+.box>div>ul,.box>div>div>ul{
+	height: 400px;
+	overflow-y: auto;
+}
+
+.leader{
+	background-color: #ccc;
+	text-align: center;
+	font-weight: bold;
+	font-size: 16px;
+}
+.box .l1 {
+	flex: none;
+}
+.box .l1 ul{
+	padding: 10px;
+}
+
+.box .l2 {
+	flex: 2;
+	max-width: 376px;
+}
+.box .l2 ul.bb1 {
+	margin-top: 13px;
+}
+
+.box .l3 {
+	flex: none;
+}
+
+.box .l4 {
+	flex: 2
+}
+.box .l2>div,.box .l3>div,.box .l4>div{
+	padding-top: 10px;
+	padding-left: 10px;
+}
+
+.box .l1 li {
+	margin-bottom: 10px;
+}
+
+.box .l2 label {
+	/*padding: 0;*/
+}
+
+.box .l2 .layui-input-inline {
+	/*width: 80px;*/
+}
+
+.box span.layui-input {
+	border: none;
+}
+
+
+
+.box .layui-form .layui-form-label {
+	padding-left: 0;
+	padding-right: 5px;
+	width: 2.5rem;
+}
+
+.box .layui-form-item .layui-input-inline {
+	width: 8rem;
+	margin-right: 0px;
+}
+
+.box .layui-form-item {
+	margin-bottom: 4px;
+}
+
+.box .l2 .layui-form-item .layui-inline +.layui-inline {
+	margin-right: 0;
+}
+
+.box .layui-form-label {
+	padding: 2px;
+}
+
+.box .layui-btn {
+	line-height: 28px;
+	height: 28px;
+}
+.box .layui-btn {
+	padding:0 15px;
+}
+
+.box .layui-input {
+	line-height: 20px;
+	padding: 2px;
+	height: auto;
+}
+
+.box .layui-form-switch {
+	margin-top: 0;
+}
+
+.box span.layui-input {
+	font-weight: bold;
+	font-style: italic;
+}
+
+.box .bb1>li+li {
+	border-top: 1px solid #ccc;
+}
+.box .l4 ul li{
+	line-height: 1.2;
+}
+.box .l4 ul b {
+	font-style: italic;
+	font-weight: normal;
+}
+
+.log {
+	display: flex;
+	/*height: 100px;*/
+	border: 1px solid #000;
+}
+
+.log .left {
+	flex: none;
+	flex-basis: 294px;
+}
+.log .left .order{
+	padding: 5px;
+	height: 193px;
+	overflow: auto;
+
+
+}
+
+.log .right {
+	flex:auto;
+	border-left: 2px solid #000;
+	word-break: break-all;
+	overflow: auto;
+	
+}
+.log .right .layui-tab-content{
+	height: 172px;
+	overflow: auto;
+}
+.log .right .layui-tab-title>li{
+	font-size: 12px
+}
+.log .right .layui-tab-content ul li:nth-child(2n),
+.box .l4 li:nth-child(2n)
+{
+	background-color: #ccc;
+}
+.log .left .order li{
+	padding-bottom: 5px;
+}
+.log .left .order li+li{
+	border-top: 1px solid #ccc;
+}
+
+.log .left .order li::before{
+	content: '';
+
+}
+.log .left .order li span {
+	font-weight: bold;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+.log .left .order li em {
+	font-style: initial;
+}
+
+.log .left .order li span:first-child {
+	padding-left: 0;
+	color: #de34ca;
+}
+.log .left .order li span:nth-child(2) {
+	font-style: italic;
+}
+.log .left .order li span:nth-child(3){
+	color:#5FB878;
+}
+
+.log .left .order {
+	word-break: break-all;
+}
+
+.log .right .layui-tab-title {
+	height: 30px;
+}
+
+.log .right .layui-tab-title li {
+	line-height: 30px;
+	height: 30px;
+	padding: 0 5px;
+
+}
+
+.log .right .layui-tab-title .layui-this:after {
+	height: 31px;
+}
+
+.log .right .layui-tab{
+	margin: 0;
+} 
+
+.success{
+	color:green;
+}
+.fail{
+	color: red;
+}
+
+.ml2{
+	margin-left: 10px;
+}
+
+
+pre{
+	font-family: "Helvetica Neue", Helvetica, "PingFang SC", 微软雅黑, Tahoma, Arial, sans-serif;
+}
+
+
+
+/*tip*/
+
+/*scan-tip*/
+.tip .layui-form-item .layui-input-inline {
+	width:auto;
+}
+.tip .layui-elem-field legend{
+	font-size:initial;
+}
+
+.tip>.layui-form-item:first-child {
+	margin-bottom: 0;
+	
+}
+.tip .layui-form-item:first-child .layui-form-label{
+	width:auto;
+	font-size: .9rem;
+	text-align: left;
+}
+
+.tip .layui-form-label{
+	width:65px;
+	padding-left: 0;
+	font-size: .8rem;
+}
+.tip .layui-form-item .layui-input-block{
+	text-align: center;
+	margin-left: 0
+}
+
+
+.tip textarea {
+	resize: none;
+	font-size: 14px;
+}
+.tip .descriptors{
+	height: 200px;
+	overflow: auto;
+	border: 1px solid;
+	padding: 5px;
+	border-radius: 4px;
+	background: #fff;
+	color: #000;
+	font-size: 13px;
+	line-height: 1.2rem;
+	word-break: break-all;
+
+}
+
+/*connect-tip*/
+.tip.connect-tip .layui-inline{
+	color: #000;
+}
+
+.short-label{
+	width: 67px;
+}
