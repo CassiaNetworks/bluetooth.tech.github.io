@@ -1,0 +1,389 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 62.5%;
+  background-color: #061223;
+  /*color: #fff !important;*/
+}
+
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+.sport-dashboard {
+  font-family: 'Microsoft YaHei';
+}
+
+.sport-dashboard .start-config {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: space-around;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+.sport-dashboard .start-config button {
+  width: 20%;
+  -webkit-box-flex: 0;
+  -webkit-flex: none;
+  -ms-flex: none;
+  flex: none;
+  font-size: 2rem;
+  padding: .5rem;
+}
+
+ul,
+li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+.sport-dashboard .show-pannel img {
+  width: 42px;
+  height: 42px;
+}
+
+.sport-dashboard h1,
+.sport-dashboard h2 {
+  margin: 0px;
+  padding: 0;
+  font-size: 48px;
+  color: #586b87;
+  font-weight: normal;
+}
+
+.sport-dashboard .show-pannel {
+  height: 100%;
+  margin-top: 20px;
+  padding-left: 2%;
+  padding-right: 2%;
+}
+
+.sport-dashboard h1 {
+  text-align: center;
+}
+
+.sport-dashboard .show-pannel ul {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: start;
+  -webkit-align-items: flex-start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  -webkit-align-content: flex-start;
+  -ms-flex-line-pack: start;
+  align-content: flex-start;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.sport-dashboard .show-pannel li {
+  position: relative;
+  box-sizing: border-box;
+  -webkit-box-flex: 0;
+  -webkit-flex: none;
+  -ms-flex: none;
+  flex: none;
+  width: 300px;
+  background: url(../../../public-resource/imgs/backpic2.jpg) -200px 0 no-repeat;
+  height: 300px;
+  padding-left: 25px;
+  border-radius: 20px;
+}
+
+.sport-dashboard .show-pannel li:nth-child(3n-1) {
+  background: url(../../../public-resource/imgs/backpic1.jpg) -200px 0 no-repeat;
+}
+
+.sport-dashboard .show-pannel li:nth-child(3n) {
+  background: url(../../../public-resource/imgs/backpic3.jpg) 0 0 no-repeat;
+  background-size: 100% 100%;
+}
+
+.sport-dashboard .show-pannel ul li {
+  margin: 0 15px 15px 0;
+  color: #fff;
+}
+
+.sport-dashboard .show-pannel h2 {
+  font-size: 42px;
+  color: #fff;
+}
+
+.sport-dashboard .show-pannel li>p {
+  font-size: 20px;
+  /*margin-top: 10px;*/
+  color: #fff;
+}
+
+.sport-dashboard .show-pannel .yellow {
+  position: absolute;
+  z-index: 30;
+  left: 5%;
+  top: 50%;
+  width: 32%;
+  height: 35%;
+  background-color: #eea800;
+  box-shadow: 10px 10px 30px #222;
+}
+
+.sport-dashboard .show-pannel div p {
+  font-size: 18px;
+}
+
+.sport-dashboard .show-pannel div span {
+  font-size: 22px;
+}
+
+.sport-dashboard .yellow p {
+  width: 90%;
+  position: absolute;
+  bottom: 5%;
+  left: 8%;
+}
+
+.sport-dashboard .show-pannel .yellow img {
+  position: absolute;
+  right: 5%;
+  top: 10%;
+}
+
+.sport-dashboard .show-pannel .yellow,
+.sport-dashboard .show-pannel .blue,
+.sport-dashboard .show-pannel .red {
+  border-radius: 18px;
+}
+
+.sport-dashboard .show-pannel .blue {
+  position: absolute;
+  z-index: 20;
+  background-color: #2283f6;
+  width: 35%;
+  height: 30%;
+  left: 35%;
+  top: 60%;
+  box-shadow: 10px 10px 30px #222;
+}
+
+.sport-dashboard .show-pannel .blue img {
+  position: absolute;
+  left: 15%;
+  top: 10%;
+}
+
+.sport-dashboard .show-pannel .blue a {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  top: 10%;
+  right: 10%;
+  background: url(../../../public-resource/imgs/refresh.jpg) 0 0 no-repeat;
+}
+
+.sport-dashboard .show-pannel .blue a:hover {
+  background: url(../../../public-resource/imgs/refresh_hover.jpg) 0 0 no-repeat;
+}
+
+.sport-dashboard .show-pannel .blue p {
+  position: absolute;
+  bottom: 10%;
+  left: 15%;
+}
+
+.sport-dashboard .show-pannel .red {
+  position: absolute;
+  z-index: 10;
+  background-color: #fe3d50;
+  width: 35%;
+  height: 30%;
+  left: 60%;
+  top: 41%;
+  box-shadow: 10px 10px 30px #222;
+}
+
+.sport-dashboard .show-pannel .red img {
+  position: absolute;
+  top: 10%;
+  right: 10%;
+}
+
+.sport-dashboard .show-pannel .red p {
+  position: absolute;
+  bottom: 20%;
+  left: 30%;
+}
+
+.sport-dashboard .show-pannel button {
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  width: 70%;
+  font-size: 3rem;
+  line-height: 3rem;
+}
+
+.sport-dashboard .show-pannel .reset {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 50%;
+  border-radius: 10%;
+  border-color: #2d223d;
+  border: 0;
+  outline: 0;
+  background-color: #2d223d;
+  box-shadow: 10px 10px 3px #222;
+}
+
+.sport-dashboard .start {
+  top: 18%;
+}
+
+.sport-dashboard .end {
+  top: 44%;
+}
+
+.ansy {
+  top: 70%;
+  color: #555;
+}
+
+.config-tip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0 20px;
+}
+
+.config-tip .layui-bg-gray {
+  background-color: #eee;
+}
+
+.config-tip .hub-item {
+  margin: 0 auto;
+}
+
+.config-tip .last-li {
+  width: 100%;
+}
+
+.config-tip-peripheral.config-tip .addhub img {
+  width: 309px;
+  height: 127px;
+}
+
+.config-tip-hub .addhub img {
+  height: 369px;
+  width: 301px;
+}
+
+.config-tip .hub-item .test button,
+.config-tip .hub-item .delete button {
+  margin: 0 0 0 10px;
+  width: 66px;
+}
+
+.config-tip .hub-item .test i {
+  margin-left: 40px;
+  font-size: 30px;
+  display: inline-block;
+}
+
+.config-tip .layui-form-radio {
+  margin: 1px 10px 0 0;
+}
+
+.config-tip .hub-item {
+  flex: 0 1 auto;
+  margin-top: 10px;
+  border: 1px solid red;
+}
+
+.config-tip .layui-form-item {
+  padding: 5px;
+  font-size: 1.5rem;
+  margin: 0 auto;
+}
+
+.config-tip li.hub-item button {
+  float: left;
+}
+
+.config-tip .layui-form-item label {
+  width: 80px;
+  height: 30px;
+  line-height: 30px;
+  padding: 1px 9px 0 0;
+}
+
+.config-tip .layui-form-item .layui-input-inline {
+  display: inline-block;
+  line-height: 32px;
+}
+
+.config-tip .layui-form-item .layui-input-inline input {
+  font-size: 1.5rem;
+  height: 30px;
+  line-height: 30px;
+}
+
+.config-tip .layui-form-item .layui-input-inline textarea {
+  font-size: 1.5rem;
+  width: 300px;
+  height: 100px;
+}
+
+.config-tip .layui-form-item .layui-button {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: space-around;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+}
+
+.config-tip .layui-form-item .layui-button button {
+  height: 50px;
+  width: 122px;
+  font-size: 2rem;
+}
+
+.config-tip .layui-form-item .mac-css {
+  position: relative;
+  top: -88px;
+}
+
+.layui-layer-page .layui-layer-content {
+  position: relative;
+  /* overflow:auto; */
+}

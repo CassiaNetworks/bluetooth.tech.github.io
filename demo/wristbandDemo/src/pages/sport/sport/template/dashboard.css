@@ -1,0 +1,35 @@
+.loc {
+    display: inline-block;
+    margin-left: 8%;
+}
+
+li h2 {
+    display: inline-block;
+}
+
+li input {
+    font-size: 18px;
+}
+
+#root li button.send {
+    width: auto;
+    margin-left: 105px;
+    font-size: 18px;
+    height: 28px;
+    line-height: 1;
+}
+
+.userName {
+    width: 115px;
+    font-size: 42px;
+    color: #fff;
+    background: transparent;
+    border: 0;
+}
+
+.model {
+    position: absolute;
+    bottom: 0;
+    color: #999;
+    left: 9%;
+}
