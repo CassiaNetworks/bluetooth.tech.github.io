@@ -40,10 +40,14 @@ const i18n = function (language,cb) {
             'hubNotifyStatus': 'Hub通知状态',
             'method': '方法名',
             'addMore': '加载更多',
-            'username':'用户名:',
+            'username':'开发者账号:',
             'password':'密码:',
-            'host':'云服务器:',
-            'connectedNum':'已连接数量: '
+            'host':'AC 地址:',
+            'connectedNum':'已连接数量: ',
+            'oAouh-Tip-p1':'<b>接口URL：</b>调用接口后，此URL会自动生成在下面的”API接口”的窗口中。',
+            //'oAouh-Tip-p2':'<b>接口描述：</b>此接口是通过oAuth2.0认证实现云端远程控制。将用户名和密码以base64编码的方式添加在请求参数中，认证成功后获得1小时有效期的access_token,你可以添加参数access_token访问其他API，从而实现远程控制。',
+            'oAouh-Tip-p3':'<b>参数解释：用户名/密码：</b>从Cassia请求的开发者账户和密码(会以base64编码的方式添加在请求中)。',
+            'oAouh-Tip-p4':'<b>AC Address</b>和蓝牙路由器交互的服务器地址。'
         },
         en = {
             'control':'control',
@@ -83,10 +87,14 @@ const i18n = function (language,cb) {
             'hubNotifyStatus': 'Hub Notify Status',
             'method': 'Method',
             'addMore': 'Add More',
-            'username':'username:',
-            'password':'password:',
-            'host':'HOST:',
-            'connectedNum':'connected number: '
+            'username':'Developer Key:',
+            'password':'Developer Secter:',
+            'host':'AC Address:',
+            'connectedNum':'connected number: ',
+            'oAouh-Tip-p1':'<b>Interface URL:</b>calling the interface, this URL is suyomatically generated in the window below "API Interface".',
+            'oAouh-Tip-p2':'<b>Interface Description:</b>This interface is achieved through oAuth2.0 cloud remote control. The developer key and developer secter to base64 encoding added in the request parameters, access to 1hour after the successful authentication access_token, you can add parameters access_token access other API, in order to achieve remote control.',
+            'oAouh-Tip-p3':'<b>Parameter Explanation:Developer Key / Developer Secter:</b>Developer account and password requested form Cassia (will be added as a base64 encoding in the request).',
+            'oAouh-Tip-p4':'<b>AC Address: </b>The address of the AC that interacts with the Bluetooth router.'
         },
         lang = {},
         i18n = function (k) {
@@ -137,7 +145,7 @@ const i18n = function (language,cb) {
                 }
             }
             cb&&cb()
-        }, 15);
+        }, 25);
     };
     i18n.render();
     return i18n

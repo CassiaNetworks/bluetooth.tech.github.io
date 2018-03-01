@@ -100,9 +100,11 @@
 				time: 5 * 1000
 			}));
 		});
-		form.on('select(control)', function (data) {
 	
+		form.on('select(control)', function (data) {
 			(0, _oAuth.control)(data.value, form);
+			(0, _i18n2.default)(_globalData2.default.lang);
+			form.render();
 		});
 		form.on('select(lang)', function (data) {
 			(0, _i18n2.default)(data.value, form.render);
@@ -1446,10 +1448,14 @@
 	        'hubNotifyStatus': 'Hub通知状态',
 	        'method': '方法名',
 	        'addMore': '加载更多',
-	        'username': '用户名:',
+	        'username': '开发者账号:',
 	        'password': '密码:',
-	        'host': '云服务器:',
-	        'connectedNum': '已连接数量: '
+	        'host': 'AC 地址:',
+	        'connectedNum': '已连接数量: ',
+	        'oAouh-Tip-p1': '<b>接口URL：</b>调用接口后，此URL会自动生成在下面的”API接口”的窗口中。',
+	
+	        'oAouh-Tip-p3': '<b>参数解释：用户名/密码：</b>从Cassia请求的开发者账户和密码(会以base64编码的方式添加在请求中)。',
+	        'oAouh-Tip-p4': '<b>AC Address</b>和蓝牙路由器交互的服务器地址。'
 	    },
 	        en = {
 	        'control': 'control',
@@ -1489,10 +1495,14 @@
 	        'hubNotifyStatus': 'Hub Notify Status',
 	        'method': 'Method',
 	        'addMore': 'Add More',
-	        'username': 'username:',
-	        'password': 'password:',
-	        'host': 'HOST:',
-	        'connectedNum': 'connected number: '
+	        'username': 'Developer Key:',
+	        'password': 'Developer Secter:',
+	        'host': 'AC Address:',
+	        'connectedNum': 'connected number: ',
+	        'oAouh-Tip-p1': '<b>Interface URL:</b>calling the interface, this URL is suyomatically generated in the window below "API Interface".',
+	        'oAouh-Tip-p2': '<b>Interface Description:</b>This interface is achieved through oAuth2.0 cloud remote control. The developer key and developer secter to base64 encoding added in the request parameters, access to 1hour after the successful authentication access_token, you can add parameters access_token access other API, in order to achieve remote control.',
+	        'oAouh-Tip-p3': '<b>Parameter Explanation:Developer Key / Developer Secter:</b>Developer account and password requested form Cassia (will be added as a base64 encoding in the request).',
+	        'oAouh-Tip-p4': '<b>AC Address: </b>The address of the AC that interacts with the Bluetooth router.'
 	    },
 	        lang = {},
 	        i18n = function i18n(k) {
@@ -1543,7 +1553,7 @@
 	                }
 	            }
 	            cb && cb();
-	        }, 15);
+	        }, 25);
 	    };
 	    i18n.render();
 	    return i18n;
@@ -4483,7 +4493,8 @@
 	}
 	
 	var htmlString = function htmlString() {
-		var temp = '<form class="layui-form  tip" action="#">\n  <fieldset class="layui-elem-field layui-field-title">\n\t\t<legend>oAuth</legend>\n  </fieldset>\n\t\t<div class="layui-form-item" style="text-align:center">\n\t\t  <label class="layui-form-label " i18n = \'username\'>\u7528\u6237\u540D:</label>\n\t\t  <div class="layui-input-inline">\n\t\t    <input type="text"   class="layui-input" id="userName">\n\t\t  </div>\n\t\t   \n\t\t</div>\n\t\t<div class="layui-form-item">\n\t\t  <label class="layui-form-label" i18n = \'password\'>\u5BC6\u7801:</label>\n\t\t  <div class="layui-input-inline">\n\t\t    <input type="password"    class="layui-input" id="password">\n\t\t  </div>\n  \t\t</div>\n\t\t<div class="layui-form-item">\n\t\t  <label class="layui-form-label" i18n = \'host\'>\u4E91\u670D\u52A1\u5668:</label>\n\t\t  <div class="layui-input-inline">\n\t\t    <input type="text" class="layui-input" id="host">\n\t\t  </div>\n  \t\t</div>\n  <fieldset class="layui-elem-field layui-field-title">\n    <legend i18n=\'description\'>\u63CF\u8FF0</legend>\n  </fieldset>\n  <div class="layui-form-item layui-form-text">\n    <div class="descriptors scan-des">\n      <p><b>\u63A5\u53E3URL\uFF1A</b>\u8C03\u7528\u63A5\u53E3\u540E\uFF0C\u6B64URL\u4F1A\u81EA\u52A8\u751F\u6210\u5728\u4E0B\u9762\u7684\u201DAPI\u63A5\u53E3\u201D\u7684\u7A97\u53E3\u4E2D\u3002</p>\n      <p><b>\u63A5\u53E3\u63CF\u8FF0\uFF1A</b>\u6B64\u63A5\u53E3\u662F\u901A\u8FC7oAuth2.0\u8BA4\u8BC1\u5B9E\u73B0\u4E91\u7AEF\u8FDC\u7A0B\u63A7\u5236\u3002\u5C06\u7528\u6237\u540D\u548C\u5BC6\u7801\u4EE5base64\u7F16\u7801\u7684\u65B9\u5F0F\u6DFB\u52A0\u5728\u8BF7\u6C42\u53C2\u6570\u4E2D\uFF0C\u8BA4\u8BC1\u6210\u529F\u540E\u83B7\u5F971\u5C0F\u65F6\u6709\u6548\u671F\u7684access_token,\u4F60\u53EF\u4EE5\u6DFB\u52A0\u53C2\u6570access_token\u8BBF\u95EE\u5176\u4ED6API\uFF0C\u4ECE\u800C\u5B9E\u73B0\u8FDC\u7A0B\u63A7\u5236\u3002</p>\n      <p><b>\u53C2\u6570\u89E3\u91CA\uFF1A\u7528\u6237\u540D/\u5BC6\u7801\uFF1A</b>\u4ECECassia\u8BF7\u6C42\u7684\u5F00\u53D1\u8005\u8D26\u6237\u548C\u5BC6\u7801(\u4F1A\u4EE5base64\u7F16\u7801\u7684\u65B9\u5F0F\u6DFB\u52A0\u5728\u8BF7\u6C42\u4E2D)</p>\n      <p><b>Host\uFF1A</b>\u548C\u84DD\u7259\u8DEF\u7531\u5668\u4EA4\u4E92\u7684\u670D\u52A1\u5668\u5730\u5740</p>\n    \n    </div>\n  </div>\n\n</form>';
+		var temp = '<form class="layui-form  tip oAuth" action="#">\n  <fieldset class="layui-elem-field layui-field-title">\n\t\t<legend>oAuth</legend>\n  </fieldset>\n\t\t<div class="layui-form-item" style="text-align:center">\n\t\t  <label class="layui-form-label" i18n="username">Developer Key:</label>\n\t\t  <div class="layui-input-inline">\n\t\t    <input type="text"   class="layui-input" id="userName" placeholder="tester">\n\t\t  </div>\n\t\t   \n\t\t</div>\n\t\t<div class="layui-form-item">\n\t\t  <label class="layui-form-label" i18n="password">Developer Secter:</label>\n\t\t  <div class="layui-input-inline">\n\t\t    <input type="password"    class="layui-input" id="password" placeholder="******">\n\t\t  </div>\n  \t\t</div>\n\t\t<div class="layui-form-item">\n\t\t  <label class="layui-form-label" i18n="host">AC Address:</label>\n\t\t  <div class="layui-input-inline">\n\t\t    <input type="text" class="layui-input" id="host" placeholder="ac-cn.cassia.pro:8080/api">\n\t\t  </div>\n  \t\t</div>\n  <fieldset class="layui-elem-field layui-field-title">\n    <legend i18n="description">Description</legend>\n  </fieldset>\n  <div class="layui-form-item layui-form-text">\n    <div class="descriptors">\n      <p i18n="oAouh-Tip-p1"><b>\u63A5\u53E3URL\uFF1A</b>\u8C03\u7528\u63A5\u53E3\u540E\uFF0C\u6B64URL\u4F1A\u81EA\u52A8\u751F\u6210\u5728\u4E0B\u9762\u7684\u201DAPI\u63A5\u53E3\u201D\u7684\u7A97\u53E3\u4E2D\u3002</p>\n      <p i18n="oAouh-Tip-p2"><b>\u63A5\u53E3\u63CF\u8FF0\uFF1A</b>\u6B64\u63A5\u53E3\u662F\u901A\u8FC7oAuth2.0\u8BA4\u8BC1\u5B9E\u73B0\u4E91\u7AEF\u8FDC\u7A0B\u63A7\u5236\u3002\u5C06\u7528\u6237\u540D\u548C\u5BC6\u7801\u4EE5base64\u7F16\u7801\u7684\u65B9\u5F0F\u6DFB\u52A0\u5728\u8BF7\u6C42\u53C2\u6570\u4E2D\uFF0C\u8BA4\u8BC1\u6210\u529F\u540E\u83B7\u5F971\u5C0F\u65F6\u6709\u6548\u671F\u7684access_token,\u4F60\u53EF\u4EE5\u6DFB\u52A0\u53C2\u6570access_token\u8BBF\u95EE\u5176\u4ED6API\uFF0C\u4ECE\u800C\u5B9E\u73B0\u8FDC\u7A0B\u63A7\u5236\u3002</p>\n      <p i18n="oAouh-Tip-p3"><b>\u53C2\u6570\u89E3\u91CA\uFF1A\u7528\u6237\u540D/\u5BC6\u7801\uFF1A</b>\u4ECECassia\u8BF7\u6C42\u7684\u5F00\u53D1\u8005\u8D26\u6237\u548C\u5BC6\u7801(\u4F1A\u4EE5base64\u7F16\u7801\u7684\u65B9\u5F0F\u6DFB\u52A0\u5728\u8BF7\u6C42\u4E2D)</p>\n      <p i18n="oAouh-Tip-p4"><b>AC Address</b>\u548C\u84DD\u7259\u8DEF\u7531\u5668\u4EA4\u4E92\u7684\u670D\u52A1\u5668\u5730\u5740</p>\n    </div>\n  </div>\n\n</form>';
+	
 		return temp;
 	};
 	var yes = function yes() {

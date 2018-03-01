@@ -469,7 +469,7 @@ var chartInit = function (n, mac) {
         };
         let xAxis = {
                 nameLocation: 'middle',
-                name: 'time',
+                name: 'time(Seconds)',
                 type: 'category',
                 boundaryGap: false,
                 data: []
@@ -664,7 +664,7 @@ var chartInit = function (n, mac) {
             <div class="content-header">
                 <h1 style="display: inline;">TI Sensortag CC2650&nbsp;</h1>
                 <span class="name"></span>
-                <b>Mac:`+mac+`</b>
+                <b>Device MAC address:`+mac+`</b>
                 <span class="hidden">状态:</span>
                 <span class="status hidden">在线</span>
             </div>

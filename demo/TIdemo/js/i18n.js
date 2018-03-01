@@ -14,10 +14,10 @@ var lang = {
         'Gyroscope': 'Gyroscope',
         'Magneto': 'Magneto-meter',
         'Humidity': 'Humidity',
-        'Pressure': 'Pressure',
+        'Pressure': 'Barometer / Atmospheric Pressure',
         'Temperature': 'Temperature',
         //'Acoustic': 'Acoustic',
-        'Digitlight': 'Digit light',
+        'Digitlight': 'lumination',
         'refBtn':"caiji"
 
 

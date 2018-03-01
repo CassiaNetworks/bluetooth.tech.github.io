@@ -36,15 +36,17 @@ layui.use(['layer', 'form'], function () {
 			})
 		)
 	});
+
+
 	form.on('select(control)',function(data){
-		
 		control(data.value,form);
-		
-	})
+	    i18n(globalData.lang)
+        form.render(); 
+	});
 	form.on('select(lang)',function(data){
 		i18n(data.value,form.render)
 		// setTimeout(form.render,500)
-	})
+	});
 	form.on('switch(switchScan)', function (data) {
 		if (data.elem.checked) {
 			console.log(globalData.saved)
