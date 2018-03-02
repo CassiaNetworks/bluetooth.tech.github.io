@@ -103,8 +103,6 @@
 	
 		form.on('select(control)', function (data) {
 			(0, _oAuth.control)(data.value, form);
-			(0, _i18n2.default)(_globalData2.default.lang);
-			form.render();
 		});
 		form.on('select(lang)', function (data) {
 			(0, _i18n2.default)(data.value, form.render);
@@ -1453,7 +1451,7 @@
 	        'host': 'AC 地址:',
 	        'connectedNum': '已连接数量: ',
 	        'oAouh-Tip-p1': '<b>接口URL：</b>调用接口后，此URL会自动生成在下面的”API接口”的窗口中。',
-	
+	        'oAouh-Tip-p2': '<b>接口描述：</b>此接口是通过oAuth2.0认证实现云端远程控制。将用户名和密码以base64编码的方式添加在请求参数中，认证成功后获得1小时有效期的access_token,你可以添加参数access_token访问其他API，从而实现远程控制。',
 	        'oAouh-Tip-p3': '<b>参数解释：用户名/密码：</b>从Cassia请求的开发者账户和密码(会以base64编码的方式添加在请求中)。',
 	        'oAouh-Tip-p4': '<b>AC Address</b>和蓝牙路由器交互的服务器地址。'
 	    },
@@ -1463,8 +1461,8 @@
 	        'remote': 'Remote',
 	        '_lang': 'en',
 	        'lang': 'Language',
-	        'title': 'Cassia Bluetooth Debugger Tool',
-	        'header': 'Cassia Bluetooth Debugger Tool',
+	        'title': 'Cassia Bluetooth Debug Tool',
+	        'header': 'Cassia Bluetooth Debug  Tool',
 	        'reboot': 'Reboot',
 	        'allApi': 'API Info',
 	        'scanDevice': 'Scan Device',
@@ -1501,7 +1499,7 @@
 	        'connectedNum': 'connected number: ',
 	        'oAouh-Tip-p1': '<b>Interface URL:</b>calling the interface, this URL is suyomatically generated in the window below "API Interface".',
 	        'oAouh-Tip-p2': '<b>Interface Description:</b>This interface is achieved through oAuth2.0 cloud remote control. The developer key and developer secret to base64 encoding added in the request parameters, access to 1hour after the successful authentication access_token, you can add parameters access_token access other API, in order to achieve remote control.',
-	        'oAouh-Tip-p3': '<b>Parameter Explanation:Developer Key / Developer Secret:</b>Developer account and password requested from Cassia (will be added as a base64 encoding in the request).',
+	        'oAouh-Tip-p3': '<b>Parameter Explanation:Developer Key / Developer Secret:</b>Developer credential requested from Cassia (will be added as a base64 encoding in the request).',
 	        'oAouh-Tip-p4': '<b>AC Address: </b>The address of the AC Server that interacts with the Bluetooth router.'
 	    },
 	        lang = {},
@@ -4466,13 +4464,21 @@
 	
 	var _showlog = __webpack_require__(/*! ./showlog */ 56);
 	
+	var _globalData = __webpack_require__(/*! ./globalData */ 49);
+	
+	var _globalData2 = _interopRequireDefault(_globalData);
+	
+	var _i18n = __webpack_require__(/*! ./i18n */ 48);
+	
+	var _i18n2 = _interopRequireDefault(_i18n);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function control(val, form) {
-		if (val == "local") {
+		if (val === "local") {
 			_urlconfig.data.access_token = '';
 			(0, _urlconfig.updateUrlArr)(_urlconfig.data.hubIp);
-		} else if (val == "remote") {
+		} else if (val === "remote") {
 			var _layer$open;
 	
 			layer.open((_layer$open = {
@@ -4490,6 +4496,8 @@
 				form.render();
 			}), _layer$open));
 		}
+		(0, _i18n2.default)(_globalData2.default.lang);
+		form.render();
 	}
 	
 	var htmlString = function htmlString() {

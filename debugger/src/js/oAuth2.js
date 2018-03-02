@@ -2,19 +2,22 @@ import {
     urlArr,
     updateUrlArr,
     data
-}from './urlconfig'
+}from './urlconfig';
 import {
     methodConfig,
     showMethod
-} from './showmethod'
+} from './showmethod';
 import {
 	showLog
-} from './showlog'
+} from './showlog';
+import globalData from './globalData';
+import i18n from './i18n';
+
 function control(val,form){
-	if(val == "local"){
+	if(val === "local"){
 		data.access_token = '';
 		updateUrlArr(data.hubIp);
-	}else if(val == "remote"){
+	}else if(val === "remote"){
 		layer.open({
 		  	title: 'Remote',
 		  	type: 6,
@@ -38,10 +41,11 @@ function control(val,form){
 		  		$('#control').val('local')
 		  		form.render()
 		  	},
-		})
-
-			
+		});	
 	}
+    i18n(globalData.lang);
+	form.render(); 
+
 }
 
 var htmlString = function() {
