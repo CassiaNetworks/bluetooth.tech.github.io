@@ -17,10 +17,8 @@ var lang = {
         'Pressure': 'Barometer / Atmospheric Pressure',
         'Temperature': 'Temperature',
         //'Acoustic': 'Acoustic',
-        'Digitlight': 'lumination',
+        'Digitlight': 'Lumination',
         'refBtn':"caiji"
-
-
     },
     cn: {
         'SamplingFrequency': '采样频率',

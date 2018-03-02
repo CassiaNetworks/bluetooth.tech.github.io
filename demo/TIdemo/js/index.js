@@ -469,7 +469,7 @@ var chartInit = function (n, mac) {
         };
         let xAxis = {
                 nameLocation: 'middle',
-                name: 'time(Seconds)',
+                name: 'Time(Seconds)',
                 type: 'category',
                 boundaryGap: false,
                 data: []
