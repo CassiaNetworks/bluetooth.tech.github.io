@@ -1458,13 +1458,13 @@
 	        'oAouh-Tip-p4': '<b>AC Address</b>和蓝牙路由器交互的服务器地址。'
 	    },
 	        en = {
-	        'control': 'control',
-	        'local': 'local',
-	        'remote': 'remote',
+	        'control': 'Control',
+	        'local': 'Local',
+	        'remote': 'Remote',
 	        '_lang': 'en',
 	        'lang': 'Language',
-	        'title': 'Cassia bluetooth Dev Tools',
-	        'header': 'Cassia bluetooth Dev Tools',
+	        'title': 'Cassia Bluetooth Debugger Tool',
+	        'header': 'Cassia Bluetooth Debugger Tool',
 	        'reboot': 'Reboot',
 	        'allApi': 'API Info',
 	        'scanDevice': 'Scan Device',
@@ -1496,13 +1496,13 @@
 	        'method': 'Method',
 	        'addMore': 'Add More',
 	        'username': 'Developer Key:',
-	        'password': 'Developer Secter:',
-	        'host': 'AC Address:',
+	        'password': 'Developer Secret:',
+	        'host': 'AC Server Address:',
 	        'connectedNum': 'connected number: ',
 	        'oAouh-Tip-p1': '<b>Interface URL:</b>calling the interface, this URL is suyomatically generated in the window below "API Interface".',
-	        'oAouh-Tip-p2': '<b>Interface Description:</b>This interface is achieved through oAuth2.0 cloud remote control. The developer key and developer secter to base64 encoding added in the request parameters, access to 1hour after the successful authentication access_token, you can add parameters access_token access other API, in order to achieve remote control.',
-	        'oAouh-Tip-p3': '<b>Parameter Explanation:Developer Key / Developer Secter:</b>Developer account and password requested form Cassia (will be added as a base64 encoding in the request).',
-	        'oAouh-Tip-p4': '<b>AC Address: </b>The address of the AC that interacts with the Bluetooth router.'
+	        'oAouh-Tip-p2': '<b>Interface Description:</b>This interface is achieved through oAuth2.0 cloud remote control. The developer key and developer secret to base64 encoding added in the request parameters, access to 1hour after the successful authentication access_token, you can add parameters access_token access other API, in order to achieve remote control.',
+	        'oAouh-Tip-p3': '<b>Parameter Explanation:Developer Key / Developer Secret:</b>Developer account and password requested from Cassia (will be added as a base64 encoding in the request).',
+	        'oAouh-Tip-p4': '<b>AC Address: </b>The address of the AC Server that interacts with the Bluetooth router.'
 	    },
 	        lang = {},
 	        i18n = function i18n(k) {
