@@ -77,7 +77,7 @@ var htmlString = function() {
   </fieldset>
   <div class="layui-form-item layui-form-text">
     <div class="descriptors">
-      <p i18n="oAouh-Tip-p1"><b>接口URL：</b>调用接口后，此URL会自动生成在下面的”API接口”的窗口中。</p>
+      <p i18n="interfaceURL"><b>接口URL：</b>调用接口后，此URL会自动生成在下面的”API接口”的窗口中。</p>
       <p i18n="oAouh-Tip-p2"><b>接口描述：</b>此接口是通过oAuth2.0认证实现云端远程控制。将用户名和密码以base64编码的方式添加在请求参数中，认证成功后获得1小时有效期的access_token,你可以添加参数access_token访问其他API，从而实现远程控制。</p>
       <p i18n="oAouh-Tip-p3"><b>参数解释：用户名/密码：</b>从Cassia请求的开发者账户和密码(会以base64编码的方式添加在请求中)</p>
       <p i18n="oAouh-Tip-p4"><b>AC Address</b>和蓝牙路由器交互的服务器地址</p>
