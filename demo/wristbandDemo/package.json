@@ -4,9 +4,8 @@
   "description": "wristband demo",
   "scripts": {
     "build": "webpack --progress --colors --bail",
-    "dev": "webpack --progress --colors --config ./webpack.dev.config.js",
-    "start": "webpack-dev-server --config ./webpack.dev.config.js ",
-    "dll": "webpack --progress --colors --config ./webpack-dll.config.js"
+    "dev": "webpack -w --colors --config ./webpack.dev.config.js",
+    "start": "webpack-dev-server --config ./webpack.dev.config.js "
   },
   "repository": {
     "type": "git",

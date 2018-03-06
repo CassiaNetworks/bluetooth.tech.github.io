@@ -10,21 +10,20 @@ moduleConfig.rules.push({
   test: /\.css$/,
   exclude: /node_modules|bootstrap/,
   // loader: 'style!css?minimize&-autoprefixer!postcss',
-  use: [
-    {
-      loader: 'style-loader',
+  use: [{
+      loader: 'style-loader'
     },
     {
-      loader: 'css-loader',
+      loader: 'css-loader'
       // options: {
       //   minimize: true,
       //   '-autoprefixer': true,
       // },
-    },
+    }
     // {
     //   loader: 'postcss-loader',
     // },
-  ],
+  ]
 });
 
 // moduleConfig.rules.push({
@@ -40,12 +39,11 @@ moduleConfig.rules.push({
   test: /\.less$/,
   include: dirVars.srcRootDir,
   // loader: 'style!css?minimize&-autoprefixer!postcss!less',
-  use: [
-    {
-      loader: 'style-loader',
+  use: [{
+      loader: 'style-loader'
     },
     {
-      loader: 'css-loader',
+      loader: 'css-loader'
       // options: {
       //   minimize: true,
       //   '-autoprefixer': true,
@@ -55,9 +53,9 @@ moduleConfig.rules.push({
     //   loader: 'postcss-loader',
     // },
     {
-      loader: 'less-loader',
-    },
-  ],
+      loader: 'less-loader'
+    }
+  ]
 });
 
 module.exports = moduleConfig;

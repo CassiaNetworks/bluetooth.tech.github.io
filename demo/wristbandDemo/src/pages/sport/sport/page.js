@@ -97,7 +97,7 @@ var sportView = new SportBodyView({
 })
 
 new DashboardView({
-	el: '#root .show-pannel ul'
+	el: '#root .show-pannel'
 })
 
 export default sportBodyModel

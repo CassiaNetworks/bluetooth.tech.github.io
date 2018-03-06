@@ -3,7 +3,7 @@ const utils = require('publicDir/libs/utils/utils')
 const baseData = {
     method: hubConfig.info.method,
     mac: 'CC:1B:E0:E0:A8:13',
-    ip: '192.168.199.133',
+    ip: '192.168.199.108',
     server: hubConfig.info.server,
     developer: hubConfig.info.developer,
     password: hubConfig.info.password,

@@ -8,10 +8,10 @@ import {
 } from '../../pages/sport/sport/models/dashboardmodel'
 
 const modelHandle = {
-/*    'HW330-0000001': {
-        scanDataHandle: HW3300000001.scanDataHandle
+    /*    'HW330-0000001': {
+            scanDataHandle: HW3300000001.scanDataHandle
 
-    },*/
+        },*/
     'HW': {
         scanDataHandle: HW.scanDataHandle
     },
@@ -20,6 +20,7 @@ const modelHandle = {
     }
 
 }
+const names = {};
 
 const DEBUG = false
 const bg = (function () {
@@ -119,25 +120,25 @@ let hubs = {
                 hubs.__intervalTask.call(this)
             })
             this.on('scanData', function (o) {
-                
+                hubs.addName(o);
                 hubs.__scanDataColl(o)
                 let node = o.data.bdaddrs[0].bdaddr,
-                    name = o.data.name.match('unknow') ? hubs.locationData[node].name : o.data.name
-                
-                if (o.data.name.match('unknow')){
+                    name = o.data.name.match('unknow') ? hubs.locationData[node].name : o.data.name;
+                names[node]
+                if (o.data.name.match('unknow')) {
                     return;
-                } 
-                
-                if(name.match('Brace')){
+                }
+
+                if (name.match('Brace')) {
                     name = 'iw';
                     //console.log('$$$$$$$$$$$$$$$$$$$$$',o);
-                } 
-                if(name.match('HW')){
+                }
+                if (name.match('HW')) {
                     name = 'HW'
                 }
                 if (hubs.scanDataHandle[name]) {
-                    
-                     hubs.trigger('broadcastData', hubs.scanDataHandle[name].call(this, o))
+
+                    hubs.trigger('broadcastData', hubs.scanDataHandle[name].call(this, o))
                 }
             })
             //每次收到期望连接的设备时 触发连接请求
@@ -170,6 +171,16 @@ let hubs = {
     __changeServer(mac) {
         const info = this.hubs[mac].info
         info.realserver = info.method === '1' ? info.server : info.ip
+    },
+    addName(o) {
+        let node = o.data.bdaddrs[0].bdaddr;
+        if (names[node]) {
+            o.data.name = names[node]
+        }
+
+        if (!o.data.name.match('unknow')) {
+            names[node] = o.data.name;
+        }
     },
     add(o = {}) {
         const mac = o.mac
@@ -436,7 +447,7 @@ let hubs = {
         }
         const origin = this.hubs[mac].scanData.origin
         for (let node in origin) {
-            if (origin[node] && origin[node].life-- === 0) {
+            if (origin[node] && origin[node].life === 0) {
                 this.__syncDelScanData(mac, node)
                 if (!option.silent) {
                     hubs.trigger('clearZombyScanData', {
@@ -452,9 +463,6 @@ let hubs = {
     __clearOldLoac() {
         for (let node in this.locationData) {
             this.locationData[node] && this.locationData[node].life--;
-            // if (this.locationData[node] && this.locationData[node].life === 0) {
-            //     this.locationData[node] = null
-            // }
         }
     },
     __hubAvailable(mac) {
@@ -644,7 +652,7 @@ let hubs = {
     },
     __slectHubByNode(node) {
         const mac = node.mac,
-            availableHubs = this.availableHubs
+            availableHubs = this.availableHubs;
         if (this.target.node.indexOf(mac) === 1) {
             return
         }
@@ -680,6 +688,8 @@ let hubs = {
                     times: 0
                 }
             }
+
+            origin[node].life = 4;
             return origin[node]
         }
 
@@ -702,7 +712,10 @@ let hubs = {
                 _node.name = name
             }
             _node.type = type
-            _node.life = 4 //生命周期是4秒
+            // _node.life = 4 //生命周期是4秒
+            if (_node.name.startsWith('Brace')) {
+
+            }
             _node.times++;
             // _node.free = true
 
@@ -714,6 +727,7 @@ let hubs = {
                     this.locationData[node] = _node
                 }
             }
+            this.locationData[node].life = 4;
 
             //更新hub.scanData.sort.name值
             const realName = _node.name,
@@ -817,7 +831,9 @@ let hubs = {
             // headers: hub.info.method === 0 ? '' : {
             //     'Authorization': hub.info.authorization
             // },
-            data: JSON.stringify({"type" : o.type || "public"}),
+            data: JSON.stringify({
+                "type": o.type || "public"
+            }),
             // dataType:'json',
             // contentType:'application/json',
             context: this,
@@ -980,7 +996,7 @@ let hubs = {
                 })
             }
         })
-        
+
     },
     read(o) {
         o = o || {
@@ -1062,11 +1078,11 @@ const startWork = function () {
     hubs.off('broadcastData')
     hubs.off('notify')
     hubs.on('broadcastData', function (o) {
-        if(!o) return;
+        if (!o) return;
         //console.log(o);
         let model = dashBoardItemColl.get(o.node),
             name = o.name;
-            name.match('Brace') ? name = 'iw':name;
+        name.match('Brace') ? name = 'iw' : name;
         switch (name) {
             /*case 'HW330-0000001':
                 {
@@ -1100,11 +1116,11 @@ const startWork = function () {
                     if (model) {
                         model.set('heartRate', o.heartRate)
                         model.set('baseStep', 0);
-                      /*  if (model.get('baseStep') !== o.step) {
-                           // model.set('totalStep', o.step - model.get('baseStep'))
-                            model.set('totalStep', o.step)
-                        }*/
-                       // model.set('step', o.step - model.get('baseCircleStep'))
+                        /*  if (model.get('baseStep') !== o.step) {
+                             // model.set('totalStep', o.step - model.get('baseStep'))
+                              model.set('totalStep', o.step)
+                          }*/
+                        // model.set('step', o.step - model.get('baseCircleStep'))
                         model.set('step', o.step)
                         model.set('loc', hubs.hubs[hubs.locationData[o.node].mac].info.location)
                         model.set('cal', o.cal)
@@ -1121,7 +1137,8 @@ const startWork = function () {
                             step: 0,
                             say: o.say,
                             node: o.node,
-                            name: o.name
+                            name: o.name,
+                            timeFlag: 0
                         })
                     }
                     break;
@@ -1129,15 +1146,14 @@ const startWork = function () {
             case 'iw':
                 {
                     if (model) {
-                        //console.log('--------------------->>>>>::',model)
                         model.set('heartRate', o.heartRate)
                         /*if (model.get('baseStep') !== o.step) {
                             model.set('totalStep', o.step - model.get('baseStep'))
                         }*/
-                        model.set('totalStep', o.step /*- model.get('baseStep')*/)
-                        model.set('step', o.step /*- model.get('baseCircleStep')*/)
+                        model.set('totalStep', o.step /*- model.get('baseStep')*/ )
+                        model.set('step', o.step /*- model.get('baseCircleStep')*/ )
                         model.set('loc', hubs.hubs[hubs.locationData[o.node].mac].info.location)
-                        model.set('cal', o.cal/*((model.get('step') * .03918)).toFixed(2)*/)
+                        model.set('cal', o.cal /*((model.get('step') * .03918)).toFixed(2)*/ )
                     } else {
                         dashBoardItemColl.add({
                             userName: o.node.slice(-5),
@@ -1150,12 +1166,13 @@ const startWork = function () {
                             step: o.step,
                             say: o.say,
                             node: o.node,
-                            name: o.name
+                            name: o.name,
+                            timeFlag: 0
 
                         })
                     }
                 }
-            break;
+                break;
         }
 
     })

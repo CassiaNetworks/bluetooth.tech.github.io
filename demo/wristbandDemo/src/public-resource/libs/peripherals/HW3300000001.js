@@ -249,15 +249,15 @@ function sendMsgHandle(node, hubs, str) {
 
 const HW = {
     scanDataHandle: function (o) {
+        if(!o.data.adData) return;
         function toDEC(str) {
             return parseInt(str, 16)
         }
         const mac = o.mac,
             // chip = o.chip,
             node = o.data.bdaddrs[0].bdaddr,
-            data = o.data.adData || o.data.scanData,
+            data = o.data.adData ,
             manufacturer = data.slice(-20);
-
         let battery = toDEC(manufacturer.slice(4, 6)),
             heartRate = toDEC(manufacturer.slice(6, 8)),
             step = toDEC(manufacturer.slice(8, 14)),

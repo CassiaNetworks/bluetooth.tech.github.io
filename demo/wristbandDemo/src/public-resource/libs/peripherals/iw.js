@@ -101,7 +101,7 @@ const iw = {
             node = o.data.bdaddrs[0].bdaddr,
             name = o.data.name;
             if(!name) return;
-            let scanData = o.data.scanData || o.data.adData;
+            let scanData = o.data.scanData;
             if(!scanData) return;
 
 

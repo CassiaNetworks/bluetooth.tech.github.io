@@ -6,8 +6,6 @@ module.exports='<div class="sport-dashboard" id="sport-dashboard">\
         <button id="startWork" i18n="startWork"><%= startWork %></button>\
         <button id="config" i18n="config"><%= config %></button>\
     </div>\
-    <div class="show-pannel">\
-        <ul class="clearfix">\
-        </ul>\
-    </div>\
+    <ul class="show-pannel">\
+    </ul>\
 </div>'

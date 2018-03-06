@@ -77,7 +77,7 @@ p {
   text-align: center;
 }
 
-.sport-dashboard .show-pannel ul {
+.sport-dashboard .show-pannel {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -97,10 +97,15 @@ p {
   -ms-flex-line-pack: start;
   align-content: flex-start;
   height: 100%;
-  margin: 0 auto;
+  margin: 20px auto;
 }
 
-.sport-dashboard .show-pannel li {
+.sport-dashboard .show-pannel>li {
+  display: flex;
+  margin: 0 15px 15px 0;
+}
+
+.sport-dashboard .show-pannel .sport-info {
   position: relative;
   box-sizing: border-box;
   -webkit-box-flex: 0;
@@ -108,24 +113,35 @@ p {
   -ms-flex: none;
   flex: none;
   width: 300px;
-  background: url(../../../public-resource/imgs/backpic2.jpg) -200px 0 no-repeat;
   height: 300px;
+  background: url(../../../public-resource/imgs/backpic2.jpg) -200px 0 no-repeat;
   padding-left: 25px;
   border-radius: 20px;
+  color: #fff;
 }
 
-.sport-dashboard .show-pannel li:nth-child(3n-1) {
+.sport-dashboard .show-pannel .position-info {
+  width: 260px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.sport-dashboard .show-pannel .position-info ul{
+  height: 300px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.sport-dashboard .show-pannel .position-info .position-details{
+  font-size: 14px;
+}
+.sport-dashboard .show-pannel li:nth-child(3n-1) .sport-info {
   background: url(../../../public-resource/imgs/backpic1.jpg) -200px 0 no-repeat;
 }
 
-.sport-dashboard .show-pannel li:nth-child(3n) {
+.sport-dashboard .show-pannel li:nth-child(3n) .sport-info{
   background: url(../../../public-resource/imgs/backpic3.jpg) 0 0 no-repeat;
   background-size: 100% 100%;
-}
-
-.sport-dashboard .show-pannel ul li {
-  margin: 0 15px 15px 0;
-  color: #fff;
 }
 
 .sport-dashboard .show-pannel h2 {
@@ -151,10 +167,10 @@ p {
 }
 
 .sport-dashboard .show-pannel div p {
-  font-size: 18px;
+  font-size: 22px;
 }
 
-.sport-dashboard .show-pannel div span {
+.sport-dashboard .show-pannel .sport-info span {
   font-size: 22px;
 }
 
@@ -236,7 +252,7 @@ p {
   left: 30%;
 }
 
-.sport-dashboard .show-pannel button {
+.sport-dashboard .show-pannel button.send {
   position: absolute;
   left: 50%;
   -webkit-transform: translateX(-50%);
