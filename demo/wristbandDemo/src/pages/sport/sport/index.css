@@ -246,11 +246,22 @@ p {
   right: 10%;
 }
 
+.sport-dashboard .show-pannel .red.red.battery img {
+  right: 5%;
+}
+
 .sport-dashboard .show-pannel .red p {
   position: absolute;
   bottom: 20%;
   left: 30%;
 }
+
+.sport-dashboard .show-pannel .red.battery p {
+  bottom: 0;
+  left: 8%;
+}
+
+
 
 .sport-dashboard .show-pannel button.send {
   position: absolute;

@@ -3,6 +3,7 @@ import Hub from 'publicDir/libs/hubs/hub'
 //import HW0000001 from 'publicDir/libs/peripherals/HW0000001'
 import HW from 'publicDir/libs/peripherals/HW3300000001'
 import iw from 'publicDir/libs/peripherals/iw'
+import Vivalink from 'publicDir/libs/peripherals/Vivalink'
 import {
     dashBoardItemColl
 } from '../../pages/sport/sport/models/dashboardmodel'
@@ -17,6 +18,9 @@ const modelHandle = {
     },
     'iw': {
         scanDataHandle: iw.scanDataHandle
+    },
+    'Vivalink': {
+        scanDataHandle: Vivalink.scanDataHandle
     }
 
 }
@@ -47,9 +51,9 @@ const bg = (function () {
         log() {
 
         },
-        table() {},
-        time() {},
-        timeEnd() {}
+        table() { },
+        time() { },
+        timeEnd() { }
     }
 })()
 
@@ -124,7 +128,7 @@ let hubs = {
                 hubs.__scanDataColl(o)
                 let node = o.data.bdaddrs[0].bdaddr,
                     name = o.data.name.match('unknow') ? hubs.locationData[node].name : o.data.name;
-                names[node]
+
                 if (o.data.name.match('unknow')) {
                     return;
                 }
@@ -137,7 +141,6 @@ let hubs = {
                     name = 'HW'
                 }
                 if (hubs.scanDataHandle[name]) {
-
                     hubs.trigger('broadcastData', hubs.scanDataHandle[name].call(this, o))
                 }
             })
@@ -176,6 +179,11 @@ let hubs = {
         let node = o.data.bdaddrs[0].bdaddr;
         if (names[node]) {
             o.data.name = names[node]
+            return;
+        }
+        if (Vivalink.scanDataHandle(o)) {
+            names[node] = 'Vivalink';
+            return;
         }
 
         if (!o.data.name.match('unknow')) {
@@ -326,6 +334,9 @@ let hubs = {
         if (!this.__online(mac)) {
             return
         }
+
+        // hub.info.realserver = 'http://127.0.0.1:9999'
+
         this.__es(hub, 'scan', hub.info.realserver + '/gap/nodes/?event=1&active=1&mac=' + mac + '&chip=' + chip + '&access_token=' + hub.info.access_token,
             function (event) {
                 if (hubs.scanHubs.indexOf(mac) === -1) {
@@ -1043,9 +1054,9 @@ const startWork = function () {
     //连接相关
     hubs.onceInit = false
     const target = {
-            name: [],
-            node: []
-        },
+        name: [],
+        node: []
+    },
         position = {
             name: [],
             node: []
@@ -1143,27 +1154,24 @@ const startWork = function () {
                     }
                     break;
                 }
-            case 'iw':
+            case 'vivalink':
                 {
                     if (model) {
-                        model.set('heartRate', o.heartRate)
                         /*if (model.get('baseStep') !== o.step) {
                             model.set('totalStep', o.step - model.get('baseStep'))
                         }*/
-                        model.set('totalStep', o.step /*- model.get('baseStep')*/ )
-                        model.set('step', o.step /*- model.get('baseCircleStep')*/ )
+                        model.set('temperature', o.temperature /*- model.get('baseStep')*/)
+                        model.set('battery', o.battery /*- model.get('baseCircleStep')*/)
                         model.set('loc', hubs.hubs[hubs.locationData[o.node].mac].info.location)
-                        model.set('cal', o.cal /*((model.get('step') * .03918)).toFixed(2)*/ )
                     } else {
                         dashBoardItemColl.add({
+                            sn: o.sn,
                             userName: o.node.slice(-5),
-                            baseStep: o.step,
-                            baseCircleStep: o.step,
-                            totalStep: o.step,
+                            baseName: 'vivalink',
+                            temperature: o.temperature,
+                            battery: o.battery,
                             cal: o.cal,
                             loc: hubs.hubs[hubs.locationData[o.node].mac].info.location,
-                            heartRate: o.heartRate,
-                            step: o.step,
                             say: o.say,
                             node: o.node,
                             name: o.name,

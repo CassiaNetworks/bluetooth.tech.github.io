@@ -1,6 +1,8 @@
 import fire_static from 'publicDir/imgs/fire_static.jpg'
 import heart_staic from 'publicDir/imgs/heart_staic.jpg'
 import running_static from 'publicDir/imgs/running_static.jpg'
+import temperature_img from 'publicDir/imgs/temperature.svg'
+import battery_img from 'publicDir/imgs/battery.svg'
 import './dashboard.css'
 
 function dashboardPosition(msg, loc) {
@@ -8,7 +10,7 @@ function dashboardPosition(msg, loc) {
 	const str = `
 	<li> 
 	<span class='position-time'>${time}: </span>
-	<span class='position-level'>${msg?msg:'进入'} </span>
+	<span class='position-level'>${msg ? msg : '进入'} </span>
 	<span class='position-message'>${loc}</span>
 	<span>停留</span>
 	<span class='position-duration'>0</span>
@@ -21,10 +23,10 @@ function dashboardStr(data) {
 	const str = `<li data-node='${data.node}'>
 						<div class='sport-info'>
 							<input type='text' class='userName' value='${data.userName}'></input>
-							${data.loc?'<p class="loc">位置：<span >'+data.loc+'</span></p>':''}
+							${data.loc ? '<p class="loc">位置：<span >' + data.loc + '</span></p>' : ''}
 							<button class='position-details' data-node='${data.node}'>详细</button>
 							<p class="totalStep">累计步数 : <span >${data.totalStep}</span></p>
-							${data.say?"<input type = 'text' value='你好'><button class='send layui-btn layui-btn-warm layui-btn-mini' data-name='"+data.name+"' data-node='"+data.node+"'>send</button>":''}
+							${data.say ? "<input type = 'text' value='你好'><button class='send layui-btn layui-btn-warm layui-btn-mini' data-name='" + data.name + "' data-node='" + data.node + "'>send</button>" : ''}
 							<div class="yellow">
 								<img src=${fire_static} alt="icon">
 								<p><span>${data.cal}</span>千卡</p>
@@ -44,7 +46,38 @@ function dashboardStr(data) {
 						</div>
 						<div class='position-info' hidden>
 							<ul>
-							${dashboardPosition(null,data.loc)}
+							${dashboardPosition(null, data.loc)}
+							</ul>	
+						</div>
+					</li>`
+	return str
+}
+
+
+function dashboardStrVivalink(data) {
+	const str = `<li data-node='${data.node}'>
+						<div class='sport-info'>
+							<input type='text' class='userName' value='${data.userName}'></input>
+							${data.loc ? '<p class="loc">位置：<span >' + data.loc + '</span></p>' : ''}
+							<button class='position-details' data-node='${data.node}'>详细</button>
+							<p class="totalStep">体温贴: <span >${data.sn}</span></p>
+							${data.say ? "<input type = 'text' value='你好'><button class='send layui-btn layui-btn-warm layui-btn-mini' data-name='" + data.name + "' data-node='" + data.node + "'>send</button>" : ''}
+							<div class="yellow vivalink temperature">
+								<img src=${temperature_img} alt="icon" height="65" width="68">
+								<p>温度: <span><br/> ${data.temperature} </span>℃</p>
+							</div>
+							<div class="red vivalink battery">
+								<img src=${battery_img} alt="icon">
+								<p>电量: <span><br/> ${data.battery} %</span></p>
+							</div>
+						
+							<div class = 'model'>
+								<p>型号:${data.name}<p>
+							</div>
+						</div>
+						<div class='position-info' hidden>
+							<ul>
+							${dashboardPosition(null, data.loc)}
 							</ul>	
 						</div>
 					</li>`
@@ -53,8 +86,8 @@ function dashboardStr(data) {
 
 
 
-
 export {
 	dashboardStr,
-	dashboardPosition
+	dashboardPosition,
+	dashboardStrVivalink
 }

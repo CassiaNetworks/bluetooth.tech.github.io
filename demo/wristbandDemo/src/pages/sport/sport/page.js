@@ -43,7 +43,7 @@ const SportBodyView = Backbone.View.extend({
 				title: "蓝牙路由器配置",
 				content: hubStr.ul
 			}, {
-				title: '手环配置',
+				title: '终端配置',
 				content: perpheralStr.ul
 			}],
 			shade: 0.6 //遮罩透明度
