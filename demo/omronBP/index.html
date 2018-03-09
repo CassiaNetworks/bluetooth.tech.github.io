@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>OMRON</title>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="css/index.css">
+</head>
+<body>
+	<!-- 头部分 -->
+	<header class="container-fluid">
+		<div class="row" style="padding-bottom: 0px">
+			<div class="col-md-3">
+				<img src="logo.png" style="width: 250px; height: 90px;margin-left: 80px">
+			</div>
+
+ 			<div class="col-md-6 setting" >
+ 				<div id="local-crl">
+ 					<div class="form-group form-inline">
+ 						<label for="ip">Router IP:</label>
+ 						<input type="text" class="form-control" id="ip" placeholder="192.168.1.1" value="" style="width: 71.5%">
+ 					</div>
+ 				</div>
+
+ 				<div id="remote-crl" >
+ 					<div class="cloud-control form-inline">
+ 					  <div class="form-group" style="width: 100%">
+ 					  	<label for="acAddress" id=''>Router IP:</label>
+ 					    <input type="text" class="form-control" id="acAddress" placeholder="ac-cn.cassia.pro:8080/api" value="" >
+ 					    <label for="ap-mac">Router MAC:</label>
+ 					    <input type="text" id="ap-mac" class="form-control" placeholder="CC:1B:E0:E0:22:60" value=""> 
+
+ 					  </div>
+ 					  <div class="form-group" style="margin-top: 6px">
+ 					    <label for="username" id='username-label'>Developer Key:</label>
+ 					    <input type="text" class="form-control" id="username"  placeholder='tester' value="">
+ 					    <label for="password" id='password-label'>Developer Secret:</label>
+ 					    <input type="password" class="form-control" id="password"  placeholder='******' value="">
+ 					  </div>
+ 					</div>
+ 				</div>
+				
+				<div class="form-group form-inline" style="margin-top: 6px">
+					<label for="pairCode">deviceMac:</label>
+					<input type="text" class="form-control" id="devices" placeholder="AA:BB:CC:DD:EE:FF" value="">
+					<label for="pairCode">Pair code:</label>
+					<input type="text" class="form-control" id="pairCode" placeholder="123465" value="">
+				</div>
+
+			</div> 
+
+				<div class="col-md-1" style="padding-top: 30px">
+					<div class="btn-group btn-group-sm" role="group" aria-label="...">
+	  				<button type="button" class="btn btn-success i18n" id="start" i18n="start">start</button>
+	  				<button type="button" class="btn btn-danger i18n" id="stop" i18n="stop">stop</button>
+				</div>
+			</div>
+			<div class="col-md-2" style="margin-top: 10px">
+				<div class="form-inline pull-right" >
+					<label class="i18n" i18n="language">language：</label>
+					<select id="lang" class="form-control input-group-sm">
+						<option value="cn">中文</option>
+						<option value="en">English</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-md-2" style="margin-top: 10px">
+				<div class="form-inline pull-right" >
+					<label class="i18n" i18n="control">control：</label>
+					<select id="control" class="form-control input-group-sm">
+						<option value="local" class="i18n" i18n" id="local" i18n="local">本地</option>
+						<option value="remote" class="i18n" id="remote" i18n="remote">远程</option>
+					</select>
+				</div>
+			</div>
+		</div>
+	</header>
+	<div id="content" class="container-fluid content">
+		<div class="row" style="margin-top: 50px">
+			<ul class="col-md-5 col-md-offset-4">
+				<li>
+					<b class="i18n" i18n="timestamp">Timestamp：</b> 
+					<span id="timestamp" >----</span>
+					<!-- <span id="timestamp" >2018-03-07 15:32:44</span> -->
+				</li>
+				<li>
+					<b class="i18n" i18n="systolic">Systolic：</b>
+					<span id="systolic">----</span>
+					<!-- <span id="systolic">103.0 mmHg</span> -->
+				</li>
+				<li>
+					<b class="i18n" i18n="diastolic">Diastolic：</b>
+					<span id="diastolic">----</span>
+					<!-- <span id="diastolic">63.0 mmHg</span> -->
+				</li>
+				<li>
+					<b class="i18n" i18n="meanAp">Mean Arterial：</b>
+					<span id="meanAp">----</span>
+					<!-- <span id="meanAp">76.0 mmHg</span> -->
+				</li>
+				<li>
+					<b class="i18n" i18n="pulseRate">PulseRate：</b>
+					<span id="pulseRate">----</span>
+					<!-- <span id="pulseRate">67</span> -->
+				</li>
+				<li>
+					<b class="i18n" i18n="bodyMovement">Body Movement：</b>
+					<span id="bodyMovement">----</span>
+					<!-- <span id="bodyMovement">NO</span> -->
+				</li>
+				<li>
+					<b class="i18n" i18n="irregular">Irregular Pulse:</b>
+					<span id="irregular">----</span>
+					<!-- <span id="irregular">NO</span> -->
+				</li>
+				<li>
+					<b class="i18n" i18n="battery">Battery:</b>
+					<span id="battery">----</span>
+				</li>
+			</ul>
+		</div>
+		
+		
+
+		
+
+	</div>
+	
+</body>
+<script src="js/jquery-3.1.1.min.js"></script>
+ <script src="js/bootstrap.js"></script>
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/savedata.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/co.js"></script>
+<script src="js/index.js"></script>
+</html>

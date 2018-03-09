@@ -1,0 +1,49 @@
+ body {
+	background-color: #f1f1f1
+} 
+header {
+	margin-top: 15px;
+	padding-bottom: 15px;
+	border-bottom: 1px solid gray;
+}
+.setting label{
+width: 120px;
+}
+
+.content {
+	margin-top:10px;
+}
+
+.tipList {
+	padding-top: 100px;
+}
+.tipList li {
+	padding: 0;
+	border-radius: 4px;
+	background-color: #ddd;
+	margin-bottom: 10px;
+	color:#0089ff;
+}
+.tipList li a{
+margin: 0
+}
+.tipList li a:hover{
+	background-color: #337ab7;
+	color:#fff;
+}
+
+
+.content li {
+	font-size: 18px;
+	margin-top: 5px;
+	list-style: none;
+}
+.content b{
+	width: 220px;
+	display: inline-block;
+}
+.content span{
+	width: 220px;
+	display: inline-block;
+	text-align: center;
+}
