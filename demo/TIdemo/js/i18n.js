@@ -18,7 +18,8 @@ var lang = {
         'Temperature': 'Temperature',
         //'Acoustic': 'Acoustic',
         'Digitlight': 'Lumination',
-        'refBtn':"caiji"
+        'refBtn':"caiji",
+        '_work18n': 'Total Sensors Connected: '
     },
     cn: {
         'SamplingFrequency': '采样频率',
@@ -34,7 +35,8 @@ var lang = {
         'Temperature': '温度',
         //'Acoustic': '声感',
         'Digitlight': '光照',
-        'refBtn':"采集"
+        'refBtn':"采集",
+        '_work18n': '已连接数量: '
     },
     //useLang: getCookie('useLang') || 'en'
     useLang: mystorage.get('useLang') || 'en'
