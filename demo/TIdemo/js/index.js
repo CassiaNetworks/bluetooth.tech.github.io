@@ -57,7 +57,8 @@ $(".disconbtn").on('click',function(){
     api
     .use({
       server: $("#ap-ip").val(),
-      hub: ''
+      hub: '',
+      local: true
     })
     .devices({
       server: $("#ap-ip").val(),
@@ -83,7 +84,8 @@ $(".disconbtn").on('click',function(){
       server: $("#acaddress").val(),
       hub: $("#apmac").val() || '',
       developer:$("#username").val()||'tester',
-      key:$("#password").val()||"10b83f9a2e823c47"
+      key:$("#password").val()||"10b83f9a2e823c47",
+      local:false
     }).oauth2({
       success: function(){
         api.devices({
@@ -123,11 +125,13 @@ setInterval(function(){
 //开始连接
 $(".conbtn").on('click',function(){
   let useway = mystorage.get('useway') || 'local';
+  console.log('start:',useway);
   if(useway === 'local'){
     api
     .use({
       server: $("#ap-ip").val(),
-      hub: ''
+      hub: '',
+      local: true
     })
     .on('notify', notification)
     .scan({})
@@ -138,7 +142,8 @@ $(".conbtn").on('click',function(){
       server: $("#acaddress").val().trim(),
       hub: $("#apmac").val().trim() || '',
       developer:$("#username").val().trim()||'tester',
-      key:$("#password").val().trim()||"10b83f9a2e823c47"
+      key:$("#password").val().trim()||"10b83f9a2e823c47",
+      local: false
     })
     .oauth2({
       success:function(){
