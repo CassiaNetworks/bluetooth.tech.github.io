@@ -139,8 +139,8 @@ const DashboardView = Backbone.View.extend({
             this.cal[item.node] = this.$el.find(`li[data-node='${item.node}'] .yellow p span`)
             this.heartRate[item.node] = this.$el.find(`li[data-node='${item.node}'] .red p span`)
             this.step[item.node] = this.$el.find(`li[data-node='${item.node}'] .blue p span`)
-            this.loc[item.node] = this.$el.find(`li[data-node='${item.node}'] .loc span`)
         }
+        this.loc[item.node] = this.$el.find(`li[data-node='${item.node}'] .loc span`)
         this.positionInfo[item.node] = this.$el.find(`li[data-node='${item.node}'] .position-info>ul`)
         this.timeFlag[item.node] = this.positionInfo[item.node].find('li:last-child .position-duration')
         this.dashBoard[item.node] = this.$el.find(`li[data-node='${item.node}']`)
