@@ -25,6 +25,7 @@ const modelHandle = {
 
 }
 const names = {};
+const vivalinks = {};
 
 const DEBUG = false
 const bg = (function () {
@@ -177,18 +178,29 @@ let hubs = {
     },
     addName(o) {
         let node = o.data.bdaddrs[0].bdaddr;
-        if (names[node]) {
-            o.data.name = names[node]
+        let vivalinkInfo;
+
+        vivalinkInfo = Vivalink.scanDataHandle(o);
+        if (vivalinkInfo) {
+            names[node] = 'Vivalink';
+            o.data.bdaddrs[0].bdaddr2 = o.data.bdaddrs[0].bdaddr;
+            if (vivalinks[vivalinkInfo.sn]) {
+                o.data.bdaddrs[0].bdaddr = vivalinks[vivalinkInfo.sn];
+            } else {
+                vivalinks[vivalinkInfo.sn] = node;
+            }
+            o.data.name = names[node];
             return;
         }
-        if (Vivalink.scanDataHandle(o)) {
-            names[node] = 'Vivalink';
+        if (names[node]) {
+            o.data.name = names[node];
+            return;
+        }
+        if (!o.data.name.match('unknow')) {
+            names[node] = o.data.name;
             return;
         }
 
-        if (!o.data.name.match('unknow')) {
-            names[node] = o.data.name;
-        }
     },
     add(o = {}) {
         const mac = o.mac
@@ -335,7 +347,7 @@ let hubs = {
             return
         }
 
-        // hub.info.realserver = 'http://127.0.0.1:9999'
+        // hub.info.realserver = 'http://192.168.1.102'
 
         this.__es(hub, 'scan', hub.info.realserver + '/gap/nodes/?event=1&active=1&mac=' + mac + '&chip=' + chip + '&access_token=' + hub.info.access_token,
             function (event) {
@@ -1090,9 +1102,9 @@ const startWork = function () {
     hubs.off('notify')
     hubs.on('broadcastData', function (o) {
         if (!o) return;
-        //console.log(o);
-        let model = dashBoardItemColl.get(o.node),
-            name = o.name;
+        console.log(o);
+        let model;
+        name = o.name;
         name.match('Brace') ? name = 'iw' : name;
         switch (name) {
             /*case 'HW330-0000001':
@@ -1156,6 +1168,7 @@ const startWork = function () {
                 }
             case 'vivalink':
                 {
+
                     if (model) {
                         /*if (model.get('baseStep') !== o.step) {
                             model.set('totalStep', o.step - model.get('baseStep'))

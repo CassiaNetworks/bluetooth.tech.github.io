@@ -9,6 +9,10 @@
 //  eval(function(p,a,c,k,e,d){e=function(c){return(c<a?"":e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--)d[e(c)]=k[c]||e(c);k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1;};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p;}('c a=["\\t\\q","\\h\\i\\Y\\T\\i\\l\\p\\h\\18\\l\\i","\\Z\\p\\h\\h\\i\\l\\1i","\\X\\n\\q\\h\\p\\O\\q\\t","\\T\\l\\n\\h\\n\\h\\1i\\T\\i","\\O\\q\\R\\i\\1C\\1B\\v","\\d\\1A\\d\\L\\d\\d\\P\\v","\\d\\1y\\d\\L\\d\\d\\P\\v","\\d\\d\\d\\1z\\L\\1I\\P\\v","","\\1F\\i\\q\\1b\\h\\N","\\h\\n\\1D\\n\\1G\\i\\l\\B\\p\\t\\i","\\t\\18\\Z\\t\\h\\l\\O\\q\\1b","\\d","\\X\\N\\p\\l\\B\\n\\R\\i\\1E\\h","\\1H","\\v\\l\\n\\Y\\B\\N\\p\\l\\B\\n\\R\\i","\\1J"];j 1u(){G[a[0]]=A;G[a[1]]=A;G[a[2]]=A}1r[a[4]][a[3]]=j(1g){e G[a[5]](1g)!==-1};c u=a[6];c D=a[7];c H=a[8];c 1s=0.1W;c M=0.1U;j 1k(b){e 1c(b)||b[a[3]](D)||b[a[3]](u)||b[a[3]](H)}j 1c(r){e r===F||r===A||r===a[9]||r[a[10]]<=0}j 1X(b){k(!1k(b)){e F};c E=a[9];b=b[a[11]]();k(b[a[3]](D)||b[a[3]](u)){E=S(b[a[12]](1Y,Q),1T)}x{k(b[a[3]](H)){c 19=b[a[12]](1N,1K)+b[a[12]](1L,1O)+b[a[12]](J,1V);E=S(19,1R)}x{e F}};c f=1S 1u();f[a[0]]=E;k(b[a[3]](D)){1p(f,b);e F};k(b[a[3]](u)||b[a[3]](H)){f=1t(f,b)};e f}j 1t(f,b){c C;c z;k(b[a[3]](u)){C=(m(b[a[12]](Q,1n),16)^1o);z=(m(b[a[12]](1n,1Q),16)^1m)*M}x{C=(m(b[a[12]](1l,Q),16)^1o);z=(m(b[a[12]](1P,1l),16)^1m)*M};f[a[2]]=C;f[a[1]]=z+1s;e f}j 1p(f,b){}j S(U,1q){c g;k(1q){g=(~m(U,16)).I(2);1M(g[a[10]]<J){g=a[13]+g}}x{g=m(U,16).I(2);g=1d(g,J)};c 1x=m(g[a[12]](1,6),2);c s=m(g[a[12]](6,12),2).I();k(s[a[10]]<2){s=a[13]+s};c 1j=1e(m(g[a[12]](12,J),2),8);c 1w=a[15][a[14]]();c 1v=1r[a[16]](1w+1x);e 1v+s+a[17]+1j}j 1d(K,V){c w=K;k(K[a[10]]>=V){e w}x{c 1h=V-K[a[10]];W(c o=0;o<1h;o++){w=a[13]+w};e w}}j 1e(1f,1a){c y=1f.I();W(c o=0;o<(1a-y[a[10]]);o++){y=a[13]+y};e y}',62,123,'||||||||||_0|_1|var|x30|return|_2|_3|x74|x65|function|if|x72|parseInt|x6F|_4|x61|x6E|_8|_6|x73|FRAME_SPC_DEVICE_DISCOVERY|x66|_7|else|_5|_9|undefined|x43|_10|FRAME_SPC_TEMP_COMPENSATION|_12|null|this|FRAME_SPC_BEANCON|toString|32|_11|x31|TEMPERATURE_HEXSTRING_UNIT|x68|x69|x38|56|x64|getSNStringInfo|x70|_13|_14|for|x63|x6D|x62|||||||||x75|_15|_19|x67|isEmpty|stringLeftAddZero|frontCompWithZore|_20|_16|_17|x79|_18|isFeverScout|54|0xffff|58|0xff|handleCompensation|_22|String|DEFAULT_COMPENSATION|handleAdvertiseFrame|Message|_23|_21|_24|x33|x32|x34|x4F|x78|x4C|x41|x6C|x77|x42|x35|x2F|22|26|while|20|30|50|62|false|new|true|0625|34|28|parseMsg|48'.split('|'),0,{}))
 
 
+// 版本3  修复 返回null问题
+// eval(function(p,a,c,k,e,d){e=function(c){return(c<a?"":e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--)d[e(c)]=k[c]||e(c);k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1;};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p;}('c a=["\\t\\q","\\h\\i\\W\\V\\i\\l\\p\\h\\1l\\l\\i","\\X\\p\\h\\h\\i\\l\\Y","\\1b\\n\\q\\h\\p\\O\\q\\t","\\V\\l\\n\\h\\n\\h\\Y\\V\\i","\\O\\q\\T\\i\\1D\\1C\\v","\\d\\1B\\d\\L\\d\\d\\Q\\v","\\d\\1z\\d\\L\\d\\d\\Q\\v","\\d\\d\\d\\1A\\L\\1J\\Q\\v","\\h\\n\\1G\\n\\1I\\i\\l\\B\\p\\t\\i","","\\1H\\i\\q\\Z\\h\\P","\\t\\1l\\X\\t\\h\\l\\O\\q\\Z","\\d","\\1b\\P\\p\\l\\B\\n\\T\\i\\1E\\h","\\1F","\\v\\l\\n\\W\\B\\P\\p\\l\\B\\n\\T\\i","\\1K"];j 1v(){G[a[0]]=A;G[a[1]]=A;G[a[2]]=A}1s[a[4]][a[3]]=j(1j){e G[a[5]](1j)!==-1};c u=a[6];c D=a[7];c H=a[8];c 1t=0.1X;c M=0.1V;j 1i(1d){c b=1d[a[9]]();e 1g(b)||b[a[3]](D)||b[a[3]](u)||b[a[3]](H)}j 1g(r){e r===F||r===A||r===a[10]||r[a[11]]<=0}j 1Y(b){k(!1i(b)){e F};c E=a[10];b=b[a[9]]();k(b[a[3]](D)||b[a[3]](u)){E=S(b[a[12]](1Z,N),1U)}x{k(b[a[3]](H)){c 18=b[a[12]](1O,1L)+b[a[12]](1M,1P)+b[a[12]](J,1W);E=S(18,1S)}x{e F}};c f=1T 1v();f[a[0]]=E;k(b[a[3]](D)){1q(f,b);e F};k(b[a[3]](u)||b[a[3]](H)){f=1u(f,b)};e f}j 1u(f,b){c C;c z;k(b[a[3]](u)){C=(m(b[a[12]](N,1o),16)^1p);z=(m(b[a[12]](1o,1R),16)^1n)*M}x{C=(m(b[a[12]](1m,N),16)^1p);z=(m(b[a[12]](1Q,1m),16)^1n)*M};f[a[2]]=C;f[a[1]]=z+1t;e f}j 1q(f,b){}j S(R,1r){c g;k(1r){g=(~m(R,16)).I(2);1N(g[a[11]]<J){g=a[13]+g}}x{g=m(R,16).I(2);g=1k(g,J)};c 1y=m(g[a[12]](1,6),2);c s=m(g[a[12]](6,12),2).I();k(s[a[11]]<2){s=a[13]+s};c 1h=1f(m(g[a[12]](12,J),2),8);c 1x=a[15][a[14]]();c 1w=1s[a[16]](1x+1y);e 1w+s+a[17]+1h}j 1k(K,U){c w=K;k(K[a[11]]>=U){e w}x{c 1e=U-K[a[11]];1a(c o=0;o<1e;o++){w=a[13]+w};e w}}j 1f(1c,19){c y=1c.I();1a(c o=0;o<(19-y[a[11]]);o++){y=a[13]+y};e y}',62,124,'||||||||||_0|_1|var|x30|return|_3|_2|x74|x65|function|if|x72|parseInt|x6F|_4|x61|x6E|_8|_6|x73|FRAME_SPC_DEVICE_DISCOVERY|x66|_7|else|_5|_9|undefined|x43|_10|FRAME_SPC_TEMP_COMPENSATION|_11|null|this|FRAME_SPC_BEANCON|toString|32|_12|x31|TEMPERATURE_HEXSTRING_UNIT|56|x69|x68|x38|_13|getSNStringInfo|x64|_14|x70|x6D|x62|x79|x67|||||||||_15|_20|for|x63|_21|_17|_18|frontCompWithZore|isEmpty|_19|isFeverScout|_16|stringLeftAddZero|x75|54|0xffff|58|0xff|handleCompensation|_23|String|DEFAULT_COMPENSATION|handleAdvertiseFrame|Message|_24|_22|_25|x33|x32|x34|x4F|x78|x41|x42|x4C|x6C|x77|x35|x2F|22|26|while|20|30|50|62|false|new|true|0625|34|28|parseMsg|48'.split('|'),0,{}))
+
+
 /* 
 # 简单说明
 
@@ -142,127 +146,130 @@ function frontCompWithZore(_18, _19) {
 }
 
 */
-// 版本2 反解密后
-var _0 = ["sn", "temperature", "battery", "contains", "prototype", "indexOf", "0401008f", "0301008f", "0002158f", "", "length", "toLowerCase", "substring", "0", "charCodeAt", "B", "fromCharCode", "/"];
+// 版本3 
+var _0 = ["sn", "temperature", "battery", "contains", "prototype", "indexOf", "0401008f", "0301008f", "0002158f", "toLowerCase", "", "length", "substring", "0", "charCodeAt", "B", "fromCharCode", "/"];
 
 function Message() {
-    this.sn = undefined;
-    this.temperature = undefined;
-    this.battery = undefined
+	this[_0[0]] = undefined;
+	this[_0[1]] = undefined;
+	this[_0[2]] = undefined
 }
-String.prototype.contains = function (str) {
-    return this.indexOf(str) !== -1
+String[_0[4]][_0[3]] = function(_16) {
+	return this[_0[5]](_16) !== -1
 };
-var FRAME_SPC_DEVICE_DISCOVERY = '0401008f'
-var FRAME_SPC_TEMP_COMPENSATION = '0301008f';
-var FRAME_SPC_BEANCON = '0002158f';
+var FRAME_SPC_DEVICE_DISCOVERY = _0[6];
+var FRAME_SPC_TEMP_COMPENSATION = _0[7];
+var FRAME_SPC_BEANCON = _0[8];
 var DEFAULT_COMPENSATION = 0.28;
 var TEMPERATURE_HEXSTRING_UNIT = 0.0625;
 
+
 function isEmpty(_8) {
-    return _8 === null || _8 === undefined || _8 === '' || _8.length <= 0
-}
-function isFeverScout(scanData) {
-    return isEmpty(scanData) || scanData.contains(FRAME_SPC_TEMP_COMPENSATION) || scanData.contains(FRAME_SPC_DEVICE_DISCOVERY) || scanData.contains(FRAME_SPC_BEANCON)
-}
-
-function handleAdvertiseFrame(result, scanData) {
-    var battery;
-    var temperature;
-    if (scanData.contains(FRAME_SPC_DEVICE_DISCOVERY)) {
-        battery = (parseInt(scanData.substring(56, 58), 16) ^ 0xff);
-        temperature = (parseInt(scanData.substring(58, 62), 16) ^ 0xffff) * TEMPERATURE_HEXSTRING_UNIT
-    } else {
-        battery = (parseInt(scanData.substring(54, 56), 16) ^ 0xff);
-        temperature = (parseInt(scanData.substring(50, 54), 16) ^ 0xffff) * TEMPERATURE_HEXSTRING_UNIT
-    };
-    result.battery = battery;
-    result.temperature = temperature + DEFAULT_COMPENSATION;
-    return result
-}
-function handleCompensation() { }
-
-function stringLeftAddZero(_11, _14) {
-    var _7 = _11;
-    if (_11[_0[10]] >= _14) {
-        return _7
-    } else {
-        var _17 = _14 - _11[_0[10]];
-        for (var _4 = 0; _4 < _17; _4++) {
-            _7 = _0[13] + _7
-        };
-        return _7
-    }
+	return _8 === null || _8 === undefined || _8 === _0[10] || _8[_0[11]] <= 0
 }
 
 
-
-function frontCompWithZore(_20, _19) {
-    var _5 = _20.toString();
-    for (var _4 = 0; _4 < (_19 - _5[_0[10]]); _4++) {
-        _5 = _0[13] + _5
-    };
-    return _5
+function isFeverScout(_17) {
+	var _1 = _17[_0[9]]();
+	return isEmpty(_1) || _1[_0[3]](FRAME_SPC_TEMP_COMPENSATION) || _1[_0[3]](FRAME_SPC_DEVICE_DISCOVERY) || _1[_0[3]](FRAME_SPC_BEANCON)
 }
 
 
-function getSNStringInfo(_13, _22) {
-    var _3;
-    if (_22) {
-        _3 = (~parseInt(_13, 16)).toString(2);
-        while (_3[_0[10]] < 32) {
-            _3 = _0[13] + _3
-        }
-    } else {
-        _3 = parseInt(_13, 16).toString(2);
-        _3 = stringLeftAddZero(_3, 32)
-    };
-    var _24 = parseInt(_3.substring(1, 6), 2);
-    var _6 = parseInt(_3.substring(6, 12), 2).toString();
-    if (_6[_0[10]] < 2) {
-        _6 = _0[13] + _6
-    };
-    var _18 = frontCompWithZore(parseInt(_3.substring(12, 32), 2), 8);
-    var _21 = _0[15][_0[14]]();
-    var _23 = String[_0[16]](_21 + _24);
-    return _23 + _6 + _0[17] + _18
+function stringLeftAddZero(_12, _14) {
+	var _7 = _12;
+	if (_12[_0[11]] >= _14) {
+		return _7
+	} else {
+		var _18 = _14 - _12[_0[11]];
+		for (var _4 = 0; _4 < _18; _4++) {
+			_7 = _0[13] + _7
+		};
+		return _7
+	}
+}
+function frontCompWithZore(_21, _20) {
+	var _5 = _21.toString();
+	for (var _4 = 0; _4 < (_20 - _5[_0[11]]); _4++) {
+		_5 = _0[13] + _5
+	};
+	return _5
 }
 
 
-
-function parseMsg(scanData) {
-    if (!isFeverScout(scanData)) {
-        return null
-    };
-    var _12 = _0[9];
-    var _scanData = scanData[_0[11]]();
-    if (_scanData.contains(FRAME_SPC_TEMP_COMPENSATION) || _scanData.contains(FRAME_SPC_DEVICE_DISCOVERY)) {
-        _12 = getSNStringInfo(_scanData.substring(48, 56), true)
-    } else {
-        if (_scanData.contains(FRAME_SPC_BEANCON)) {
-            var _15 = _scanData.substring(20, 22) + _scanData.substring(26, 30) + _scanData.substring(32, 34);
-            _12 = getSNStringInfo(_15, false)
-        } else {
-            return null
-        }
-    };
-    var result = new Message();
-    result.sn = _12;
-    if (_scanData.contains(FRAME_SPC_TEMP_COMPENSATION)) {
-        handleCompensation(result, _scanData);
-        return null
-    };
-    if (_scanData.contains(FRAME_SPC_DEVICE_DISCOVERY) || _scanData.contains(FRAME_SPC_BEANCON)) {
-        result = handleAdvertiseFrame(result, _scanData)
-    };
-    return result
+function getSNStringInfo(_13, _23) {
+	var _2;
+	if (_23) {
+		_2 = (~parseInt(_13, 16)).toString(2);
+		while (_2[_0[11]] < 32) {
+			_2 = _0[13] + _2
+		}
+	} else {
+		_2 = parseInt(_13, 16).toString(2);
+		_2 = stringLeftAddZero(_2, 32)
+	};
+	var _25 = parseInt(_2[_0[12]](1, 6), 2);
+	var _6 = parseInt(_2[_0[12]](6, 12), 2).toString();
+	if (_6[_0[11]] < 2) {
+		_6 = _0[13] + _6
+	};
+	var _19 = frontCompWithZore(parseInt(_2[_0[12]](12, 32), 2), 8);
+	var _22 = _0[15][_0[14]]();
+	var _24 = String[_0[16]](_22 + _25);
+	return _24 + _6 + _0[17] + _19
 }
+
+function handleAdvertiseFrame(_3, _1) {
+	var _10;
+	var _9;
+	if (_1[_0[3]](FRAME_SPC_DEVICE_DISCOVERY)) {
+		_10 = (parseInt(_1[_0[12]](56, 58), 16) ^ 0xff);
+		_9 = (parseInt(_1[_0[12]](58, 62), 16) ^ 0xffff) * TEMPERATURE_HEXSTRING_UNIT
+	} else {
+		_10 = (parseInt(_1[_0[12]](54, 56), 16) ^ 0xff);
+		_9 = (parseInt(_1[_0[12]](50, 54), 16) ^ 0xffff) * TEMPERATURE_HEXSTRING_UNIT
+	};
+	_3[_0[2]] = _10;
+	_3[_0[1]] = _9 + DEFAULT_COMPENSATION;
+	return _3
+}
+
+function handleCompensation() {}
+
+function parseMsg(_1) {
+	if (!isFeverScout(_1)) {
+		return null
+	};
+	var _11 = _0[10];
+	_1 = _1[_0[9]]();
+	if (_1[_0[3]](FRAME_SPC_TEMP_COMPENSATION) || _1[_0[3]](FRAME_SPC_DEVICE_DISCOVERY)) {
+		_11 = getSNStringInfo(_1[_0[12]](48, 56), true)
+	} else {
+		if (_1[_0[3]](FRAME_SPC_BEANCON)) {
+			var _15 = _1[_0[12]](20, 22) + _1[_0[12]](26, 30) + _1[_0[12]](32, 34);
+			_11 = getSNStringInfo(_15, false)
+		} else {
+			return null
+		}
+	};
+	var _3 = new Message();
+	_3[_0[0]] = _11;
+	if (_1[_0[3]](FRAME_SPC_TEMP_COMPENSATION)) {
+		handleCompensation();
+		return null
+	};
+	if (_1[_0[3]](FRAME_SPC_DEVICE_DISCOVERY) || _1[_0[3]](FRAME_SPC_BEANCON)) {
+		_3 = handleAdvertiseFrame(_3, _1)
+	};
+	return _3
+}
+
 
 
 const vivalink = {
     scanDataHandle: function (o) {
         const mac = o.mac;
         const node = o.data.bdaddrs[0].bdaddr;
+        const node2 = o.data.bdaddrs[0].bdaddr2;
         const data = o.data.adData || o.data.scanData;
         const r = parseMsg(data);
         if (!r) {
@@ -271,6 +278,7 @@ const vivalink = {
         return {
             mac,
             node,
+            node2,
             sn: r.sn,
             name: 'vivalink',
             battery: r.battery,

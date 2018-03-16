@@ -5,7 +5,9 @@ const app = http.createServer(handle);
 function handle(req, res) {
     var method = req.method;
     var urlObj = url.parse(req.url);
-    const sseData = { "name": "(unknown)", "evt_type": 3, "rssi": -43, "adData": "0201041aff4c0002158f02010510984de7a0566976614c6e6bfe629bea9d", "bdaddrs": [{ "bdaddr": "B4:E7:82:00:81:77", "bdaddrType": "public" }] }
+    const sseData1 = { "name": "(unknown)", "evt_type": 3, "rssi": -43, "adData": "0201041aff4c0002158f02010510984de7a0566976614c6e6bfe629bea9d", "bdaddrs": [{ "bdaddr": "B4:E7:82:00:81:77", "bdaddrType": "public" }] };
+	 const sseData2 = { "name": "(unknown)", "evt_type": 3, "rssi": -43, "adData": "0201041aff4c0002158f02010510984de7a0566976614c6e6bfe629bea9d", "bdaddrs": [{ "bdaddr": "B4:E7:82:00:81:78", "bdaddrType": "public" }] }
+	const sseData = JSON.stringify(sseData1)+'\n\n'+JSON.stringify(sseData2)
     if (method === 'GET') {
         res.sendSSE = sendSSE;
         if (urlObj.pathname === '/gap/nodes/') {
@@ -16,13 +18,13 @@ function handle(req, res) {
             res.setHeader('Content-Type', 'text/event-stream');
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.flushHeaders();
-            setTimeout(function () {
+            /*setTimeout(function () {
                 delete sseData.adData
                 sseData.scanData = '02010411076b6e4c61766956a0514d18640401008f09fffdfdef67189bfe4d'
-            }, 5000)
+            }, 5000)*/
             initKeepAlive(req, res)
             var timer = setInterval(function () {
-                res.sendSSE(JSON.stringify(sseData))
+                res.sendSSE(sseData)
             }, 1000);
             req.once('close', function () {
                 clearInterval(timer);

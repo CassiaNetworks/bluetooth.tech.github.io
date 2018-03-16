@@ -64,16 +64,24 @@ const DashboardView = Backbone.View.extend({
         this.dashBoard[node].find('.position-info').animate({ width: 'toggle' }, 'fast')
     },
     checkTime() {
+        const defaultLimit = -6;
+        const limitVivalink = -60;
+        let limit = defaultLimit;
         const modelList = this.model.toJSON()
         for (let item of modelList) {
             const life = hubs.locationData[item.node].life
+            if (item.name === "vivalink") {
+                limit = limitVivalink
+            }
             if (life >= 3) {
                 this.dashBoard[item.node].stop(true, false).css('opacity', 1)
-            } else if (life === -6) {
+            }
+
+            else if (life === limit) {
                 this.dashBoard[item.node].stop(true, false).css('opacity', .2)
                 this.model.get(item.node).set('loc', '未知')
             }
-            if (life !== -6) {
+            if (life !== limit) {
                 this.model.get(item.node).set('timeFlag', this.model.get(item.node).get('timeFlag') + 1);
             }
         }
@@ -107,20 +115,20 @@ const DashboardView = Backbone.View.extend({
             model.hasChanged('cal') && this.cal[item.node].html(item.cal)
             model.hasChanged('heartRate') && this.heartRate[item.node].html(item.heartRate)
             model.hasChanged('step') && this.step[item.node].html(item.step)
-            if (model.hasChanged('timeFlag')) {
-                this.timeFlag[item.node].html(item.timeFlag)
-            }
-            if (model.hasChanged('loc')) {
-                model.set('timeFlag', 0, {
-                    silent: true
-                });
-                this.loc[item.node].html(item.loc)
-                this.positionInfo[item.node].append(dashboardPosition(`离开 ${model.previous('loc')} 进入 `, item.loc))
-                this.timeFlag[item.node] = this.positionInfo[item.node].find('li:last-child .position-duration')
-                this.timeFlag[item.node].html(model.get('timeFlag'))
-            }
-
         }
+        if (model.hasChanged('timeFlag')) {
+            this.timeFlag[item.node].html(item.timeFlag)
+        }
+        if (model.hasChanged('loc')) {
+            model.set('timeFlag', 0, {
+                silent: true
+            });
+            this.loc[item.node].html(item.loc)
+            this.positionInfo[item.node].append(dashboardPosition(`离开 ${model.previous('loc')} 进入 `, item.loc))
+            this.timeFlag[item.node] = this.positionInfo[item.node].find('li:last-child .position-duration')
+            this.timeFlag[item.node].html(model.get('timeFlag'))
+        }
+
     },
     storeElem: function (item) {
         if (item.baseName === 'vivalink') {
@@ -132,9 +140,9 @@ const DashboardView = Backbone.View.extend({
             this.heartRate[item.node] = this.$el.find(`li[data-node='${item.node}'] .red p span`)
             this.step[item.node] = this.$el.find(`li[data-node='${item.node}'] .blue p span`)
             this.loc[item.node] = this.$el.find(`li[data-node='${item.node}'] .loc span`)
-            this.positionInfo[item.node] = this.$el.find(`li[data-node='${item.node}'] .position-info>ul`)
-            this.timeFlag[item.node] = this.positionInfo[item.node].find('li:last-child .position-duration')
         }
+        this.positionInfo[item.node] = this.$el.find(`li[data-node='${item.node}'] .position-info>ul`)
+        this.timeFlag[item.node] = this.positionInfo[item.node].find('li:last-child .position-duration')
         this.dashBoard[item.node] = this.$el.find(`li[data-node='${item.node}']`)
 
     },
