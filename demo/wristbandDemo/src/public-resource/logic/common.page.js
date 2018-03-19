@@ -4,6 +4,7 @@ import Hub from 'publicDir/libs/hubs/hub'
 import HW from 'publicDir/libs/peripherals/HW3300000001'
 import iw from 'publicDir/libs/peripherals/iw'
 import Vivalink from 'publicDir/libs/peripherals/Vivalink'
+import position from './position'
 import {
     dashBoardItemColl
 } from '../../pages/sport/sport/models/dashboardmodel'
@@ -126,6 +127,7 @@ let hubs = {
             })
             this.on('scanData', function (o) {
                 hubs.addName(o);
+                position().handle(o);//计算位置
                 hubs.__scanDataColl(o)
                 let node = o.data.bdaddrs[0].bdaddr,
                     name = o.data.name.match('unknow') ? hubs.locationData[node].name : o.data.name;
@@ -1103,7 +1105,7 @@ const startWork = function () {
     hubs.on('broadcastData', function (o) {
         if (!o) return;
         console.log(o);
-        let model;
+        let model = dashBoardItemColl.get(o.node);
         name = o.name;
         name.match('Brace') ? name = 'iw' : name;
         switch (name) {
