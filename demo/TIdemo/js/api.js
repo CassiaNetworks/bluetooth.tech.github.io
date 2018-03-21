@@ -23,22 +23,23 @@
 
     api.use = function(o) {
         o = o || {}
-        let reg_ip = /(\d+)\.(\d+)\.(\d+)\.(\d+)/,
-            reg_http = /http\:\/\/(.+)/;
-        // local
-        if (o.server && typeof o.server == 'string' && reg_ip.test(o.server)) {
-            //api.server = 'http://' + o.server;
-            api.local = true
-            // console.log(12312312)
-                // cloud
-        } else {
-            // api.server = 'http://' + ({
-            //     'us': 'api1',
-            //     'cn': 'api2',
-            //     'demo': 'demo',
-            //     'auto': 'api'
-            // }[o.server] || 'api') + '.cassianetworks.com'
-        }
+        // let reg_ip = /(\d+)\.(\d+)\.(\d+)\.(\d+)/,
+        //     reg_http = /http\:\/\/(.+)/;
+        // // local
+        // if (o.server && typeof o.server == 'string' && reg_ip.test(o.server)) {
+        //     //api.server = 'http://' + o.server;
+        //     api.local = true
+        //     // console.log(12312312)
+        //         // cloud
+        // } else {
+        //     // api.server = 'http://' + ({
+        //     //     'us': 'api1',
+        //     //     'cn': 'api2',
+        //     //     'demo': 'demo',
+        //     //     'auto': 'api'
+        //     // }[o.server] || 'api') + '.cassianetworks.com'
+        // }
+        api.local = o.local;
         api.server = 'http://' + o.server || 'http://api.cassianetworks.com';
         api.developer = o.developer || 'tester'
         api.key = o.key || '10b83f9a2e823c47'

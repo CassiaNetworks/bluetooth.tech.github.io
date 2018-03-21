@@ -1,0 +1,21 @@
+{
+  "name": "dll",
+  "content": {
+    "./node_modules/jquery/dist/jquery.js": {
+      "id": 0,
+      "meta": {}
+    },
+    "./node_modules/underscore/underscore.js": {
+      "id": 1,
+      "meta": {}
+    },
+    "./node_modules/backbone/backbone-min.js": {
+      "id": 2,
+      "meta": {}
+    },
+    "./node_modules/webpack/buildin/global.js": {
+      "id": 3,
+      "meta": {}
+    }
+  }
+}

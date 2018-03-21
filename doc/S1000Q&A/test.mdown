@@ -1,0 +1,310 @@
+# C1000开发Q&A
+ 
+## 一、初识蓝牙路由器
+### 1.1、什么是蓝牙路由器？
+ 1）兰桂蓝牙路由器可以以连接和建连的方式对蓝牙设备以建连和扫描的方式进行控制或数据交换。一方面，蓝牙路由器可以大大地提高传统的蓝牙通信距离，另一方面，蓝牙路由器可以将蓝牙信号通过网络传递给远程的控制端。
+ 2）蓝牙路由器可以作为模拟蓝牙设备，向外发送广播包。
+###1.2、蓝牙路由器的控制方式
+ 蓝牙路由器(AP)通过蓝牙来管理蓝牙终端设备，需要连接WiFi、3G/4G或者以太网,由控制端（如PC、Cloud Server等）调用Cassia的API接口，实现对蓝牙路由器的控制。
+## 二、AP连接WiFi、以太网、3G/4G网卡需要注意哪些？
+### 2.1、怎么进入到AP的配置页面(需要IP地址，如何获取IP地址请看3.2)？
+ 将PC与AP放在同一局域网内，在PC的浏览器中输入AP的IP地址就可以进入AP的配置页面了(如：192.168.0.153，配图见2.2)
+### 2.2、如何操作配置页面？
+ ![配置页面图](./images/control.png)
+ 如上图所(该图AP连接了WiFi)
+#### Networks Configuration (网络配置)：
+ **3G/4G：**配置3G/4G网络(如果AP将通过3G / 4G访问互联网，则需要USB dongle)，此选项不需要配置，将我们支持的dongle型号插在USB接口处即可实现自动上网（目前大陆支持中兴MF823 Hilink版）。
+
+ **Wired:**配置以太网(可以设置为静态的，详情见2.4)
+
+ **Wireless:**配置WiFi的账号密码，点击save后，需要重启路由器才会生效
+
+#### Remote control(云端控制所必须的)：
+ **Developer:**Cassia的开发者账户
+
+ **Domain/IP:**云服务器地址(云端控制见3.4)。
+
+ **Timezone:**时区设置
+
+### 2.3、WiFi的支持情况？
+
+ 只支持2.4G网络，不支持portal认证方式。
+
+### 2.4、怎么连接到3G/4G网？
+
+ 插入3G/4G无线网卡到USB插口，AP将会自动接入互联网，目前大陆支持中兴MF823 Hilink版。
+
+### 2.5、怎么连接到以太网？
+
+ 通过以太网线直接连接到AP的网口，AP将会自动接入接入互联网，AP的IP地址默认通过DHCP方式获取。
+ 可以在AP配置页面将IP配置为静态的(如下图)：
+ ![配置页面图](./images/wired.png)
+ 在IP栏你要设置的静态IP,配置完成后，AP将会一直使用该IP地址;
+ MASK、GATEWAY、DNS，可以在同网段的PC命令行输入 ipconfig得到网段信息:
+ ![配置页面图](./images/ipconfig.png)
+### 2.6、怎么连接到WiFi？
+   &nbsp;&nbsp;&nbsp;&nbsp;插上网线连接以太网。通过IP地址进入AP的配置页面，在Wireless处配置你想要链接的WIfI,配置完成后拔掉网线重AP，再通电会自动连接WiFi.
+
+### 2.7、连接成功有什么提示吗？
+
+ **连接是否成功可以看指示灯的颜色，指示灯有如下几种状态和该状态所对应的的颜色：**
+
+ &nbsp;&nbsp;&nbsp;&nbsp;当AP刚连接电源，系统正在启动，这时显示绿灯常亮。系统启动完成后，绿灯慢闪表示连接网络成功，红灯慢闪表示未连接。（绿灯慢闪表示AP已经连接到外网，如果AP连接的wifi路由器无法连接外网，那么也会闪红灯。）
+
+### 2.8、怎么从WIFI切换到以太网？
+
+ 因为以太网的优先级高于WiFi,所以直接插入网线就可以切换到以太网。
+
+### 2.9、怎么从以太网切换到WIFI？
+
+ 先进入AP的配置页面，在Wireless处配置WiFi的账号密码，配置成功后拔掉网线，重启AP。
+
+
+### 2.10、哪一种连网的优先级高？
+
+ 连网的优先级由高到低为：3G/4G > 以太网 > WiFi（优先级：当3G/4G、以太网、WIFI并存的情况下数据会从优先级高的通道走）
+
+### 2.11、配置后保存时弹出”action err”
+
+ 弹出action err说明配置保存失败，检查网络和AP的IP是否发生变化，然后重试
+
+## 三、AP联网后有哪些控制方式？
+
+### 3.1、本地控制
+
+ ![配置页面图](./images/localcontrol.png)
+ **我们通过http的方式访问AP上的http server 根据http路由 将http请求分配到不同接口，实现对蓝牙设备的控制**
+
+### 3.2、怎么得到AP的IP地址？
+
+ **本地所有控制都基于IP地址，因此，这是必须要了解的，目前有三种方式可以得到AP的IP地址：**
+
+ 1）进入WiFi路由器控制面板，查看AP被分配的IP地址。
+
+ 2）找到AP底部的MAC地址，将MAC地址添加在链接后面可以得到IP地址
+ (http://domain/cassia/hubs/CC:1B:E0:E0:24:B4，domain的值与在2.2的配置中Remote control这一项中填写的域名一致，默认为：api.cassianetworks.com)
+
+ 3）可以通过向局域网发送UDP广播来获取.广播地址:255.255.255.255,Cassia Hub 的端口:34952,广播内容: 'CASSIA_HUB_DISCOVERY',当AP监听到广播包后, 会按照以下格式回复自身的信息:ip-port-mac.这样可以获取到Cassia Hub的IP地 址.注意:当使用UDP广播时,请确保发送设备与Cassia Hub在一个局域网内,并且监 听设备的监听端口不能是34952
+### 3.3、AP重启后IP地址会变吗？
+
+ 因为IP是动态分配的，所以AP重启后，IP是有可能发生改变的。通过以太网连接可以在AP配置页面将IP设为静态的(设置静态见2.4)
+
+### 3.4、云端控制(需要AC):
+
+ ![配置页面图](./images/remotecontrol.png)
+ **我们通过http的方式访问云端上的http server 根据http路由 将http请求分配到不同接口，再通过capwap的方式发送给AP，实现对蓝牙设备的控制。AC是什么 见3.6**
+
+### 3.5、云端控制和本地控制有什么区别？
+
+ 1）云端控制多了oAuth认证，更加安全。
+
+ 2）请求的url不同:本地控制根据AP的IP地址进行操作，云端控制根据云服务器、MAC和access_token进行操作。
+
+ 3）本地控制时IP地址会动态随机分配，云端使用云服务器地址和MAC是固定的。
+
+ 4）数据走向不同。
+
+ 5）云端控制有其他功能，如定位漫游等。
+
+### 3.6、AC是什么？有什么用？
+ AC是一套蓝牙路由器以及蓝牙设备的管理软件。 
+ 针对企业的业务层提供 API 接口作为调用、数据转发、定位、漫游、安全及策略管理等，可以跨越局域网实现对AP的远程控制。
+
+### 3.7、AC部署方式？
+ **目前支持三种部署方式：**
+ 1）AC Box (盒子形态)
+
+ 2）AC Cloud (Cassia公有云)
+
+ 3）私有云
+
+### 3.8、怎么进行oAuth认证？(流程图可见3.4)
+ 1）在cassia请求一个开发者账户
+
+ 2）访问AP的IP地址(例如：192.168.1.8)，进入AP的配置页面(见2.2)
+
+ 3）在远程部分配置您的开发者账户和云服务器地址（默认是api.cassianetworks.com）如下图:
+ ![配置页面图](./images/oAuthcontrol.png)
+ 4）http的post请求进行oAuth认证：
+ 例如你的用户名：tester  密码：10b83f9a2e823c47
+
+ 将 tester:10b83f9a2e823c47进行base64编码得到dgvzdgvyojewyjgzzjlhmmu4mjnjndc = 使用下面的HTTP请求进行身份验证：
+ POST /oauth2/token HTTP/1.1
+ Host: api.cassianetworks.com /oauth2/token
+ Headers: 	
+ {Authorization:Basic dGVzdGVyOjEwYjgzZjlhMmU4MjNjNDc=Content-Type: application/x-www-form-urlencoded}
+ Body: {grant_type=client_credentials}
+
+ **如果没有错，你会得到这样的JSON响应:**
+ HTTP/1.1 200 OK
+ Content-Type: application/json;charset=UTF-8
+ Cache-Control: no-store
+ Pragma: no-cache
+ {
+ 	token_type:'bearer',
+ 	access_token:'2b6ced831413685ec33204abc2a9a476310a852f53a763b72c854fd7708499f1bc0b3626bfcfef2a2cfe0519356c9d7cb1b514243cb29f60e76b92d4a64ea8bd'
+ 	expires_in: 3600
+ }
+ 现在你可以使用access_token访问其他API，添加access_token URL参数：
+ (http：//api.cassianetworks.com/gap/nodes/?event=1&mac=xxx&access_token=xxxx)
+ 或者你可以添加Headers “access_token:Bearer XXXX”
+
+### 3.9在上一个token有效期内再次申请token，这两个token都有效吗？
+
+ 是的。
+
+### 3.10、AP的Mac地址在哪里？
+
+ **MAC地址在AP的底部 如下图 (例如：MAC: CC:1B:E0:E0:22:60)**
+
+ ![配置页面图](./images/APMAC.png)
+
+### 3.11、怎么配置开发人员账户和云服务器地址？
+ 在Remote control模块配置Developer(开发者账户)和Domain/IP(云服务器地址)，配置图见2.2配置完成后点击保存按钮，成功会提示action successful、失败会提示 action err
+ ![配置页面图](./images/actionSuccessful.png)
+
+
+
+### 3.12、云服务器地址都有哪些？
+
+ **公有云：**
+ api2.cassianetworks.com(国内正式服务器，不含港澳台地区)，
+ 以及api1.cassianetworks.com(国外正式服务器以及港澳台地区)。
+ **私有云：**
+ 私有部署后，服务器地址是客户的公网或者内网的地址 
+
+## 四、在初步调试过程中的问题？
+
+### 4.1、可以用哪些工具进行调试？
+
+ 我们提供了一个蓝牙调试工具，实现了API中的大部分控制功能，如何操作见4.2；
+ 
+ 其他支持HTTP请求的软件，比如Postman(不支持SSE)，如何操作间见4.3；
+
+ 浏览器(不支持POST请求)，在地址栏发送http请求，如何操作见4.4；
+
+### 4.2、牙调试工具怎么使用？（见下面文档）
+
+
+### 4.3、Postman怎么使用？(不能使用sse)
+ **Postma网页调试工具不仅可以调试简单的css、html、脚本等简单的网页基本信息，它还可以发送几乎所有类型的HTTP请求！ 
+ 页面信息元素,下图是获取链接设备列表的API:**
+ ![配置页面图](./images/postman1.png)
+ ![配置页面图](./images/postman2.png)
+ **主要操作:**
+ 1）添加一个集合（Collections）:login 
+ 2）在请求编辑区添加接口URL。 
+ 例如（获取链接设备列表）：http：//192.168.0.153/gap/nodes/?connection_state=connected
+ 3）选择接口提交方式Get/Put/Post… 
+ 4）设置参数（Params）点击提交（Send）按钮 
+ 5） 使用Sava按钮可将当前请求添加到已有的Collections中，也可新建一个Collections 
+ 6）在Collections中可新增文件夹（Add Folder），讲请求分门别类的放在folder中，通过Collections-Filder-Request三级关系来管理我们的请求 
+ 7）导出：已经创建好的Collections，点击Export导出Json文件到本地 
+ 8）导入：点击页面上的Import将本地Json文件导入至Postman
+
+
+### 4.4、浏览器如何操作？(不能发送POST请求)
+**将API中的ulr输入在浏览器的地址栏就会获得返回的原始数据，如下图是用本地控制的方式调用了扫描的接口返回的数据：**
+ ![配置页面图](./images/liulanqi.png)
+
+## 五、代码开发过程中遇到什么问题
+
+### 5.1、API支持哪些开发语言？
+
+ 任何基于HTTP通信协议的编程语言都支持（例如C＃，Node.js，Java，iOS等）。
+
+### 5.2、有没有sampleCode？
+
+ 对于C＃，Node.js，Java，iOS有oAuth及sse的sampleCode。
+
+### 5.3、SSE（Server-sent Events）是什么?该如何实现？
+ 
+ **server-sent events**，简称：see。是一种http的长链接，请求需要手动关闭，否则理论上在不报错的情况下会一直进行，每条数据会以“data: ” 开头。在调试中可以直接将sse的url输入在浏览器中进行调用。但是在编程中使用一般的http请求无法请求到数据(一般的http请求都是在请求结束后返回所有的数据)，我们目前提供了iOS/java/nodejs/js/c#等的demo来实现sse的调用，如果在这方面遇到困难可以参考。另外，当调用sse时，最好对该长链接进行监控，以便在长链接出现错误或意外停止后进行重启，或者其他操作。
+
+## 六、使用API过程中的问题
+
+### 6.1、API中有哪些接口使用SSE？
+ 
+ API中的SCAN、Get device connection state、Receive indication & notification 三个接口使用的是SSE
+
+### 6.2、接口中的参数(mac、node、handle、value、chip)分别是什么？
+ 
+ **mac:**当前AP的mac地址(例如：CC:1B:E0:E0:24:B4)
+ **node:**需要操作的设备的mac地址(例如：EF:F3:CF:F0:8B:81)
+ **handle:**对应操作的索引值(发现设备服务后，根据设备蓝牙协议中的UUID找到对应的handle)
+ **Value:**想对应handle中写入的值
+ **Chip:**0和1表示AP中的两个芯片，此参数规定哪个芯片完成本次操作
+ **1）下面为Write by handle接口的示例代码(GET请求)：**
+ Url:http：//api.cassianetworks.com/gatt/nodes/<node>/handle/<handle>/value/<value>/?mac=
+ Url:http：//192.168.1.23/gatt/nodes/EF:F3:CF:F0:8B:81/handle/37/value/0100/?mac=CC:1B:E0:E0:24:B4
+ 此调用执行时，mac地址为CC:1B:E0:E0:24:B4的AP会向连接的mac地址为EF:F3:CF:F0:8B:81的蓝牙设备的handle 37 写入指令0100.
+
+ **2）下面为Connect的示例代码(本地POST请求)：**
+ Url: http：//api.cassianetworks.com/gap/nodes/<node>/connection?mac=&chip=
+ Url:http：//192.168.1.23/gap/nodes/EF:F3:CF:F0:8B:81/connection?mac=CC:1B:E0:E0:24:B4&chip=0&access_token=xxx
+ Headers:  {Content-Type:application/json}
+ Body:"  {type :public或random}
+ 此调用执行时，mac地址为CC:1B:E0:E0:24:B4的AP会用芯片0去连接mac地址为EF:F3:CF:F0:8B:81的蓝牙设备
+
+### 6.3、高频错误信息解析
+ **1）Offline(例如CC:1B:E0:E0:22:61is offline)：** 该AP没有上线，或者在云端调用时接口的domain与AP配置页面的domain不一致。查看AP的网络和电源，让AP重新上线后在进行操作并且查看AP的domain。
+
+ **2）net::ERR_NAME_NOT_RESOLVED：**在进行oAuth认证时，云服务器地址发生错误检查下云服务器地址是否书写有误，重新输入正确的云服务器地址
+
+ **3）Failed to load resource: the server responded with a status of 401 (Unauthorized)：**在进行oAuth认证时，开发者账户/密码输入错误检查开发者账户和密码输入是否有误，确认无误重新进行认证
+
+ **4）{"error":"forbidden","error_description":"Token not found or expired"} (403)：**token错误或者token超时(token只支持1小时)确认用户名密码，然后重新进行oAuth认证，获取token再执行操作
+
+
+ **5）{"error":"access_denied","error_description":"Bearer token not found"}(403): ** 拒绝访问，token错误，一般token输入为空时会返回上面的数据，检查开发者账户、密码、云服务器是否输入正确，重新申请token
+ **6）net::ERR_CONNECTION_TIMED_OUT：**链接超时 可能是因为IP地址写错导致 
+ **7）net::ERR_INCOMPLETE_CHUNKED_ENCODING：**可能因为url中的参数写错导致(例如将chip写成非0和1的值)
+ **8）param error ：**可能是因为url中的参数写错导致(例如event写错)
+ **9）400 (Bad Request)：** 当设备没有连接AP时，AP向设备发送请求，有可能返回400
+ **10）NO DEVICE ：**当你想断连某蓝牙设备时可能会发生该错误，因为其已经断开或者未连接AP
+
+## 七、AP的性能及其他特性？
+### 7.1、AP可以缓存设备的数据吗？
+ 目前AP还不支持数据缓存功能。
+### 7.2、AP的带宽是多少？
+ AP的理论带宽是1Mbps
+### 7.3、AP可以连接多少个设备？
+ AP最多可以连接22个ble设备。
+### 7.4、AP连接设备的距离是多少？
+ 在无遮挡的情况下，最远可支持300米，可以穿3堵墙，
+### 7.5、AP会自动升级吗？
+ 目前还支持自动升级。	
+### 7.6、AP升级时会停止工作吗？
+ AP升级时不能工作，需要等到升级成功之后才能正常工作。
+### 7.7、AP可以持续工作多长时间？
+ 根据AP的网络环境来定，平均4分钟左右
+### 7.8、扫描可以过滤吗？
+ 可以根据设备的name，mac地址等进行过滤
+### 7.9、为什么AP扫描时在短时间内发现很多重复的设备？
+### 7.10、AP的扫描间隔是多久？
+ 用户不主动停止扫描，AP会不间断地进行扫描。	
+### 7.11、AP能同时扫描和发送广播吗？
+ 可以。
+### 7.12、在工作中可以切换网络吗？会有什么影响？
+ 工作中可以切换网络，但对工作会有影响。如果需要切换网络，建议先停止工作。
+### 7.13、AP的时间会自动同步吗？同步周期是多久？
+ 会与时间服务器进行时时的时间同步，需要AP连接外网。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

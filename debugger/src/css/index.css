@@ -317,3 +317,8 @@ pre{
 .short-label{
 	width: 67px;
 }
+.oAuth .layui-form-label{
+	width:130px;
+	padding-left: 0;
+	font-size: .8rem;
+}

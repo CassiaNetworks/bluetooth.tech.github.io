@@ -1,0 +1,22 @@
+{
+    "info": {
+        "method": 0,
+        "server": "demo.cassianetworks.com",
+        "developer": "tester",
+        "password": "10b83f9a2e823c47",
+        "tokenExpire": 3000,
+        "ip": "",
+        "location": "",
+        "mac": "",
+        "access_token": "",
+        "authorization": ""
+    },
+    "config": {
+        "maxConnected": 14,
+        "maxConnected0": 7,
+        "maxConnected1": 7
+    },
+    "connetedPeripherals": {
+        "checkConnTime": 3
+    }
+}

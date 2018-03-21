@@ -57,7 +57,8 @@ $(".disconbtn").on('click',function(){
     api
     .use({
       server: $("#ap-ip").val(),
-      hub: ''
+      hub: '',
+      local: true
     })
     .devices({
       server: $("#ap-ip").val(),
@@ -83,7 +84,8 @@ $(".disconbtn").on('click',function(){
       server: $("#acaddress").val(),
       hub: $("#apmac").val() || '',
       developer:$("#username").val()||'tester',
-      key:$("#password").val()||"10b83f9a2e823c47"
+      key:$("#password").val()||"10b83f9a2e823c47",
+      local:false
     }).oauth2({
       success: function(){
         api.devices({
@@ -117,17 +119,19 @@ setInterval(function(){
         device.real[mac].notifyWork = false;
     }
     console.log('work---work---work', num);
-    $('#_work').html('concurrent connections: ' + num);
+    $('#_work').html(num);
 },6 * 1000);
 
 //开始连接
 $(".conbtn").on('click',function(){
   let useway = mystorage.get('useway') || 'local';
+  console.log('start:',useway);
   if(useway === 'local'){
     api
     .use({
       server: $("#ap-ip").val(),
-      hub: ''
+      hub: '',
+      local: true
     })
     .on('notify', notification)
     .scan({})
@@ -138,7 +142,8 @@ $(".conbtn").on('click',function(){
       server: $("#acaddress").val().trim(),
       hub: $("#apmac").val().trim() || '',
       developer:$("#username").val().trim()||'tester',
-      key:$("#password").val().trim()||"10b83f9a2e823c47"
+      key:$("#password").val().trim()||"10b83f9a2e823c47",
+      local: false
     })
     .oauth2({
       success:function(){
@@ -210,7 +215,7 @@ let connectedDeviceCount = function (device) {
         isWork = false;
         connectNum = connectedDeviceCount(device);
         if (connectNum === 1) {
-          $('#graphic .message').eq(0).children('b').html(`Mac:${mac}`);
+          $('#graphic .message').eq(0).children('b').html(`MAC:${mac}`);
           $('#graphic .chart')[0].dataset.mac = deviceMac;
           // $('#graphic .name')[0].innerHTML = device.real[i].name;
         } else {
@@ -469,15 +474,16 @@ var chartInit = function (n, mac) {
         };
         let xAxis = {
                 nameLocation: 'middle',
-                name: 'time',
+                name: 'Time(Seconds)',
                 type: 'category',
                 boundaryGap: false,
-                data: []
+                data: [],
+                nameGap: 20
             }
         let grid = {
                 left: '3%',
                 right: '0%',
-                bottom: '3%',
+                bottom: '6%',
                 containLabel: true
             };
 
@@ -662,9 +668,9 @@ var chartInit = function (n, mac) {
             let chartHtmlStr = function () {
                 return `<div class="chart" data-mac='${mac}'>
             <div class="content-header">
-                <h1 style="display: inline;">TI Sensortag CC2650&nbsp;</h1>
+                <h4 style="display: inline-block; margin-left: 70px;">Device #${n}</h4>
                 <span class="name"></span>
-                <b>Mac:`+mac+`</b>
+                <b style="display: inline-block; margin-left: 70px";>MAC：`+mac+`</b>
                 <span class="hidden">状态:</span>
                 <span class="status hidden">在线</span>
             </div>
@@ -689,7 +695,7 @@ var chartInit = function (n, mac) {
                 chartInit(n, mac);
                 console.log(n,mac);
                // $('#graphic .message').eq(n-1).children('b').html(`Mac:${mac}`);
-                $('#graphic .chart:eq(1)').find('b').html(`Mac:${mac}`);
+                $('#graphic .chart:eq(1)').find('b').html(`MAC:${mac}`);
                 $('#graphic .chart')[n-1].dataset.mac = mac;
             }
         }

@@ -2,19 +2,22 @@ import {
     urlArr,
     updateUrlArr,
     data
-}from './urlconfig'
+}from './urlconfig';
 import {
     methodConfig,
     showMethod
-} from './showmethod'
+} from './showmethod';
 import {
 	showLog
-} from './showlog'
+} from './showlog';
+import globalData from './globalData';
+import i18n from './i18n';
+
 function control(val,form){
-	if(val == "local"){
+	if(val === "local"){
 		data.access_token = '';
 		updateUrlArr(data.hubIp);
-	}else if(val == "remote"){
+	}else if(val === "remote"){
 		layer.open({
 		  	title: 'Remote',
 		  	type: 6,
@@ -38,50 +41,52 @@ function control(val,form){
 		  		$('#control').val('local')
 		  		form.render()
 		  	},
-		})
-
-			
+		});	
 	}
+    i18n(globalData.lang);
+	form.render(); 
+
 }
 
 var htmlString = function() {
-  let temp = `<form class="layui-form  tip" action="#">
+  let temp = `<form class="layui-form  tip oAuth" action="#">
   <fieldset class="layui-elem-field layui-field-title">
 		<legend>oAuth</legend>
   </fieldset>
 		<div class="layui-form-item" style="text-align:center">
-		  <label class="layui-form-label " i18n = 'username'>用户名:</label>
+		  <label class="layui-form-label" i18n="username">Developer Key:</label>
 		  <div class="layui-input-inline">
-		    <input type="text"   class="layui-input" id="userName">
+		    <input type="text"   class="layui-input" id="userName" placeholder="tester">
 		  </div>
 		   
 		</div>
 		<div class="layui-form-item">
-		  <label class="layui-form-label" i18n = 'password'>密码:</label>
+		  <label class="layui-form-label" i18n="password">Developer Secter:</label>
 		  <div class="layui-input-inline">
-		    <input type="password"    class="layui-input" id="password">
+		    <input type="password"    class="layui-input" id="password" placeholder="******">
 		  </div>
   		</div>
 		<div class="layui-form-item">
-		  <label class="layui-form-label" i18n = 'host'>云服务器:</label>
+		  <label class="layui-form-label" i18n="host">AC Address:</label>
 		  <div class="layui-input-inline">
-		    <input type="text" class="layui-input" id="host">
+		    <input type="text" class="layui-input" id="host" placeholder="ac-cn.cassia.pro:8080/api">
 		  </div>
   		</div>
   <fieldset class="layui-elem-field layui-field-title">
-    <legend i18n='description'>描述</legend>
+    <legend i18n="description">Description</legend>
   </fieldset>
   <div class="layui-form-item layui-form-text">
-    <div class="descriptors scan-des">
-      <p><b>接口URL：</b>调用接口后，此URL会自动生成在下面的”API接口”的窗口中。</p>
-      <p><b>接口描述：</b>此接口是通过oAuth2.0认证实现云端远程控制。将用户名和密码以base64编码的方式添加在请求参数中，认证成功后获得1小时有效期的access_token,你可以添加参数access_token访问其他API，从而实现远程控制。</p>
-      <p><b>参数解释：用户名/密码：</b>从Cassia请求的开发者账户和密码(会以base64编码的方式添加在请求中)</p>
-      <p><b>Host：</b>和蓝牙路由器交互的服务器地址</p>
-    
+    <div class="descriptors">
+      <p i18n="interfaceURL"><b>接口URL：</b>调用接口后，此URL会自动生成在下面的”API接口”的窗口中。</p>
+      <p i18n="oAouh-Tip-p2"><b>接口描述：</b>此接口是通过oAuth2.0认证实现云端远程控制。将用户名和密码以base64编码的方式添加在请求参数中，认证成功后获得1小时有效期的access_token,你可以添加参数access_token访问其他API，从而实现远程控制。</p>
+      <p i18n="oAouh-Tip-p3"><b>参数解释：用户名/密码：</b>从Cassia请求的开发者账户和密码(会以base64编码的方式添加在请求中)</p>
+      <p i18n="oAouh-Tip-p4"><b>AC Address</b>和蓝牙路由器交互的服务器地址</p>
     </div>
   </div>
 
 </form>` 
+
+
 return temp
 }
 var yes = function(){
