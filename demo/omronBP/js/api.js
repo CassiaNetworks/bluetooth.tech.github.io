@@ -143,7 +143,7 @@
     api.iolist=["DisplayOnly","DisplayYesNo","KeyboardOnly","NoInputNoOutput","KeyboardDisplay"];
     api.pair = function(o) {
         o = o || {}
-        $.ajax({
+        return    $.ajax({
             type: 'post',
             url: api.server + "/management/nodes/" + o.node + "/pair?mac=" + (o.hub || api.hub),
             headers: api.local ? {"Content-Type" : "application/json"} : {
@@ -153,11 +153,15 @@
             data: JSON.stringify({
                 "bond":1,
                 "legacy-oob":o.oob || 0,
-                "io-capability":o.io || 'NoInputNoOutput'
+                "io-capability":o.io || 'KeyboardDisplay'
             }),
             success: function(data){
-                console.log('pair,pair,pair,pair', data);
+                console.log('pair,success', data);
                 o.success && o.success(data)
+            },
+            error: function(err){
+                console.log('pair,fail', err);
+                o.error && o.error(err)
             }
         })
     }
@@ -179,9 +183,11 @@
             }),
             success: function(data){
                 console.log('pairInput success', data);
+                o.success && o.success(data);
             },
             error: function(err){
-                console.log("pairInput fail", err)
+                console.log("pairInput fail", err);
+                o.error && o.error(err);
             }
         })
     }
@@ -202,7 +208,7 @@
                 //api.trigger('disconn', [o.hub || api.hub, o.node, data])
             },
             error: function(err){
-                console.log('unPair',err);
+                console.log('unPair fail',err);
             }
         })
     }
@@ -216,7 +222,7 @@
                 'Authorization': api.authorization
             },
             success: function(data) {
-                console.log(data)
+                console.log('disconn fail',data)
                 o.success && o.success(o.hub || api.hub, o.node, data)
                 api.trigger('disconn', [o.hub || api.hub, o.node, data])
             }
