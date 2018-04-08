@@ -222,7 +222,7 @@
                 'Authorization': api.authorization
             },
             success: function(data) {
-                console.log('disconn fail',data)
+                console.log('disconn success',data)
                 o.success && o.success(o.hub || api.hub, o.node, data)
                 api.trigger('disconn', [o.hub || api.hub, o.node, data])
             }
