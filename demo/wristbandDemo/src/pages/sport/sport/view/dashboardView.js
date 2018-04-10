@@ -17,6 +17,7 @@ import {
 
 import HW from '../../../../public-resource/libs/peripherals/HW3300000001'
 import _iw from '../../../../public-resource/libs/peripherals/iw'
+import _iw_02 from '../../../../public-resource/libs/peripherals/iw-02'
 
 
 const DashboardView = Backbone.View.extend({
@@ -26,20 +27,24 @@ const DashboardView = Backbone.View.extend({
         'click .send': 'send',
         'click .position-details': 'togglePositionDetails'
     },
-    send: function (e) {
+    send: function(e) {
         const target = e.target,
             // type = target.dataset.type,
             str = $(target).prev().val(),
             node = target.dataset.node;
         let name = target.dataset.name;
         if (name.match("Brace")) {
-            console.log("brace");
+            console.log("brace sendmsg");
             _iw.sendMsg(node, hubs, str);
+        } else if (name.match("I6IA")) {
+            console.log("A6IA sendmsg");
+            _iw_02.sendMsg(node, hubs, str);
         } else {
+            console.log('hw sendmsg');
             HW.sendMsg(node, hubs, str)
         }
     },
-    initialize: function () {
+    initialize: function() {
         this.render()
         this.userName = {}
         this.totalStep = {}
@@ -61,7 +66,9 @@ const DashboardView = Backbone.View.extend({
     },
     togglePositionDetails(e) {
         const node = e.target.dataset.node;
-        this.dashBoard[node].find('.position-info').animate({ width: 'toggle' }, 'fast')
+        this.dashBoard[node].find('.position-info').animate({
+            width: 'toggle'
+        }, 'fast')
     },
     checkTime() {
         const defaultLimit = -6;
@@ -75,9 +82,7 @@ const DashboardView = Backbone.View.extend({
             }
             if (life >= 3) {
                 this.dashBoard[item.node].stop(true, false).css('opacity', 1)
-            }
-
-            else if (life === limit) {
+            } else if (life === limit) {
                 this.dashBoard[item.node].stop(true, false).css('opacity', .2)
                 this.model.get(item.node).set('loc', '未知')
             }
@@ -86,7 +91,7 @@ const DashboardView = Backbone.View.extend({
             }
         }
     },
-    resetStep: function (e) {
+    resetStep: function(e) {
         const node = e.target.dataset.node,
             model = this.model.get(node)
         model.set('baseCircleStep', model.get('totalStep') + model.get('baseStep'))
@@ -94,7 +99,7 @@ const DashboardView = Backbone.View.extend({
         model.set('cal', '0.00')
         this.upgrade(model)
     },
-    add: function (model) {
+    add: function(model) {
         const item = model.toJSON()
         if (item.baseName === 'vivalink') {
             this.$el.append(dashboardStrVivalink(item));
@@ -104,7 +109,7 @@ const DashboardView = Backbone.View.extend({
         this.storeElem(item)
 
     },
-    upgrade: function (model) {
+    upgrade: function(model) {
         const item = model.toJSON()
         if (item.baseName === 'vivalink') {
             model.hasChanged('temperature') && this.temperature[item.node].html(item.temperature)
@@ -130,7 +135,7 @@ const DashboardView = Backbone.View.extend({
         }
 
     },
-    storeElem: function (item) {
+    storeElem: function(item) {
         if (item.baseName === 'vivalink') {
             this.temperature[item.node] = this.$el.find(`li[data-node='${item.node}'] .temperature span`)
             this.battery[item.node] = this.$el.find(`li[data-node='${item.node}'] .battery span`)
@@ -146,10 +151,10 @@ const DashboardView = Backbone.View.extend({
         this.dashBoard[item.node] = this.$el.find(`li[data-node='${item.node}']`)
 
     },
-    render: function () {
+    render: function() {
         const coll = this.model.toJSON()
         let str = ''
-        coll.forEach(function (element) {
+        coll.forEach(function(element) {
             str += dashboardStr(element)
         }, this);
         this.$el.html(str)
