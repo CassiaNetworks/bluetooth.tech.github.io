@@ -1,6 +1,5 @@
 [TOC]
-#蓝牙路由器S1000开发Q&A
-###更新日期：2017-9-13
+#云端使用说明文档
 
 注：为了方便描述，下文将蓝牙路由器称为AP。
 蓝牙路由器以及蓝牙设备的管理软件称为AC。 
@@ -22,14 +21,15 @@ __※__1、使用AP与AC对接设备调试的流程<font color="ff0000" face="Mi
 7、怎么连接到wifi?
 8、连网成功有什么提示吗？
 9、AP登录到AC,需要配置哪些参数？
-####四、AC详细功能
+####四、AC详细功能及<font color="ff0000" face="Microsoft YaHei">BI使用说明</font>
 1、总览面板
 2、历史统计
 3、管理蓝牙路由器
 4、查看已连接蓝牙设备
 5、地图管理
-5、AP怎么连接到AC（设置详情）
-6、升级与维护
+6、AP怎么连接到AC（设置详情）
+7、升级与维护
+8、<font color="ff0000" face="Microsoft YaHei">BI的使用说明</font>
 ####五、配置完成后怎么调试？
 1、可以用哪些工具进行调试？
 2、 蓝牙调试工具怎么使用？<font color="ff0000" face="Microsoft YaHei">（推荐）</font>
@@ -102,7 +102,7 @@ _**AC**：_
 以下为我们健身房实例图：
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![Alt text](./1505294688878.png)
 
-###三、对接流程 及AP详细功能
+###三、<font color="ff0000" face="Microsoft YaHei">对接流程 </font>，AP详细功能及BI使用说明</font>
 ####3.1 <font color="ff0000" face="Microsoft YaHei">AP与AC对接设备调试的流程（必看）此流程可完成初步对接</font>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**1)** 将AP供电并插上网线，保证其可以进入到配置页面。(3.2)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**2)** 进入到AP配置页面，对AP进行配置，填写Developer Key和 AC Address保证与AC端一致。(3.4)
@@ -110,11 +110,12 @@ _**AC**：_
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**4)**  AC添加或自动发现AP，等待约1分钟后，AP上线，可以进行调试及对接工作。(4.6)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**5)** 通过蓝牙调试工具或其他方式进行设备的对接，获取数据。(5.2)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**6)** 最后遵照蓝牙协议进行解析数据。(例子见6.12)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**<font color="ff0000" face="Microsoft YaHei">选看(7)</font>** 在可以成功使用AC后可对AC中的BI进行使用，目前支持教育解决方案（详情看4.8）
 ####3.2 怎么进入到AP的配置页面？
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**1）**将进入到wifi路由器的配置页面
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**2）**找到AP的mac地址（在AP的底部）
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**3）**进入WiFi路由器控制面板，通过mac地址查找AP被分配的IP地址。
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**4）**在浏览器地址栏中输入AP的ip地址
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**4）**在浏览器地址栏中输入AP的ip地址即可进到AP的配置页面
 ####3.3 获取AP的ip地址
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;进入WiFi路由器控制面板，查看AP被分配的IP地址。
 在这里找到AP的mac地址所对应的ip地址
@@ -196,6 +197,61 @@ _**AC**：_
 点击确定后，等待约1分钟，AP上线，就可以进行简单的调试，对接工作了。
 ####4.7升级更新与维护
 ![Alt text](./1505294836199.png)
+####4.8BI的使用说明
+#####4.8.1BI概述
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**①、BI是什么**
+            BI（Business Intelligence）即商务智能软件，是一种根据预设定的程序自主处理用户的原始数据，并将原始数据转化成可读的用户数据的软件。在我们的产品中，BI是通用的面向大部分客户的蓝牙数据采集及蓝牙数据交互平台。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**②、为什么要用BI**
+            使用蓝牙路由器获取数据后，将原始数据进行解析，并发送到服务地址的过程，多是重复工作，这样的开发多为复杂，繁琐的工作。若使用相同的手环，解析数据是对于每个客户都相同步骤。为省去客户许多不必要的对接工作，我们创造了BI。
+#####4.8.2、BI页面
+
+#####4.8.3、BI功能及使用
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AC进入BI的唯一通道：将AC地址中主机名后的第一个路由改为”bi”，即可进到BI中。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;进到BI后，会有许多版本选择，在您想要的版本后点击install，即可下载成功。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击setting，进到BI配置页面
+BI目前整合了6项业务，**数据采集业务、信息录入业务、定位业务、进出校业务、反向通知业务、校时业务。**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;每项业务必须填写参数，保存后需**重启BI**，路由器会将获取到的数据发送到目标地址上。
+
+
+**我们以定位业务为例：**
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当我们想要获取到手环的数据时，需将左侧AC的信息写入，地址为AP的所在AC地址（后面必须加入端口号+/api），账号及密码为AC中设置项的信息。右侧有4项填写的信息，**url**为目标服务器地址，数据将通过post请求方式向地址推送数据。**选择设备**为使用设备的名称。**发送间隔**为获取到的数据发送至目标服务器的发送间隔。**数据类型**有json和form两种类型。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;全部配置好后，点击保存，若提示保存失败，请完善上方配置信息，不符合标准的会有提示，确认信息填写正确后，点击保存，会提示”保存成功，重启BI生效”，**返回到上一页面，重启BI**。配置信息即可生效。
+
+**再以比较复杂的校时业务为例：**
+
+校时业务分为自动校时，手动校时。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**自动校时**：
+
+**选择设备：**为使用的终端设备
+**是否接收回复：**为是否接收校时的结果
+**接受回复的地址：**为接受结果的地址，BI将校时的结果通过post请求推送至目标地址
+**校时开始时间；**为路由器开始进行校时的时间点，时间以AC服务器的时间为准。注：若校时开始时间为8:00则在8点前需将手环开启（路由器可以扫到），在8点过后再次扫描到手环才可进行校时。
+**校时时间：**为进行校时的总时长，若接受回复，且在指定时间内没有全部校时成功，则校时时间结束时向服务器推送校时结果。若接受回复，且全部手环在时间范围内全部校时成功，则在全部校时成功后，将结果推送至服务器。
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**手动校时：**
+
+**选择设备**为使用的终端设备
+**是否接收回复**为是否接收校时的结果
+**BI服务器地址**为将进行手动校时的手环或其他蓝牙设备的MAC地址推送至BI的服务器中的地址。常为http://192.168.199.183:8081/bi/education/api/clockSync/后接自定义路由。（下面以postman为例，向BI服务器发送请求）注：推送的地址与BI页面中的地址必须统一。
+**接受回复的地址**为接受结果的地址，BI将校时的结果通过post请求推送至目标地址。推送的数据格式请看业务的介绍文档
+
+**校时开始时间**为路由器开始进行校时的时间点，时间以AC服务器的时间为准
+**校时时间**为进行校时的总时长，若接受回复，且在校时时间内没有全部校时成功，则校时时间结束时向服务器教室结果数据。若接受回复，且全部手环在时间范围内全部校时成功，则在全部校时成功后，将结果推送至服务器。
+**黑白名单**为是选用制定路由器执行，还是不选用指定路由器执行
+
+
+我们拿postman举例，向BI服务器地址发送指定的校时手环。
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Headers中写入Content-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Type:application/json
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Body中数据格式为
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "type": "clockSync",
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "timeout": 300,//与BI中的填写相同
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "requireRes": "true",
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "deviceMac":["D8:45:A3:B8:20:C2","D3:CB:56:6E:7C:82","E6:96:F1:52:D1:C2"]
+
 
 ###五、配置完成后怎么调试？
 ####5.1 可以用哪些工具进行调试？
@@ -215,6 +271,9 @@ _**AC**：_
 ![Alt text](./1505294927502.png)
 
 ###六、API接口的常见问题
+API接口文档地址：https://cassiasdk.docs.apiary.io
+下滑找到APIs的章节，即为
+
 ####6.1 什么是API接口？都有哪些接口？
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AP提供了简单的api接口，供开发使用
 #####token

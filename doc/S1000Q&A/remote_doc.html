@@ -23,6 +23,9 @@ width:26%;/*目录框的宽度*/
 top:0;
 /*border-right: 2px solid #ccc;*/
 }
+.left-div ul{
+  padding-left:0px;
+}
 .right-div 
 {
 float:right;/*正文的位置*/
@@ -458,7 +461,7 @@ body .markdown-body
 
 .markdown-body ul,
 .markdown-body ol {
-  padding-left: 2em;
+  padding-left: 0.5em;
 }
 
 .markdown-body ul ul,
@@ -1039,21 +1042,21 @@ body .markdown-body
     page-break-after: avoid;
   }
 }
-</style><title>test</title></head><body><article class="markdown-body"><div class="toc left-div">
+</style><title>云端使用说明文档</title></head><body><article class="markdown-body"><div class="toc left-div">
 <ul>
-<li><a href="#_1">云端使用说明文档</a><ul>
-<li><a href="#_2">正文</a><ul>
-<li><a href="#_3">一、产品综述</a><ul>
+<li><a href="#_1"><h2>云端使用说明文档（需要AC）</h2></a><ul>
+<li><a href="#_2"><h3>正文</h3></a><ul>
+<li><a href="#_3"><h4>一、产品综述</h4></a><ul>
 <li><a href="#11apac">1.1、产品介绍AP,AC是什么？</a></li>
 <li><a href="#12apac">1.2、AP，AC会给你带来什么？</a></li>
 </ul>
 </li>
-<li><a href="#_4">二、产品结构</a><ul>
+<li><a href="#_4"><h4>二、产品结构</h4></a><ul>
 <li><a href="#21">2.1、网络结构图</a></li>
 <li><a href="#22">2.2、工作流程图</a></li>
 </ul>
 </li>
-<li><a href="#_5">三、连网方式</a></li>
+<li><a href="#_5"><h4>三、连网方式</h4></a></li>
 <li><a href="#apbi">三、<font color="ff0000" face="Microsoft YaHei">对接流程 </font>，AP详细功能及BI使用说明</font></a><ul>
 <li><a href="#31-apac">3.1 <font color="ff0000" face="Microsoft YaHei">AP与AC对接设备调试的流程（必看）此流程可完成初步对接</font></a></li>
 <li><a href="#32-ap">3.2 怎么进入到AP的配置页面？</a></li>
@@ -1066,7 +1069,7 @@ body .markdown-body
 <li><a href="#39-apac">3.9 AP登录到AC,需要配置哪些参数？</a></li>
 </ul>
 </li>
-<li><a href="#ac">四、AC详细功能</a><ul>
+<li><a href="#ac"><h4>四、AC详细功能</h4></a><ul>
 <li><a href="#41">4.1总览面板</a></li>
 <li><a href="#42-ac">4.2  ac历史统计</a></li>
 <li><a href="#43">4.3管理蓝牙路由器</a></li>
@@ -1082,14 +1085,14 @@ body .markdown-body
 </li>
 </ul>
 </li>
-<li><a href="#_6">五、配置完成后怎么调试？</a><ul>
+<li><a href="#_6"><h4>五、配置完成后怎么调试？</h4></a><ul>
 <li><a href="#51">5.1 可以用哪些工具进行调试？</a></li>
 <li><a href="#52">5.2 蓝牙调试工具怎么使用？（推荐）</a></li>
 <li><a href="#53-postmanapisse">5.3 Postman怎么调用API接口？(不支持sse)</a></li>
 <li><a href="#54-apipost">5.4 浏览器怎么调用调用API接口？(不可请求post)</a></li>
 </ul>
 </li>
-<li><a href="#api">六、API接口的常见问题</a><ul>
+<li><a href="#api"><h4>六、API接口的常见问题</h4></a><ul>
 <li><a href="#61-api">6.1 什么是API接口？都有哪些接口？</a><ul>
 <li><a href="#token">token</a></li>
 <li><a href="#scan">Scan</a></li>
@@ -1117,7 +1120,6 @@ body .markdown-body
 <li><a href="#69-apiurl">6.9 API中url的参数是什么意思？该如何填写？</a></li>
 </ul>
 </li>
-<li><a href="#_7">七、高频错误信息有哪些？</a></li>
 </ul>
 </li>
 </ul>
@@ -1326,43 +1328,46 @@ BI目前整合了6项业务，<strong>数据采集业务、信息录入业务、
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AP提供了简单的api接口，供开发使用</p>
 <h5 id="token"><a name="user-content-token" href="#token" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>token</h5>
 <blockquote>
-<p><code>http://AC地址/oauth2/token</code></p>
+<p><code>http://AC address/oauth2/token</code></p>
 </blockquote>
-<h5 id="scan"><a name="user-content-scan" href="#scan" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Scan</h5>
+<h5 id="scan"><a name="user-content-scan" href="#scan" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Scan(sse)</h5>
 <blockquote>
 <p><code>http://AC address/gap/nodes/?event=1&amp;mac=&amp;chip=&amp;filter_name=&amp;filter_mac=&amp;filter_uuid=&amp;access_token=</code></p>
 </blockquote>
-<h5 id="connect"><a name="user-content-connect" href="#connect" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Connect</h5>
+<h5 id="connect"><a name="user-content-connect" href="#connect" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Connect(post)</h5>
 <blockquote>
 <p><code>http://AC address/gap/nodes/&lt;node&gt;/connection?mac=&amp;chip=&amp;access_token=</code></p>
 </blockquote>
-<h5 id="disconnect"><a name="user-content-disconnect" href="#disconnect" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Disconnect</h5>
+<h5 id="disconnect"><a name="user-content-disconnect" href="#disconnect" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Disconnect(delete)</h5>
 <blockquote>
 <p><code>http://AC address/gap/nodes/&lt;node&gt;/connection?mac=&amp;access_token</code></p>
 </blockquote>
-<h5 id="connect_list"><a name="user-content-connect_list" href="#connect_list" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Connect_list</h5>
-<blockquote>
-<p><code>http://ACaddress/gap/nodes/?connection_state=connected&amp;mac=&amp;access_token=</code></p>
-</blockquote>
-<h5 id="discover-services-characteristics-desciptors"><a name="user-content-discover-services-characteristics-desciptors" href="#discover-services-characteristics-desciptors" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Discover  services &amp; characteristics &amp; desciptors</h5>
-<blockquote>
-<p><code>http://AC address/gatt/nodes/&lt;node&gt;/services/characteristics/descriptors?mac=&amp;access_token=</code></p>
-</blockquote>
-<h5 id="get-device-connection-state"><a name="user-content-get-device-connection-state" href="#get-device-connection-state" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Get device connection state</h5>
+<h5 id="connect_list"><a name="user-content-connect_list" href="#connect_list" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Connect_list(get)</h5>
 <blockquote>
 <p><code>http://AC address/gap/nodes/?connection_state=connected&amp;mac=&amp;access_token=</code></p>
 </blockquote>
-<h5 id="write-by-handle"><a name="user-content-write-by-handle" href="#write-by-handle" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Write by handle</h5>
+<h5 id="discover-services-characteristics-desciptors"><a name="user-content-discover-services-characteristics-desciptors" href="#discover-services-characteristics-desciptors" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Discover  services &amp; characteristics &amp; desciptors(get)</h5>
+<blockquote>
+<p><code>http://AC address/gatt/nodes/&lt;node&gt;/services/characteristics/descriptors?mac=&amp;access_token=</code></p>
+</blockquote>
+<h5 id="get-device-connection-state"><a name="user-content-get-device-connection-state" href="#get-device-connection-state" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Get device connection state(sse)</h5>
+<blockquote>
+<p><code>http://AC address/gap/nodes/?connection_state=connected&amp;mac=&amp;access_token=</code></p>
+</blockquote>
+<h5 id="write-by-handle"><a name="user-content-write-by-handle" href="#write-by-handle" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Write by handle(post)</h5>
 <blockquote>
 <p><code>http://AC address/gatt/nodes/&lt;node&gt;/handle/&lt;handle&gt;/value/&lt;value&gt;/?mac=&amp;access_token=</code></p>
 </blockquote>
-<h5 id="notify"><a name="user-content-notify" href="#notify" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Notify</h5>
+<h5 id="notify"><a name="user-content-notify" href="#notify" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Notify(sse)</h5>
 <blockquote>
 <p><code>http://AC address/gatt/nodes/?event=1&amp;mac=&amp;access_token=</code></p>
 </blockquote>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;以上为常用API接口，供开发使用，有专门的的API接口文档，蓝牙调试工具所有功能都是通过API接口实现的。<br />
 以连接接口为例（js语言）：<br />
-<img alt="Alt text" src="./images/i_6.1.png" /></p>
+<img alt="Alt text" src="./images/api_3.png" /></p>
+<p>以扫描的sse接口为例（js语言）：<br />
+<img alt="Alt text" src="./images/api_2.png" /></p>
+<p><strong>以上云端使用调用接口时均需要加入token，进行验证</strong></p>
 <h4 id="62-api"><a name="user-content-62-api" href="#62-api" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>6.2 API支持哪些开发语言？</h4>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;任何基于HTTP通信协议的编程语言都支持（例如C＃，Node.js，Java，iOS等）。<br />
     对于C＃、Node.js、Java、iOS，我们提供了oAuth认证及sse的sampleCode。<br />

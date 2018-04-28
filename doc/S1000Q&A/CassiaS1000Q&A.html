@@ -1,39 +1,14 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><style>body {
-  /*max-width: 980px;
+  max-width: 980px;
   border: 1px solid #ddd;
   outline: 1300px solid #fff;
-  margin: 16px auto;*/
+  margin: 16px auto;
 }
 
 body .markdown-body
 {
-  /*padding: 45px;*/
+  padding: 45px;
 }
-.markdown-body *{
-  list-style: none;
-}
-.left-div 
-{
-height: 100%; /*目录框的高度*/
-float:left;/*目录框的位置*/
-overflow-y:scroll;/*目录框添加滚动条*/
-/*padding-right: 10px;*/
-position: fixed;/*目录框相对浏览器进行定位*/
-width:26%;/*目录框的宽度*/
-top:0;
-/*border-right: 2px solid #ccc;*/
-}
-.right-div 
-{
-float:right;/*正文的位置*/
-padding-left: 10px;/*边距*/
-width:70%;/*正文的宽度*/
-}
-body .markdown-body
-{
-  /*padding: 45px;*/
-}
-
 
 @font-face {
   font-family: fontawesome-mini;
@@ -1039,21 +1014,30 @@ body .markdown-body
     page-break-after: avoid;
   }
 }
-</style><title>test</title></head><body><article class="markdown-body"><div class="toc left-div">
+</style><title>CassiaS1000Q&amp;A</title></head><body><article class="markdown-body"><div class="toc left-div">
 <ul>
 <li><a href="#_1">云端使用说明文档</a><ul>
-<li><a href="#_2">正文</a><ul>
-<li><a href="#_3">一、产品综述</a><ul>
+<li><a href="#_2">目录</a><ul>
+<li><a href="#_3">一、产品综述</a></li>
+<li><a href="#_4">二、产品结构</a></li>
+<li><a href="#ap">三、对接流程 及AP详细功能</a></li>
+<li><a href="#acbi">四、AC详细功能及<font color="ff0000" face="Microsoft YaHei">BI使用说明</font></a></li>
+<li><a href="#_5">五、配置完成后怎么调试？</a></li>
+<li><a href="#api">六、API接口的常见问题</a></li>
+<li><a href="#_6">七、高频错误信息有哪些？</a></li>
+</ul>
+</li>
+<li><a href="#_7">正文</a><ul>
+<li><a href="#_8">一、产品综述</a><ul>
 <li><a href="#11apac">1.1、产品介绍AP,AC是什么？</a></li>
 <li><a href="#12apac">1.2、AP，AC会给你带来什么？</a></li>
 </ul>
 </li>
-<li><a href="#_4">二、产品结构</a><ul>
+<li><a href="#_9">二、产品结构</a><ul>
 <li><a href="#21">2.1、网络结构图</a></li>
 <li><a href="#22">2.2、工作流程图</a></li>
 </ul>
 </li>
-<li><a href="#_5">三、连网方式</a></li>
 <li><a href="#apbi">三、<font color="ff0000" face="Microsoft YaHei">对接流程 </font>，AP详细功能及BI使用说明</font></a><ul>
 <li><a href="#31-apac">3.1 <font color="ff0000" face="Microsoft YaHei">AP与AC对接设备调试的流程（必看）此流程可完成初步对接</font></a></li>
 <li><a href="#32-ap">3.2 怎么进入到AP的配置页面？</a></li>
@@ -1075,21 +1059,21 @@ body .markdown-body
 <li><a href="#46-apac">4.6 AP怎么连接到AC（设置详情）</a></li>
 <li><a href="#47">4.7升级更新与维护</a></li>
 <li><a href="#48bi">4.8BI的使用说明</a><ul>
-<li><a href="#481bi">4.8.1、BI概述</a></li>
+<li><a href="#481bi">4.8.1BI概述</a></li>
 <li><a href="#482bi">4.8.2、BI页面</a></li>
 <li><a href="#483bi">4.8.3、BI功能及使用</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#_6">五、配置完成后怎么调试？</a><ul>
+<li><a href="#_10">五、配置完成后怎么调试？</a><ul>
 <li><a href="#51">5.1 可以用哪些工具进行调试？</a></li>
 <li><a href="#52">5.2 蓝牙调试工具怎么使用？（推荐）</a></li>
 <li><a href="#53-postmanapisse">5.3 Postman怎么调用API接口？(不支持sse)</a></li>
 <li><a href="#54-apipost">5.4 浏览器怎么调用调用API接口？(不可请求post)</a></li>
 </ul>
 </li>
-<li><a href="#api">六、API接口的常见问题</a><ul>
+<li><a href="#api_1">六、API接口的常见问题</a><ul>
 <li><a href="#61-api">6.1 什么是API接口？都有哪些接口？</a><ul>
 <li><a href="#token">token</a></li>
 <li><a href="#scan">Scan</a></li>
@@ -1117,7 +1101,7 @@ body .markdown-body
 <li><a href="#69-apiurl">6.9 API中url的参数是什么意思？该如何填写？</a></li>
 </ul>
 </li>
-<li><a href="#_7">七、高频错误信息有哪些？</a></li>
+<li><a href="#_11">七、高频错误信息有哪些？</a></li>
 </ul>
 </li>
 </ul>
@@ -1128,8 +1112,50 @@ body .markdown-body
 <h1 id="_1"><a name="user-content-_1" href="#_1" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>云端使用说明文档</h1>
 <p>注：为了方便描述，下文将蓝牙路由器称为AP。<br />
 蓝牙路由器以及蓝牙设备的管理软件称为AC。 </p>
-<h2 id="_2"><a name="user-content-_2" href="#_2" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>正文</h2>
-<h3 id="_3"><a name="user-content-_3" href="#_3" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>一、产品综述</h3>
+<h2 id="_2"><a name="user-content-_2" href="#_2" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>目录</h2>
+<h4 id="_3"><a name="user-content-_3" href="#_3" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>一、产品综述</h4>
+<p>1、产品介绍AP,AC是什么？<br />
+2、AC和AP解决了什么？</p>
+<h4 id="_4"><a name="user-content-_4" href="#_4" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>二、产品结构</h4>
+<p>1、网络结构图<br />
+2、工作流程图</p>
+<h4 id="ap"><a name="user-content-ap" href="#ap" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>三、对接流程 及AP详细功能</h4>
+<p>__※__1、使用AP与AC对接设备调试的流程<font color="ff0000" face="Microsoft YaHei">（必看）</font><br />
+2、怎么进入到AP的配置页面？<br />
+3、获取AP的ip地址<br />
+4、配置页面的详情<br />
+5、怎么连接到3G/4G网？<br />
+6、怎么连接到以太网 ？<br />
+7、怎么连接到wifi?<br />
+8、连网成功有什么提示吗？<br />
+9、AP登录到AC,需要配置哪些参数？</p>
+<h4 id="acbi"><a name="user-content-acbi" href="#acbi" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>四、AC详细功能及<font color="ff0000" face="Microsoft YaHei">BI使用说明</font></h4>
+<p>1、总览面板<br />
+2、历史统计<br />
+3、管理蓝牙路由器<br />
+4、查看已连接蓝牙设备<br />
+5、地图管理<br />
+6、AP怎么连接到AC（设置详情）<br />
+7、升级与维护<br />
+8、<font color="ff0000" face="Microsoft YaHei">BI的使用说明</font></p>
+<h4 id="_5"><a name="user-content-_5" href="#_5" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>五、配置完成后怎么调试？</h4>
+<p>1、可以用哪些工具进行调试？<br />
+2、 蓝牙调试工具怎么使用？<font color="ff0000" face="Microsoft YaHei">（推荐）</font><br />
+3、Postman怎么调用API接口？(不支持sse)<br />
+4、浏览器怎么调用调用API接口？(不可请求post)</p>
+<h4 id="api"><a name="user-content-api" href="#api" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>六、API接口的常见问题</h4>
+<p>1、什么是API接口？该如何使用?（例）（API接口有哪些？）<br />
+2、API支持哪些开发语言？<br />
+3、接口中SSE（Server-sent Events）是什么?该如何实现？API中有哪些接口使用SSE？<br />
+4、怎么通过API进行oAuth认证？（获取token）<br />
+5、拿到token后怎么使用？<br />
+6、oAuth认证得到的token有效期是多长久?<br />
+7、token与100个AP的问题<br />
+8、怎么调用API中的SSE接口？（以扫描为例）<br />
+9、API中url的参数是什么意思？该如何填写？</p>
+<h4 id="_6"><a name="user-content-_6" href="#_6" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>七、高频错误信息有哪些？</h4>
+<h2 id="_7"><a name="user-content-_7" href="#_7" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>正文</h2>
+<h3 id="_8"><a name="user-content-_8" href="#_8" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>一、产品综述</h3>
 <h4 id="11apac"><a name="user-content-11apac" href="#11apac" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>1.1、产品介绍AP,AC是什么？</h4>
 <p><strong>AP</strong>：<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>1）</strong> <font face="华文楷体">蓝牙路由器(AP)</font>:可以通过扫描和建连的方式对蓝牙设备进行控制和数据采集。一方面，蓝牙路由器可以大大地提高传统的蓝牙通信距离和连接 终端数量，另一方面，蓝牙路由器可以将蓝牙信号通过网络传递给远程的控 制端。<br />
@@ -1161,32 +1187,25 @@ body .markdown-body
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>7) </strong>对局域网的网络环境适应性强（二层、三层网络均可，可穿透内网防火墙）<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>8) </strong>可以根据ap的唯一标识（mac地址）来控制ap，防止出现ap的ip变化      的问题<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>9)</strong> 安全问题，内网通过ip地址调试无任何安全机制，普通人可以简单地干扰      ap的使用，需要oAuth认证；ac支持https方式对数据进行加密</p>
-<h3 id="_4"><a name="user-content-_4" href="#_4" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>二、产品结构</h3>
+<h3 id="_9"><a name="user-content-_9" href="#_9" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>二、产品结构</h3>
 <h4 id="21"><a name="user-content-21" href="#21" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>2.1、网络结构图</h4>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;下图一是集中管理架构下，AC作为网络设备、私有云时的网络结构示意图：<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <img alt="Alt text" src="./images/APhardwave1
-.png" /></p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img alt="Alt text" src="./1505294636131.png" /></p>
 <p><strong>图1： AC作为网络设备或私有云时的网络拓朴</strong></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;图二是集中管理架构下，AC作为公有云时的网络结构示意图：<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Alt text" src="./images/APhardwave2
-.png"" /></p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Alt text" src="./1505294665616.png" /></p>
 <p><strong>图2： AC作为公有云部署时的网络拓朴</strong></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;有线上行和WiFi上行的AP均可由本地局域网连接到AC上；若采用3G、LTE上行时，AC需要在互联网上具备一个公网地址（或公网映射）,AP通过互联网可连入AC。<br />
 业务平台与AC之间通过局域网或Internet进行通信。</p>
 <h4 id="22"><a name="user-content-22" href="#22" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>2.2、工作流程图</h4>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Alt text" src="./images/flow.png" /><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Alt text" src="./images/flow2.png" /></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Alt text" src="./1505294677169.png" /><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Alt text" src="./1505294684870.png" /></p>
 <p>以下为我们健身房实例图：<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Alt text" src="./images/run.png" /></p>
-<h3 id="_5"><a name="user-content-_5" href="#_5" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>三、连网方式</h3>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.1：以太网：通过以太网线直接连接到AP的网口，AP将会自动接入接入互联网，AP的IP地址默认通过DHCP方式获取。<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.2：wifi：只支持2.4G网络，不支持portal认证方式<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.3：3G,4G(暂不支持5G)：插入3G/4G无线网卡到USB插口，AP将会自动接入互联网， 目前大陆支持中兴MF823 Hilink版</p>
-<p>优先级：以太网&gt;wifi&gt;3G4G（即：插上网线后，优先通过以太网方式进行dhcp分配地址）</p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Alt text" src="./1505294688878.png" /></p>
 <h3 id="apbi"><a name="user-content-apbi" href="#apbi" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>三、<font color="ff0000" face="Microsoft YaHei">对接流程 </font>，AP详细功能及BI使用说明</font></h3>
 <h4 id="31-apac"><a name="user-content-31-apac" href="#31-apac" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>3.1 <font color="ff0000" face="Microsoft YaHei">AP与AC对接设备调试的流程（必看）此流程可完成初步对接</font></h4>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>1)</strong> 将AP供电并插上网线，保证其可以进入到配置页面。(3.2)<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>2)</strong> 进入到AP配置页面，对AP进行配置，填写Developer Key和 AC Address保证与AC端一致。(3.4)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>2)</strong> 进入到AP配置页面，对AP进行配置，填写Developer Key和AC Address保证与AC端一致。(3.4)<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>3)</strong> 进入到AC，在设置中填写Developer Key和Developer Secret。(4.6)<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>4)</strong>  AC添加或自动发现AP，等待约1分钟后，AP上线，可以进行调试及对接工作。(4.6)<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>5)</strong> 通过蓝牙调试工具或其他方式进行设备的对接，获取数据。(5.2)<br />
@@ -1197,23 +1216,22 @@ body .markdown-body
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>2）</strong>找到AP的mac地址（在AP的底部）<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>3）</strong>进入WiFi路由器控制面板，通过mac地址查找AP被分配的IP地址。<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>4）</strong>在浏览器地址栏中输入AP的ip地址即可进到AP的配置页面</p>
-<img alt="Alt text" src="./images/local-1.png" />
 <h4 id="33-apip"><a name="user-content-33-apip" href="#33-apip" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>3.3 获取AP的ip地址</h4>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;进入WiFi路由器控制面板，查看AP被分配的IP地址。<br />
 在这里找到AP的mac地址所对应的ip地址<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Alt text" src="./images/ACip.png" /></p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="Alt text" src="./1505294738895.png" /></p>
 <h4 id="34-ap"><a name="user-content-34-ap" href="#34-ap" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>3.4  AP配置页面的详情</h4>
-<p><img alt="Alt text" src="./images/i_3.41.png" /></p>
+<p><img alt="Alt text" src="./1505294744320.png" /></p>
 <p>将AP登录到AC ，必须配置Developer和 AC Address（cassia提供）<br />
-<img alt="Alt text" src="./images/i_3.42.png" /></p>
+<img alt="Alt text" src="./1505294747991.png" /></p>
 <h4 id="35-3g4g"><a name="user-content-35-3g4g" href="#35-3g4g" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>3.5 怎么连接到3G/4G网？</h4>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;插入3G/4G无线网卡到USB插口，AP将会自动接入互联网，目前大陆  支持中兴MF823 Hilink版。</p>
 <h4 id="36"><a name="user-content-36" href="#36" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>3.6 怎么连接到以太网 ？</h4>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;通过以太网线直接连接到AP的网口，AP将会自动接入接入互联网，AP的IP地址默认通过DHCP方式获取。<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可以在AP配置页面将IP配置为static<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;打开cmd，输入ipconfig</p>
-<p><img alt="Alt text" src="./images/i_3.61.png" /><br />
-<img alt="Alt text" src="./images/i_3.62.png" /></p>
+<p><img alt="Alt text" src="./1505294755743.png" /><br />
+<img alt="Alt text" src="./1505294758973.png" /></p>
 <h4 id="37wifi"><a name="user-content-37wifi" href="#37wifi" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>3.7怎么连接到WiFi？（及网络优先级问题）</h4>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;插上网线连接以太网。通过IP地址进入AP的配置页面(如图3)，在Wireless处配置WIfI 的名字和密码,配置完成后拔掉网线，AP会自动连接WiFi.<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;设置WiFi静态IP，同上<br />
@@ -1229,31 +1247,30 @@ body .markdown-body
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;让AP登录到AC，必须配置AC Address和Developer 。Developer 要跟AC中设置相同，配置成功后点击保存。然后进入AC中添加或自动发现AP</p>
 <h3 id="ac"><a name="user-content-ac" href="#ac" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>四、AC详细功能</h3>
 <h4 id="41"><a name="user-content-41" href="#41" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>4.1总览面板</h4>
-<p><img alt="Alt text" src="./images/i_4.11.png" /></p>
-<p><img alt="Alt text" src="./images/i_4.12.png" /></p>
+<p><img alt="Alt text" src="./1505294773126.png" /></p>
+<p><img alt="Alt text" src="./1505294776539.png" /></p>
 <h4 id="42-ac"><a name="user-content-42-ac" href="#42-ac" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>4.2  ac历史统计</h4>
-<p><img alt="Alt text" src="./images/i_4.21.png" /><br />
-<img alt="Alt text" src="./images/i_4.22.png" /><br />
-<img alt="Alt text" src="./images/i_4.23.png" /></p>
+<p><img alt="Alt text" src="./1505294782299.png" /><br />
+<img alt="Alt text" src="./1505294785923.png" /><br />
+<img alt="Alt text" src="./1505294788974.png" /></p>
 <h4 id="43"><a name="user-content-43" href="#43" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>4.3管理蓝牙路由器</h4>
-<p><img alt="Alt text" src="./images/remote-2.png" /></p>
+<p><img alt="Alt text" src="./1505294793007.png" /></p>
 <h4 id="44"><a name="user-content-44" href="#44" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>4.4查看已连接蓝牙设备</h4>
-<p><img alt="Alt text" src="./images/remote-3.png" /></p>
+<p><img alt="Alt text" src="./1505294796167.png" /></p>
 <h4 id="45"><a name="user-content-45" href="#45" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>4.5 地图管理</h4>
-<p><img alt="Alt text" src="./images/i_4.5.png" /><br />
-<img alt="Alt text" src="./images/i_4.52.png" /></p>
+<p><img alt="Alt text" src="./1505294800029.png" /><br />
+<img alt="Alt text" src="./1505294802841.png" /></p>
 <h4 id="46-apac"><a name="user-content-46-apac" href="#46-apac" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>4.6 AP怎么连接到AC（设置详情）</h4>
-<p><img alt="Alt text" src="./images/i_3.41.png" /></p>
-<p><img alt="Alt text" src="./images/i_4.61.png" /></p>
-<p><img alt="Alt text" src="./images/i_4.62.png" /></p>
+<p><img alt="Alt text" src="./1505294806203.png" /></p>
+<p><img alt="Alt text" src="./1505294809412.png" /></p>
 <p>点击添加或自动发现，并写入AP的mac地址和名字(名字自定义)<br />
 添加：<br />
-<img alt="Alt text" src="./images/i_4.63.png" /></p>
+<img alt="Alt text" src="./1505294823270.png" /></p>
 <p>自动发现：<br />
-<img alt="Alt text" src="./images/i_4.64.png" /></p>
+<img alt="Alt text" src="./1505294827890.png" /></p>
 <p>点击确定后，等待约1分钟，AP上线，就可以进行简单的调试，对接工作了。</p>
 <h4 id="47"><a name="user-content-47" href="#47" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>4.7升级更新与维护</h4>
-<p><img alt="Alt text" src="./images/remote-4.png" /></p>
+<p><img alt="Alt text" src="./1505294836199.png" /></p>
 <h4 id="48bi"><a name="user-content-48bi" href="#48bi" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>4.8BI的使用说明</h4>
 <h5 id="481bi"><a name="user-content-481bi" href="#481bi" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>4.8.1BI概述</h5>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>①、BI是什么</strong><br />
@@ -1261,39 +1278,28 @@ body .markdown-body
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>②、为什么要用BI</strong><br />
             使用蓝牙路由器获取数据后，将原始数据进行解析，并发送到服务地址的过程，多是重复工作，这样的开发多为复杂，繁琐的工作。若使用相同的手环，解析数据是对于每个客户都相同步骤。为省去客户许多不必要的对接工作，我们创造了BI。</p>
 <h5 id="482bi"><a name="user-content-482bi" href="#482bi" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>4.8.2、BI页面</h5>
-<img alt="Alt text" src="./images/BI-1.png" /></p>
 <h5 id="483bi"><a name="user-content-483bi" href="#483bi" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>4.8.3、BI功能及使用</h5>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AC进入BI的唯一通道：将AC地址中主机名后的第一个路由改为”bi”，即可进到BI中。<br />
-<img alt="Alt text" src="./images/BI-2.png" /></p>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;进到BI后，会有许多版本选择，在您想要的版本后点击install，即可下载成功。<br />
-<img alt="Alt text" src="./images/BI-3.png" /></p>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击setting，进到BI配置页面<br />
 BI目前整合了6项业务，<strong>数据采集业务、信息录入业务、定位业务、进出校业务、反向通知业务、校时业务。</strong><br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;每项业务必须填写参数，保存后需<strong>重启BI</strong>，路由器会将获取到的数据发送到目标地址上。</p>
-<img alt="Alt text" src="./images/BI-4.png" /></p>
-
 <p><strong>我们以定位业务为例：</strong></p>
-<img alt="Alt text" src="./images/BI-5.png" /></p>
-
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当我们想要获取到手环的数据时，需将左侧AC的信息写入，地址为AP的所在AC地址（后面必须加入端口号+/api），账号及密码为AC中设置项的信息。右侧有4项填写的信息，<strong>url</strong>为目标服务器地址，数据将通过post请求方式向地址推送数据。<strong>选择设备</strong>为使用设备的名称。<strong>发送间隔</strong>为获取到的数据发送至目标服务器的发送间隔。<strong>数据类型</strong>有json和form两种类型。<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;全部配置好后，点击保存，若提示保存失败，请完善上方配置信息，不符合标准的会有提示，确认信息填写正确后，点击保存，会提示”保存成功，重启BI生效”，<strong>返回到上一页面，重启BI</strong>。配置信息即可生效。</p>
 <p><strong>再以比较复杂的校时业务为例：</strong></p>
 <p>校时业务分为自动校时，手动校时。<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>自动校时</strong>：</p>
-<img alt="Alt text" src="./images/BI-6.png" /></p>
 <p><strong>选择设备：</strong>为使用的终端设备<br />
 <strong>是否接收回复：</strong>为是否接收校时的结果<br />
 <strong>接受回复的地址：</strong>为接受结果的地址，BI将校时的结果通过post请求推送至目标地址<br />
 <strong>校时开始时间；</strong>为路由器开始进行校时的时间点，时间以AC服务器的时间为准。注：若校时开始时间为8:00则在8点前需将手环开启（路由器可以扫到），在8点过后再次扫描到手环才可进行校时。<br />
 <strong>校时时间：</strong>为进行校时的总时长，若接受回复，且在指定时间内没有全部校时成功，则校时时间结束时向服务器推送校时结果。若接受回复，且全部手环在时间范围内全部校时成功，则在全部校时成功后，将结果推送至服务器。</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>手动校时：</strong></p>
-<img alt="Alt text" src="./images/BI-7.png" /></p>
 <p><strong>选择设备</strong>为使用的终端设备<br />
 <strong>是否接收回复</strong>为是否接收校时的结果<br />
 <strong>BI服务器地址</strong>为将进行手动校时的手环或其他蓝牙设备的MAC地址推送至BI的服务器中的地址。常为http://192.168.199.183:8081/bi/education/api/clockSync/后接自定义路由。（下面以postman为例，向BI服务器发送请求）注：推送的地址与BI页面中的地址必须统一。<br />
-<strong>接受回复的地址</strong>
-<img alt="Alt text" src="./images/BI-8.png" /></p>
-为接受结果的地址，BI将校时的结果通过post请求推送至目标地址。推送的数据格式请看业务的介绍文档</p>
+<strong>接受回复的地址</strong>为接受结果的地址，BI将校时的结果通过post请求推送至目标地址。推送的数据格式请看业务的介绍文档</p>
 <p><strong>校时开始时间</strong>为路由器开始进行校时的时间点，时间以AC服务器的时间为准<br />
 <strong>校时时间</strong>为进行校时的总时长，若接受回复，且在校时时间内没有全部校时成功，则校时时间结束时向服务器教室结果数据。若接受回复，且全部手环在时间范围内全部校时成功，则在全部校时成功后，将结果推送至服务器。<br />
 <strong>黑白名单</strong>为是选用制定路由器执行，还是不选用指定路由器执行</p>
@@ -1304,24 +1310,24 @@ BI目前整合了6项业务，<strong>数据采集业务、信息录入业务、
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &ldquo;timeout&rdquo;: 300,//与BI中的填写相同<br />
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &ldquo;requireRes&rdquo;: &ldquo;true&rdquo;,<br />
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &ldquo;deviceMac&rdquo;:[&ldquo;D8:45:A3:B8:20:C2&rdquo;,&rdquo;D3:CB:56:6E:7C:82&rdquo;,&rdquo;E6:96:F1:52:D1:C2&rdquo;]</p>
-<h3 id="_6"><a name="user-content-_6" href="#_6" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>五、配置完成后怎么调试？</h3>
+<h3 id="_10"><a name="user-content-_10" href="#_10" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>五、配置完成后怎么调试？</h3>
 <h4 id="51"><a name="user-content-51" href="#51" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>5.1 可以用哪些工具进行调试？</h4>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>1）</strong>我们提供了一个蓝牙调试工具，实现了API中的大部分控制功能，在如何操作见5.2；<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>2）</strong>其他支持HTTP请求的软件，比如Postman(不支持SSE)，如何操作间见5.3；<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>3）</strong>浏览器(不支持POST请求)，在地址栏发送http请求，如何操作见5.4；</p>
 <h4 id="52"><a name="user-content-52" href="#52" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>5.2 蓝牙调试工具怎么使用？（推荐）</h4>
 <p>(<a href="http://www.bluetooth.tech/nativeHubControl/index.html">http://www.bluetooth.tech/nativeHubControl/index.html</a>)<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;说明文档：<a src="蓝牙调试工具.doc">蓝牙调试工具</a></p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;说明文档：蓝牙调试工具</p>
 <h4 id="53-postmanapisse"><a name="user-content-53-postmanapisse" href="#53-postmanapisse" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>5.3 Postman怎么调用API接口？(不支持sse)</h4>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;需要获取token，详细见6.4<br />
-<img alt="Alt text" src="./images/i_5.3.png" /></p>
+<img alt="Alt text" src="./1505294894975.png" /></p>
 <h4 id="54-apipost"><a name="user-content-54-apipost" href="#54-apipost" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>5.4 浏览器怎么调用调用API接口？(不可请求post)</h4>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在浏览器地址栏中输入API接口<br />
 例:scan接口<br />
-<img alt="Alt text" src="./images/i_5.4.png" /></p>
-<h3 id="api"><a name="user-content-api" href="#api" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>六、API接口的常见问题</h3>
+<img alt="Alt text" src="./1505294927502.png" /></p>
+<h3 id="api_1"><a name="user-content-api_1" href="#api_1" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>六、API接口的常见问题</h3>
 <p>API接口文档地址：<a href="https://cassiasdk.docs.apiary.io">https://cassiasdk.docs.apiary.io</a><br />
-找到APIs的章节，即为所有API的接口</p>
+下滑找到APIs的章节，即为</p>
 <h4 id="61-api"><a name="user-content-61-api" href="#61-api" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>6.1 什么是API接口？都有哪些接口？</h4>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AP提供了简单的api接口，供开发使用</p>
 <h5 id="token"><a name="user-content-token" href="#token" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>token</h5>
@@ -1362,7 +1368,7 @@ BI目前整合了6项业务，<strong>数据采集业务、信息录入业务、
 </blockquote>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;以上为常用API接口，供开发使用，有专门的的API接口文档，蓝牙调试工具所有功能都是通过API接口实现的。<br />
 以连接接口为例（js语言）：<br />
-<img alt="Alt text" src="./images/i_6.1.png" /></p>
+<img alt="Alt text" src="./1505294944711.png" /></p>
 <h4 id="62-api"><a name="user-content-62-api" href="#62-api" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>6.2 API支持哪些开发语言？</h4>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;任何基于HTTP通信协议的编程语言都支持（例如C＃，Node.js，Java，iOS等）。<br />
     对于C＃、Node.js、Java、iOS，我们提供了oAuth认证及sse的sampleCode。<br />
@@ -1396,8 +1402,8 @@ API中的SCAN、Get device connection state、Receive indication &amp; notificat
 </code></pre>
 <p>现在你可以使用access_token访问其他API，添加access_token URL参数：<br />
         例：<br />
-<img alt="Alt text" src="./images/i_6.41.png" /><br />
-<img alt="Alt text" src="./images/i_6.42.png" /></p>
+<img alt="Alt text" src="./1505294953686.png" /><br />
+<img alt="Alt text" src="./1505294956044.png" /></p>
 <h4 id="65-token"><a name="user-content-65-token" href="#65-token" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>6.5 拿到token后怎么使用？</h4>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;拿到access_token后访问其他API，例：scan接口<br />
 <em>http://AC地址/gap/nodes/?event=1&amp;mac=xxx&amp;access_token=xxxx</em><br />
@@ -1405,7 +1411,7 @@ API中的SCAN、Get device connection state、Receive indication &amp; notificat
 <h4 id="66-oauthtoken"><a name="user-content-66-oauthtoken" href="#66-oauthtoken" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>6.6 oAuth认证得到的token有效期是多长久?</h4>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Token的有效期为1小时<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在上一个token有效期内再次申请token，这两个token都有效</p>
-<h4 id="67-token100ap"><a name="user-content-67-token100ap" href="#67-token100ap" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>6.7 token只与AC与开发者账号有关</h4>
+<h4 id="67-token100ap"><a name="user-content-67-token100ap" href="#67-token100ap" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>6.7 token与100个AP的问题</h4>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Token只与开发者账号有关，与AP的MAC无关，100个AP如果有相同的开发者账号，那只需要1个小时重新获取一次token</p>
 <h4 id="68-apisse"><a name="user-content-68-apisse" href="#68-apisse" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>6.8 怎么调用API中的SSE接口？（以扫描为例）</h4>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在浏览器地址栏中输入：<br />
@@ -1416,6 +1422,23 @@ API中的SCAN、Get device connection state、Receive indication &amp; notificat
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>handle=</strong>:对应操作的索引值(发现设备服务后，根据设备蓝牙协议中的UUID找到对应的handle)<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>value=</strong>:想对应handle中写入的值(根据蓝牙协议，写入操作的对应命令)<br />
 在此，以开源蓝牙协议为例：</p>
-<p>(<img alt="Alt text" src="./images/i_6.91.png" />)<br />
-<img alt="Alt text" src="./images/i_6.92.png" /></p></div>
-</article></body></html>
+<p>(<img alt="Alt text" src="./1505294963477.png" />)<br />
+<img alt="Alt text" src="./1505294965722.png" /></p>
+<h3 id="_11"><a name="user-content-_11" href="#_11" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>七、高频错误信息有哪些？</h3>
+<p><strong>1）</strong> <strong>Offline(例如CC:1B:E0:E0:22:61is offline)</strong>： 该AP没有上线，或者在云端调用时接口的domain与AP配置页面的domain不一致。查看AP的网络和电源，让AP重新上线后在进行操作并且查看AP的domain。</p>
+<p><strong>2）</strong> <strong>net::ERR_NAME_NOT_RESOLVED</strong>：在进行oAuth认证时，云服务器地址发生错误检查下云服务器地址是否书写有误，重新输入正确的云服务器地址</p>
+<p><strong>3）</strong> <strong>Failed to load resource</strong>: the server responded with a status of 401 (Unauthorized)：在进行oAuth认证时，开发者账户/密码输入错误检查开发者账户和密码输入是否有误，确认无误重新进行认证</p>
+<p><strong>4）</strong> <strong>{&ldquo;error&rdquo;:&rdquo;forbidden&rdquo;,&rdquo;error_description&rdquo;:&rdquo;Token not found or expired&rdquo;}(403)</strong>：token错误或者token超时(token只支持1小时)确认用户名密码，然后重新进行oAuth认证，获取token再执行操作</p>
+<p><strong>5）</strong> <strong>{“error”:”access_denied”,”error_description”:”Bearer token not found”}(403)</strong>: 拒绝访问，token错误，一般token输入为空时会返回上面的数据，检查开发<!-- MarkdownTOC --></p>
+<!-- /MarkdownTOC -->
+
+<p>者账户、密码、云服务器是否输入正确，重新申请token</p>
+<p><strong>6）</strong> <strong>net::ERR_CONNECTION_TIMED_OUT</strong>：链接超时 可能是因为IP地址写错导致</p>
+<p><strong>7）</strong> <strong>net::ERR_INCOMPLETE_CHUNKED_ENCODING</strong>：可能因为url中的参数写错导致(例如将chip写成非0和1的值)</p>
+<p><strong>8）</strong> <strong>param error </strong>：可能是因为url中的参数写错导致(例如event写错)</p>
+<p><strong>9）</strong> <strong>400 (Bad Request)</strong>： 当设备没有连接AP时，AP向设备发送请求，有可能返回400</p>
+<p><strong>10）</strong> <strong>NO DEVICE </strong>：当你想断连某蓝牙设备时可能会发生该错误，因为其已经断开或者未连接AP</p>
+<p><strong>11）</strong> <strong>NO HUB MAC </strong>：没有配置开发者账号或者开发者账号错误</p>
+<p><strong>12）</strong> <strong>CHIP IS BUSY,PLEASE WAITE</strong> ：路由器正在连接其他设备，需要等待该设备连接结束，才可以连接下一个</p>
+<p><strong>13）</strong> <strong>ERR timeout </strong>：发送http请求超时</p>
+<p><strong>14）</strong> <strong>404</strong>：请检查url中参数是否正确</p></div></article></body></html>
