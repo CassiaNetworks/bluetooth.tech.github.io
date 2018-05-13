@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Blue Ocean</title>
+  <script src="lib/jquery-3.3.1.min.js"></script>
+  <script src="lib/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+  <link href="lib/jquery-ui-1.12.1.custom/jquery-ui.css" rel="stylesheet" type="css/test" />
+  <link href="css/index.css" rel="stylesheet" type="css/test" />
+  <script src="lib/jsplumb.min.js"></script>
+</head>
+<body>
+  <div id="ocean" class=" ocean">
+    <header id="header" class="header">
+      <span class="logo">
+        <img src="images/logo.png" alt="">
+        <span id="toolName">Blue-Ocean</span>
+      </span>
+
+      <span id="save">Save</span>
+      <div id="header-shade" class="shade hide">
+    </header>
+
+    <div id="main-container" class="main-container">
+      <aside id="palette" class="palette">
+        <div id="palette-header" class="palette-header">
+          Palette
+        </div>
+        <!-- palette-container -->
+        <div id="palette-container" class="palette-container">
+        <div id="palette-container-subfiows" class="palette-category hide">
+          <div id="palette-container-header-subflows" class="palette-container-header">
+            <i class="expanded fa fa-angle-down"></i>
+            <span>子流程</span>
+          </div>
+        </div>
+          <!-- palette-container-interface -->
+          <div id="palette-container-interface" class="palette-category">
+            <!-- palette-container-interface-header-->
+            <div id="palette-container-interface-header" class="palette-container-header">
+              <i class="fa fa-angle-down expanded"></i>
+              <span>Interface</span>
+            </div>
+            <!-- palette-container-content -->
+            <div id="palette-container-interface-content" class="palette-container-content">
+              <!-- palette-Interface -->
+              <div id="palette-interface">
+                <div id="palette_node_httpS" class="palette_node ui-draggable" style="background-color: rgba(242,135,135,1);" name="httpServer">
+                    <div class="palette_label" dir>Http Server</div>
+                    <div class="palette_icon_container">
+                      <div class="palette_icon" style="background-image: url(images/grip.png)"></div>
+                    </div>
+                    <div class="palette_port palette_port_output" style="top: 10px;"></div>
+                </div>
+
+                <div id="palette_node_httpC" class="palette_node ui-draggable" style="background-color: rgba(135,172,242,1);" name="httpClient">
+                    <div class="palette_label" dir>Http Client</div>
+                    <div class="palette_icon_container">
+                      <div class="palette_icon" style="background-image: url(images/grip.png)"></div>
+                    </div>
+                    <div class="palette_port palette_port_input" style="top: 10px;"></div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- palette-container-bluetooth -->
+          <div id="palette-container-bluetooth" class="palette-category">
+            <!-- palette-container-bluetooth-header-->
+            <div id="palette-container-bluetooth-header" class="palette-container-header">
+              <i class="fa fa-angle-down expanded"></i>
+              <span>Bluetooth</span>
+            </div>
+            <!-- palette-container-content -->
+            <div id="palette-container-bluetooth-content" class="palette-container-content">
+              <!-- palette-bluetooth -->
+              <div id="palette-bluetooth">
+                <div id="palette_node_scan" class="palette_node ui-draggable" style="background-color: rgba(156,205,221,1);" name="scan">
+                    <div class="palette_label" dir>Scan</div>
+                    <div class="palette_icon_container">
+                      <div class="palette_icon" style="background-image: url(images/grip.png)"></div>
+                    </div>
+                    <div class="palette_port palette_port_output" style="top: 10px;"></div>
+                    <div class="palette_port palette_port_input" style="top: 10px;"></div>
+                </div>
+
+                <div id="palette_node_notify" class="palette_node ui-draggable" style="background-color: rgba(220,208,131,1);" name="notify">
+                    <div class="palette_label" dir>Notify</div>
+                    <div class="palette_icon_container">
+                      <div class="palette_icon" style="background-image: url(images/grip.png)"></div>
+                    </div>
+                    <div class="palette_port palette_port_output" style="top: 10px;"></div>
+                    <div class="palette_port palette_port_input" style="top: 10px;"></div>
+                </div>
+
+                <div id="palette_node_connect" class="palette_node ui-draggable" style="background-color: rgba(221,187,156,1);" name="connect">
+                    <div class="palette_label" dir>Connect</div>
+                    <div class="palette_icon_container">
+                      <div class="palette_icon" style="background-image: url(images/grip.png)"></div>
+                    </div>
+                    <div class="palette_port palette_port_input" style="top: 10px;"></div>
+                    <div class="palette_port palette_port_output" style="top: 10px;"></div>
+                </div>
+
+                <div id="palette_node_write" class="palette_node ui-draggable" style="background-color: rgba(155,221,156,1);" name="write">
+                    <div class="palette_label" dir>Write</div>
+                    <div class="palette_icon_container">
+                      <div class="palette_icon" style="background-image: url(images/grip.png)"></div>
+                    </div>
+                    <div class="palette_port palette_port_input" style="top: 10px;"></div>
+                    <div class="palette_port palette_port_output" style="top: 10px;"></div>
+                </div>
+
+                <div id="palette_node_disconnect" class="palette_node ui-draggable" style="background-color: rgba(205,169,204,1);" name="disconnect">
+                    <div class="palette_label" dir>Disconnect</div>
+                    <div class="palette_icon_container">
+                      <div class="palette_icon" style="background-image: url(images/grip.png)"></div>
+                    </div>
+                    <div class="palette_port palette_port_input" style="top: 10px;"></div>
+                    <div class="palette_port palette_port_output" style="top: 10px;"></div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- palette-container-function -->
+          <div id="palette-container-function" class="palette-category">
+            <!-- palette-container-function-header-->
+            <div id="palette-container-function-header" class="palette-container-header">
+              <i class="fa fa-angle-down expanded"></i>
+              <span>Function</span>
+            </div>
+            <!-- palette-container-content -->
+            <div id="palette-container-function-content" class="palette-container-content">
+              <!-- palette-Interface -->
+              <div id="palette-function">
+                <div id="palette_node_function" class="palette_node ui-draggable" style="background-color: rgba(192,192,192,1);" name="fn">
+                    <div class="palette_label" dir>Function</div>
+                    <div class="palette_icon_container">
+                      <div class="palette_icon" style="background-image: url(images/grip.png)"></div>
+                    </div>
+                    <div class="palette_port palette_port_output" style="top: 10px;"></div>
+                    <div class="palette_port palette_port_input" style="top: 10px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="palette-footer" class="palette-footer"></div>
+        <div id="palette-shade" class="shade hide"></div>
+      </aside>
+        <!-- workspack -->
+      <div id="workspace" class="workspace">
+        <div id="workspace-header" class="workspace-header"></div>
+        <div id="chart" tabindex="1" class="chart ui-droppable" style="display: block; margin-top: 0px;">
+          <div id="innerCanvas" class="innerCanvas" ></div>
+        </div>
+        <div id="workspace-footer" class="workspace-footer"></div>
+        <div id="editor-shade" class="shade hide"></div>
+      </div>
+
+      <div id="editor-stack" class="editor-stack hide">
+
+        <div class="editor-tray" style="width: 518px; right: 0px; transition: right 0.25s ease">
+          <div class="editor-tray-header">
+            <div class="editor-tray-titlebar">
+              <ul class="editor-tray-breadcrumbs">
+                <li id="editor_title">编辑xx节点</li>
+              </ul>
+            </div>
+            <div class="editor-tray-toolbar">
+              <button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only leftButton" role="button" aria-disabled="false" id="node-dialog-delete">删除</button>
+              <button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false" id="node-dialog-cancel">取消</button>
+              <button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only primary" role="button" aria-disabled="false" id="node-dialog-ok">完成</button>
+            </div>
+          </div>
+
+          <div class="editor-tray-body-wrapper" style="text-overflow: hidden">
+            <div class="editor-tray-body red-ui-stack" style="min-width: 460px;">
+              <div palette-category palette-category-expanded>
+
+                <div class="palette-container-header">
+                  <i class="fa fa-angle-down expanded"></i>
+                  <span>节点属性</span>
+                </div>
+                
+                <div style="position: relative; display: block;">
+                  <div class="editor-tray-content">
+                    <form id="dialog-form" class="form-horizontal" autocomplete="off" style="height: 482px;">
+<!-- 
+                      <div class="form-row">
+                        <label for="node-input-name">
+                          <span>名称:</span>
+                        </label>
+                        <input type="text" id="node-input-name" data-i18n="[placeholder]node-red:common.label.name" dir="" placeholder="名称">
+                      </div> -->
+
+<!--                       <div class="form-row">
+                        <label>Triger:</label>
+                        <label style="margin-left: 100px;">HttpServer</label>
+                      </div>
+                      <div class="form-row">
+                        <label>Input Content:</label>
+                        <label  style="margin-left: 100px;">Nofification</label>
+                      </div>
+                      <div class="form-row">
+                        <label>Output Type:</label>
+                        <label style="margin-left: 100px;">NofificationData</label>
+                      </div>
+                      <div class="form-row">
+                        <label>Output Content:</label>
+                        <label style="margin-left: 100px;"  >NofificationData</label>
+                      </div> -->
+                      
+                     <!--  <div class="form-row node-text-editor-row">
+                        <div style="height: 0px; min-height: 150px;" class="node-text-editor ace_editor ace-tomorrow" id="node-input-func-editor">
+                          <textarea class="ace_text-input" wrap="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="opacity: 0; height: 16px; width: 7.6975px; left: 46px;">
+                          </textarea>
+                          <div class="ace_gutter" aria-hidden="true">
+                            <div class="ace_layer ace_gutter-layer ace_folding-enabled" style="margin-top: 0px; height: 182px; width: 41px;">
+                              <div class="ace_gutter-cell " style="height: 16px;">1</div>
+                              <div class="ace_gutter-cell " style="height: 16px;">2</div>
+                            </div>
+                            <div class="ace_gutter-active-line" style="top: 0px; height: 16px;"></div>
+                          </div>
+                          <div class="ace_scroller" style="left: 42px; right: 0px; bottom: 0px;">
+                            <div class="ace_content" style="margin-top: 0px; width: 400px; height: 182px; margin-left: 0px;">
+                              <div class="ace_layer ace_print-margin-layer">
+                                <div class="ace_print-margin" style="left: 619.8px; visibility: visible;"></div>
+                              </div>
+                              <div class="ace_layer ace_marker-layer">
+                                <div class="ace_active-line" style="height:16px;top:0px;left:0;right:0;"></div>
+                              </div>
+                              <div class="ace_layer ace_text-layer" style="padding: 0px 4px;">
+                                <div class="ace_line" style="height:16px"></div>
+                                <div class="ace_line" style="height:16px">
+                                  <span class="ace_keyword">return</span> 
+                                  <span class="ace_identifier">msg</span>
+                                  <span class="ace_punctuation ace_operator">;</span>
+                                </div>
+                              </div>
+                              <div class="ace_layer ace_marker-layer"></div>
+                              <div class="ace_layer ace_cursor-layer ace_hidden-cursors">
+                                <div class="ace_cursor" style="left: 4px; top: 0px; width: 7.6975px; height: 16px;"></div>
+                              </div>
+                            </div>
+                          </div>
+                        <div class="ace_scrollbar ace_scrollbar-v" style="display: none; width: 22px; bottom: 0px;">
+                          <div class="ace_scrollbar-inner" style="width: 22px; height: 32px;"></div>
+                        </div>
+                        <div class="ace_scrollbar ace_scrollbar-h" style="display: none; height: 22px; left: 42px; right: 0px;">
+                          <div class="ace_scrollbar-inner" style="height: 22px; width: 442px;"></div>
+                        </div>
+                        <div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; overflow: hidden;">
+                          <div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; overflow: visible;"></div>
+                          <div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font-style: inherit; font-variant: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; overflow: visible;">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+                        </div>
+                      </div> 
+                    </div> -->
+
+                      <div class="form-row node-input-rule-container-row">
+                        <div class="red-ui-editableList">
+                          <div class="red-ui-editableList-border red-ui-editableList-container" style="min-height: 250px; max-height: none;overflow-y: scroll; height: 270px;">
+                            <ol id="node-input-rule-container" class="red-ui-editableList-list ui-sortable" style="min-height: 0px; min-width: 410px; height: auto;">
+                              <li class="red-ui-editableList-item-sortable red-ui-editableList-item-removable">
+                                <div class="red-ui-editableList-item-content" style="overflow: hidden; white-space: nowrap;">
+                                  <div>
+
+                                    <div class="red-ui-typedInput-container" style="width: 196px; margin-right: 0px; margin-left: 5px;">
+                                      <div class="red-ui-typedInput-span">
+                                        handle:
+                                      </div>
+                                      <div class="red-ui-typedInput-input" style="left: 0px;right: 0px;">
+                                        <input class="node-input-rule-value red-ui-typedInput" type="text" style="margin-left: 0px; margin-right: 0px;">
+                                      </div>
+                                    </div>
+
+                                  </div>
+                                </div>
+                                <a href="#" class="red-ui-editableList-item-remove editor-button editor-button-small">
+                                  <i class="fa fa-remove"></i>
+                                </a>
+                              </li>
+                            </ol>
+                          </div>
+                          <a href="#" class="editor-button red-ui-editableList-addButton" style="margin-top: 4px;">
+                            <i class="fa fa-plus"></i> 
+                            +添加條件
+                          </a>
+                        </div>
+                      </div>
+
+
+
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+
+              <div palette-category palette-category-expanded>
+                <div class="palette-container-header">
+                  <i class="fa fa-angle-down"></i>
+                  <span>端口标签</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          
+          <div class="editor-tray-footer"></div>
+          <div class="editor-tray-resize-handle"></div>
+
+        </div>
+      </div>
+
+      <div id="sidebar" class="sidebar">
+        <div id="red-ui-tabs" class="red-ui-tabs">
+          <div>
+            <ul id="sidebar-tabs">
+              <li class="red-ui-tab active" id="red-ui-tab-info" style="width: 46.1783%;">
+                <a href="#info" class="red-ui-tab-label" title="信息" style="">
+                  <span class="bidiAware" dir="">信息</span>
+                </a>
+              </li>
+              <li class="red-ui-tab" id="red-ui-tab-debug" style="width: 44.4954%;">
+                <a href="#debug" class="red-ui-tab-label" title="调试窗口">
+                  <span class="bidiAware" dir="">调试窗口</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div id="sidebar-container" class="sidebar-container"></div>
+        <div id="sidebar-footer" class="sidebar-footer"></div>
+        <div id="sidebar-shade" class="hide"></div>
+      </div>
+      <div id="sidebar-separator" class="ui-draggable"></div>
+  
+  </div>
+</body>
+</html>
