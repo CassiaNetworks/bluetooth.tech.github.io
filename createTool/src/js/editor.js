@@ -46,22 +46,28 @@ let nameStr = `
 `;
 
 editor.httpServer = {
-  final: function(modle) {
+  final: function (modle) {
     let content = modle.editorContent.content;
-    let params = `[{'path': '${content[0].url}'}]`;
+
+    let params = [{ "path": content[0].url, "method": content[0].method, "port": content[0].port }];
     modle.flow.todoList[0].params = params;
   },
-  html2Obj: function(dom) {
+  html2Obj: function (dom) {
     let url = dom.find('.editor-httpServer-url').val();
+    let method = dom.find('select').val();
+    let port = dom.find('.editor-httpServer-port').val();
     let obj = [{
-      'url': url
+      url,
+      method,
+      port
     }];
+    console.log(obj);
     return obj;
   },
-  obj2Html: function(obj) {
+  obj2Html: function (obj) {
 
   },
-  show: function(modle) {
+  show: function (modle) {
     let contentStr = `
       <div class="form-row">
         <label>Triger:</label>
@@ -74,10 +80,27 @@ editor.httpServer = {
       
       
         <div class="form-row">
-          <label for="node-input-name">
+          <label>
             <span>URL:</span>
           </label>
-          <input class="editor-httpServer-url" type="text"  data-i18n="[placeholder]node-red:common.label.url" dir="" placeholder="http://127.0.0.1:8081/bi/api/xxx">
+          <input class="editor-httpServer-url" type="text"  data-i18n="[placeholder]node-red:common.label.url" dir="" placeholder="/bi/api/xxx">
+        </div>
+
+        <div class="form-row">
+          <div class="form-row-left">
+            <label>
+              <span>Method:</span>
+            </label>
+            <select style="width: 74px;text-align: center;">
+              <option value="POST">POST</option>
+            </select>
+         </div>
+          <div class="form-row-right">
+            <label style="width:65px;">
+              <span>Port:</span>
+            </label>
+            <input style="width:74px;"class="editor-httpServer-port" type="text"  data-i18n="[placeholder]node-red:common.label.port" dir="" placeholder="4000">
+          </div>
         </div>
       
 
@@ -92,25 +115,30 @@ editor.httpServer = {
     `
     let dom = $(nameStr + contentStr);
     let content = modle.editorContent.content;
-    content.length && dom.find('.editor-httpClient-url').val(content[0].url);
+    if (content.length) {
+      dom.find('.editor-httpServer-url').val(content[0].url);
+      dom.find('.editor-httpServer-port').val(content[0].port);
+      dom.find('select').val(content[0].method);
+    }
+
     return dom;
   }
 };
 editor.httpClient = {
-  final: function(modle) {
+  final: function (modle) {
     let content = modle.editorContent.content;
     let params = `[{'path': '${content[0].url}'}]`;
     modle.flow.todoList[0].params = params;
   },
-  html2Obj: function(dom) {
+  html2Obj: function (dom) {
     let url = dom.find('.editor-httpClient-url').val();
     let obj = [{
       'url': url
     }];
     return obj;
   },
-  obj2Html: function(obj) {},
-  show: function(modle) {
+  obj2Html: function (obj) { },
+  show: function (modle) {
     let contentStr = `
       <div class="form-row">
         <label>Triger:</label>
@@ -144,10 +172,10 @@ editor.httpClient = {
   }
 };
 editor.scan = {
-  final: function(modle) {
+  final: function (modle) {
     let content = modle.editorContent.content;
     let p = ``;
-    content.forEach(function(item, idx, arr) {
+    content.forEach(function (item, idx, arr) {
       let tempStr = '';
       if (item.judge === 'match') {
         tempStr = item.filterType + `.match('${item.input}')`;
@@ -163,14 +191,14 @@ editor.scan = {
         p += (editorSelect[item.logic] + tempStr);
       }
     });
-    if(!content.length){
+    if (!content.length) {
       p = `return true`;
     }
     let fn = `if(${p}){return true}`;
     console.log('scan final', fn);
     modle.flow.todoList[0].function = fn;
   },
-  html2Obj: function(dom) {
+  html2Obj: function (dom) {
     let lis = dom.find('ol').find('li');
     let obj = [];
     for (let item of lis) {
@@ -183,8 +211,8 @@ editor.scan = {
     }
     return obj;
   },
-  obj2Html: function(obj) {},
-  show: function(modle) {
+  obj2Html: function (obj) { },
+  show: function (modle) {
     console.log(modle.flow.inputType);
     let contentStr = `
     <div class="form-row">
@@ -225,7 +253,7 @@ editor.scan = {
     if (content.length === 0) {
       dom.find('ol').append(editorStr.scan.itemStr(0));
     } else {
-      content.forEach(function(item, idx, arr) {
+      content.forEach(function (item, idx, arr) {
         dom.find('ol').append(editorStr.scan.itemStr(idx));
         dom.find('li').eq(idx).find('.red-ui-editableList-button-logic').html(item.logic);
         dom.find('li').eq(idx).find('select').eq(0).val(item.filterType);
@@ -237,13 +265,13 @@ editor.scan = {
   }
 };
 editor.notify = {
-  final: function(modle) {
+  final: function (modle) {
     let fn = `return true`;
     modle.flow.todoList[0].function = fn;
   },
-  html2Obj: function(dom) {},
-  obj2Html: function(obj) {},
-  show: function(modle) {
+  html2Obj: function (dom) { },
+  obj2Html: function (obj) { },
+  show: function (modle) {
     let contentStr = `
       <div class="form-row">
         <label>Triger:</label>
@@ -268,10 +296,10 @@ editor.notify = {
   }
 };
 editor.connect = {
-  final: function(modle) {
+  final: function (modle) {
     let content = modle.editorContent.content;
     let p = ``;
-    content.forEach(function(item, idx, arr) {
+    content.forEach(function (item, idx, arr) {
       let tempStr = '';
       if (item.judge === 'match') {
         tempStr = item.filterType + `.match('${item.input}')`;
@@ -287,7 +315,7 @@ editor.connect = {
         p += (editorSelect[item.logic] + tempStr);
       }
     });
-    if(!content.length){
+    if (!content.length) {
       p = `return true`;
     }
     let fn = `if(${p}){return true}`;
@@ -295,7 +323,7 @@ editor.connect = {
     modle.flow.todoList[0].function = fn;
   },
 
-  html2Obj: function(dom) {
+  html2Obj: function (dom) {
     let lis = dom.find('ol').find('li');
     let obj = [];
     for (let item of lis) {
@@ -308,8 +336,8 @@ editor.connect = {
     }
     return obj;
   },
-  obj2Html: function(obj) {},
-  show: function(modle) {
+  obj2Html: function (obj) { },
+  show: function (modle) {
     let contentStr = `
     <div class="form-row">
       <label>Triger:</label>
@@ -349,7 +377,7 @@ editor.connect = {
     if (content.length === 0) {
       dom.find('ol').append(editorStr.connect.itemStr(0));
     } else {
-      content.forEach(function(item, idx, arr) {
+      content.forEach(function (item, idx, arr) {
         dom.find('ol').append(editorStr.connect.itemStr(idx));
         dom.find('li').eq(idx).find('.red-ui-editableList-button-logic').html(item.logic);
         dom.find('li').eq(idx).find('select').eq(0).val(item.filterType);
@@ -362,22 +390,24 @@ editor.connect = {
 };
 
 editor.write = {
-  final: function(modle) {
+  final: function (modle) {
     let content = modle.editorContent.content;
     let p = [];
-    content.forEach(function(item, idx, arr) {
-      p.push(
-        {
-          'handle': item.handle,
-          'value': editorSelect[item.valueSource] + item.value
-        }
-      );
-    });
-    console.log('write final', JSON.stringify(p,null,2));
-    let fn = `return ${p.toString()}`;
-   
-    modle.flow.todoList[0].function = fn;
-  },
+    content.forEach(function (item, idx, arr) {
+      p.push({ 'handle': item.handle, 'value': editorSelect[item.valueSource] + item.value, 'type': item.valueSource
+    }
+    );
+  });
+  console.log('write final', JSON.stringify(p, null, 2));
+  p = p.map(item => {
+    item.type === 'default' ? item.value = `'${item.value}'` : 0;
+    delete item.type;
+    return item;
+  })
+  let fn = "return" + JSON.stringify(p);
+  fn = fn.replace(/\"/g, " ");
+  modle.flow.todoList[0].function = fn;
+},
   html2Obj: function(dom) {
     let lis = dom.find('ol').find('li');
     let obj = [];
@@ -388,12 +418,13 @@ editor.write = {
         'value': $(item).find('.red-ui-typedInput-value').val()
       });
     }
+    console.log('dasdsadsadasdd',obj);
     return obj;
   },
-  obj2Html: function(obj) {},
-  show: function(modle) {
+obj2Html: function(obj) { },
+show: function(modle) {
 
-    let contentStr = `
+  let contentStr = `
       <div class="form-row">
         <label>Triger:</label>
         <label style="margin-left: 100px;">${modle.flow.inputType || '未指定'}</label>
@@ -425,32 +456,32 @@ editor.write = {
         <label>Output Content:</label>
         <label style="margin-left: 100px;"  >Status</label>
       </div>`;
-    // ${editorStr.write.itemStr(0)};
-    let dom = $(nameStr + contentStr);
+  // ${editorStr.write.itemStr(0)};
+  let dom = $(nameStr + contentStr);
 
-    const content = modle.editorContent.content;
-    if (content.length === 0) {
-      dom.find('ol').append(editorStr.write.itemStr(0));
-    } else {
-      content.forEach(function(item, idx, arr) {
-        dom.find('ol').append(editorStr.write.itemStr(idx));
-        dom.find('li').eq(idx).find('.red-ui-typedInput-handle').val(item.handle);
-        dom.find('li').eq(idx).find('select').val(item.valueSource);
-        dom.find('li').eq(idx).find('.red-ui-typedInput-value').eq(1).val(item.value);
-      });
-    }
-    return dom;
+  const content = modle.editorContent.content;
+  if (content.length === 0) {
+    dom.find('ol').append(editorStr.write.itemStr(0));
+  } else {
+    content.forEach(function (item, idx, arr) {
+      dom.find('ol').append(editorStr.write.itemStr(idx));
+      dom.find('li').eq(idx).find('.red-ui-typedInput-handle').val(item.handle);
+      dom.find('li').eq(idx).find('select').val(item.valueSource);
+      dom.find('li').eq(idx).find('.red-ui-typedInput-value').val(item.value);
+    });
   }
+  return dom;
+}
 
 };
 editor.disconnect = {
-  final: function(modle) {
+  final: function (modle) {
     let fn = `return true`;
     modle.flow.todoList[0].function = fn;
   },
-  html2Obj: function(dom) {},
-  obj2Html: function(obj) {},
-  show: function(modle) {
+  html2Obj: function (dom) { },
+  obj2Html: function (obj) { },
+  show: function (modle) {
     let contentStr = `
       <div class="form-row">
         <label>Triger:</label>
@@ -474,21 +505,21 @@ editor.disconnect = {
     return str;
   }
 };
-editor.fn = {
-  final: function(modle) {
+editor.function = {
+  final: function (modle) {
     let content = modle.editorContent.content;
-    let params = modleConfig.fn.inputTypes2value[modle.flow.inputType];
+    let params = modleConfig.function.inputTypes2value[modle.flow.inputType];
     let fn_content = content[0].fn_content.split('\n');
     let str = ''
-    fn_content.forEach(function(item,idx,arr){
-        str += item;
+    fn_content.forEach(function (item, idx, arr) {
+      str += item;
     });
     let fn = `${str.replace(/\s+/g, ' ')} return ${content[0].outputContent};`;
-    
+
     modle.flow.todoList[0].function = fn;
     console.log(fn_content);
   },
-  html2Obj: function(dom) {
+  html2Obj: function (dom) {
     let obj = [];
     obj.push({
       outputType: dom.find('.red-ui-editor-fn-outputType').html(),
@@ -497,10 +528,10 @@ editor.fn = {
     });
     return obj;
   },
-  obj2Html: function(obj) {},
-  show: function(modle) {
+  obj2Html: function (obj) { },
+  show: function (modle) {
 
-    let param = editorStr.fn.itemStr(modle.flow.inputType);
+    let param = editorStr.function.itemStr(modle.flow.inputType);
     let contentStr = `
       <div class="form-row">
         <label>Triger:</label>

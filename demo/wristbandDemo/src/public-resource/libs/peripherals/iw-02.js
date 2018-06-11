@@ -37,27 +37,28 @@
 
 
     function packetData(data) {
-      let dataLength = data.length / 2;
-      if (dataLength < 15) {
-        let totalLen = (2 + dataLength).toString();
-            //console.log(totalLen.length);
-            totalLen.length === 1 ? totalLen = ('0' + totalLen).toString(16) : totalLen = totalLen.toString(16);
-            let packet = ['21ff31', totalLen, '02ff', data];
-            console.log(packet.join('').split());
-            return packet.join('').split();
-          } else {
-            let packets = [];
-            let firstPacket = data.slice(0,28);
-            let packet = '21ff311202ff' + firstPacket;
-            packets.push(packet);
-            let otherPacket = data.slice(28);
-            for(let i = 0, len = otherPacket.length; i < len; i = i + 40){
-              packets.push(otherPacket.slice(i,i+40));
-            }
-            console.log(packets);
-            return  packets;
+        let dataLength = data.length / 2;
+        let totalLen = (2 + dataLength).toString(16);
+      
+        totalLen.length === 1 ? totalLen = ('0' + totalLen).toString(16) : totalLen = totalLen.toString(16);
+        if (dataLength < 15) {
+          let packet = '21ff31' + totalLen + '02ff' + data;
+      
+          return [packet];
+        } else {
+          let packets = [];
+          let firstPacket = data.slice(0, 28);
+          let packet = '21ff31' + totalLen + '02ff' + firstPacket;
+      
+          packets.push(packet);
+          let otherPacket = data.slice(28);
+      
+          for (let i = 0, len = otherPacket.length; i < len; i = i + 40) {
+            packets.push(otherPacket.slice(i, i + 40));
           }
+          return packets;
         }
+      }
 
 
 //写入逻辑  

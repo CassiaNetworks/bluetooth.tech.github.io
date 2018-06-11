@@ -151,13 +151,13 @@ editorStr.connect = {
 };
 
 
-editorStr.fn = {
+editorStr.function = {
   contentStr: function() {
 
   },
   itemStr: function(inputType) {
 
-    let obj = modleConfig.fn.inputTypes2value;
+    let obj = modleConfig.function.inputTypes2value;
     let str = ``;
     if(!obj[inputType]){
       obj.scanData.forEach(function(item,idx,arr){

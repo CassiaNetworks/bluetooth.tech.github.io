@@ -59,7 +59,7 @@ config.disconnect = {
   'downstream': [2]
 };
 
-config.fn = {
+config.function = {
   id: 8,
   point: 'FF',
   'inputType': ['scan_data'],

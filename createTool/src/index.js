@@ -29,8 +29,8 @@ firstInstance.bind("click", function (conn, originalEvent) {
 
 /*
   连接事件
-*/ 
-firstInstance.bind('connection', function(connInfo, originalEvent) {
+*/
+firstInstance.bind('connection', function (connInfo, originalEvent) {
   let sourceId = connInfo.sourceId;
   let targetId = connInfo.targetId;
   let sourceType = $(`#${sourceId}`).attr('name');
@@ -47,9 +47,9 @@ firstInstance.bind('connection', function(connInfo, originalEvent) {
   //   '\n downstreams', downstreams,
   //   '\n downstreamId', downstreamId);
 
-  if (sourceId == targetId) {      
-      firstInstance.deleteConnection(connInfo.connection);      
-      alert("不能连接自己！");      
+  if (sourceId == targetId) {
+    firstInstance.deleteConnection(connInfo.connection);
+    alert("不能连接自己！");
   }
   if (!downstreams.includes(downstreamId)) {
     firstInstance.deleteConnection(connInfo.connection);
@@ -57,7 +57,7 @@ firstInstance.bind('connection', function(connInfo, originalEvent) {
     return;
   }
   let n = 0;
-  firstInstance.getAllConnections().forEach(function(item, idx, arr) {
+  firstInstance.getAllConnections().forEach(function (item, idx, arr) {
     if (item.sourceId === sourceId && item.targetId === targetId) {
       n++;
     }
@@ -72,20 +72,20 @@ firstInstance.bind('connection', function(connInfo, originalEvent) {
 
   targetModle.flow.inputType = sourceModle.flow.outputType;
   // console.log('-----------------------', sourceModle, targetModle, sourceModle.outputType);
-   !sourceModle.flow.todoList[0].nextIds.success.includes(targetId) && sourceModle.flow.todoList[0].nextIds.success.push(targetId);
+  !sourceModle.flow.todoList[0].nextIds.success.includes(Number(targetId)) && sourceModle.flow.todoList[0].nextIds.success.push(Number(targetId));
 
 });
 
 /*
   删除事件
 */
-firstInstance.bind("connectionDetached", function (conn, originalEvent) {    
+firstInstance.bind("connectionDetached", function (conn, originalEvent) {
   if (conn.sourceId === conn.targetId) {  //自己连接自己时会自动取消连接
     return;
-    console.log('童心未泯的广言，看我龟派气功');     
-            
-  }  
-    alert("删除连接从" + conn.sourceId + "到" + conn.targetId + "！"); 
+    console.log('童心未泯的广言，看我龟派气功');
+
+  }
+  alert("删除连接从" + conn.sourceId + "到" + conn.targetId + "！");
 });
 
 
@@ -93,7 +93,7 @@ firstInstance.bind("connectionDetached", function (conn, originalEvent) {
 
 // reseauInit(); // svg wang ge 
 // 左侧list item开启关闭动画
-$('.palette-container-header').on('click', function() {
+$('.palette-container-header').on('click', function () {
   $(this).next().toggle('blind', {}, 300);
   $(this).find('i').toggleClass("expanded", 3000);
   // console.log($(this).find('i'));
@@ -111,7 +111,7 @@ $('.ui-draggable').draggable({
 $('.ui-droppable').droppable({
   accept: '.ui-draggable',
   scope: "plant",
-  drop: function(event, ui) {
+  drop: function (event, ui) {
     let _newModle = createModle($('#innerCanvas'), ui);
     jsPmodleInit(_newModle);
   }
@@ -168,7 +168,7 @@ function jsPmodleInit(m) {
 /*
   取消editor
 */
-$(".shade").on('click', function() {
+$(".shade").on('click', function () {
   $("#editor-stack").hide();
   $(".shade").hide();
   return false;
@@ -177,7 +177,7 @@ $(".shade").on('click', function() {
 /*
   新元素双击事件
 */
-$('body').on('dblclick', '.newModle', function() {
+$('body').on('dblclick', '.newModle', function () {
   let s = firstInstance.select();
   //TODO
   $("#editor-stack").show();
@@ -196,7 +196,7 @@ $('body').on('dblclick', '.newModle', function() {
 /*
     dialog 删除事件
 */
-$('#node-dialog-delete').on('click', function() {
+$('#node-dialog-delete').on('click', function () {
   $("#editor-stack").hide();
   $(".shade").hide();
   removeModle(editors.selected);
@@ -207,14 +207,14 @@ $('#node-dialog-delete').on('click', function() {
 /*
   dialog 取消事件
 */
-$('#node-dialog-cancel').on('click', function() {
+$('#node-dialog-cancel').on('click', function () {
   $("#editor-stack").hide();
   $(".shade").hide();
 });
 /*
   dialog 保存事件
 */
-$('#node-dialog-ok').on('click', function() {
+$('#node-dialog-ok').on('click', function () {
   let mId = editors.selected.attr('id');
   let mType = editors.selected.attr('name');
   let mName = $('#node-input-name').val();
@@ -232,13 +232,13 @@ $('#node-dialog-ok').on('click', function() {
 /*
   editor item remove
 */
-$('body').on('click', '.red-ui-editableList-item-remove', function() {
+$('body').on('click', '.red-ui-editableList-item-remove', function () {
   $(this).parent().remove();
 });
 /*
   editor item add
 */
-$('body').on('click', '.red-ui-editableList-addButton', function() {
+$('body').on('click', '.red-ui-editableList-addButton', function () {
   let m = editors.selected;
   let type = m.attr('name');
   let list = $(this).parent().find('ol').find('li');
@@ -247,13 +247,13 @@ $('body').on('click', '.red-ui-editableList-addButton', function() {
 /*
 scan write  & | 切换
 */
-$('body').on('click', '.red-ui-editableList-button-logic', function() {
+$('body').on('click', '.red-ui-editableList-button-logic', function () {
   $(this).html() === '&amp;' ? $(this).html('|') : $(this).html('&amp;');
 });
 /*
   function 模块选择outputType
 */
-$('body').on('change', '.ace_editor_text_output select', function() {
+$('body').on('change', '.ace_editor_text_output select', function () {
   $('.red-ui-editor-fn-outputType').html($(this).val());
   console.log($('.red-ui-editor-fn-outputType'))
   console.log($(this).val());
@@ -261,14 +261,77 @@ $('body').on('change', '.ace_editor_text_output select', function() {
 /*
   function return content
 */
-$('body').on('keyup', '.ace_editor_text_input input', function() {
+$('body').on('keyup', '.ace_editor_text_input input', function () {
   $('.red-ui-editor-fn-content').html($(this).val());
 });
+
+function urlSearch2obj(str) {  
+  if(str == undefined) return  
+  str = str.substr(1)  
+  var arr = str.split("&"),  
+      obj = {},  
+      newArr = []  
+  arr.map(function(value,index,arr){  
+   newArr = value.split("=")  
+   if(newArr[0] != undefined) {  
+    obj[newArr[0]] = newArr[1]  
+  }  
+})  
+return obj  
+} 
+
+$('#test').on('click', function () {
+  const tree = saveTree();
+  const id = urlSearch2obj(window.location.search).id;
+  const body = {
+    id,
+    enable: 1
+  }
+  startBi(body).then(data => {
+    startTest(tree);
+  });
+  
+})
+
+function startBi(body){
+  return $.ajax({
+    type: 'put',
+    data: JSON.stringify(body),
+    url: `/bi/${body.id}`,
+    timeout: 10000,
+    success: function(data){
+      console.log('test send ok',data);
+    },
+    error: function(err) {
+      console.log('test send err', err);
+    }
+  })
+}
+function startTest(tree){
+  setTimeout(function(){
+    $.ajax({
+      type: 'post',
+      data: JSON.stringify(tree),
+      url: 'http://127.0.0.1:8081/bi/api',
+      timeout: 10000,
+      success: function(data){
+        console.log('startTest send ok',data);
+      },
+      error: function(err) {
+        console.log('startTest send err', err);
+      }
+    })
+  },3000)
+ 
+}
 
 /*
   最后点击save生成的代码
 */
-$('#save').on('click', function() {
+$('#save').on('click', function () {
+  saveTree();
+});
+function saveTree(){
   let _modles = getModles();
   let result = {
     'startId': []
@@ -280,17 +343,16 @@ $('#save').on('click', function() {
       "outputType": _modles[item].flow.outputType,
       "todoList": _modles[item].flow.todoList
     };
-    if(!_modles[item].flow.inputType || _modles[item].flow.inputType === 'auto'){
+    if (!_modles[item].flow.inputType || _modles[item].flow.inputType === 'auto') {
       result.startId.push(_modles[item].id);
     }
-   // console.log('fofofofoffofofo',JSON.stringify(_modles[item].flow.todoList, null, 2));
+    // console.log('fofofofoffofofo',JSON.stringify(_modles[item].flow.todoList, null, 2));
   }
-   console.log('save-save-save', JSON.stringify(result, null, 2));
-
-});
+  console.log('save-save-save', JSON.stringify(result, null, 2));
+}
 
 // TODO
-$('.body').on('click','.newModle',function(event) {
+$('.body').on('click', '.newModle', function (event) {
   console.log(event.target);
   // let selectedModle = $(this).find('.newModle-selected');
   if (event.keyCode === 8) {

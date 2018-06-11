@@ -159,13 +159,23 @@ span.logo img {
   font-size: 16px;
 }
 #save {
+  text-align:center;
   float: right;
   margin-left: 0;
   margin-right: 30px;
   height: 40px;
   line-height: 40px;
   background: #357;
-  padding: 0 4px;
+  width: 60px;
+  cursor: pointer;
+}
+#test {
+  text-align:center;
+  float: right;
+  height: 40px;
+  line-height: 40px;
+  background: rgb(101, 20, 104);
+  width: 60px;
   cursor: pointer;
 }
 
@@ -1117,4 +1127,13 @@ red-ui-tabs ul li.active a {
   margin-left: 5px;
   padding: 0px 4px;
   display: inline-block;
+}
+
+.form-row-left {
+  float: left;
+  width: 50%
+}
+.form-row-right {
+  float: left;
+  width: 50%
 }
