@@ -296,6 +296,7 @@ $('#test').on('click', function () {
 function startBi(body){
   return $.ajax({
     type: 'put',
+    headers : {"Content-Type" : "application/json"},
     data: JSON.stringify(body),
     url: `/bi/${body.id}`,
     timeout: 10000,
@@ -308,11 +309,13 @@ function startBi(body){
   })
 }
 function startTest(tree){
+  const host = window.location.host;
   setTimeout(function(){
     $.ajax({
       type: 'post',
+      headers : {"Content-Type" : "application/json"},
       data: JSON.stringify(tree),
-      url: 'http://127.0.0.1:8081/bi/api',
+      url: `http://${host}:8081/bi/api`,
       timeout: 10000,
       success: function(data){
         console.log('startTest send ok',data);
@@ -320,6 +323,8 @@ function startTest(tree){
       error: function(err) {
         console.log('startTest send err', err);
       }
+    }).then( data => {
+      alert('TEST success');
     })
   },3000)
  
@@ -344,10 +349,10 @@ function saveTree(){
       "todoList": _modles[item].flow.todoList
     };
     if (!_modles[item].flow.inputType || _modles[item].flow.inputType === 'auto') {
-      result.startId.push(_modles[item].id);
+      result.startId.push(Number(_modles[item].id));
     }
   }
-  return resule;
+  return result;
   // console.log('save-save-save', JSON.stringify(result, null, 2));
   // console.log('hahaha',result)
 }

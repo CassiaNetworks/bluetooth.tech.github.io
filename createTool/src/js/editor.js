@@ -49,7 +49,7 @@ editor.httpServer = {
   final: function (modle) {
     let content = modle.editorContent.content;
 
-    let params = [{ "path": content[0].url, "method": content[0].method, "port": content[0].port }];
+    let params = [{ "path": content[0].url, "method": content[0].method, "port": Number(content[0].port) }];
     modle.flow.todoList[0].params = params;
   },
   html2Obj: function (dom) {
@@ -92,7 +92,7 @@ editor.httpServer = {
               <span>Method:</span>
             </label>
             <select style="width: 74px;text-align: center;">
-              <option value="POST">POST</option>
+              <option value="post">POST</option>
             </select>
          </div>
           <div class="form-row-right">
