@@ -515,16 +515,17 @@ editor.function = {
       str += item;
     });
     let fn = `${str.replace(/\s+/g, ' ')} return ${content[0].outputContent};`;
-
+    
     modle.flow.todoList[0].function = fn;
-    console.log(fn_content);
+    console.log(' modle.flow.todoList[0].function', modle.flow.todoList[0].function);
+
   },
   html2Obj: function (dom) {
     let obj = [];
     obj.push({
       outputType: dom.find('.red-ui-editor-fn-outputType').html(),
       outputContent: dom.find('.red-ui-editor-fn-content').html(),
-      fn_content: dom.find('textarea').val(),
+      fn_content: (function(){var v = dom.find('textarea').val(); console.log('>>>>',v); return v;})(),
     });
     return obj;
   },

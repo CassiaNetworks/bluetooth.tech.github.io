@@ -329,7 +329,7 @@ function startTest(tree){
   最后点击save生成的代码
 */
 $('#save').on('click', function () {
-  saveTree();
+  console.log('save,save,save',saveTree())
 });
 function saveTree(){
   let _modles = getModles();
@@ -346,9 +346,10 @@ function saveTree(){
     if (!_modles[item].flow.inputType || _modles[item].flow.inputType === 'auto') {
       result.startId.push(_modles[item].id);
     }
-    // console.log('fofofofoffofofo',JSON.stringify(_modles[item].flow.todoList, null, 2));
   }
-  console.log('save-save-save', JSON.stringify(result, null, 2));
+  return resule;
+  // console.log('save-save-save', JSON.stringify(result, null, 2));
+  // console.log('hahaha',result)
 }
 
 // TODO

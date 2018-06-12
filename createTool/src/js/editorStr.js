@@ -72,7 +72,7 @@ editorStr.write = {
               value:
             </span>
             <div class="red-ui-typedInput-container" style="width: 196px; margin-right: 0px; margin-left: 5px;">
-              <button style="padding-left:0px">
+              <button style="padding-left:0px" type="button">
                 <select class="red-ui-typed-select">
                   <optgroup>
                     <option value="default">default</option>
