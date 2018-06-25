@@ -1334,7 +1334,10 @@ BI目前整合了6项业务，<strong>数据采集业务、信息录入业务、
 <blockquote>
 <p><code>http://AC address/gap/nodes/?event=1&amp;mac=&amp;chip=&amp;filter_name=&amp;filter_mac=&amp;filter_uuid=&amp;access_token=</code></p>
 </blockquote>
-<h5 id="connect"><a name="user-content-connect" href="#connect" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Connect(post)</h5>
+<h5 id="connect"><a name="user-content-connect" href="#connect" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Connect(post)<pre>网络请求body:({
+    "timeout": "",//可不写（默认5s），最小值为1000
+    "type" :"public" // `public` or `random`
+})</pre></h5>
 <blockquote>
 <p><code>http://AC address/gap/nodes/&lt;node&gt;/connection?mac=&amp;chip=&amp;access_token=</code></p>
 </blockquote>
@@ -1354,7 +1357,7 @@ BI目前整合了6项业务，<strong>数据采集业务、信息录入业务、
 <blockquote>
 <p><code>http://AC address/gap/nodes/?connection_state=connected&amp;mac=&amp;access_token=</code></p>
 </blockquote>
-<h5 id="write-by-handle"><a name="user-content-write-by-handle" href="#write-by-handle" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Write by handle(post)</h5>
+<h5 id="write-by-handle"><a name="user-content-write-by-handle" href="#write-by-handle" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Write by handle(get)</h5>
 <blockquote>
 <p><code>http://AC address/gatt/nodes/&lt;node&gt;/handle/&lt;handle&gt;/value/&lt;value&gt;/?mac=&amp;access_token=</code></p>
 </blockquote>
