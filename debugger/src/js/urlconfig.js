@@ -25,6 +25,9 @@ function updateUrlArr(hubIp) {
     urlArr.notifyMsg = `http://${hubIp}/gatt/nodes/?mac=${data.hubMac}&event=1&access_token=${data.access_token}`
     urlArr.writeByHandle = `http://${hubIp}/gatt/nodes/${data.perMac}/handle/${data.handle}/value/${data.writeValue}/?mac=${data.hubMac}&access_token=${data.access_token}`
     urlArr.reboot = `http://${hubIp}/cassia/reboot/?mac=${data.hubMac}&access_token=${data.access_token}`
+    urlArr.pair_input = `http://${hubIp}/management/nodes/${data.perMac}/pair-input?&access_token=${data.access_token}`
+    urlArr.unpair=`http://${hubIp}/management/nodes/${data.perMac}/bond?&access_token=${data.access_token}`
+    urlArr.pair = `http://${hubIp}/management/nodes/${data.perMac}/pair?&access_token=${data.access_token}`
 }
 updateUrlArr(data.hubIp)
 

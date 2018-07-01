@@ -62,7 +62,6 @@ layui.use(['layer', 'form'], function () {
 	form.on('switch(switchNotifyState)', function (data) {
 		if (data.elem.checked) {
 			notifyStateAndFill.start()
-
 			// data.elem.setAttribute('disabled', 'true')
 		} else {
 			notifyStateAndFill.stop()
@@ -94,6 +93,8 @@ layui.use(['layer', 'form'], function () {
 	handle.getConnectLists()
 	handle.disConnectDevice()
 	handle.getAllServices()
+	handle.gopair()
+	handle.cancelpair()
 
 
 });

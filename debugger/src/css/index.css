@@ -222,9 +222,52 @@ body {
 .log .left .order {
 	word-break: break-all;
 }
-
+.pairCode,.firstPair{
+	text-align:center;
+	margin-left:auto; 
+	margin-right:auto;
+	display: table-cell;
+	background-color: #fff;
+	position:absolute; /*绝对定位*/ 
+	top:50%; /*距顶部50%*/ 
+	left:50%; 
+	margin:-100px 0 0 -150px; /*设定这个div的margin-top的负值为自身的高度的一半,margin-left的值也是自身的宽度的一半的负值.(感觉在绕口令)*/ 
+	width:300px; /*宽为400,那么margin-top为-200px*/ 
+	height:200px; /*高为200那么margin-left为-100px;*/ 
+	z-index:99; /*浮动在最上层 */ 
+	display: none
+}
+/* .firstPair{
+	display:block
+} */
+.pairCode h3,.firstPair h3{
+	text-align: center;
+	color: #009688;
+	font-size: 24px;
+	font-weight: 500
+}
+.pairCode input{
+	width:295px; 
+height:40px;
+	/* line-height: 150px; */
+}
+.pairCode button,.firstPair button{
+	height: 38px;
+    line-height: 38px;
+    padding: 0 18px;
+    background-color: #009688;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    opacity: .9;
+}
 .log .right .layui-tab-title {
 	height: 30px;
+	/* overflow: auto; */
+	overflow-y:hidden
 }
 
 .log .right .layui-tab-title li {

@@ -59,7 +59,6 @@ function stateNotifyHandle(data) {
 		$li[0] && $li.slideUp('normal', function() {
 			this.parentNode.removeChild(this)
 		});
-
 		// debugger
 	}
 }

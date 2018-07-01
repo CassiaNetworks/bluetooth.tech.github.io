@@ -6,6 +6,7 @@ function showLog(parent, data) {
 		after: '',
 		class: ''
 	}, data)
+	console.log(_data)
 
 	let temp = `<li><pre class='${_data.class}'>${_data.before}${_data.message}${_data.after}</pre></li>`
 	// setTimeout(function() {

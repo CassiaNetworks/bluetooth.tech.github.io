@@ -10,7 +10,10 @@ let methodNames = {
     getConnectState: 'deviceConStateChange',
     writeByHandle: 'writeCom',
     disconnectDevice: 'disCon',
-    oAuth:'oAuth'
+    oAuth:'oAuth',
+    pair:'pair',
+    pair_input:'pair_input',
+    unpair:'unpair'
 }
 
 let methodConfig = {
@@ -58,11 +61,28 @@ let methodConfig = {
         type:'POST',
         methodName:methodNames.oAuth,
         url:''
+    },
+    pair:{
+        type:'POST',
+        methodName:methodNames.pair,
+        url:''
+    },
+    pair_input:{
+        type:'POST',
+        methodName:methodNames.pair_input,
+        url:''
+    },
+    unpair:{
+        type:'DELETE',
+        methodName:methodNames.unpair,
+        url:''
     }
 }
+
 let $showMethods = $('.log .left .order')
 
 function showMethod(method) {
+    console.log("*******88",methodConfig[method])
     let _methodName = methodConfig[method].methodName,
         _type = methodConfig[method].type,
         _url = methodConfig[method].url,
