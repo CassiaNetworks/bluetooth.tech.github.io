@@ -134,6 +134,7 @@ $(document).ready(function() {
     $('#_work').html(num);
   }, 6 * 1000);
 
+
   //开始连接
   $(".conbtn").on('click', function() {
     let useway = mystorage.get('useway') || 'local';
@@ -148,6 +149,9 @@ $(document).ready(function() {
         .on('notify', notification)
         .scan({})
         .on('scan', scan2conn);
+
+
+
     } else {
       api
         .use({

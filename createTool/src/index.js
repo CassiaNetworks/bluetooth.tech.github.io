@@ -329,13 +329,44 @@ function startTest(tree){
   },3000)
  
 }
+/*
+  下载文件的
+ */
+function download(text,fileName, type) {
+  const a = document.getElementById("a");
+  const file = new Blob([text], {type: type});
+  a.href = URL.createObjectURL(file);
+  a.download = fileName;
+  a.dispatchEvent(new MouseEvent('click', {'bubbles': false, 'cancelable': true}));
+}
 
 /*
   最后点击save生成的代码
 */
 $('#save').on('click', function () {
-  console.log('save,save,save',saveTree())
+  const name = prompt('请输入要保存的名字：', 'tree');
+  console.log(name, typeof name);
+  if(!name){
+    return alert('取消保存');
+  }
+  const text = JSON.stringify(saveTree(), null, 2);
+  const fileName = `${name}.json`;
+  download(text,fileName,'text/plain');
+  // console.log('save,save,save',text);
+  alert('保存成功')
 });
+function show_prompt(){  
+  var value = prompt('输入你的名字：', '默认名字');  
+  if(value == null){  
+      alert('你取消了输入！');  
+  }else if(value == ''){  
+      alert('姓名输入为空，请重新输入！');  
+      show_prompt();  
+  }else{  
+      alert('你好，'+value);  
+  }  
+}  
+
 function saveTree(){
   let _modles = getModles();
   let result = {
