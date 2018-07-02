@@ -1,0 +1,143 @@
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+    <title>bt</title>
+    <link rel="stylesheet" type="text/css" href="./css/index.css">
+	<link rel="stylesheet" type="text/css" href="./css/bootstrap.css">
+    <script type="text/javascript" src="http://www.zeptojs.cn/zepto.min.js"></script>
+    <script src="./echarts.js"></script>
+</head>
+<style type="text/css">
+	.clearfix::after{
+		display: block;
+		height:0;
+		content: "";
+		clear:both;
+	}
+	.list{
+		width: 500px;
+		height: 1000px;
+		overflow-y: scroll;
+		background-color: #fff;
+		color: red;
+	}
+	ul li{
+		list-style: none;
+	}
+	.list ul li{
+		list-style: none;
+	}
+	.canvas{
+		float: left;
+	}
+	.row{
+		display: none;
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		margin: -200px 0 0-300px;
+		width: 600px;
+		height: 400px;
+		border-radius: 5px;
+		background:#fff;
+		padding:20px;
+		z-index: 100;
+	}
+	body{
+		position: relative;
+	}
+	.ref{
+		height: 20px;
+		width: 20px;
+		outline:none;
+		border: none;
+		/*margin-left: 20px;*/
+		background-color: #4484ff;
+		color: #fff;
+		border-radius: 3px;
+		font-size: 8px;
+		font-weight: 600;
+		line-height: 20px;
+	}
+	.clo{
+		height: 20px;
+		width: 50px;
+		outline:none;
+		border: none;
+		background-color: #4484ff;
+		color: #fff;
+		border-radius: 3px;
+		font-size: 8px;
+		font-weight: 600;
+		line-height: 20px;
+		position: absolute;
+		top: 20px;
+		right: 20px;
+		z-index: 100;
+	}
+	.devData{
+		overflow-y:scroll;
+		width: 500px;
+		height: 350px;
+	}
+	.btn2{
+		position: absolute;
+		top:20px;
+		right:50px;
+	}
+	.content1{
+		position: relative;
+	}
+	.alert{
+		background-color: #fff;
+		width: 300px;
+		height: 200px;
+		color: #333;
+		font-size: 20px;
+		font-weight: bold;
+		border-radius: 5px;
+		  position:absolute;
+	    top:50%;
+	    left:50%;
+	    margin-top:-100px;
+	    margin-left:-150px;
+	    line-height:30px;
+	    text-align:center;
+	}
+</style>
+<body>
+	
+<div class="all">
+	<div class="row">
+		<button class="clo">close</button>
+		<ul class="devData">
+		</ul>
+	</div>
+	<div class="content">
+		<div class="top">
+			<span>AC Address:/AP Ip</span>
+			<input type="text" class="input ip" value="http://api.cassianetworks.com" style="width: 50%">
+		</div>
+		<div class="middle">
+			<span>Router MAC</span>
+        	<input type="text" placeholder="Router MAC" class="input hubIp">
+			<span>Sensor(s) MAC</span>
+			<input type="text" placeholder="Sensor(s) MAC" class="input devMac">
+        	<br>
+			<span>Developer Key</span>
+        	<input type="text" placeholder="Developer Key" class="input Developer" value="">
+			<span>Secret</span>
+        	<input type="text" placeholder="Secret" class="input key" value="">
+        	<button class="Scan">Start</button>
+		</div>
+	<div id="main" style="width: 600px;height:300px;"></div>
+	<div id="main1" style="width: 600px;height:300px;"></div>
+	<div id="main2" style="width: 600px;height:300px;"></div>
+
+	</div>
+</div>	
+</body>
+<script type="text/javascript" src="api.js"></script>
+<script type="text/javascript" src="ittChart.js"></script>
+<script type="text/javascript" src="index.js"></script>
+</html>

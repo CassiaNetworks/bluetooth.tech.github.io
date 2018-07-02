@@ -1,0 +1,102 @@
+body {
+    background: url(img/background.png) no-repeat center;
+}
+.title label{
+    display: inline-block;
+    margin: 20px 40px 20px 0;
+    margin-left: 40px;
+}
+.title i {
+    float:right;
+    cursor: pointer;
+    padding:25px;
+    padding-right: 50px;
+    font-size: 30px;
+    color:#1E4ddd;
+}
+.content {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.top {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.layui-elem-field legend {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.chart-style {
+    width: 800px;
+    height: 300px;
+}
+
+.fl {
+    display: inline-block;
+}
+
+.conrol {
+    text-align: center;
+}
+
+
+
+.layui-form-item .layui-input-inline {
+    display: inline-block;
+}
+
+.layui-form-item .layui-input-inline input {
+    width: 360px;
+    font-size: 1.5rem;
+    line-height: 50px;
+    height: 50px;
+}
+.reset-all{
+    float: right;
+    margin: 25px;
+}
+.layui-form-item {
+    padding: 10px;
+    font-size: 1rem;
+    margin: 0 auto;
+}
+
+.layui-form-item label {
+    display: inline-block;
+    font-size: 16px;
+    text-align: right;
+    color: #444;
+    line-height: 36px;
+    margin-right: 5px;
+}
+
+.layui-form-item .layui-button button {
+    height: 50px;
+    width: 122px;
+    font-size: 2rem;
+    border-radius: 5px;
+}
+
+.title {
+    background-color: black;
+}
+
+.subtitle {
+    color: white;
+    font-size: 3em;
+}
+
+.sensor-config textarea{
+    width:360px;
+    resize:none
+}
+
+.show-pannel li:first-child{
+    text-align: center;
+}
+.show-pannel li:first-child button{
+    margin-right: 20px;
+}

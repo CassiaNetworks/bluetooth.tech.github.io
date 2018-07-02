@@ -1,0 +1,161 @@
+html,body,div,ul,li,img,a,span,p{
+	margin:0;
+	padding:0;
+}
+html,body{
+	font-family: "Arial";
+	background:url(../timg.jpg);
+background-repeat:no-repeat ;
+background-size:100% 100%;
+background-attachment: fixed
+	/*background: url(http://new.abb.com/images/librariesprovider151/stories/smart-sensor-hero.jpg?sfvrsn=6c390111_2) 100%;*/
+}
+*{
+	 font-weight: bold
+}
+.clearfix::after{
+        display: block;
+        height:0;
+        content: "";
+        clear:both;
+}
+.content{
+	width: 1000px;
+	/*height: 44px;*/
+	margin: 0 auto;background-color: rgba(255,255,255,.7)
+}
+.top{
+	vertical-align:middle;
+	display:table-cell;
+	width: 1000px;
+	height: 44px;
+	border-bottom:1px solid #979797;
+}
+.all{
+	width: 100%;
+}
+.content img{
+	margin-left: 20px;
+	vertical-align:middle;
+	height: 24px;
+	line-height: 44px;
+}
+.middle{
+	height: 130px;
+	padding: 10px;
+	margin: 0 44px;
+}
+.middle{
+	line-height: 50px;
+	border-bottom: 1px solid #979797;
+}
+.middle span{
+	font-size: 18px;
+}
+.input{
+	border-radius: 3px;
+	outline:none;
+	border: none;
+	height: 36px;
+	width: 200px;
+	border:1px solid #333;
+	padding: 0 5px;
+}
+.refresh,.connect,.btn2,.Scan,.alertclose{
+	height: 36px;
+	width: 100px;
+	outline:none;
+	border: none;
+	/*margin-left: 20px;*/
+	background-color: #4484ff;
+	color: #fff;
+	border-radius: 3px;
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 36px;
+}
+.middle .connect a{
+	display: block;
+	height: 36px;
+	width: 100px;
+	color: #fff;
+	text-align: center;
+	line-height: 36px;
+}
+.data_right ul li{
+	font-size: 18px;
+	font-weight: 500;
+	margin-top: 10px;
+	list-style: none;	
+}
+.data_left{
+	float: left;
+	font-weight: bold;
+	font-size: 20px;
+}
+.data_right{
+	float: left;
+	margin-left: 20px;
+}
+.five_data{
+	padding: 20px 0;
+	margin: 0 44px;
+}
+.trend_data p{
+	margin-left: 40px;
+}
+.time_data_case,.line_frequency_case,.running_speed_case,.broken_rotor_index_case,.kurtosis_case,.crc_field_case,.skin_data_case,.electricity_case{
+	float: left;
+	margin: 10px 0 0 30px;
+    width: 300px;
+    height: 100px;
+    overflow-y:scroll;
+    border: 1px solid #333;
+}
+
+.data_right .Temperature span:nth-of-type(1){
+    color: #696969;
+}
+.BatteryVoltage span:nth-of-type(1){
+    color: #00CD66;
+}
+.Accelerometer span:nth-of-type(1){
+    color: #FF4500;
+}
+.Magnetometer span:nth-of-type(1){
+    color: #FF4040;
+}
+.Microphone span:nth-of-type(1){
+    color: #FF1493;
+}
+.data_right ul li span:nth-of-type(1){
+	margin-right: 10px;
+}
+.bottom>p{
+	margin-left: 40px;
+	font-size: 22px;
+}
+.content1 ul li{
+	list-style: none;
+	font-size: 20px;
+}
+.content1 ul li span:nth-of-type(1){
+	color: 	#8B1A1A
+}
+.content1 ul li span:nth-of-type(2){
+	color: #333
+}
+.content1 ul{
+	padding-left: 40px;
+}
+.lists{
+	/*float: left;*/
+	margin: 10px 0 0 30px;
+    width: 300px;
+    height: 100px;
+    overflow-y:scroll;
+    border: 1px solid #333;
+}
+.row{
+	
+}

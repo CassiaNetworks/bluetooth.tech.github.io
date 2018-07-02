@@ -1,0 +1,43 @@
+
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+    <title>OEM</title>
+    <link rel="stylesheet" type="text/css" href="./css/index.css">
+	<link rel="stylesheet" type="text/css" href="./css/bootstrap.css">
+    <script type="text/javascript" src="http://www.zeptojs.cn/zepto.min.js"></script>
+    <script src="http://echarts.baidu.com/dist/echarts.js"></script>
+</head>
+<body>
+<div class="all">
+	<div class="content" id="content">
+		<div class="top">
+			<label style="margin-left: 30px" for="acAddress">AC Address：</label>
+			<input type="text" id="acAddress" class="input" value="" style="width: 25%" placeholder="demo58.cassia.pro/api">
+
+			<label for="userName"> Developer key：</label>
+			<input type="text" id="username" class="input" value="" style="width: 18%" placeholder="oemdd ">
+
+			<label for="password"> Password：</label>
+			<input type="password" id="password" class="input" value="" style="width: 18%" placeholder="****** ">
+		</div>
+		<div class="middle">
+			<label for="apmac">Router's MAC：</label>
+        	<input type="text" placeholder="CC:1B:E0:E0:22:60" class="input hubIp" id="apmac">
+			<label for="devMac">Device MAC：</label>
+			<input type="text" placeholder="AA:BB:CC:DD:EE:FF" class="input devMac" id="devMac">
+        	<button class="btn1" id="start">Start</button>
+		</div>
+		<div class="content1" id="content1">
+			
+		</div>
+	</div>
+</div>	
+</div> 
+</body>
+<script type="text/javascript" src="api.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="js/savedata.js"></script>
+
+<script type="text/javascript" src="index.js"></script>
+</html>
