@@ -67,25 +67,25 @@
 			<h3 class="leader" i18n='allApi'>总览API</h3>
 			<ul>
 				<li>
-					<button id="bscan" i18n='scanDevice' class="layui-btn  layui-btn-primary funBtn" data-type='start'>扫描设备</button>
+					<button id="bscan" i18n='scanDevice' class="layui-btn  layui-btn-primary funBtn" data-type='start'><span i18n="sm">扫描</span></br><span i18n="sb">设备</span></button>
 				</li>
 				<li>
-					<button id="bConnect" i18n='connDevice' class="layui-btn  layui-btn-primary funBtn">连接设备</button>
+					<button id="bConnect" i18n='connDevice' class="layui-btn  layui-btn-primary funBtn"><span i18n="lj">连接</span></br><span i18n="sb">设备</span></button>
 				</li>
 				<li>
-					<button id="bconnectList" i18n='connedDevice' class="layui-btn  layui-btn-primary funBtn">已连接设备</button>
+					<button id="bconnectList" i18n='connedDevice' class="layui-btn  layui-btn-primary funBtn"><span i18n="ylj">已连接</span></br><span i18n="sb">设备</span></button>
 				</li>
 				<li>
-					<button id="bdiscoverSer" i18n='discoverServices' class="layui-btn  layui-btn-primary funBtn">发现设备服务</button>
+					<button id="bdiscoverSer" i18n='discoverServices' class="layui-btn  layui-btn-primary funBtn"><span i18n="fx">发现</span></br><span i18n="sb-fw">设备</span></br><span i18n="fw">服务</span></button>
 				</li>
 				<li>
-					<button id="bnotify" i18n='openNotify' class="layui-btn  layui-btn-primary funBtn">打开Hub通知</button>
+					<button id="bnotify" i18n='openNotify' class="layui-btn  layui-btn-primary funBtn"><span i18n="dk">打开</span></br><span i18n="router">router</span></br><span i18n="tz">通知</span></button>
 				</li>
 				<li>
-					<button id="bnotifyState" i18n='stateChange' class="layui-btn  layui-btn-primary funBtn">连接状态变化</button>
+					<button id="bnotifyState" i18n='stateChange' class="layui-btn  layui-btn-primary funBtn"><span i18n="ljj">连接</span></br><span i18n="zt">状态</span></br><span i18n="bh">变化</span></button>
 				</li>
 				<li>
-					<button id="bwrite" i18n='writeCom' class="layui-btn  layui-btn-primary funBtn">写入指令</button>
+					<button id="bwrite" i18n='writeCom' class="layui-btn  layui-btn-primary funBtn"><span i18n="xr">写入</span></br><span i18n="zl">指令</span></button>
 				</li>
 				<li>
 					<button id="bdisconnect" i18n='disCon' class="layui-btn  layui-btn-primary funBtn">断开连接</button>
@@ -135,11 +135,11 @@
 						</button>
 					</div>
 					<div class="layui-inline">
-						<label class="layui-form-label" i18n='stateChangeNotify'>连接状态变化通知</label>
+						<label class="layui-form-label" i18n='stateChangeNotify'><span i18n="co-st">连接状态</span></br><span i18n="ch-no">变化通知</span></label>
 						<input type="checkbox" lay-skin="switch" lay-filter="switchNotifyState" title="连接状态变化通知">
 					</div>
 					<div class="layui-inline">
-						<label class="layui-form-label connected_Num" i18n='connectedNum'>已连接数量： </label>
+						<label class="layui-form-label connected_Num" i18n='connectedNum'><span i18n="cond">已连接</span></br><span i18n="num">数量： </span></label>
 						<label class="layui-form-label" style="width:auto" id="connectedNum">0</label>
 					</div>
 				</div>
@@ -246,12 +246,12 @@
 			<div class="layui-tab layui-tab-card" lay-filter="log">
 				<ul class="layui-tab-title">
 					<li class="layui-this" i18n='scanResult'>扫描结果</li>
-					<li i18n='connDevice'>连接设备</li>
-					<li i18n='connedDevice'>已连接设备</li>
+					<li i18n='connDeviceLog'>连接设备</li>
+					<li i18n='connedDeviceLog'>已连接设备</li>
 					<li i18n='disService'>发现服务</li>
 					<li i18n='getMsg'>接收设备信息</li>
 					<li i18n='deviceConStateChange'>设备连接转态变化</li>
-					<li i18n='writeCom'>写入指令</li>
+					<li i18n='writeComLog'>写入指令</li>
 					<li i18n='disCon'>断开连接</li>
 					<li>oAuth</li>
 					<li i18n='pair'>配对</li>

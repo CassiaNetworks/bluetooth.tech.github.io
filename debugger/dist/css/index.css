@@ -121,6 +121,9 @@ body {
 	word-break:break-all;
 	word-wrap:break-word;
 }
+.box .layui-form-item .layui-input-inline .layui-form-switch{
+	margin-top: 0px;
+}
 .box .layui-form-item .layui-input-inline {
 	width: 8rem;
 	margin-right: 0px;
@@ -154,7 +157,7 @@ body {
 }
 
 .box .layui-form-switch {
-	margin-top: 0;
+	margin-top: 10px;
 }
 
 .box span.layui-input {
@@ -248,6 +251,9 @@ body {
 	text-align: center;
 	word-break: break-all;
 	 word-wrap:break-word;
+}
+.sss{
+
 }
 .l1 ul li button{
 	display: block;
