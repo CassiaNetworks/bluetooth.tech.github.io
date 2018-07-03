@@ -112,10 +112,21 @@ body {
 	word-break:break-all;
 	word-wrap:break-word;
 }
+.connectList{
+	margin-left:25px;
+	margin-top: -15px;
+}
+#cond_dev{
+	text-align: center;
+
+}
+#connectedNum{
+	margin-top:20px;
+}
 .box .layui-form  .open_Notify{
 	padding-left: 0;
 	padding-right: 5px;
-	width: 68px;
+	width: 85px;
 	white-space:normal;
 	text-align: center;
 	word-break:break-all;
@@ -258,9 +269,9 @@ body {
 .l1 ul li button{
 	display: block;
 	width:115px;
-	white-space:normal;
+	/* white-space:normal;
 	word-break:break-all;
-	word-wrap:break-word;
+	word-wrap:break-word; */
 }
 .pairCode,.firstPair{
 	text-align:center;
@@ -268,7 +279,7 @@ body {
 	margin-right:auto;
 	display: table-cell;
 	background-color: #fff;
-	position:absolute; /*绝对定位*/ 
+	position:fixed; /*绝对定位*/ 
 	top:50%; /*距顶部50%*/ 
 	left:50%; 
 	margin:-100px 0 0 -150px; /*设定这个div的margin-top的负值为自身的高度的一半,margin-left的值也是自身的宽度的一半的负值.(感觉在绕口令)*/ 

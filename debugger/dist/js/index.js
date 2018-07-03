@@ -1561,7 +1561,6 @@
 	        'sm': '扫描',
 	        'sb': '设备',
 	        'lj': '连接',
-	
 	        'unpair': '取消配对',
 	        'ylj': '已连接',
 	        'fx': '发现',
@@ -1570,6 +1569,8 @@
 	        'connDeviceLog': '连接设备',
 	        'connedDeviceLog': '已连接设备',
 	        'writeComLog': '写入指令',
+	        'openHub': '打开Router',
+	        'notify': '通知',
 	
 	        'dk': '打开',
 	        'router': 'router通知',
@@ -1577,14 +1578,15 @@
 	        'zt': '状态变化',
 	        'bh': ' ',
 	        'ljj': '连接',
-	
 	        'xr': '写入指令',
 	        'zl': ' ',
+	        'router-mac': '路由器 Mac',
+	        'router-ip': '路由器 Ip',
 	        'disCon': '断开连接',
+	        'getCond': '已连接',
 	        'scanList': '扫描列表',
 	        'startScan': '开始扫描',
 	        'devcieAndService': '设备及服务列表',
-	        'getList': '获取已连接设备',
 	
 	        'co-st': '连接状态',
 	        'ch-no': '变化通知',
@@ -1614,7 +1616,6 @@
 	        'close': '关闭',
 	        'pleaseCode': '请输入配对码',
 	        'pair': '配对',
-	
 	        'cond': '已连接',
 	        'num': '数量:',
 	        'interfaceURL': '<b>接口URL：</b>调用接口后，此URL会自动生成在下面的”API接口”的窗口中。',
@@ -1664,7 +1665,6 @@
 	        'sm': 'Scan',
 	        'sb': 'Device',
 	        'lj': 'Connect',
-	
 	        'unpair': 'Unpair',
 	        'pairInput': 'PairInput',
 	        'pair': 'Pair',
@@ -1676,27 +1676,29 @@
 	        'connDeviceLog': 'Connect Device',
 	        'connedDeviceLog': 'Connected Devices',
 	        'writeComLog': 'Write Instruction',
+	        'router-mac': 'Router Mac',
+	        'router-ip': 'Router Ip',
+	        'openHub': 'Open Router',
+	        'notify': 'Notify',
 	
 	        'dk': 'Open',
 	        'router': 'Router',
 	        'tz': 'Notify',
 	        'xr': 'Write',
 	        'zl': 'Instruction',
-	
 	        'ljj': 'Connection',
 	        'zt': 'State',
 	        'bh': 'Changes',
-	
+	        'getCond': 'Connected',
 	        'disCon': 'Disconnect',
 	        'scanList': 'Scan List',
 	        'startScan': 'Start Scan',
 	        'devcieAndService': 'Device and Services List',
-	        'getList': 'Connected Devices',
 	
 	        'co-st': 'Connection State',
 	        'ch-no': 'Changes Notify',
 	        'notifyList': 'Notify List',
-	        'openHubNotify': 'Open Router Notify',
+	
 	        'clearList': 'Clear List',
 	        'apiSocket': 'Api Interfaces',
 	        'scanResult': 'Scan Results',
@@ -1717,7 +1719,6 @@
 	        'yes': 'yes',
 	        'input': 'import',
 	        'close': 'close',
-	
 	        'cond': 'Connected',
 	        'num': 'Number:',
 	        'interfaceURL': '<b>Interface URL:</b>calling the interface, this URL is suyomatically generated in the window below "API Interface".',

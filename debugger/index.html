@@ -21,13 +21,13 @@
 	</fieldset>
 	<div class="top layui-form">
 		<div class="layui-inline">
-			<label class="layui-form-label" style="width:90px">Router MAC:</label>
+			<label class="layui-form-label" style="width:90px" i18n="router-mac">Router MAC:</label>
 			<div class="layui-input-inline">
 				<input type="text" name="number" id="hubMac" lay-verify="deviceMac" class="layui-input" placeholder="CC:1B:E0:E0:22:60">
 			</div>
 		</div>
 		<div class="layui-inline">
-			<label class="layui-form-label" style="width: 110px">Router Local IP:</label>
+			<label class="layui-form-label" style="width: 110px" i18n="router-ip">Router Local IP:</label>
 			<div class="layui-input-inline">
 				<input type="text" name="title" lay-verify="hubIp" id="hubIp" class="layui-input" placeholder="192.168.199.150">
 			</div>
@@ -67,25 +67,25 @@
 			<h3 class="leader" i18n='allApi'>总览API</h3>
 			<ul>
 				<li>
-					<button id="bscan" i18n='scanDevice' class="layui-btn  layui-btn-primary funBtn" data-type='start'><span i18n="sm">扫描</span></br><span i18n="sb">设备</span></button>
+					<button id="bscan" i18n='scanDevice' class="layui-btn  layui-btn-primary funBtn" data-type='start'><span i18n="sm" id="bscan">扫描</span></br><span i18n="sb" id="bscan">设备</span></button>
 				</li>
 				<li>
-					<button id="bConnect" i18n='connDevice' class="layui-btn  layui-btn-primary funBtn"><span i18n="lj">连接</span></br><span i18n="sb">设备</span></button>
+					<button id="bConnect" i18n='connDevice' class="layui-btn  layui-btn-primary funBtn"><span i18n="lj" id="bConnect">连接</span></br><span i18n="sb" id="bConnect">设备</span></button>
 				</li>
 				<li>
-					<button id="bconnectList" i18n='connedDevice' class="layui-btn  layui-btn-primary funBtn"><span i18n="ylj">已连接</span></br><span i18n="sb">设备</span></button>
+					<button id="bconnectList" i18n='connedDevice' class="layui-btn  layui-btn-primary funBtn"><span i18n="ylj" id="bconnectList">已连接</span></br><span i18n="sb" id="bconnectList">设备</span></button>
 				</li>
 				<li>
-					<button id="bdiscoverSer" i18n='discoverServices' class="layui-btn  layui-btn-primary funBtn"><span i18n="fx">发现</span></br><span i18n="sb-fw">设备</span></br><span i18n="fw">服务</span></button>
+					<button id="bdiscoverSer" i18n='discoverServices' class="layui-btn  layui-btn-primary funBtn"><span i18n="fx" id="bdiscoverSer">发现</span></br><span i18n="sb-fw" id="bdiscoverSer">设备</span></br><span i18n="fw" id="bdiscoverSer">服务</span></button>
 				</li>
 				<li>
-					<button id="bnotify" i18n='openNotify' class="layui-btn  layui-btn-primary funBtn"><span i18n="dk">打开</span></br><span i18n="router">router</span></br><span i18n="tz">通知</span></button>
+					<button id="bnotify" i18n='openNotify' class="layui-btn  layui-btn-primary funBtn"><span i18n="dk" id="bnotify">打开</span></br><span i18n="router" id="bnotify">router</span></br><span i18n="tz" id="bnotify">通知</span></button>
 				</li>
 				<li>
-					<button id="bnotifyState" i18n='stateChange' class="layui-btn  layui-btn-primary funBtn"><span i18n="ljj">连接</span></br><span i18n="zt">状态</span></br><span i18n="bh">变化</span></button>
+					<button id="bnotifyState" i18n='stateChange' class="layui-btn  layui-btn-primary funBtn"><span i18n="ljj" id="bnotifyState">连接</span></br><span i18n="zt" id="bnotifyState">状态</span></br><span i18n="bh" id="bnotifyState">变化</span></button>
 				</li>
 				<li>
-					<button id="bwrite" i18n='writeCom' class="layui-btn  layui-btn-primary funBtn"><span i18n="xr">写入</span></br><span i18n="zl">指令</span></button>
+					<button id="bwrite" i18n='writeCom' class="layui-btn  layui-btn-primary funBtn"><span i18n="xr" id="bwrite">写入</span></br><span i18n="zl" id="bwrite">指令</span></button>
 				</li>
 				<li>
 					<button id="bdisconnect" i18n='disCon' class="layui-btn  layui-btn-primary funBtn">断开连接</button>
@@ -129,7 +129,7 @@
 			<div class="layui-form">
 				<div class="layui-form-item">
 					<div class="layui-inline">
-						<label for="" i18n='getList'>获取已连接设备</label>
+						<label for="" i18n='getList' id="cond_dev"><span i18n="getCond">获取已连接</span></br><span i18n="sb">设备</span></label>
 						<button id="" class="layui-btn connectList">
 							<i class="layui-icon">&#x1002;</i>
 						</button>
@@ -207,7 +207,7 @@
 			<div class="layui-form">
 				<div class="layui-form-item">
 					<div class="layui-inline">
-						<label class="layui-form-label open_Notify" i18n='openHubNotify'>打开Hub通知</label>
+						<label class="layui-form-label open_Notify" i18n='openHubNotify'><span i18n='openHub'>打开</span></br><span i18n='notify'>Hub通知</span></label>
 						<input type="checkbox" lay-skin="switch" lay-filter="switchNotifyMsg" title="打开通知">
 					</div>
 					<div class="layui-inline">

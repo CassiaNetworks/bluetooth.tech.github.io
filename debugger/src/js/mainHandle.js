@@ -103,8 +103,8 @@ function mainHandle(layer, form) {
                 {
                     // e.target.fn = pairDeviceAndFill
                     $('.firstPair').show()
-                    $('.yes').unbind('click').bind('click',function(){
-                    $('.firstPair').hide()
+                    $('.yes').unbind('click').bind('click', function () {
+                        $('.firstPair').hide()
                     })
                     break
                 }
@@ -155,7 +155,7 @@ function gopair() {
     $l3.on('click', "[data-action='pair']", function (e) {
         // debugger
         let deviceMac = this.dataset.mac
-        pair(deviceMac,e.target)
+        pair(deviceMac, e.target)
     })
 }
 
