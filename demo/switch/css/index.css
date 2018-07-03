@@ -1,0 +1,53 @@
+ body {
+	background-color: #f1f1f1
+} 
+header {
+	margin-top: 15px;
+	padding-bottom: 15px;
+	border-bottom: 1px solid gray;
+}
+.setting label{
+width: 120px;
+}
+#stop,#Connect-iAlert{
+	margin-left: 8px
+}
+
+.content {
+	margin-top:10px;
+}
+.tipList {
+	padding-top: 100px;
+}
+.tipList li {
+	padding: 0;
+	border-radius: 4px;
+	background-color: #ddd;
+	margin-bottom: 10px;
+	color:#0089ff;
+}
+.tipList li a{
+margin: 0
+}
+.tipList li a:hover{
+	background-color: #337ab7;
+	color:#fff;
+}
+.form-group{
+	position: relative;
+}
+.cloud-control{
+	display: none;
+}
+.cloud-control input{
+	margin-top: 6px;
+}
+
+.hide{
+	display: none;
+}
+.content {
+	margin-top: 0;
+	height: 600px;
+	background-color: #000
+}

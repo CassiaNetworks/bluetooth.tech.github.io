@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        .clearfix:after {
+            content: ".";
+            display: block;
+            height: 0;
+            clear: both;
+            visibility: hidden
+        }
+
+        select {
+            height: 26px;
+            vertical-align: bottom;
+        }
+
+
+        .graphic {
+            margin-top: 20px;
+        }
+
+        .graphic .chart .pic {
+            width: 350px;
+            height: 250px;
+            float: left;
+        }
+
+        .chart .message h2,
+        .chart .message span,
+        .chart .message i {
+            display: inline-block;
+        }
+
+        .bgc {
+            height: 90%;
+            width: 90%;
+            position: fixed;
+            background: url('boschLogo.png') no-repeat center;
+            opacity: .1;
+        }
+
+        input {
+            margin-right: 10px;
+        }
+
+        #config label {
+            margin-right: 10px;
+        }
+
+        #hub_ip,
+        #device_mac,
+        #device_name {
+            width: 250px;
+            height: 20px;
+            line-height: 20px;
+            font-size: 18px;
+        }
+
+        button {
+            display: inline-block;
+            font-size: 18px;
+            line-height: 20px;
+            margin-right: 10px;
+        }
+
+        .chart .message .hidden,
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="config">
+        <label for="hub_ip">Hub IP</label><input id="hub_ip" placeholder="type the hub ip">
+        <label for="device_name" class="">Device Name</label><input id="device_name" placeholder="type the device name"
+            class="" value="BCDS_Virtual_Sensor">
+        <label for="frequency" class="i18n" i18n='SamplingFrequency'>Sampling Frequency</label><input id="frequency" type="range"
+            min="1" max="50" step="1" value="10">
+        <span id="frequencyData">10</span>HZ
+        <label for="frequency" class="i18n" i18n='RefreshRate'>Refresh Rate</label><input type="range" id="refresh" min="1"
+            max="50" step="1" value="1">
+        <span id="refreshData">1</span>HZ
+        <button id="connect" class="i18n" i18n='connect'>connect</button>
+        <button id="disconnect" class="i18n" i18n='disconnectAll'>disconnectAll</button>
+        <select name="lang" id="lang">
+            <option value="en">English</option>
+            <option value="cn">中文</option>
+        </select>
+    </div>
+    <div class="graphic clearfix" id="graphic">
+        <div class="bgc"></div>
+        <div class="chart clearfix" data-mac=''>
+            <div class="message">
+                <h2>XDK1&nbsp;</h2>
+                <span class="name"></span>
+                <b>Mac:</b>
+                <span class="hidden">状态:</span>
+                <span class="status hidden">在线</span>
+                <i class="i18n" i18n='receivepacket'>收到数据包:</i>
+                <span class="packNum">0</span>
+                <time></time>
+            </div>
+            <div class="acc pic"></div>
+            <div class="gyro pic"></div>
+            <div class="light pic"></div>
+            <div class="noise pic"></div>
+            <div class="temperature pic"></div>
+            <div class="hum pic"></div>
+            <div class="pressure pic"></div>
+            <div class="magnetic pic"></div>
+        </div>
+    </div>
+    </div>
+    <script src='js/zepto.js'></script>
+    <script src="js/echarts.js"></script>
+    <script src='js/api.js'></script>
+    <script src="js/util_cookie.js"></script>
+    <script src='js/index.js'></script>
+</body>
+
+</html>

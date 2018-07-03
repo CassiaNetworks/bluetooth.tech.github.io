@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<head>
+    <title>masterbuilt</title>
+</head>
+<style type="text/css">
+*{
+	font-family: arial
+}
+body{
+    background: url(bg-60.jpg) no-repeat center top;
+    background-size: cover; 
+    color: #731010;   
+    font-size: 1.2em;
+    line-height: 2em;
+}
+.logo { text-align: center }
+.logo img {height: 120px}
+.cc {
+    width: 960px;
+    margin: 0 auto;
+}
+h2 {
+    background: url(bg-hr.png) center top no-repeat,url(bg-hr.png) center bottom no-repeat;
+    margin: 0;
+    padding: .2em;
+    text-align: center;
+    color: #fff;
+}
+    .container{
+        padding: 2em;
+        margin-top: .5em;
+        box-shadow: 0 0 5em rgba(0,0,0,.5);
+        background-color: rgba(252, 222, 93, .2);
+        position: relative;
+    }
+
+    button{
+        border: none;
+        position: relative;
+        background: none;
+        font-size: 1.2em;
+        padding: .5em 1em;
+        color: #731010;
+        -webkit-transform: skew(-12deg);
+        -moz-transform: skew(-12deg);
+        -o-transform: skew(-12deg);
+        transform: skew(-12deg);
+
+    }
+    button:after {
+        content: '';
+        background: rgba(255, 226, 93, 0.65);
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        top: 0px;
+        bottom: 0px;
+        border: solid 3px #ffe25d;
+        z-index: -1;
+    }
+    button.light, button.power{
+        color: #fff
+    }
+    button.connect{
+		width: 170px;
+    }
+    button.light:after, button.power:after{
+        border-color: #FF8209;
+        background-color: rgba(255, 130, 9, .6);
+    }
+    input {
+        -webkit-transform: skew(-12deg);
+        -moz-transform: skew(-12deg);
+        -o-transform: skew(-12deg);
+        transform: skew(-12deg);
+        background: rgba(255,255,255,.5);
+        padding: .2em .8em;
+        font-size: 1.2em;
+        border: solid 3px #ffe25d;
+        width: 20%;
+    }
+    label { min-width: 30%; display: inline-block; }
+    .Heating,.notification{
+        background-color: gray;
+    }
+    .select select{
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        background-color: rgba(252, 222, 93, .4);
+        border: none;
+        padding: .2em .8em;
+        font-size: 1.2em;
+    }
+    option{
+    	background: rgba(255, 226, 93, 0.65);
+        border: none
+    }
+    .cassiaRouter{
+    	display: inline-block;
+    	width:180px;
+    }
+</style>
+<script src="jquery-3.1.1.min.js"></script>
+<script src="ms.js"></script>
+<body>
+
+    
+    <div class="cc">
+        <div class="logo">
+            <img src="http://masterbuilt.com/wp-content/themes/mbOne/images/1X/global/mblogo2.svg" >
+        </div>
+        <!-- 
+            <button id="xor">配对信息</button>
+            <br /> 
+        -->
+        <h2>SMOKER APPLICATION</h2>
+        <div class="container">
+        <div class="select">
+            <select id="select">
+                <option value="bendi">LocalControl&nbsp;&nbsp;</option>
+                <option value="oauth">RemoteControl&nbsp;&nbsp;</option>
+            </select>
+        </div>
+            
+            <div>
+            	<span id="cassiaRouter" class="cassiaRouter">Cassia Router IP:</span>
+               	<input type="text" id="hubIP" placeholder="HUB IP" style="width: 220px">
+                <button style="margin-left:30px; " class="connect" id="connect">Connect</button>
+            </div>
+            <br />
+
+            <button class="power" id="power">ON/OFF</button>
+            <button class="light" id="light">LIGHT</button>
+            
+
+
+            <br /> 
+            <input type="text" id="time"  placeholder="setTime(Minutes)" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" />
+            <button class="set" id="setTime">SETTIME</button>
+            
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="text" id="temp" placeholder="setTemp(>35F)" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" />
+            <button class="set" id="setTemp">SETTEMP</button><br />
+            
+            <div id="status">
+                <div class="Heating" id="Heating"></div>
+                <label>RemainTime:</label>    <span id="remainTime">00:00</span><br />
+                <label>setTemp:</label>    <span id="settemp">35F</span><br />
+                <label>The current temperature:</label>    <span id="getTemp">35F</span><br />
+                <label>MeatProbe:</label>    <span class="meatProbe" id="meatProbe">0F</span>
+            </div>
+        </div>
+</body>
+</html>
