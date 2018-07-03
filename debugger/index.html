@@ -63,37 +63,37 @@
 			<h3 class="leader" i18n='allApi'>总览API</h3>
 			<ul>
 				<li>
-					<button id="bscan" i18n='scanDevice' class="layui-btn  layui-btn-primary" data-type='start'>扫描设备</button>
+					<button id="bscan" i18n='scanDevice' class="layui-btn  layui-btn-primary funBtn" data-type='start'>扫描设备</button>
 				</li>
 				<li>
-					<button id="bConnect" i18n='connDevice' class="layui-btn  layui-btn-primary">连接设备</button>
+					<button id="bConnect" i18n='connDevice' class="layui-btn  layui-btn-primary funBtn">连接设备</button>
 				</li>
 				<li>
-					<button id="bconnectList" i18n='connedDevice' class="layui-btn  layui-btn-primary">已连接设备</button>
+					<button id="bconnectList" i18n='connedDevice' class="layui-btn  layui-btn-primary funBtn">已连接设备</button>
 				</li>
 				<li>
-					<button id="bdiscoverSer" i18n='discoverServices' class="layui-btn  layui-btn-primary">发现设备服务</button>
+					<button id="bdiscoverSer" i18n='discoverServices' class="layui-btn  layui-btn-primary funBtn">发现设备服务</button>
 				</li>
 				<li>
-					<button id="bnotify" i18n='openNotify' class="layui-btn  layui-btn-primary">打开Hub通知</button>
+					<button id="bnotify" i18n='openNotify' class="layui-btn  layui-btn-primary funBtn">打开Hub通知</button>
 				</li>
 				<li>
-					<button id="bnotifyState" i18n='stateChange' class="layui-btn  layui-btn-primary">连接状态变化</button>
+					<button id="bnotifyState" i18n='stateChange' class="layui-btn  layui-btn-primary funBtn">连接状态变化</button>
 				</li>
 				<li>
-					<button id="bwrite" i18n='writeCom' class="layui-btn  layui-btn-primary">写入指令</button>
+					<button id="bwrite" i18n='writeCom' class="layui-btn  layui-btn-primary funBtn">写入指令</button>
 				</li>
 				<li>
-					<button id="bdisconnect" i18n='disCon' class="layui-btn  layui-btn-primary">断开连接</button>
+					<button id="bdisconnect" i18n='disCon' class="layui-btn  layui-btn-primary funBtn">断开连接</button>
 				</li>
 				<li>
-					<button id="bpair" i18n='pair' class="layui-btn  layui-btn-primary">配对</button>
+					<button id="bpair" i18n='pair' class="layui-btn  layui-btn-primary funBtn">配对</button>
 				</li>
 				<li>
-					<button id="bpairInput" i18n='pairInput' class="layui-btn  layui-btn-primary">写入配对码</button>
+					<button id="bpairInput" i18n='pairInput' class="layui-btn  layui-btn-primary funBtn">写入配对码</button>
 				</li>
 				<li>
-					<button id="bunpair" i18n='unpair' class="layui-btn  layui-btn-primary">取消配对</button>
+					<button id="bunpair" i18n='unpair' class="layui-btn  layui-btn-primary funBtn">取消配对</button>
 				</li>
 			</ul>
 		</div>
@@ -112,7 +112,7 @@
 		</div>
 		<div class="pairCode">
 			<h3 i18n="pleaseCode">请输入配对码</h3>
-			<input class="Code" value="324622">
+			<input class="Code" placeholder="Pair Code">
 			<button i18n='input' class="sub">输入</button>
 			<button i18n='close' class="close">取消</button>
 		</div>
@@ -131,11 +131,11 @@
 						</button>
 					</div>
 					<div class="layui-inline">
-						<label class="layui-form-label" style="width:auto" i18n='stateChangeNotify'>连接状态变化通知</label>
+						<label class="layui-form-label" i18n='stateChangeNotify'>连接状态变化通知</label>
 						<input type="checkbox" lay-skin="switch" lay-filter="switchNotifyState" title="连接状态变化通知">
 					</div>
 					<div class="layui-inline">
-						<label class="layui-form-label" style="width:auto" i18n='connectedNum'>已连接数量： </label>
+						<label class="layui-form-label connected_Num" i18n='connectedNum'>已连接数量： </label>
 						<label class="layui-form-label" style="width:auto" id="connectedNum">0</label>
 					</div>
 				</div>
@@ -203,7 +203,7 @@
 			<div class="layui-form">
 				<div class="layui-form-item">
 					<div class="layui-inline">
-						<label class="layui-form-label" style="width:auto" i18n='openHubNotify'>打开Hub通知</label>
+						<label class="layui-form-label open_Notify" i18n='openHubNotify'>打开Hub通知</label>
 						<input type="checkbox" lay-skin="switch" lay-filter="switchNotifyMsg" title="打开通知">
 					</div>
 					<div class="layui-inline">

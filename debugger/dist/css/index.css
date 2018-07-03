@@ -97,9 +97,30 @@ body {
 .box .layui-form .layui-form-label {
 	padding-left: 0;
 	padding-right: 5px;
-	width: 2.5rem;
+	width: 110px;
+	white-space:normal;
+	word-break:break-all;
+	text-align: center;
+	word-wrap:break-word;
 }
-
+.box .layui-form .connected_Num{
+	padding-left: 0;
+	padding-right: 5px;
+	width: 68px;
+	white-space:normal;
+	text-align: center;
+	word-break:break-all;
+	word-wrap:break-word;
+}
+.box .layui-form  .open_Notify{
+	padding-left: 0;
+	padding-right: 5px;
+	width: 68px;
+	white-space:normal;
+	text-align: center;
+	word-break:break-all;
+	word-wrap:break-word;
+}
 .box .layui-form-item .layui-input-inline {
 	width: 8rem;
 	margin-right: 0px;
@@ -117,10 +138,11 @@ body {
 	padding: 2px;
 }
 
-.box .layui-btn {
-	line-height: 28px;
-	height: 28px;
+.box .funBtn {
+	line-height: 14px;
+	height: 48px;
 }
+
 .box .layui-btn {
 	padding:0 15px;
 }
@@ -221,6 +243,18 @@ body {
 
 .log .left .order {
 	word-break: break-all;
+}
+.l1 ul li{
+	text-align: center;
+	word-break: break-all;
+	 word-wrap:break-word;
+}
+.l1 ul li button{
+	display: block;
+	width:115px;
+	white-space:normal;
+	word-break:break-all;
+	word-wrap:break-word;
 }
 .pairCode,.firstPair{
 	text-align:center;
