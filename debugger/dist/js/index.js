@@ -1644,7 +1644,7 @@
 	        'allApi': 'API Info',
 	        'firstCode': 'Please pair first',
 	        'scanDevice': 'Scan' + ' \n ' + 'Device',
-	        'unpair': 'Unpair',
+	        'unpair': 'U1npair',
 	        'pairInput': 'PairInput',
 	        'pair': 'Pair',
 	        'pair_input': 'Pair_input',
