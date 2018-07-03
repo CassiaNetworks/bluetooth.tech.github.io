@@ -155,7 +155,6 @@ $(function() {
         dispatch(obj);
       }
     });
-
   }
 
   function _pairInput(obj) {
