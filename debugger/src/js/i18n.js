@@ -97,7 +97,7 @@ const i18n = function (language,cb) {
             'reboot': 'Reboot',
             'allApi': 'API Info',
             'firstCode':'Please pair first',
-            'scanDevice': 'Scan Device',
+            'scanDevice': 'Scan'+' \n '+'Device',
             'unpair':'Unpair',
             'pairInput':'PairInput',
             'pair':'Pair',

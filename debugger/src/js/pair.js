@@ -72,9 +72,10 @@ function gopair(deviceMac, etarget) {
 			$(`.l3 ul li[data-mac='${deviceMac}']`).slideUp('normal', function () {
 				this.remove()
 			});
-		}
-		if (e.pairingStatus === 'Pairing Successful') {
+		}else if (e.pairingStatus === 'Pairing Successful') {
 			alert('已经配对')
+		}else {
+			alert('此设备不支持配对')
 		}
 	}).fail(function (e) {
 		console.log(e)
