@@ -160,14 +160,22 @@ body {
 .box .layui-btn {
 	padding:0 15px;
 }
-
+.layui-btn{
+	line-height: 0;
+	height:30px;
+}
 .box .layui-input {
 	line-height: 20px;
 	padding: 2px;
 	height: auto;
 }
-
 .box .layui-form-switch {
+	margin-top: 0px;
+}
+/* .tree .layui-tree li{
+	overflow:visible;
+} */
+.box .selectBtn .layui-form-switch {
 	margin-top: 10px;
 }
 
