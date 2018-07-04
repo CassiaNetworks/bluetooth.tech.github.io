@@ -1689,7 +1689,7 @@
 	        'ljj': 'Connection',
 	        'zt': 'State',
 	        'bh': 'Changes',
-	        'getCond': 'Connected1',
+	        'getCond': 'Connected',
 	        'disCon': 'Disconnect',
 	        'scanList': 'Scan List',
 	        'startScan': 'Start Scan',
