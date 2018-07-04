@@ -63,7 +63,7 @@
 	</div>
 	<div class="box">
 		<div class="l1">
-			<h3 class="leader" i18n='allApi'>总览API</h3>
+			<h3 class="leader"><span class="radius" i18n='allApi'>总览API</span></h3>
 			<ul>
 				<li>
 					<button id="bscan" class="layui-btn  layui-btn-primary funBtn" data-type='start'><span i18n="sm" id="bscan">扫描</span></br><span i18n="sb" id="bscan">设备</span></button>
@@ -101,7 +101,7 @@
 			</ul>
 		</div>
 		<div class="l2">
-			<h3 class="leader" i18n='scanList'>扫描列表</h3>
+			<h3 class="leader"><span class="radius" i18n='scanList'>扫描列表</span></h3>
 			<div class="layui-form">
 				<div class="layui-form-item">
 					<label class="layui-form-label" i18n='startScan' style="width:auto">开始扫描</label>
@@ -124,7 +124,7 @@
 			<button i18n="yes" class="yes">确定</button>
 		</div>
 		<div class="l3">
-			<h3 class="leader" i18n='devcieAndService'>设备及服务列表</h3>
+			<h3 class="leader"><span class="radius" i18n='devcieAndService'>设备及服务列表</span></h3>
 			<div class="layui-form">
 				<div class="layui-form-item">
 					<div class="layui-inline">
@@ -202,8 +202,8 @@
 			</div>
 		</div>
 		<div class="l4">
-			<h3 class="leader" i18n='notifyList'>通知列表</h3>
-			<div class="layui-form">
+			<h3 class="leader"><span i18n='notifyList' class="radius">通知列表</span></h3>
+			<div class="layui-form n-background">
 				<div class="layui-form-item">
 					<div class="layui-inline selectBtn">
 						<label class="layui-form-label open_Notify" i18n='openHubNotify'><span i18n='openHub'>打开</span></br><span i18n='notify'>Hub通知</span></label>
@@ -223,7 +223,7 @@
 	</div>
 	<div class="log">
 		<div class="left">
-			<h3 class="leader" i18n='apiSocket'>API接口</h3>
+			<h3 class="leader"><span i18n='apiSocket' class="radius">API接口</span></h3>
 			<ul class="order">
 				<!--<li>
 					<p><span>方法名</span><span>扫描设备</span><span>GET</span></p>
@@ -241,21 +241,21 @@
 				</li>-->
 			</ul>
 		</div>
-		<div class="right">
+		<div class="right" id="fontColor">
 			<div class="layui-tab layui-tab-card" lay-filter="log">
 				<ul class="layui-tab-title">
-					<li class="layui-this" i18n='scanResult'>扫描结果</li>
-					<li i18n='connDeviceLog'>连接设备</li>
-					<li i18n='connedDeviceLog'>已连接设备</li>
-					<li i18n='disService'>发现服务</li>
-					<li i18n='getMsg'>接收设备信息</li>
-					<li i18n='deviceConStateChange'>设备连接转态变化</li>
-					<li i18n='writeComLog'>写入指令</li>
-					<li i18n='disCon'>断开连接</li>
-					<li>oAuth</li>
-					<li i18n='pair'>配对</li>
-					<li i18n='pairInput'>写入配对码</li>
-					<li i18n='unpair'>取消配对</li>
+					<li class="layui-this touch" i18n='scanResult'>扫描结果</li>
+					<li class="touch" i18n='connDeviceLog'>连接设备</li>
+					<li class="touch" i18n='connedDeviceLog'>已连接设备</li>
+					<li class="touch" i18n='disService'>发现服务</li>
+					<li class="touch" i18n='getMsg'>接收设备信息</li>
+					<li class="touch" i18n='deviceConStateChange'>设备连接转态变化</li>
+					<li class="touch" i18n='writeComLog'>写入指令</li>
+					<li class="touch" i18n='disCon'>断开连接</li>
+					<li class="touch">oAuth</li>
+					<li class="touch" i18n='pair'>配对</li>
+					<li class="touch" i18n='pairInput'>写入配对码</li>
+					<li class="touch" i18n='unpair'>取消配对</li>
 				</ul>
 				<div class="layui-tab-content">
 					<div class="layui-tab-item layui-show" id="scanLog">
