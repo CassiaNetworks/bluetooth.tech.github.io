@@ -1063,7 +1063,7 @@ body .markdown-body
 <li><a href="#33-apip">3.3 获取AP的ip地址</a></li>
 <li><a href="#34-ap">3.4  AP配置页面的详情</a></li>
 <li><a href="#35-3g4g">3.5 怎么连接到3G/4G网？</a></li>
-<li><a href="#36">3.6 怎么连接到以太网 ？</a></li>
+<li><a href="#36">3.6 怎么连接到以太网？怎样设置静态IP？</a></li>
 <li><a href="#37wifi">3.7怎么连接到WiFi？（及网络优先级问题）</a></li>
 <li><a href="#38">3.8连网成功有什么提示吗？</a></li>
 <li><a href="#39-apac">3.9 AP登录到AC,需要配置哪些参数？</a></li>
@@ -1209,7 +1209,7 @@ body .markdown-body
 <img alt="Alt text" src="./images/i_3.42.png" /></p>
 <h4 id="35-3g4g"><a name="user-content-35-3g4g" href="#35-3g4g" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>3.5 怎么连接到3G/4G网？</h4>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;插入3G/4G无线网卡到USB插口，AP将会自动接入互联网，目前大陆  支持中兴MF823 Hilink版。</p>
-<h4 id="36"><a name="user-content-36" href="#36" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>3.6 怎么连接到以太网 ？</h4>
+<h4 id="36"><a name="user-content-36" href="#36" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>3.6 怎么连接到以太网 ？怎样设置静态IP？</h4>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;通过以太网线直接连接到AP的网口，AP将会自动接入接入互联网，AP的IP地址默认通过DHCP方式获取。<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可以在AP配置页面将IP配置为static<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;打开cmd，输入ipconfig</p>
@@ -1333,12 +1333,13 @@ BI目前整合了6项业务，<strong>数据采集业务、信息录入业务、
 <blockquote>
 <p><code>http://AC address/gap/nodes/?event=1&amp;mac=&amp;chip=&amp;filter_name=&amp;filter_mac=&amp;filter_uuid=&amp;access_token=</code></p>
 </blockquote>
-<h5 id="connect"><a name="user-content-connect" href="#connect" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Connect(post)<pre>网络请求body:({
-    "timeout": "1",//此字段可不写（默认5s），最小值为1
-    "type" :"public" // `public` or `random`
-})</pre></h5>
+<h5 id="connect"><a name="user-content-connect" href="#connect" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Connect(post)</h5>
 <blockquote>
 <p><code>http://AC address/gap/nodes/&lt;node&gt;/connection?mac=&amp;chip=&amp;access_token=</code></p>
+<pre>       post请求的body:({
+        "timeout": "1",//此字段可不写（默认5s），最小值为1
+        "type" :"public" // `public` or `random`
+      })</pre>
 </blockquote>
 <h5 id="disconnect"><a name="user-content-disconnect" href="#disconnect" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Disconnect(delete)</h5>
 <blockquote>
@@ -1363,6 +1364,30 @@ BI目前整合了6项业务，<strong>数据采集业务、信息录入业务、
 <h5 id="notify"><a name="user-content-notify" href="#notify" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Notify(sse)</h5>
 <blockquote>
 <p><code>http://AC address/gatt/nodes/?event=1&amp;mac=&amp;access_token=</code></p>
+</blockquote>
+<h5 id="pair"><a name="user-content-pair" href="#pair" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Pair(post)(此接口为新增)</h5>
+<blockquote>
+<p><code>http://192.168.199.218/management/nodes/&lt;node&gt;/pair?&access_token=</code></p>
+<pre>
+        post请求的data: ({
+            "bond": 1,
+            "legacy-oob":  0,
+            "io-capability": 'KeyboardDisplay'
+        })</pre>
+        <p><strong>**注：若此设备不支持配对，则http请求会返回失败</strong></p>
+</blockquote>
+<h5 id="pairInput"><a name="user-content-pairInput" href="#pairInput" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Pair-input(post)(此接口为新增)</h5>
+<blockquote>
+<p><code>http://192.168.199.218/management/nodes/&lt;node&gt;/pair-input?&access_token=</code></p>
+<pre>
+        post请求的data: ({
+            "passkey": passkey //passkey为配对码
+        })</pre>
+</blockquote>
+<h5 id="pairInput"><a name="user-content-pairInput" href="#pairInput" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Unpair(delete)(此接口为新增)</h5>
+<blockquote>
+<p><code>http://192.168.199.218/management/nodes/&lt;node&gt;/bond?&access_token=</code></p>
+
 </blockquote>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;以上为常用API接口，供开发使用，有专门的的API接口文档，蓝牙调试工具所有功能都是通过API接口实现的。<br />
 以连接接口为例（js语言）：<br />
