@@ -1591,7 +1591,7 @@
 	        'co-st': '连接状态',
 	        'ch-no': '变化通知',
 	        'notifyList': '通知列表',
-	        'openHubNotify': '打开router通知',
+	
 	        'clearList': '清空此列表',
 	        'apiSocket': 'API接口',
 	        'scanResult': '扫描结果',
@@ -1656,7 +1656,7 @@
 	        'local': 'Local',
 	        'remote': 'Remote',
 	        '_lang': 'en',
-	        'lang': 'Language',
+	        'lang': '语言',
 	        'title': 'Cassia Bluetooth Debug Tool',
 	        'header': 'Cassia Bluetooth Debug  Tool',
 	        'reboot': 'Reboot',

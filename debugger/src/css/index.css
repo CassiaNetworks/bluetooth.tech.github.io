@@ -113,12 +113,12 @@ body {
 	word-wrap:break-word;
 }
 .connectList{
-	margin-left:25px;
 	margin-top: -15px;
 }
 #cond_dev{
 	text-align: center;
-
+	width: 88px;
+    display: inline-block;
 }
 #connectedNum{
 	margin-top:20px;
