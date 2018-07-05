@@ -11,6 +11,8 @@ import {
 import {
 	showLog
 } from './showlog'
+import * as mainHandle from './mainHandle'
+
 let temp = `<form class="layui-form  getpair-tip tip" action="#">
 	<div class="layui-form-item">
 	  <label class="layui-form-label">getpair a device：GET</label>
@@ -58,6 +60,7 @@ function gopair(deviceMac, etarget) {
 			$('.sub').unbind('click').bind('click',function () {
 				var x = $('.Code').val()
 				$('.pairCode').hide()
+				mainHandle.linkage(10)
 				pair_input(deviceMac, x)
 			})
 			$('.close').unbind('click').bind('click',function(){
@@ -73,11 +76,24 @@ function gopair(deviceMac, etarget) {
 				this.remove()
 			});
 		}else if (e.pairingStatus === 'Pairing Successful') {
-			alert('已经配对')
+			alert("已经配对")
+			showLog(parent, {
+				before: `mac:&nbsp;&nbsp;${deviceMac} pair`,
+				message: JSON.stringify(e, null, 2),
+				class: 'success'
+			})
+			$(`.l3 ul li[data-mac='${deviceMac}']`).slideUp('normal', function () {
+				this.remove()
+			});
 		}else {
 			alert('此设备不支持配对')
 		}
 	}).fail(function (e) {
+		showLog(parent, {
+			before: `mac:&nbsp;&nbsp;${deviceMac} pair`,
+			message: JSON.stringify(e, null, 2),
+			class: 'fail'
+		})
 		console.log(e)
 	})
 

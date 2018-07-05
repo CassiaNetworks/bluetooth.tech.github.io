@@ -108,6 +108,7 @@
 			(0, _i18n2.default)(data.value, form.render);
 		});
 		form.on('switch(switchScan)', function (data) {
+			handle.linkage(0);
 			if (data.elem.checked) {
 				console.log(_globalData2.default.saved);
 				_scan2.default.start({
@@ -119,6 +120,7 @@
 		});
 	
 		form.on('switch(switchNotifyState)', function (data) {
+			handle.linkage(5);
 			if (data.elem.checked) {
 				_notifyStateAndFill2.default.start();
 			} else {
@@ -127,6 +129,7 @@
 		});
 	
 		form.on('switch(switchNotifyMsg)', function (data) {
+			handle.linkage(4);
 			if (data.elem.checked) {
 				_notifyMsgAndFill2.default.start();
 			} else {
@@ -175,7 +178,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.cancelpair = exports.gopair = exports.getAllServices = exports.disConnectDevice = exports.getConnectLists = exports.connectButton = exports.mainHandle = undefined;
+	exports.linkage = exports.cancelpair = exports.gopair = exports.getAllServices = exports.disConnectDevice = exports.getConnectLists = exports.connectButton = exports.mainHandle = undefined;
 	
 	var _connectDevice = __webpack_require__(/*! ./connectDevice */ 6);
 	
@@ -343,9 +346,14 @@
 	        form.render();
 	    });
 	}
+	function linkage(id) {
+	    $('.log .layui-tab-title li').eq(id).addClass('layui-this').siblings().removeClass('layui-this');
+	    $('.layui-tab-card .layui-tab-content>div').eq(id).addClass('layui-show').siblings().removeClass('layui-show');
+	}
 	
 	function connectButton() {
 	    $('.box .l2').on('click', "[data-action='connect']", function () {
+	        linkage(1);
 	        var deviceMac = this.dataset.mac,
 	            type = this.dataset.type;
 	        (0, _connectDevice2.default)(null, type, deviceMac);
@@ -353,12 +361,14 @@
 	}
 	function cancelpair() {
 	    $('body').on('click', "[data-action='unpair']", function () {
+	        linkage(11);
 	        var deviceMac = this.dataset.mac;
 	        (0, _unpair2.default)(deviceMac);
 	    });
 	}
 	function disConnectDevice() {
 	    $l3.on('click', "[data-action='disconnect']", function () {
+	        linkage(7);
 	        var deviceMac = this.dataset.mac;
 	        (0, _disConnectDeviceAndFill2.default)(deviceMac);
 	    });
@@ -366,12 +376,14 @@
 	
 	function getAllServices() {
 	    $l3.on('click', "button[data-action='services']", function () {
+	        linkage(3);
 	        var deviceMac = this.dataset.mac;
 	        (0, _getAllServicesAndFill.getAllServicesAndFill)(deviceMac);
 	    });
 	}
 	function gopair() {
 	    $l3.on('click', "[data-action='pair']", function (e) {
+	        linkage(9);
 	        var deviceMac = this.dataset.mac;
 	        (0, _pair2.default)(deviceMac, e.target);
 	    });
@@ -379,6 +391,7 @@
 	
 	function getConnectLists() {
 	    $l3.on('click', '.connectList', function () {
+	        linkage(2);
 	        (0, _getConnectList.getConnectListAndFiil)();
 	    });
 	}
@@ -390,6 +403,7 @@
 	exports.getAllServices = getAllServices;
 	exports.gopair = gopair;
 	exports.cancelpair = cancelpair;
+	exports.linkage = linkage;
 
 /***/ }),
 /* 6 */
@@ -1676,6 +1690,10 @@
 	        'unpair': 'Unpair',
 	        'pairInput': 'Pair Input',
 	        'pair': 'Pair',
+	        'Pair': 'Pair',
+	        'Unpair': 'Unpair',
+	        'Seri': 'Serivices',
+	        'Disc': 'Disconnect',
 	        'pair_input': 'Pair_input',
 	        'ylj': 'Connected',
 	        'fx': 'Discover',
@@ -1684,10 +1702,10 @@
 	        'connDeviceLog': 'Connect Device',
 	        'connedDeviceLog': 'Connected Devices',
 	        'writeComLog': 'Write Instruction',
-	        'router-mac': 'Router Mac',
+	        'router-mac': 'Router MAC',
 	        'router-ip': 'Router Ip',
 	        'openHub': 'Open Router',
-	        'notify': 'Notify',
+	        'notify': 'Notification',
 	        'connDevice': 'Connect Device',
 	        'connedDevice': 'Connected Devices',
 	
@@ -1712,7 +1730,7 @@
 	        'devcieAndService': 'Device and Services List',
 	
 	        'co-st': 'Connection State',
-	        'ch-no': 'Changes Notify',
+	        'ch-no': 'Notification',
 	        'notifyList': 'Notify List',
 	
 	        'clearList': 'Clear List',
@@ -1873,7 +1891,10 @@
 		_hubMac: '',
 		_hubIp: '',
 		_chip: '0',
-		_commond: ''
+		_commond: '',
+		_oAuth_dev: '',
+		_secret: '',
+		_acaddress: ''
 	};
 	(0, _defineProperties2.default)(savedInit, {
 		deviceMac: {
@@ -1918,6 +1939,33 @@
 			},
 			set: function set(newValue) {
 				this._commond = newValue;
+				(0, _localStorage.storage)(localStorageKey, this);
+			}
+		},
+		oAuth_dev: {
+			get: function get() {
+				return this._oAuth_dev;
+			},
+			set: function set(newValue) {
+				this._oAuth_dev = newValue;
+				(0, _localStorage.storage)(localStorageKey, this);
+			}
+		},
+		secret: {
+			get: function get() {
+				return this._secret;
+			},
+			set: function set(newValue) {
+				this._secret = newValue;
+				(0, _localStorage.storage)(localStorageKey, this);
+			}
+		},
+		acaddress: {
+			get: function get() {
+				return this._acaddress;
+			},
+			set: function set(newValue) {
+				this._acaddress = newValue;
 				(0, _localStorage.storage)(localStorageKey, this);
 			}
 		}
@@ -2053,8 +2101,9 @@
 	
 	function readStorage(key, expectationData) {
 		if (!window.localStorage) return expectationData;
-		var storage = window.localStorage,
-		    localData = JSON.parse(storage.getItem(key));
+		var storage = window.localStorage;
+		var localData = JSON.parse(storage.getItem(key));
+		console.log(storage, localData);
 	
 	
 		return (0, _assign2.default)(expectationData, localData);
@@ -2349,6 +2398,12 @@
 	
 	var _showlog = __webpack_require__(/*! ./showlog */ 57);
 	
+	var _mainHandle = __webpack_require__(/*! ./mainHandle */ 5);
+	
+	var mainHandle = _interopRequireWildcard(_mainHandle);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var temp = '<form class="layui-form  getpair-tip tip" action="#">\n\t<div class="layui-form-item">\n\t  <label class="layui-form-label">getpair a device\uFF1AGET</label>\n\t</div>\n\t<fieldset class="layui-elem-field layui-field-title">\n\t  <legend  i18n=\'arguments\'>\u53C2\u6570</legend>\n\t</fieldset>\n\t\n\t<div class="layui-form-item">\n\t  <label class="layui-form-label">pair code:</label>\n\t  <div class="layui-input-inline">\n\t\t<input type="text" name="pair code"  placeholder="CC:1B:E0:E0:10:C1" value="" lay-verify=\'deviceMac\'  class="layui-input">\n\t  </div>\n\t  <div class="layui-form-mid layui-word-aux" i18n = \'required\'>(\u5FC5\u586B)</div>\n\t</div>\n\t\n\t\n\t<fieldset class="layui-elem-field layui-field-title">\n\t  <legend i18n = \'description\'>\u63CF\u8FF0</legend>\n\t</fieldset>\n\t<div class="layui-form-item layui-form-text">\n\t  <div class="descriptors getpair-des">\n\t\t<p i18n="getpair-Tip-p1"><b>chip\uFF1A</b>\u84DD\u7259\u8DEF\u7531\u5668\u5171\u6709\u4E24\u4E2A\u82AF\u7247\uFF0C\u82AF\u72470\u548C\u82AF\u72471\uFF0C\u5728\u8C03\u7528\u63A5\u53E3\u65F6\u53EF\u4EE5\u901A\u8FC7\u6DFB\u52A0queryString\u6765\u9009\u62E9\u82AF\u7247(?chip=0\u6216\u8005?chip=1)\uFF0C\u6BCF\u4E2A\u82AF\u7247\u7684\u8FDE\u63A5\u4E0A\u9650\u662F11\u4E2A\u8BBE\u5907\uFF0C\u5982\u679C\u4E0D\u586B\u6B64\u53C2\u6570\uFF0C\u84DD\u7259\u8DEF\u7531\u5668\u4F1A\u6839\u636E\u8FDE\u63A5\u6570\u91CF\u81EA\u52A8\u5339\u914D\u82AF\u7247\u3002</p>\n\t\t<p i18n="getpair-Tip-p2"><b>deviceMac\uFF1A</b>\u8981\u8FDE\u63A5\u7684\u8BBE\u5907\u7684MAC\u5730\u5740\u3002</p>\n\t\t<p i18n="getpair-Tip-p3"><b>type\uFF1A</b>\u6B64\u53C2\u6570\u5728body\u4E2D\uFF0C\u662F\u5FC5\u586B\u9879\u3002\u84DD\u7259\u8BBE\u5907\u7684MAC\u5730\u5740\u5206\u4E3Arandom\u548Cpublic\u4E24\u79CD\uFF0C\u6240\u4EE5\u5728\u8FDE\u63A5\u8BBE\u5907\u65F6\uFF0C\u9700\u8981\u6307\u51FA\u8BBE\u5907\u7684\u5E7F\u64ADtype\uFF0C\u5E7F\u64ADtype\u53EF\u4EE5\u4ECE\u626B\u63CF\u6570\u636E\u4E2D\u83B7\u53D6\u3002</p>\n\t  </div>\n\t</div>\n\t<div class="layui-form-item">\n\t  <div class="layui-input-block">\n\t\t<button class="layui-btn" lay-submit lay-filter="getpair">do</button>\n\t  </div>\n\t</div>\n  </form>';
@@ -2365,6 +2420,7 @@
 				$('.sub').unbind('click').bind('click', function () {
 					var x = $('.Code').val();
 					$('.pairCode').hide();
+					mainHandle.linkage(10);
 					(0, _pairInput2.default)(deviceMac, x);
 				});
 				$('.close').unbind('click').bind('click', function () {
@@ -2379,11 +2435,24 @@
 					this.remove();
 				});
 			} else if (e.pairingStatus === 'Pairing Successful') {
-				alert('已经配对');
+				alert("已经配对");
+				(0, _showlog.showLog)(parent, {
+					before: 'mac:&nbsp;&nbsp;' + deviceMac + ' pair',
+					message: (0, _stringify2.default)(e, null, 2),
+					class: 'success'
+				});
+				$('.l3 ul li[data-mac=\'' + deviceMac + '\']').slideUp('normal', function () {
+					this.remove();
+				});
 			} else {
 				alert('此设备不支持配对');
 			}
 		}).fail(function (e) {
+			(0, _showlog.showLog)(parent, {
+				before: 'mac:&nbsp;&nbsp;' + deviceMac + ' pair',
+				message: (0, _stringify2.default)(e, null, 2),
+				class: 'fail'
+			});
 			console.log(e);
 		});
 	}
@@ -2532,7 +2601,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function htmlTemp(mac, name) {
-		return '<li data-mac=' + mac + '>\n\t\t\t\t<div class="layui-form-item">\n\t\t\t\t\t<div class="layui-inline">\n\t\t\t\t\t\t<label class="layui-form-label">mac:</label>\n\t\t\t\t\t\t<div class="layui-input-inline">\n\t\t\t\t\t\t\t<span class="layui-input">' + mac + '</span>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class="layui-inline">\n\t\t\t\t\t\t<label class="layui-form-label">name:</label>\n\t\t\t\t\t\t<div class="layui-input-inline">\n\t\t\t\t\t\t\t<span class="layui-input">' + name + '</span>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<div class="layui-form-item">\n\t\t\t\t\t<div class="layui-input-inline">\n\t\t\t\t\t\t<button class="layui-btn" data-mac=' + mac + ' data-action=\'services\'>Serivices</button>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class="layui-input-inline">\n\t\t\t\t\t\t<button class="layui-btn" data-mac=' + mac + ' data-action=\'pair\'>pair</button>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class="layui-input-inline">\n\t\t\t\t\t\t<button class="layui-btn" data-mac=' + mac + ' data-action=\'unpair\'>unpair</button>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class="layui-input-inline">\n\t\t\t\t\t\t<button class="layui-btn" data-mac=' + mac + ' data-action=\'disconnect\'>disconnect</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<div class="layui-input-item tree">\n\t\t\t\t\t<ul data-mac=' + mac + '></ul> \n\t\t\t\t</div>\n\t\t\t</li>';
+		return '<li data-mac=' + mac + '>\n\t\t\t\t<div class="layui-form-item">\n\t\t\t\t\t<div class="layui-inline">\n\t\t\t\t\t\t<label class="layui-form-label">mac:</label>\n\t\t\t\t\t\t<div class="layui-input-inline">\n\t\t\t\t\t\t\t<span class="layui-input">' + mac + '</span>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class="layui-inline">\n\t\t\t\t\t\t<label class="layui-form-label">name:</label>\n\t\t\t\t\t\t<div class="layui-input-inline">\n\t\t\t\t\t\t\t<span class="layui-input">' + name + '</span>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<div class="layui-form-item">\n\t\t\t\t\t<div class="layui-input-inline">\n\t\t\t\t\t\t<button class="layui-btn" data-mac=' + mac + ' data-action=\'services\' i18n="Seri">Serivices</button>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class="layui-input-inline">\n\t\t\t\t\t\t<button class="layui-btn" data-mac=' + mac + ' data-action=\'pair\' i18n="Pair">Pair</button>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class="layui-input-inline">\n\t\t\t\t\t\t<button class="layui-btn" data-mac=' + mac + ' data-action=\'unpair\' i18n="Unpair">Unpair</button>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class="layui-input-inline">\n\t\t\t\t\t\t<button class="layui-btn" data-mac=' + mac + ' data-action=\'disconnect\' i18n="Disc">Disconnect</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<div class="layui-input-item tree">\n\t\t\t\t\t<ul data-mac=' + mac + '></ul> \n\t\t\t\t</div>\n\t\t\t</li>';
 	}
 	
 	function getConnectListAndFiil() {
@@ -3539,9 +3608,16 @@
 	
 	var _formatServicesData2 = _interopRequireDefault(_formatServicesData);
 	
+	var _mainHandle = __webpack_require__(/*! ./mainHandle */ 5);
+	
+	var mainHandle = _interopRequireWildcard(_mainHandle);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var hasGetServices = {};
+	console.log("***********", mainHandle);
 	
 	function getAllServicesAndFill(deviceMac) {
 		layui.use(['tree', 'form', 'layer'], function () {
@@ -3588,6 +3664,7 @@
 						var writeValue = void 0;
 						form.render();
 						$ul.find('button.js-try').click(function (e) {
+							mainHandle.linkage(6);
 							var handle = e.target.dataset.handle,
 							    deviceMac = e.target.dataset.devicemac;
 							if ($ul.find('input.js' + handle).length === 2 && e.target.dataset.action === 'writeWithoutRes') {
@@ -5119,6 +5196,12 @@
 	
 	var _i18n2 = _interopRequireDefault(_i18n);
 	
+	var _mainHandle = __webpack_require__(/*! ./mainHandle */ 5);
+	
+	var mainHandle = _interopRequireWildcard(_mainHandle);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function control(val, form) {
@@ -5129,7 +5212,7 @@
 			var _layer$open;
 	
 			layer.open((_layer$open = {
-				title: 'Remote',
+				title: 'remote',
 				type: 6,
 				area: ['450px', 'auto'],
 				shade: 0,
@@ -5148,12 +5231,15 @@
 	}
 	
 	var htmlString = function htmlString() {
-		var temp = '<form class="layui-form  tip oAuth" action="#">\n  <fieldset class="layui-elem-field layui-field-title">\n\t\t<legend>oAuth</legend>\n  </fieldset>\n\t\t<div class="layui-form-item" style="text-align:center">\n\t\t  <label class="layui-form-label" i18n="username">Developer Key:</label>\n\t\t  <div class="layui-input-inline">\n\t\t    <input type="text"   class="layui-input" id="userName" placeholder="tester">\n\t\t  </div>\n\t\t   \n\t\t</div>\n\t\t<div class="layui-form-item">\n\t\t  <label class="layui-form-label" i18n="password">Developer Secter:</label>\n\t\t  <div class="layui-input-inline">\n\t\t    <input type="password"    class="layui-input" id="password" placeholder="******">\n\t\t  </div>\n  \t\t</div>\n\t\t<div class="layui-form-item">\n\t\t  <label class="layui-form-label" i18n="host">AC Address:</label>\n\t\t  <div class="layui-input-inline">\n\t\t    <input type="text" class="layui-input" id="host" placeholder="ac-cn.cassia.pro:8080/api">\n\t\t  </div>\n  \t\t</div>\n  <fieldset class="layui-elem-field layui-field-title">\n    <legend i18n="description">Description</legend>\n  </fieldset>\n  <div class="layui-form-item layui-form-text">\n    <div class="descriptors">\n      <p i18n="interfaceURL"><b>\u63A5\u53E3URL\uFF1A</b>\u8C03\u7528\u63A5\u53E3\u540E\uFF0C\u6B64URL\u4F1A\u81EA\u52A8\u751F\u6210\u5728\u4E0B\u9762\u7684\u201DAPI\u63A5\u53E3\u201D\u7684\u7A97\u53E3\u4E2D\u3002</p>\n      <p i18n="oAouh-Tip-p2"><b>\u63A5\u53E3\u63CF\u8FF0\uFF1A</b>\u6B64\u63A5\u53E3\u662F\u901A\u8FC7oAuth2.0\u8BA4\u8BC1\u5B9E\u73B0\u4E91\u7AEF\u8FDC\u7A0B\u63A7\u5236\u3002\u5C06\u7528\u6237\u540D\u548C\u5BC6\u7801\u4EE5base64\u7F16\u7801\u7684\u65B9\u5F0F\u6DFB\u52A0\u5728\u8BF7\u6C42\u53C2\u6570\u4E2D\uFF0C\u8BA4\u8BC1\u6210\u529F\u540E\u83B7\u5F971\u5C0F\u65F6\u6709\u6548\u671F\u7684access_token,\u4F60\u53EF\u4EE5\u6DFB\u52A0\u53C2\u6570access_token\u8BBF\u95EE\u5176\u4ED6API\uFF0C\u4ECE\u800C\u5B9E\u73B0\u8FDC\u7A0B\u63A7\u5236\u3002</p>\n      <p i18n="oAouh-Tip-p3"><b>\u53C2\u6570\u89E3\u91CA\uFF1A\u7528\u6237\u540D/\u5BC6\u7801\uFF1A</b>\u4ECECassia\u8BF7\u6C42\u7684\u5F00\u53D1\u8005\u8D26\u6237\u548C\u5BC6\u7801(\u4F1A\u4EE5base64\u7F16\u7801\u7684\u65B9\u5F0F\u6DFB\u52A0\u5728\u8BF7\u6C42\u4E2D)</p>\n      <p i18n="oAouh-Tip-p4"><b>AC Address</b>\u548C\u84DD\u7259\u8DEF\u7531\u5668\u4EA4\u4E92\u7684\u670D\u52A1\u5668\u5730\u5740</p>\n    </div>\n  </div>\n\n</form>';
+		var temp = '<form class="layui-form  tip oAuth" action="#">\n  <fieldset class="layui-elem-field layui-field-title">\n\t\t<legend>oAuth</legend>\n  </fieldset>\n\t\t<div class="layui-form-item" style="text-align:center">\n\t\t  <label class="layui-form-label" i18n="username">Developer Key:</label>\n\t\t  <div class="layui-input-inline">\n\t\t    <input type="text" value="' + (_globalData2.default.saved.oAuth_dev ? _globalData2.default.saved.oAuth_dev : '') + '"  class="layui-input" id="userName" placeholder="tester">\n\t\t  </div>\n\t\t   \n\t\t</div>\n\t\t<div class="layui-form-item">\n\t\t  <label class="layui-form-label" i18n="password">Developer Secter:</label>\n\t\t  <div class="layui-input-inline">\n\t\t    <input type="password"  value="' + (_globalData2.default.saved.secret ? _globalData2.default.saved.secret : '') + '"  class="layui-input" id="password" placeholder="******">\n\t\t  </div>\n  \t\t</div>\n\t\t<div class="layui-form-item">\n\t\t  <label class="layui-form-label" i18n="host">AC Address:</label>\n\t\t  <div class="layui-input-inline">\n\t\t    <input type="text" value="' + (_globalData2.default.saved.acaddress ? _globalData2.default.saved.acaddress : '') + '" class="layui-input" id="host" placeholder="ac-cn.cassia.pro:8080/api">\n\t\t  </div>\n  \t\t</div>\n  <fieldset class="layui-elem-field layui-field-title">\n    <legend i18n="description">Description</legend>\n  </fieldset>\n  <div class="layui-form-item layui-form-text">\n    <div class="descriptors">\n      <p i18n="interfaceURL"><b>\u63A5\u53E3URL\uFF1A</b>\u8C03\u7528\u63A5\u53E3\u540E\uFF0C\u6B64URL\u4F1A\u81EA\u52A8\u751F\u6210\u5728\u4E0B\u9762\u7684\u201DAPI\u63A5\u53E3\u201D\u7684\u7A97\u53E3\u4E2D\u3002</p>\n      <p i18n="oAouh-Tip-p2"><b>\u63A5\u53E3\u63CF\u8FF0\uFF1A</b>\u6B64\u63A5\u53E3\u662F\u901A\u8FC7oAuth2.0\u8BA4\u8BC1\u5B9E\u73B0\u4E91\u7AEF\u8FDC\u7A0B\u63A7\u5236\u3002\u5C06\u7528\u6237\u540D\u548C\u5BC6\u7801\u4EE5base64\u7F16\u7801\u7684\u65B9\u5F0F\u6DFB\u52A0\u5728\u8BF7\u6C42\u53C2\u6570\u4E2D\uFF0C\u8BA4\u8BC1\u6210\u529F\u540E\u83B7\u5F971\u5C0F\u65F6\u6709\u6548\u671F\u7684access_token,\u4F60\u53EF\u4EE5\u6DFB\u52A0\u53C2\u6570access_token\u8BBF\u95EE\u5176\u4ED6API\uFF0C\u4ECE\u800C\u5B9E\u73B0\u8FDC\u7A0B\u63A7\u5236\u3002</p>\n      <p i18n="oAouh-Tip-p3"><b>\u53C2\u6570\u89E3\u91CA\uFF1A\u7528\u6237\u540D/\u5BC6\u7801\uFF1A</b>\u4ECECassia\u8BF7\u6C42\u7684\u5F00\u53D1\u8005\u8D26\u6237\u548C\u5BC6\u7801(\u4F1A\u4EE5base64\u7F16\u7801\u7684\u65B9\u5F0F\u6DFB\u52A0\u5728\u8BF7\u6C42\u4E2D)</p>\n      <p i18n="oAouh-Tip-p4"><b>AC Address</b>\u548C\u84DD\u7259\u8DEF\u7531\u5668\u4EA4\u4E92\u7684\u670D\u52A1\u5668\u5730\u5740</p>\n    </div>\n  </div>\n\n</form>';
 	
 		return temp;
 	};
 	var yes = function yes() {
-		console.log($('#userName').val());
+	
+		_globalData2.default.saved.oAuth_dev = $('#userName').val();
+		_globalData2.default.saved.secret = $('#password').val();
+		_globalData2.default.saved.acaddress = $('#host').val();
 		if ($('#userName').val() === '' || $('#password').val() === '' || $('#host').val() === '') {
 			layer.msg('输入不能为空', { icon: 5, title: 'oAuth2', time: 1000 });
 			return;
@@ -5169,6 +5255,7 @@
 				"Content-Type": "application/x-www-form-urlencoded"
 			},
 			success: function success(d) {
+				mainHandle.linkage(8);
 				console.log(d.access_token);
 				if (d.access_token) {
 					layer.alert('成功', { icon: 1, title: 'oAuth2' });

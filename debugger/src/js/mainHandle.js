@@ -120,10 +120,14 @@ function mainHandle(layer, form) {
         form.render();
     })
 }
-
+function linkage(id){
+    $('.log .layui-tab-title li').eq(id).addClass('layui-this').siblings().removeClass('layui-this')
+    $('.layui-tab-card .layui-tab-content>div').eq(id).addClass('layui-show').siblings().removeClass('layui-show')
+}
 
 function connectButton() {
     $('.box .l2').on('click', "[data-action='connect']", function () {
+        linkage(1)
         const deviceMac = this.dataset.mac,
             type = this.dataset.type
         connectDevice(null, type, deviceMac)
@@ -132,12 +136,14 @@ function connectButton() {
 function cancelpair() {
     $('body').on('click', "[data-action='unpair']", function () {
         // debugger
+        linkage(11)
         let deviceMac = this.dataset.mac
         unpair(deviceMac)
     })
 }
 function disConnectDevice() {
     $l3.on('click', "[data-action='disconnect']", function () {
+        linkage(7)
         let deviceMac = this.dataset.mac
         disConnectDeviceAndFill(deviceMac)
     })
@@ -146,6 +152,7 @@ function disConnectDevice() {
 function getAllServices() {
     $l3.on('click', "button[data-action='services']", function () {
         // debugger
+        linkage(3)
         let deviceMac = this.dataset.mac
         getAllServicesAndFill(deviceMac)
 
@@ -154,6 +161,7 @@ function getAllServices() {
 function gopair() {
     $l3.on('click', "[data-action='pair']", function (e) {
         // debugger
+        linkage(9)
         let deviceMac = this.dataset.mac
         pair(deviceMac, e.target)
     })
@@ -165,6 +173,7 @@ function gopair() {
  */
 function getConnectLists() {
     $l3.on('click', '.connectList', function () {
+        linkage(2)
         getConnectListAndFiil()
     })
 }
@@ -178,5 +187,6 @@ export {
     disConnectDevice,
     getAllServices,
     gopair,
-    cancelpair
+    cancelpair,
+    linkage
 }

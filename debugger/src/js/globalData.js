@@ -28,7 +28,10 @@ const localStorageKey = 'cassiaSDKTool',
 		_hubMac: '',
 		_hubIp: '',
 		_chip: '0',
-		_commond: ''
+		_commond: '',
+		_oAuth_dev:'',
+		_secret:'',
+		_acaddress:''
 	}
 Object.defineProperties(savedInit, {
 	deviceMac: {
@@ -47,7 +50,6 @@ Object.defineProperties(savedInit, {
 		set(newValue) {
 			this._hubMac = newValue
 			storage(localStorageKey, this)
-
 		}
 	},
 	hubIp: {
@@ -74,6 +76,33 @@ Object.defineProperties(savedInit, {
 		},
 		set(newValue) {
 			this._commond = newValue
+			storage(localStorageKey, this)
+		}
+	},
+	oAuth_dev: {
+		get() {
+			return this._oAuth_dev
+		},
+		set(newValue) {
+			this._oAuth_dev = newValue
+			storage(localStorageKey, this)
+		}
+	},
+	secret: {
+		get() {
+			return this._secret
+		},
+		set(newValue) {
+			this._secret = newValue
+			storage(localStorageKey, this)
+		}
+	},
+	acaddress: {
+		get() {
+			return this._acaddress
+		},
+		set(newValue) {
+			this._acaddress = newValue
 			storage(localStorageKey, this)
 		}
 	}

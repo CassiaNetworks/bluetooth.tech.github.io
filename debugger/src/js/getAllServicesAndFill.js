@@ -14,9 +14,10 @@ import {
     urlArr  
 }from './urlconfig'
 import formatServicesData from './formatServicesData'
+import * as mainHandle from './mainHandle'
 
 const hasGetServices = {}
-
+console.log("***********",mainHandle)
 
 // hasGetServices[deviceMac] = 0  '未获取'
 // hasGetServices[deviceMac] = 1  '正在获取'
@@ -73,6 +74,7 @@ function getAllServicesAndFill(deviceMac) {
 					let writeValue
 					form.render()
 					$ul.find('button.js-try').click(function(e) {
+						mainHandle.linkage(6)
 						const handle = e.target.dataset.handle,
 							deviceMac = e.target.dataset.devicemac
 						if ($ul.find(`input.js${handle}`).length === 2 && e.target.dataset.action === 'writeWithoutRes') {

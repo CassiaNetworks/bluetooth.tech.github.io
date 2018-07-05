@@ -30,16 +30,16 @@ function htmlTemp(mac, name) {
 				</div>
 				<div class="layui-form-item">
 					<div class="layui-input-inline">
-						<button class="layui-btn" data-mac=${mac} data-action='services'>Serivices</button>
+						<button class="layui-btn" data-mac=${mac} data-action='services' i18n="Seri">Serivices</button>
 					</div>
 					<div class="layui-input-inline">
-						<button class="layui-btn" data-mac=${mac} data-action='pair'>pair</button>
+						<button class="layui-btn" data-mac=${mac} data-action='pair' i18n="Pair">Pair</button>
 					</div>
 					<div class="layui-input-inline">
-						<button class="layui-btn" data-mac=${mac} data-action='unpair'>unpair</button>
+						<button class="layui-btn" data-mac=${mac} data-action='unpair' i18n="Unpair">Unpair</button>
 					</div>
 					<div class="layui-input-inline">
-						<button class="layui-btn" data-mac=${mac} data-action='disconnect'>disconnect</button>
+						<button class="layui-btn" data-mac=${mac} data-action='disconnect' i18n="Disc">Disconnect</button>
 					</div>
 				</div>
 				<div class="layui-input-item tree">

@@ -41,8 +41,9 @@ function storage(key, data) {
 function readStorage(key, expectationData) {
 	if (!window.localStorage)
 		return expectationData
-	let storage = window.localStorage,
-		localData = JSON.parse(storage.getItem(key))
+	let storage = window.localStorage
+	let	localData = JSON.parse(storage.getItem(key))
+	console.log(storage,localData)
 	// if (verifylocalStorageData(localData, expectationData))
 	// 	return localData
 

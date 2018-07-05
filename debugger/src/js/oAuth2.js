@@ -12,14 +12,14 @@ import {
 } from './showlog';
 import globalData from './globalData';
 import i18n from './i18n';
-
+import * as mainHandle from './mainHandle'
 function control(val,form){
 	if(val === "local"){
 		data.access_token = '';
 		updateUrlArr(data.hubIp);
 	}else if(val === "remote"){
 		layer.open({
-		  	title: 'Remote',
+		  	title: 'remote',
 		  	type: 6,
 		  	area: ['450px', 'auto'],
 		  	shade: 0,
@@ -56,20 +56,20 @@ var htmlString = function() {
 		<div class="layui-form-item" style="text-align:center">
 		  <label class="layui-form-label" i18n="username">Developer Key:</label>
 		  <div class="layui-input-inline">
-		    <input type="text"   class="layui-input" id="userName" placeholder="tester">
+		    <input type="text" value="${globalData.saved.oAuth_dev?globalData.saved.oAuth_dev:''}"  class="layui-input" id="userName" placeholder="tester">
 		  </div>
 		   
 		</div>
 		<div class="layui-form-item">
 		  <label class="layui-form-label" i18n="password">Developer Secter:</label>
 		  <div class="layui-input-inline">
-		    <input type="password"    class="layui-input" id="password" placeholder="******">
+		    <input type="password"  value="${globalData.saved.secret?globalData.saved.secret:''}"  class="layui-input" id="password" placeholder="******">
 		  </div>
   		</div>
 		<div class="layui-form-item">
 		  <label class="layui-form-label" i18n="host">AC Address:</label>
 		  <div class="layui-input-inline">
-		    <input type="text" class="layui-input" id="host" placeholder="ac-cn.cassia.pro:8080/api">
+		    <input type="text" value="${globalData.saved.acaddress?globalData.saved.acaddress:''}" class="layui-input" id="host" placeholder="ac-cn.cassia.pro:8080/api">
 		  </div>
   		</div>
   <fieldset class="layui-elem-field layui-field-title">
@@ -90,7 +90,11 @@ var htmlString = function() {
 return temp
 }
 var yes = function(){
-	console.log($('#userName').val())
+
+
+	globalData.saved.oAuth_dev = $('#userName').val()
+	globalData.saved.secret = $('#password').val()
+	globalData.saved.acaddress = $('#host').val()
 	if($('#userName').val() === '' || $('#password').val() === '' || $('#host').val() === ''){
 			layer.msg('输入不能为空', {icon:5,title:'oAuth2',time:1000});
 		return
@@ -106,6 +110,7 @@ var yes = function(){
 			 				"Content-Type":"application/x-www-form-urlencoded"
 						},
 			 success: function(d){
+				mainHandle.linkage(8)
 			 	console.log(d.access_token)
 			   if (d.access_token) {
 			   	layer.alert('成功', {icon: 1,title:'oAuth2'});

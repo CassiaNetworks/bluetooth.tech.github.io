@@ -9,7 +9,7 @@ import {control} from './src/js/oAuth2'
 import {
 	api
 } from './src/js/api'
-
+// import * as mainHandle from './mainHandle'
 import {
 	urlArr,
 	updateUrlArr
@@ -46,6 +46,7 @@ layui.use(['layer', 'form'], function () {
 		// setTimeout(form.render,500)
 	});
 	form.on('switch(switchScan)', function (data) {
+		handle.linkage(0)
 		if (data.elem.checked) {
 			console.log(globalData.saved)
 			scan.start({
@@ -60,6 +61,7 @@ layui.use(['layer', 'form'], function () {
 	});
 
 	form.on('switch(switchNotifyState)', function (data) {
+		handle.linkage(5)
 		if (data.elem.checked) {
 			notifyStateAndFill.start()
 			// data.elem.setAttribute('disabled', 'true')
@@ -71,6 +73,7 @@ layui.use(['layer', 'form'], function () {
 	});
 
 	form.on('switch(switchNotifyMsg)', function (data) {
+		handle.linkage(4)
 		if (data.elem.checked) {
 			notifyMsg.start()
 
