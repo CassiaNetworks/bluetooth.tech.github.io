@@ -283,13 +283,20 @@ return obj
 $('#test').on('click', function () {
   const tree = saveTree();
   const id = urlSearch2obj(window.location.search).id;
-  const body = {
-    id,
-    enable: 1
-  }
-  startBi(body).then(data => {
-    startTest(tree);
-  });
+  const body = { id, enable: 1}
+  const host = window.location.host;
+  startBi(body)
+    .then(data => startTest(host,tree))
+    .then(data => {
+      const es = new EventSource(`http://${host}:8081/bi/debuginfo`);
+      es.onmessage = function (event) {
+        console.log(event.log);
+
+      }
+      es.onerror = function (err) {
+        console.err('debuginfo sse err: ',err);
+      }
+    })
   
 })
 
@@ -299,35 +306,29 @@ function startBi(body){
     headers : {"Content-Type" : "application/json"},
     data: JSON.stringify(body),
     url: `/bi/${body.id}`,
-    timeout: 10000,
-    success: function(data){
-      console.log('test send ok',data);
-    },
-    error: function(err) {
-      console.log('test send err', err);
-    }
+    timeout: 10000
   })
 }
-function startTest(tree){
-  const host = window.location.host;
-  setTimeout(function(){
-    $.ajax({
-      type: 'post',
-      headers : {"Content-Type" : "application/json"},
-      data: JSON.stringify(tree),
-      url: `http://${host}:8081/bi/api`,
-      timeout: 10000,
-      success: function(data){
-        console.log('startTest send ok',data);
-      },
-      error: function(err) {
-        console.log('startTest send err', err);
-      }
-    }).then( data => {
-      alert('TEST success');
-    })
-  },3000)
- 
+function startTest(host,tree){
+  return new Promise( (resolve, reject) => {
+    setTimeout(function(){
+      $.ajax({
+        type: 'post',
+        headers : {"Content-Type" : "application/json"},
+        data: JSON.stringify(tree),
+        url: `http://${host}:8081/bi/api`,
+        timeout: 10000,
+        success: function(data){
+          console.log('startTest send ok',data);
+          return resolve(data);
+        },
+        error: function(err) {
+          console.log('startTest send err', err);
+          return reject(err);
+        }
+      })
+    },3000)
+  });
 }
 /*
   下载文件的
@@ -355,17 +356,17 @@ $('#save').on('click', function () {
   // console.log('save,save,save',text);
   alert('保存成功')
 });
-function show_prompt(){  
-  var value = prompt('输入你的名字：', '默认名字');  
-  if(value == null){  
-      alert('你取消了输入！');  
-  }else if(value == ''){  
-      alert('姓名输入为空，请重新输入！');  
-      show_prompt();  
-  }else{  
-      alert('你好，'+value);  
-  }  
-}  
+// function show_prompt(){  
+//   var value = prompt('输入你的名字：', '默认名字');  
+//   if(value == null){  
+//       alert('你取消了输入！');  
+//   }else if(value == ''){  
+//       alert('姓名输入为空，请重新输入！');  
+//       show_prompt();  
+//   }else{  
+//       alert('你好，'+value);  
+//   }  
+// }  
 
 function saveTree(){
   let _modles = getModles();
