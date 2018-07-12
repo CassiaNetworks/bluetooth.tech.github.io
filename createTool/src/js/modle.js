@@ -2,6 +2,17 @@ import modleConfig from './modle.config.js';
 
 const modles = {};
 
+// => newModle 高亮
+$('#chart').on('click', function(e){
+  $('.newModle').removeClass('newModle-selected');
+  if(e.target.closest('.newModle')) {
+    $(e.target.closest('.newModle')).addClass('newModle-selected');
+  }
+});
+
+
+
+
 // 元素拖拽到画板上以后会创建一个新的 modle
 function createModle(parent, ui) {
   // console.log('createModle', parent, ui);
@@ -19,7 +30,7 @@ function createModle(parent, ui) {
 
 
 function magic() {
-  $('body').find('.newModle').removeClass('.newModle-selected');
+  $('body').find('.newModle').removeClass('newModle-selected');
 };
 
 
@@ -29,6 +40,7 @@ function newModleView(dom) {
     .addClass('newModle')
     .addClass('newModle-selected')
     .attr('id', Date.now());
+    _newModle.find('.palette_port').remove();
   return _newModle;
 }
 function addModle (m) {

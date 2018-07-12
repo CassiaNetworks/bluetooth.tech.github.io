@@ -155,7 +155,10 @@
       </aside>
         <!-- workspack -->
       <div id="workspace" class="workspace">
-        <div id="workspace-header" class="workspace-header"></div>
+        <div id="workspace-header" class="workspace-header">  
+
+        </div>  
+
         <div id="chart" tabindex="1" class="chart ui-droppable" style="display: block; margin-top: 0px;">
           <div id="innerCanvas" class="innerCanvas" ></div>
         </div>
@@ -335,7 +338,32 @@
             </ul>
           </div>
         </div>
-        <div id="sidebar-container" class="sidebar-container"></div>
+
+        <div id="sidebar-content" class="sidebar-content">
+            <!-- sidebar info start -->
+            <div id="sidebar-info-active" style="height: 100%; display: block">
+              <div class="sidebar-node-info">
+                <div class="sidebar-node-info-stack red-ui-stack"></div>
+              </div>
+            </div>
+            <!-- sidebar info end -->
+            <!-- sidebar deubg start -->
+            <div id="sidebar-debug-active" style="height: 100%; display: none">
+              <div style="position: relative; height: 100%">
+                <div class="sidebar-header"></div>
+
+                <div id="debug-content" class="debug-content debug-content-list">
+                  
+                </div>
+                <!-- <div class="debug-content  debug-content-table hide"></div> -->
+
+              </div>
+            
+            </div>
+            <!-- sidebar debug end -->
+        
+        </div>
+
         <div id="sidebar-footer" class="sidebar-footer"></div>
         <div id="sidebar-shade" class="hide"></div>
       </div>

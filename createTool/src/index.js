@@ -1,9 +1,14 @@
+/**
+ * create by guangyan 
+ * 2018-4-29
+ */
 import jqui from './lib/jquery-ui-1.12.1.custom/jquery-ui.min.css';
 import css from './css/index.css';
 import jsPconfig from './js/jsPlumb.config.js';
 import modleConfig from './js/modle.config.js';
 import editors from './js/editor.js';
 import editorStr from './js/editorStr.js';
+import {debugHighlight} from './js/showDebugInfo.js';
 
 import {
   createModle,
@@ -118,6 +123,8 @@ $('.ui-droppable').droppable({
 });
 
 
+
+
 function jsPmodleInit(m) {
   // console.log('jsPmodleInit', m);
   const modleType = m.attr('name');
@@ -173,11 +180,17 @@ $(".shade").on('click', function () {
   $(".shade").hide();
   return false;
 });
-
+$.fn.isChildAndSelfOf = function(b){
+  return (this.closest(b).length > 0);
+};
 /*
   新元素双击事件
 */
 $('body').on('dblclick', '.newModle', function () {
+  // $('.newModle').removeClass('debug-newModle');
+  // $(this).addClass('debug-newModle');
+  // firstInstance.repaintEverything();
+
   let s = firstInstance.select();
   //TODO
   $("#editor-stack").show();
@@ -192,6 +205,8 @@ $('body').on('dblclick', '.newModle', function () {
   $('#node-input-name').val(_modle.name);
   let that = $(this);
 });
+
+
 
 /*
     dialog 删除事件
@@ -264,7 +279,7 @@ $('body').on('change', '.ace_editor_text_output select', function () {
 $('body').on('keyup', '.ace_editor_text_input input', function () {
   $('.red-ui-editor-fn-content').html($(this).val());
 });
-
+// 把url参数转换成json
 function urlSearch2obj(str) {  
   if(str == undefined) return  
   str = str.substr(1)  
@@ -279,7 +294,7 @@ function urlSearch2obj(str) {
 })  
 return obj  
 } 
-
+// => 点击test 按钮 让BI run 起来，然后发送句法树，建立sse用于debug
 $('#test').on('click', function () {
   const tree = saveTree();
   const id = urlSearch2obj(window.location.search).id;
@@ -290,8 +305,10 @@ $('#test').on('click', function () {
     .then(data => {
       const es = new EventSource(`http://${host}:8081/bi/debuginfo`);
       es.onmessage = function (event) {
-        console.log(event.log);
+        console.log('debugInfo sse',typeof event, typeof event.data, event.data);
+        debugHighlight(firstInstance, JSON.parse(event.data));
 
+        
       }
       es.onerror = function (err) {
         console.err('debuginfo sse err: ',err);
@@ -299,7 +316,7 @@ $('#test').on('click', function () {
     })
   
 })
-
+// 让BI run起来
 function startBi(body){
   return $.ajax({
     type: 'put',
@@ -309,6 +326,7 @@ function startBi(body){
     timeout: 10000
   })
 }
+// 将语法树发送至BI
 function startTest(host,tree){
   return new Promise( (resolve, reject) => {
     setTimeout(function(){
@@ -389,19 +407,41 @@ function saveTree(){
   // console.log('hahaha',result)
 }
 
-// TODO
-$('.body').on('click', '.newModle', function (event) {
-  console.log(event.target);
-  // let selectedModle = $(this).find('.newModle-selected');
-  if (event.keyCode === 8) {
-    console.log('不管怎么样，先删了再说', selectedModle);
-    // removeModle(editors.selected);
-    // firstInstance.remove(editors.selected);
+// TODO  删除的逻辑，需要增加 workspack-header tabs item
+// $('body').on('keydown', '#innerCanvas',function (e) {
+//    const selectedModle = $('.newModle-selected');
+//    const isWorkspaceFocus = !!$('.workspace-focussed');
+
+//   if (isWorkspaceFocus && selectedModle.length && e.keyCode === 8 ) {
+//     console.log('DELETE Selected modle', selectedModle);
+//     firstInstance.remove(selectedModle);
+//     // removeModle(editors.selected);
+
+//   }
+// });
+
+$('.red-ui-tab').on('click', function() {
+  if($(this).hasClass('active')){ return }
+   console.log(" don't has active",$(this).attr('id'));
+  $('.red-ui-tab').removeClass('active');
+  $(this).addClass('active');
+  $(this).attr('id') === 'red-ui-tab-debug'
+  if($(this).attr('id') === 'red-ui-tab-debug'){
+    $('#sidebar-info-active').hide();
+    $('#sidebar-debug-active').show();
+  }else{
+    $('#sidebar-debug-active').hide();
+    $('#sidebar-info-active').show();
+    
   }
+
+  
+
 });
-
-
-
-/*jsPlumb.ready(function() {
-  console.log('jsPlumb init', jsPlumb);
-});*/
+// $('.red-ui-tab').on('click', function() {
+//   if(!$(this).hasClass('active')){
+//     console.log(" don't has active",$('.red-ui-tab'));
+//     $('.red-ui-tab').removeClass('active');
+//     $(this).addClass('active');
+//   }
+// });
