@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Blue Ocean</title>
@@ -9,6 +10,7 @@
   <link href="css/index.css" rel="stylesheet" type="css/test" />
   <script src="lib/jsplumb.min.js"></script>
 </head>
+
 <body>
   <div id="ocean" class=" ocean">
     <header id="header" class="header">
@@ -24,17 +26,24 @@
 
     <div id="main-container" class="main-container">
       <aside id="palette" class="palette">
-        <div id="palette-header" class="palette-header">
-          Palette
+        <div id="palette-search" class="palette-search">
+          <div class="red-ui-searchBox-container">
+            <i class="fa fa-search iconfont">&#xe613;</i>
+            <input type="text" placeholder="过滤节点">
+            <a href="#">
+              <i class="fa fa-times"></i>
+            </a>
+            <span class="red-ui-searchBox-resultCount hide"></span>
+          </div>
         </div>
         <!-- palette-container -->
         <div id="palette-container" class="palette-container">
-        <div id="palette-container-subfiows" class="palette-category hide">
-          <div id="palette-container-header-subflows" class="palette-container-header">
-            <i class="expanded fa fa-angle-down"></i>
-            <span>子流程</span>
+          <div id="palette-container-subfiows" class="palette-category hide">
+            <div id="palette-container-header-subflows" class="palette-container-header">
+              <i class="expanded fa fa-angle-down"></i>
+              <span>子流程</span>
+            </div>
           </div>
-        </div>
           <!-- palette-container-interface -->
           <div id="palette-container-interface" class="palette-category">
             <!-- palette-container-interface-header-->
@@ -47,19 +56,23 @@
               <!-- palette-Interface -->
               <div id="palette-interface">
                 <div id="palette_node_httpS" class="palette_node ui-draggable" style="background-color: rgba(242,135,135,1);" name="httpServer">
-                    <div class="palette_label" dir>Http Server</div>
-                    <div class="palette_icon_container">
-                      <div class="palette_icon" style="background-image: url(images/grip.png)"></div>
+                  <div class="palette_label" dir>Http Server</div>
+                  <div class="palette_icon_container">
+                    <div class="palette_icon">
+                      <i class="iconfont">&#xe62e;</i>
                     </div>
-                    <div class="palette_port palette_port_output" style="top: 10px;"></div>
+                  </div>
+                  <div class="palette_port palette_port_output" style="top: 10px;"></div>
                 </div>
 
                 <div id="palette_node_httpC" class="palette_node ui-draggable" style="background-color: rgba(135,172,242,1);" name="httpClient">
-                    <div class="palette_label" dir>Http Client</div>
-                    <div class="palette_icon_container">
-                      <div class="palette_icon" style="background-image: url(images/grip.png)"></div>
+                  <div class="palette_label" dir>Http Client</div>
+                  <div class="palette_icon_container">
+                    <div class="palette_icon">
+                      <i class="iconfont">&#xe62e;</i>
                     </div>
-                    <div class="palette_port palette_port_input" style="top: 10px;"></div>
+                  </div>
+                  <div class="palette_port palette_port_input" style="top: 10px;"></div>
                 </div>
 
               </div>
@@ -78,48 +91,58 @@
               <!-- palette-bluetooth -->
               <div id="palette-bluetooth">
                 <div id="palette_node_scan" class="palette_node ui-draggable" style="background-color: rgba(156,205,221,1);" name="scan">
-                    <div class="palette_label" dir>Scan</div>
-                    <div class="palette_icon_container">
-                      <div class="palette_icon" style="background-image: url(images/grip.png)"></div>
+                  <div class="palette_label" dir>Scan</div>
+                  <div class="palette_icon_container">
+                    <div class="palette_icon">
+                      <i class="iconfont">&#xe626;</i>
                     </div>
-                    <div class="palette_port palette_port_output" style="top: 10px;"></div>
-                    <div class="palette_port palette_port_input" style="top: 10px;"></div>
+                  </div>
+                  <div class="palette_port palette_port_output" style="top: 10px;"></div>
+                  <div class="palette_port palette_port_input" style="top: 10px;"></div>
                 </div>
 
                 <div id="palette_node_notify" class="palette_node ui-draggable" style="background-color: rgba(220,208,131,1);" name="notify">
-                    <div class="palette_label" dir>Notify</div>
-                    <div class="palette_icon_container">
-                      <div class="palette_icon" style="background-image: url(images/grip.png)"></div>
+                  <div class="palette_label" dir>Notify</div>
+                  <div class="palette_icon_container">
+                    <div class="palette_icon">
+                      <i class="iconfont">&#xe60a;</i>
                     </div>
-                    <div class="palette_port palette_port_output" style="top: 10px;"></div>
-                    <div class="palette_port palette_port_input" style="top: 10px;"></div>
+                  </div>
+                  <div class="palette_port palette_port_output" style="top: 10px;"></div>
+                  <div class="palette_port palette_port_input" style="top: 10px;"></div>
                 </div>
 
                 <div id="palette_node_connect" class="palette_node ui-draggable" style="background-color: rgba(221,187,156,1);" name="connect">
-                    <div class="palette_label" dir>Connect</div>
-                    <div class="palette_icon_container">
-                      <div class="palette_icon" style="background-image: url(images/grip.png)"></div>
+                  <div class="palette_label" dir>Connect</div>
+                  <div class="palette_icon_container">
+                    <div class="palette_icon">
+                      <i class="iconfont">&#xe61e;</i>
                     </div>
-                    <div class="palette_port palette_port_input" style="top: 10px;"></div>
-                    <div class="palette_port palette_port_output" style="top: 10px;"></div>
+                  </div>
+                  <div class="palette_port palette_port_input" style="top: 10px;"></div>
+                  <div class="palette_port palette_port_output" style="top: 10px;"></div>
                 </div>
 
                 <div id="palette_node_write" class="palette_node ui-draggable" style="background-color: rgba(155,221,156,1);" name="write">
-                    <div class="palette_label" dir>Write</div>
-                    <div class="palette_icon_container">
-                      <div class="palette_icon" style="background-image: url(images/grip.png)"></div>
+                  <div class="palette_label" dir>Write</div>
+                  <div class="palette_icon_container">
+                    <div class="palette_icon">
+                      <i class="iconfont">&#xe612;</i>
                     </div>
-                    <div class="palette_port palette_port_input" style="top: 10px;"></div>
-                    <div class="palette_port palette_port_output" style="top: 10px;"></div>
+                  </div>
+                  <div class="palette_port palette_port_input" style="top: 10px;"></div>
+                  <div class="palette_port palette_port_output" style="top: 10px;"></div>
                 </div>
 
                 <div id="palette_node_disconnect" class="palette_node ui-draggable" style="background-color: rgba(205,169,204,1);" name="disconnect">
-                    <div class="palette_label" dir>Disconnect</div>
-                    <div class="palette_icon_container">
-                      <div class="palette_icon" style="background-image: url(images/grip.png)"></div>
+                  <div class="palette_label" dir>Disconnect</div>
+                  <div class="palette_icon_container">
+                    <div class="palette_icon">
+                      <i class="iconfont">&#xe78a;</i>
                     </div>
-                    <div class="palette_port palette_port_input" style="top: 10px;"></div>
-                    <div class="palette_port palette_port_output" style="top: 10px;"></div>
+                  </div>
+                  <div class="palette_port palette_port_input" style="top: 10px;"></div>
+                  <div class="palette_port palette_port_output" style="top: 10px;"></div>
                 </div>
 
               </div>
@@ -138,29 +161,38 @@
               <!-- palette-Interface -->
               <div id="palette-function">
                 <div id="palette_node_function" class="palette_node ui-draggable" style="background-color: rgba(192,192,192,1);" name="function">
-                    <div class="palette_label" dir>Function</div>
-                    <div class="palette_icon_container">
-                      <div class="palette_icon" style="background-image: url(images/grip.png)"></div>
+                  <div class="palette_label" dir>Function</div>
+                  <div class="palette_icon_container">
+                    <div class="palette_icon">
+                      <i class="iconfont">&#xe88a;</i>
                     </div>
-                    <div class="palette_port palette_port_output" style="top: 10px;"></div>
-                    <div class="palette_port palette_port_input" style="top: 10px;"></div>
+                  </div>
+                  <div class="palette_port palette_port_output" style="top: 10px;"></div>
+                  <div class="palette_port palette_port_input" style="top: 10px;"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div id="palette-footer" class="palette-footer"></div>
+        <div id="palette-footer" class="palette-footer">
+          <a class="palette-button" id="palette-collapse-all" href="#">
+            <i class="fa fa-angle-double-up iconfont" style="font-size: 3px;">&#xe617;</i>
+          </a>
+          <a class="palette-button" id="palette-expand-all" href="#">
+            <i class="fa fa-angle-double-down iconfont" style="font-size: 3px;">&#xe618;</i>
+          </a>
+        </div>
         <div id="palette-shade" class="shade hide"></div>
       </aside>
-        <!-- workspack -->
+      <!-- workspack -->
       <div id="workspace" class="workspace">
-        <div id="workspace-header" class="workspace-header">  
+        <div id="workspace-header" class="workspace-header">
 
-        </div>  
+        </div>
 
         <div id="chart" tabindex="1" class="chart ui-droppable" style="display: block; margin-top: 0px;">
-          <div id="innerCanvas" class="innerCanvas" ></div>
+          <div id="innerCanvas" class="innerCanvas"></div>
         </div>
         <div id="workspace-footer" class="workspace-footer"></div>
         <div id="editor-shade" class="shade hide"></div>
@@ -176,9 +208,12 @@
               </ul>
             </div>
             <div class="editor-tray-toolbar">
-              <button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only leftButton" role="button" aria-disabled="false" id="node-dialog-delete">删除</button>
-              <button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false" id="node-dialog-cancel">取消</button>
-              <button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only primary" role="button" aria-disabled="false" id="node-dialog-ok">完成</button>
+              <button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only leftButton" role="button" aria-disabled="false"
+                id="node-dialog-delete">删除</button>
+              <button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"
+                id="node-dialog-cancel">取消</button>
+              <button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only primary" role="button" aria-disabled="false"
+                id="node-dialog-ok">完成</button>
             </div>
           </div>
 
@@ -190,11 +225,11 @@
                   <i class="fa fa-angle-down expanded"></i>
                   <span>节点属性</span>
                 </div>
-                
+
                 <div style="position: relative; display: block;">
                   <div class="editor-tray-content">
                     <form id="dialog-form" class="form-horizontal" autocomplete="off" style="height: 482px;">
-<!-- 
+                      <!-- 
                       <div class="form-row">
                         <label for="node-input-name">
                           <span>名称:</span>
@@ -202,7 +237,7 @@
                         <input type="text" id="node-input-name" data-i18n="[placeholder]node-red:common.label.name" dir="" placeholder="名称">
                       </div> -->
 
-<!--                       <div class="form-row">
+                      <!--                       <div class="form-row">
                         <label>Triger:</label>
                         <label style="margin-left: 100px;">HttpServer</label>
                       </div>
@@ -218,8 +253,8 @@
                         <label>Output Content:</label>
                         <label style="margin-left: 100px;"  >NofificationData</label>
                       </div> -->
-                      
-                     <!--  <div class="form-row node-text-editor-row">
+
+                      <!--  <div class="form-row node-text-editor-row">
                         <div style="height: 0px; min-height: 150px;" class="node-text-editor ace_editor ace-tomorrow" id="node-input-func-editor">
                           <textarea class="ace_text-input" wrap="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="opacity: 0; height: 16px; width: 7.6975px; left: 46px;">
                           </textarea>
@@ -291,7 +326,7 @@
                             </ol>
                           </div>
                           <a href="#" class="editor-button red-ui-editableList-addButton" style="margin-top: 4px;">
-                            <i class="fa fa-plus"></i> 
+                            <i class="fa fa-plus"></i>
                             +添加條件
                           </a>
                         </div>
@@ -314,7 +349,7 @@
 
             </div>
           </div>
-          
+
           <div class="editor-tray-footer"></div>
           <div class="editor-tray-resize-handle"></div>
 
@@ -340,35 +375,36 @@
         </div>
 
         <div id="sidebar-content" class="sidebar-content">
-            <!-- sidebar info start -->
-            <div id="sidebar-info-active" style="height: 100%; display: block">
-              <div class="sidebar-node-info">
-                <div class="sidebar-node-info-stack red-ui-stack"></div>
-              </div>
+          <!-- sidebar info start -->
+          <div id="sidebar-info-active" style="height: 100%; display: block">
+            <div class="sidebar-node-info">
+              <div class="sidebar-node-info-stack red-ui-stack"></div>
             </div>
-            <!-- sidebar info end -->
-            <!-- sidebar deubg start -->
-            <div id="sidebar-debug-active" style="height: 100%; display: none">
-              <div style="position: relative; height: 100%">
-                <div class="sidebar-header"></div>
+          </div>
+          <!-- sidebar info end -->
+          <!-- sidebar deubg start -->
+          <div id="sidebar-debug-active" style="height: 100%; display: none">
+            <div style="position: relative; height: 100%">
+              <div class="sidebar-header"></div>
 
-                <div id="debug-content" class="debug-content debug-content-list">
-                  
-                </div>
-                <!-- <div class="debug-content  debug-content-table hide"></div> -->
+              <div id="debug-content" class="debug-content debug-content-list">
 
               </div>
-            
+              <!-- <div class="debug-content  debug-content-table hide"></div> -->
+
             </div>
-            <!-- sidebar debug end -->
-        
+
+          </div>
+          <!-- sidebar debug end -->
+
         </div>
 
         <div id="sidebar-footer" class="sidebar-footer"></div>
         <div id="sidebar-shade" class="hide"></div>
       </div>
       <div id="sidebar-separator" class="ui-draggable"></div>
-  
-  </div>
+
+    </div>
 </body>
+
 </html>

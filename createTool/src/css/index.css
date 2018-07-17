@@ -1,3 +1,19 @@
+@font-face {
+  font-family: 'iconfont';
+  src: url('../fonts/iconfont.eot');
+  src: url('../fonts/iconfont.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/iconfont.woff') format('woff'),
+  url('../fonts/iconfont.ttf') format('truetype'),
+  url('../fonts/iconfont.svg#iconfont') format('svg');
+}
+.iconfont{
+  font-family:"iconfont" !important;
+  font-size:16px;font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 * {
   /*transform-origin: 0px 0px 0px;*/
   margin: 0;
@@ -204,7 +220,7 @@ span.logo img {
   transition: width 0.2s ease-in-out;
 }
 /* palette-header  */
-.palette-header {
+.palette-search {
   position: relative;
   overflow: hidden;
   background: #fff;
@@ -214,15 +230,59 @@ span.logo img {
   border-bottom: 1px solid #bbb;
   box-sizing: border-box;
 }
+.red-ui-searchBox-container {
+  position: relative;
+}
+.red-ui-searchBox-container i {
+  font-size: 10px;
+  color: #666;
+}
+.red-ui-searchBox-container i.fa-search {
+  position: absolute;
+  pointer-events: none;
+  left: 8px;
+  top: 9px;
+}
+
+.red-ui-searchBox-container input {
+  border-radius: 0;
+  border: none;
+  width: 100%;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  padding: 3px 17px 3px 22px;
+  margin: 0px;
+  height: 30px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.red-ui-searchBox-container a {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  display: none;
+}
+
+.red-ui-searchBox-container i.fa-times {
+  position: absolute;
+  right: 5px;
+  top: 9px;
+}
+
+
 /* palette-container */
 .palette-container {
-  /*position: absolute;*/
+  /* position: absolute; */
   top: 35px;
   right: 0;
   bottom: 25px;
   left: 0px;
   padding: 0px;
   overflow-y: auto;
+  
   box-sizing: border-box;
 }
 
@@ -292,6 +352,9 @@ span.logo img {
 .palette_node:hover .palette_label{
  color: #fff;
 }
+.palette_node:hover .palette_icon_container{
+  color: #fff;
+ }
 
 .palette_label {
   font-size: 13px;
@@ -320,7 +383,16 @@ span.logo img {
   left: 0;
   width: 30px;
   border-right: 1px solid rgba(0,0,0,0.1);
-  background-color: rgba(0,0,0,0.05)
+  background-color: rgba(0,0,0,0.05);
+  font-size: 18px;
+  color: #f3f3f3;
+}
+
+.palette_icon {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .palette_port {
   position: absolute;
@@ -354,6 +426,26 @@ span.logo img {
   height: 25px;
   line-height: 23px;
   padding: 0 10px;
+}
+.palette-button{
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  box-sizing: border-box;
+  display: inline-block;
+  color: #888 !important;
+  background: #fff;
+  border: 1px solid #ccc;
+  text-align: center;
+  margin: 0;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 11px;
+  line-height: 17px;
+  width: 18px;
+  height: 18px;
 }
 
 /* workspace */

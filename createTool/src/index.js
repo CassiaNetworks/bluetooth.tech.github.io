@@ -99,8 +99,9 @@ firstInstance.bind("connectionDetached", function (conn, originalEvent) {
 // reseauInit(); // svg wang ge 
 // 左侧list item开启关闭动画
 $('.palette-container-header').on('click', function () {
-  $(this).next().toggle('blind', {}, 300);
-  $(this).find('i').toggleClass("expanded", 3000);
+  $(this).next().toggle('blind', 300);
+  $(this).find('i').toggleClass("expanded", 300);
+  return false;
   // console.log($(this).find('i'));
 });
 
@@ -445,3 +446,25 @@ $('.red-ui-tab').on('click', function() {
 //     $(this).addClass('active');
 //   }
 // });
+
+window.onbeforeunload = function(){
+  const modles = getModles();
+  if(Object.keys(modles).length){
+     return "尚未保存！";
+  }
+  
+}
+
+  $('#palette-collapse-all').on('click' ,function(){
+    const selectedEffect = 'blind';
+    $( "#palette").find('.palette-container-content').hide(200);
+    $('#palette .palette-container-header').find('i').removeClass( "expanded", 200);
+    return false;
+
+  });
+  $('#palette-expand-all').on('click' ,function(){
+    const selectedEffect = 'blind';
+    $( "#palette .palette-container-content" ).show(200);
+    $('#palette .palette-container-header').find('i').addClass("expanded", 200);
+    return false;
+  });

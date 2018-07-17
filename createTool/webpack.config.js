@@ -21,24 +21,24 @@ module.exports = {
     }),
     new CleanWebpackPlugin(['dist']),
     new TransferWebpackPlugin([{
-        from: 'lib',
-        to: 'lib'
-    }], path.resolve(__dirname, "src"))// run build 先清除
+      from: 'lib',
+      to: 'lib'
+    }], path.join(__dirname, 'src'))
   ],
   module: {
     rules: [
       {
         test: /\.css$/,
-        use: [ 'style-loader', 'css-loader' ]
+        use: ['style-loader', 'css-loader']
       },
       {
-        test: /\.(gif|png|jpe?g|svg)$/i,
+        test: /\.(gif|png|jpe?g|svg|eot|ttf|woff)$/i,
         use: [
           {
             loader: 'file-loader',
             options: {
-                name: '[name].[ext]',
-                outputPath: 'images/'
+              name: '[name].[ext]',
+              outputPath: 'images/'
             }
           },
           {
@@ -51,7 +51,7 @@ module.exports = {
       },
       {
         test: /\.html$/,
-        use: [ {
+        use: [{
           loader: 'html-loader',
           options: {
             minimize: true
