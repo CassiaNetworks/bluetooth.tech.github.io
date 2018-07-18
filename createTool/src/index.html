@@ -360,12 +360,12 @@
         <div id="red-ui-tabs" class="red-ui-tabs">
           <div>
             <ul id="sidebar-tabs">
-              <li class="red-ui-tab active" id="red-ui-tab-info" style="width: 46.1783%;">
+              <li class="red-ui-tab" id="red-ui-tab-info" style="width: 46.1783%;">
                 <a href="#info" class="red-ui-tab-label" title="信息" style="">
                   <span class="bidiAware" dir="">信息</span>
                 </a>
               </li>
-              <li class="red-ui-tab" id="red-ui-tab-debug" style="width: 44.4954%;">
+              <li class="red-ui-tab active" id="red-ui-tab-debug" style="width: 44.4954%;">
                 <a href="#debug" class="red-ui-tab-label" title="调试窗口">
                   <span class="bidiAware" dir="">调试窗口</span>
                 </a>
@@ -376,22 +376,76 @@
 
         <div id="sidebar-content" class="sidebar-content">
           <!-- sidebar info start -->
-          <div id="sidebar-info-active" style="height: 100%; display: block">
+          <div id="sidebar-info-active" style="height: 100%; display: none">
             <div class="sidebar-node-info">
               <div class="sidebar-node-info-stack red-ui-stack"></div>
             </div>
           </div>
           <!-- sidebar info end -->
           <!-- sidebar deubg start -->
-          <div id="sidebar-debug-active" style="height: 100%; display: none">
-            <div style="position: relative; height: 100%">
-              <div class="sidebar-header"></div>
+          <div id="sidebar-debug-active" style="height: 100%; display: block">
 
-              <div id="debug-content" class="debug-content debug-content-list">
+            <div class="sidebar-node-info">
+              <div class="sidebar-node-info-stack red-ui-stack">
+                <div class="palette-category palette-category-expanded" style="">
+                  <div class="palette-container-header">
+                    <i class="fa fa-angle-down expanded"></i>
+                    <span>信息</span>
+                  </div>
+                  <div style="position: relative; display: block;">
+                    <div id="debug-content-info">
+                      <table class="node-info">
+                        <tbody>
+                          <tr class="node-info-node-row">
+                            <td>流程</td>
+                            <td>
+                              <span class="debug-message-element debug-message-top-level">
+                                <span class="debug-message-row">
+                                  <span class="debug-message-object-value">
+                                    <span class="debug-message-type-string debug-message-object-header">"0000000000000"</span>
+                                  </span>
+                                </span>
+                              </span>
+                            </td>
+                          </tr>
+                          <tr class="node-info-node-row">
+                            <td>名称</td>
+                            <td>流程1</td>
+                          </tr>
+                          <tr class="node-info-node-row">
+                            <td>状态</td>
+                            <td>启用</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="palette-category palette-category-expanded" style="border-bottom: none;">
+                  <div class="palette-container-header">
+                    <i class="fa fa-angle-down expanded"></i>
+                    <span>流程描述</span>
+                  </div>
+                  <div style="position: relative; display: block;">
+                    <div style="padding: 6px;" class="debug-help" id="debug-help">
 
+                      <p class="debug-help-none">无</p>
+
+                    </div>
+                  </div>
+                </div>
               </div>
-              <!-- <div class="debug-content  debug-content-table hide"></div> -->
-
+              <div class="node-info-tips">
+                <div class="node-info-tip"></div>
+                <div class="node-info-tips-buttons">
+                  <a href="#" class="workspace-footer-button">
+                    <i class="fa fa-refresh"></i>
+                  </a>
+                  <a href="#" class="workspace-footer-button">
+                    <i class="fa fa-times"></i>
+                  </a>
+                </div>
+              </div>
             </div>
 
           </div>
@@ -405,6 +459,25 @@
       <div id="sidebar-separator" class="ui-draggable"></div>
 
     </div>
+
+    <div id="window-shade" class="window-shade hide">
+        <svg width="170" height="170" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid"
+          class="lds-radio">
+          <circle cx="28" cy="75" r="11"  fill="#dce4eb">
+            <animate attributeName="fill-opacity" calcMode="linear" values="0;1;1" keyTimes="0;0.2;1" dur="1" begin="0s" repeatCount="indefinite"></animate>
+          </circle>
+          <path d="M28 47A28 28 0 0 1 56 75" fill="none"  stroke-width="10" stroke="#bbcedd">
+            <animate attributeName="stroke-opacity" calcMode="linear" values="0;1;1" keyTimes="0;0.2;1" dur="1" begin="0.1s"
+              repeatCount="indefinite"></animate>
+          </path>
+          <path d="M28 25A50 50 0 0 1 78 75" fill="none"  stroke-width="10" stroke="#85a2b6">
+            <animate attributeName="stroke-opacity" calcMode="linear" values="0;1;1" keyTimes="0;0.2;1" dur="1" begin="0.2s"
+              repeatCount="indefinite"></animate>
+          </path>
+        </svg>
+    </div>
+    <div id="_alert" class="_alert hide">程序初始化失败</div>
+  </div>
 </body>
 
 </html>

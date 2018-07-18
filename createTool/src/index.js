@@ -8,7 +8,7 @@ import jsPconfig from './js/jsPlumb.config.js';
 import modleConfig from './js/modle.config.js';
 import editors from './js/editor.js';
 import editorStr from './js/editorStr.js';
-import {debugHighlight} from './js/showDebugInfo.js';
+import { debugHighlight, defaultDebugInfo, nodeDebugInfo } from './js/showDebugInfo.js';
 
 import {
   createModle,
@@ -22,10 +22,8 @@ import {
 const firstInstance = jsPlumb.getInstance({});
 
 
-
 firstInstance.bind("click", function (conn, originalEvent) {
   console.log('connector --> click', $(this), '\n conn:', conn);
-
   /*
     TODO
     firstInstance.deleteConnection(conn);
@@ -88,15 +86,10 @@ firstInstance.bind("connectionDetached", function (conn, originalEvent) {
   if (conn.sourceId === conn.targetId) {  //自己连接自己时会自动取消连接
     return;
     console.log('童心未泯的广言，看我龟派气功');
-
   }
   alert("删除连接从" + conn.sourceId + "到" + conn.targetId + "！");
 });
 
-
-
-
-// reseauInit(); // svg wang ge 
 // 左侧list item开启关闭动画
 $('.palette-container-header').on('click', function () {
   $(this).next().toggle('blind', 300);
@@ -113,48 +106,57 @@ $('.ui-draggable').draggable({
   zIndex: 1
 });
 
-// 放入事件
+// 放入事件 TODO  结构优化
 $('.ui-droppable').droppable({
   accept: '.ui-draggable',
   scope: "plant",
   drop: function (event, ui) {
-    let _newModle = createModle($('#innerCanvas'), ui);
-    jsPmodleInit(_newModle);
+    const _newModle = createModle($('#innerCanvas'), ui);
+    const endpoints = jsPmodleInit(_newModle);
+    const modle = getModle(_newModle.attr('id'));
+    modle.endpoints = endpoints;
+    nodeDebugInfo({ id: _newModle.attr('id'), type: _newModle.attr('name') });
+    // 下面注释是测试所用  无意义
+    // debugHighlight(firstInstance, { id: _newModle.attr('id'), state: "start", data: {} });
+    // setTimeout(debugHighlight, 3000, firstInstance, { id: _newModle.attr('id'), state: "end", data: {} });
+    // console.log(modle);
   }
 });
-
-
-
 
 function jsPmodleInit(m) {
   // console.log('jsPmodleInit', m);
   const modleType = m.attr('name');
   jsPconfig.input.Scope = modleType;
   jsPconfig.output.Scope = modleType;
+  let tempEndpoint;
   switch (modleConfig[m.attr('name')].point) {
-    case '00':
-      firstInstance.addEndpoint(m, {
+    case '00': {
+      const endpoint = firstInstance.addEndpoint(m, {
         anchors: "LeftMiddle"
       }, jsPconfig.input);
+      tempEndpoint = [endpoint];
+    }
       break;
-    case '01':
-      firstInstance.addEndpoint(m, {
+    case '01': {
+      const endpoint = firstInstance.addEndpoint(m, {
         anchors: "RightMiddle"
       }, jsPconfig.output);
+      tempEndpoint = [endpoint];
+    }
       break;
-    case 'FF':
-      firstInstance.addEndpoint(m, {
+    case 'FF': {
+      const endpoint1 = firstInstance.addEndpoint(m, {
         anchors: "LeftMiddle"
       }, jsPconfig.input);
-      firstInstance.addEndpoint(m, {
+      const endpoint2 = firstInstance.addEndpoint(m, {
         anchors: "RightMiddle"
       }, jsPconfig.output);
-      // firstInstance.addEndpoint(m, {
-      //   anchors: "TopRight"
-      // }, jsPconfig.output);
+      tempEndpoint = [endpoint1, endpoint2];
+    }
       break;
   }
   firstInstance.draggable(m);
+  return tempEndpoint;
   // m.draggable({
   //   containment: "parent",
   //   drag: function(event, ui) {
@@ -181,18 +183,14 @@ $(".shade").on('click', function () {
   $(".shade").hide();
   return false;
 });
-$.fn.isChildAndSelfOf = function(b){
+$.fn.isChildAndSelfOf = function (b) {
   return (this.closest(b).length > 0);
 };
 /*
   新元素双击事件
 */
 $('body').on('dblclick', '.newModle', function () {
-  // $('.newModle').removeClass('debug-newModle');
-  // $(this).addClass('debug-newModle');
-  // firstInstance.repaintEverything();
-
-  let s = firstInstance.select();
+  // firstInstance.animate($(this), {left: 10, top: 20, opacity: 0.4}, { duration: 350, easing: 'easeOutBack' });//
   //TODO
   $("#editor-stack").show();
   $(".shade").show();
@@ -281,83 +279,89 @@ $('body').on('keyup', '.ace_editor_text_input input', function () {
   $('.red-ui-editor-fn-content').html($(this).val());
 });
 // 把url参数转换成json
-function urlSearch2obj(str) {  
-  if(str == undefined) return  
-  str = str.substr(1)  
-  var arr = str.split("&"),  
-      obj = {},  
-      newArr = []  
-  arr.map(function(value,index,arr){  
-   newArr = value.split("=")  
-   if(newArr[0] != undefined) {  
-    obj[newArr[0]] = newArr[1]  
-  }  
-})  
-return obj  
-} 
+function urlSearch2obj(str) {
+  if (str == undefined) return
+  str = str.substr(1)
+  var arr = str.split("&"),
+    obj = {},
+    newArr = []
+  arr.map(function (value, index, arr) {
+    newArr = value.split("=")
+    if (newArr[0] != undefined) {
+      obj[newArr[0]] = newArr[1]
+    }
+  })
+  return obj
+}
 // => 点击test 按钮 让BI run 起来，然后发送句法树，建立sse用于debug
 $('#test').on('click', function () {
   const tree = saveTree();
   const id = urlSearch2obj(window.location.search).id;
-  const body = { id, enable: 1}
+  const body = { id, enable: 1 }
   const host = window.location.host;
-  startBi(body)
-    .then(data => startTest(host,tree))
-    .then(data => {
-      const es = new EventSource(`http://${host}:8081/bi/debuginfo`);
-      es.onmessage = function (event) {
-        console.log('debugInfo sse',typeof event, typeof event.data, event.data);
-        debugHighlight(firstInstance, JSON.parse(event.data));
+  console.log('程序正在初始化');
+  _alert({msg:'程序正在初始化',css:{color: '#555'}})
+  $('#window-shade').show();
 
-        
-      }
-      es.onerror = function (err) {
-        console.err('debuginfo sse err: ',err);
-      }
+  startBi(body)
+    .then(data => debugInfoSSE(host))
+    .then(data => sendTree(host, tree))
+    .then(data => console.log('程序初始化成功')).then(data => {
+      _alert({msg:'程序初始化成功',css:{color: '#5cb85c'}})
+      $('#window-shade').hide()
     })
-  
+    .catch(e => {
+      console.error('程序初始化失败', e)
+      $('#window-shade').hide();
+      _alert({msg:'程序初始化失败',css:{color: '#c9302c'}})
+    })
 })
+
 // 让BI run起来
-function startBi(body){
+function startBi(body) {
   return $.ajax({
     type: 'put',
-    headers : {"Content-Type" : "application/json"},
+    headers: { "Content-Type": "application/json" },
     data: JSON.stringify(body),
     url: `/bi/${body.id}`,
     timeout: 10000
   })
 }
 // 将语法树发送至BI
-function startTest(host,tree){
-  return new Promise( (resolve, reject) => {
-    setTimeout(function(){
-      $.ajax({
-        type: 'post',
-        headers : {"Content-Type" : "application/json"},
-        data: JSON.stringify(tree),
-        url: `http://${host}:8081/bi/api`,
-        timeout: 10000,
-        success: function(data){
-          console.log('startTest send ok',data);
-          return resolve(data);
-        },
-        error: function(err) {
-          console.log('startTest send err', err);
-          return reject(err);
-        }
-      })
-    },3000)
+function sendTree(host, tree) {
+  return $.ajax({
+    type: 'post',
+    headers: { "Content-Type": "application/json" },
+    data: JSON.stringify(tree),
+    url: `http://${host}:8081/bi/api`,
+    timeout: 10000
+  })
+
+}
+function debugInfoSSE(host) {
+  return new Promise((resolve, reject) => {
+    setTimeout(function () {
+      const es = new EventSource(`http://${host}:8081/bi/debuginfo`);
+      es.onmessage = function (event) {
+        console.log('debugInfo sse', typeof event, typeof event.data, event.data);
+        debugHighlight(firstInstance, JSON.parse(event.data));
+      }
+      es.onerror = function (err) {
+        console.error('debuginfo sse err: ', err);
+      }
+      return resolve();
+    }, 3000);
   });
 }
 /*
   下载文件的
  */
-function download(text,fileName, type) {
+function download(text, fileName, type) {
   const a = document.getElementById("a");
-  const file = new Blob([text], {type: type});
+  const file = new Blob([text], { type: type });
   a.href = URL.createObjectURL(file);
   a.download = fileName;
-  a.dispatchEvent(new MouseEvent('click', {'bubbles': false, 'cancelable': true}));
+  a.dispatchEvent(new MouseEvent('click', { 'bubbles': false, 'cancelable': true }));
 }
 
 /*
@@ -366,14 +370,14 @@ function download(text,fileName, type) {
 $('#save').on('click', function () {
   const name = prompt('请输入要保存的名字：', 'tree');
   console.log(name, typeof name);
-  if(!name){
-    return alert('取消保存');
+  if (!name) {
+    return _alert({msg:'取消保存',css:{color:'#c9302c'}});
   }
   const text = JSON.stringify(saveTree(), null, 2);
   const fileName = `${name}.json`;
-  download(text,fileName,'text/plain');
+  download(text, fileName, 'text/plain');
   // console.log('save,save,save',text);
-  alert('保存成功')
+  _alert({msg:'保存成功',css:{color:'#5cb85c'}});
 });
 // function show_prompt(){  
 //   var value = prompt('输入你的名字：', '默认名字');  
@@ -387,7 +391,7 @@ $('#save').on('click', function () {
 //   }  
 // }  
 
-function saveTree(){
+function saveTree() {
   let _modles = getModles();
   let result = {
     'startId': []
@@ -405,7 +409,6 @@ function saveTree(){
   }
   return result;
   // console.log('save-save-save', JSON.stringify(result, null, 2));
-  // console.log('hahaha',result)
 }
 
 // TODO  删除的逻辑，需要增加 workspack-header tabs item
@@ -421,23 +424,21 @@ function saveTree(){
 //   }
 // });
 
-$('.red-ui-tab').on('click', function() {
-  if($(this).hasClass('active')){ return }
-   console.log(" don't has active",$(this).attr('id'));
+// 右侧 sidebar tab标签
+$('.red-ui-tab').on('click', function () {
+  if ($(this).hasClass('active')) { return }
+  console.log(" don't has active", $(this).attr('id'));
   $('.red-ui-tab').removeClass('active');
   $(this).addClass('active');
   $(this).attr('id') === 'red-ui-tab-debug'
-  if($(this).attr('id') === 'red-ui-tab-debug'){
+  if ($(this).attr('id') === 'red-ui-tab-debug') {
     $('#sidebar-info-active').hide();
     $('#sidebar-debug-active').show();
-  }else{
+  } else {
     $('#sidebar-debug-active').hide();
     $('#sidebar-info-active').show();
-    
+
   }
-
-  
-
 });
 // $('.red-ui-tab').on('click', function() {
 //   if(!$(this).hasClass('active')){
@@ -447,24 +448,49 @@ $('.red-ui-tab').on('click', function() {
 //   }
 // });
 
-window.onbeforeunload = function(){
+window.onbeforeunload = function () {
   const modles = getModles();
-  if(Object.keys(modles).length){
-     return "尚未保存！";
+  if (Object.keys(modles).length) {
+    return "尚未保存！";
   }
-  
+
 }
 
-  $('#palette-collapse-all').on('click' ,function(){
-    const selectedEffect = 'blind';
-    $( "#palette").find('.palette-container-content').hide(200);
-    $('#palette .palette-container-header').find('i').removeClass( "expanded", 200);
-    return false;
+// 标签全部关闭
+$('#palette-collapse-all').on('click', function () {
+  const selectedEffect = 'blind';
+  $("#palette").find('.palette-container-content').hide(200);
+  $('#palette .palette-container-header').find('i').removeClass("expanded", 200);
+  return false;
+});
+// 标签全部展开
+$('#palette-expand-all').on('click', function () {
+  const selectedEffect = 'blind';
+  $("#palette .palette-container-content").show(200);
+  $('#palette .palette-container-header').find('i').addClass("expanded", 200);
+  return false;
+});
 
-  });
-  $('#palette-expand-all').on('click' ,function(){
-    const selectedEffect = 'blind';
-    $( "#palette .palette-container-content" ).show(200);
-    $('#palette .palette-container-header').find('i').addClass("expanded", 200);
-    return false;
-  });
+// => newModle 高亮
+$('#chart').on('click', function (e) {
+  $('.newModle').removeClass('newModle-selected');
+  const modle = e.target.closest('.newModle');
+  if (modle) {
+    $(modle).addClass('newModle-selected');
+    nodeDebugInfo({ id: $(modle).attr('id'), type: $(modle).attr('name') });
+  } else {
+    defaultDebugInfo();
+  }
+});
+// setTimeout(_alert, 3000, {msg:'hello world',css:{color: '#5cb85c'}})
+// setTimeout(_alert, 3000, {msg:'hello world',css:{color: '#c9302c'}})
+
+function _alert(content) {
+  $('#_alert').html(content.msg)
+  content.css && $('#_alert').css(content.css)
+
+  $('#_alert').show(500);
+  setTimeout(function () {
+    $('#_alert').hide(500);
+  }, 1750);
+}

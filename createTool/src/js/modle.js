@@ -2,13 +2,7 @@ import modleConfig from './modle.config.js';
 
 const modles = {};
 
-// => newModle 高亮
-$('#chart').on('click', function(e){
-  $('.newModle').removeClass('newModle-selected');
-  if(e.target.closest('.newModle')) {
-    $(e.target.closest('.newModle')).addClass('newModle-selected');
-  }
-});
+
 
 
 
