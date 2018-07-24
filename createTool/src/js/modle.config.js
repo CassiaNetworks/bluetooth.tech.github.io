@@ -26,7 +26,7 @@ config.scan = {
   'downstream': [2, 8]
 };
 
-config.notify = {
+config.notification = {
   id: 4,
   point: 'FF',
   'inputType': 'auto',
@@ -68,7 +68,7 @@ config.function = {
   'downstream': [2, 6, 7],
   'inputTypes2value': {
     'scan_data': ['routerMac','deviceMac', 'name', 'rssi', 'type','evt_type','adData', 'scan_data', 'store'],
-    'notification_data': ['routerMac','deviceMac', 'name', 'rssi', 'handle', 'value', 'store'],
+    'notification_data': ['routerMac','deviceMac', 'handle', 'notifyData', 'store'],
     'http_server': ['obj', 'store'],
   }
 };

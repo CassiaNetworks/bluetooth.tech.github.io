@@ -127,7 +127,7 @@ editor.httpServer = {
 editor.httpClient = {
   final: function (modle) {
     let content = modle.editorContent.content;
-    let params = `[{'path': '${content[0].url}'}]`;
+    let params = {"path": `${content[0].url}`};
     modle.flow.todoList[0].params = params;
   },
   html2Obj: function (dom) {
@@ -264,7 +264,7 @@ editor.scan = {
     return dom;
   }
 };
-editor.notify = {
+editor.notification = {
   final: function (modle) {
     let fn = `return true`;
     modle.flow.todoList[0].function = fn;

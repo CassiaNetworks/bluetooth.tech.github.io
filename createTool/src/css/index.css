@@ -1343,7 +1343,7 @@ table.node-info tr:not(.blank) td:last-child {
   bottom: 0;
   left: 0;
   background: rgba(160,160,160,0.5);
-  z-index: 100;
+  z-index: 20;
   text-align: center;
 }
 .lds-radio {
@@ -1368,4 +1368,5 @@ table.node-info tr:not(.blank) td:last-child {
   color: #555;
   color:#5cb85c;
   font-weight: bold;
+  z-index: 100;
 }

@@ -58,7 +58,7 @@ function _startBlank(modle, endpoints) {
   _blank(modle, endpoints);
   const timer = setInterval(_blank, 1000, modle, endpoints);
   return timer;
-}``
+}
 
 function showDebug() {
 
