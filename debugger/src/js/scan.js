@@ -18,7 +18,7 @@ const scan = {
     itemHandle = {},
     $log = $('#scanLog ul')
 itemHandle.add = function (data) {
-    // debugger
+    // debugger 
     let _data = {
         mac: data.mesg.bdaddrs[0].bdaddr,
         name: data.mesg.name,
