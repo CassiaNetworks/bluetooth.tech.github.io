@@ -2,7 +2,7 @@
 存储localstorage时候最好是封装一个自己的键值，在这个值里存储自己的内容对象，封装一个方法针对自己对象进行操作。避免冲突也会在开发中更方便。
 */
 var mystorage = (function mystorage(){
-    var ms = "msgResponse";
+    var ms = "scanUtils";
     var storage=window.localStorage;
     if(!window.localStorage){
         alert("浏览器支持localstorage");

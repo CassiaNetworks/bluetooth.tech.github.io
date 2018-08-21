@@ -27,19 +27,20 @@
             reg_http = /http\:\/\/(.+)/;
         // local
         if (o.server && typeof o.server == 'string' && reg_ip.test(o.server)) {
-            //api.server = 'http://' + o.server;
+            api.server = 'http://' + o.server
             api.local = true
-            // console.log(12312312)
                 // cloud
+        } else if (o.server && typeof o.server == 'string' && reg_ip.test(o.server)) {
+            // ... hehe, use url directly
+            // cloud (use us/cn/auto)
         } else {
-            // api.server = 'http://' + ({
-            //     'us': 'api1',
-            //     'cn': 'api2',
-            //     'demo': 'demo',
-            //     'auto': 'api'
-            // }[o.server] || 'api') + '.cassianetworks.com'
+            api.server = 'http://' + ({
+                'us': 'api1',
+                'cn': 'api2',
+                'demo': 'demo',
+                'auto': 'api'
+            }[o.server] || 'api') + '.cassianetworks.com'
         }
-        api.server = 'http://' + o.server || 'http://api.cassianetworks.com';
         api.developer = o.developer || 'tester'
         api.key = o.key || '10b83f9a2e823c47'
         api.base64_dev_key = 'Basic ' + btoa(o.developer + ':' + o.key)
@@ -49,8 +50,8 @@
     api.oauth2 = function(o) {
         o = o || {}
         let next = function(d) {
-                api.access_token = d || '',
-                // api.access_token = '',
+           // api.access_token = d || '',
+                api.access_token = '',
                 api.authorization = 'Bearer ' + (d || ''),
                 o.success && o.success(d),
                 api.trigger('oauth2', [d])
@@ -112,7 +113,7 @@
         o = o || {}
         $.ajax({
             type: 'post',
-            url: api.server + '/gap/nodes/' + o.node + '/connection?mac=' + (o.hub || api.hub) + '&access_token=' + api.access_token,
+            url: api.server + '/gap/nodes/' + o.node + '/connection?mac=' + (o.hub || api.hub),
             /*headers: api.local ? {
                 "Content-Type" : "application/json"
             } : {
@@ -129,100 +130,23 @@
             data : JSON.stringify({"type" : o.type || "public"}),
             success: function(data) {
                 // debugger
-                console.log('connect Ok ',data)
+                console.log(data)
                 o.success && o.success(o.hub || api.hub, o.node, data)
                 api.trigger('conn', [o.hub || api.hub, o.node, data])
-            },
-            error: function(err) {
-                console.log('connect fail ',err)
-                o.error && o.error(err, o.node)
             }
         })
         return api
     }
-    api.iolist=["DisplayOnly","DisplayYesNo","KeyboardOnly","NoInputNoOutput","KeyboardDisplay"];
-    api.pair = function(o) {
-        o = o || {}
-        return    $.ajax({
-            type: 'post',
-            url: api.server + "/management/nodes/" + o.node + "/pair?mac=" + (o.hub || api.hub),
-            headers: api.local ? {"Content-Type" : "application/json"} : {
-                "Content-Type" : "application/json",
-                'Authorization': api.authorization
-            },
-            data: JSON.stringify({
-                "bond":1,
-                "legacy-oob":o.oob || 0,
-                "io-capability":o.io || 'KeyboardDisplay'
-            }),
-            success: function(data){
-                console.log('pair,success', data);
-                o.success && o.success(data)
-            },
-            error: function(err){
-                console.log('pair,fail', err);
-                o.error && o.error(err)
-            }
-        })
-    }
-    api.pairInput = function(o) {
-        console.log('pairInput Start');
-        o = o || {}
-         return  $.ajax({
-            type: 'post',
-            url: api.server + "/management/nodes/" + o.node + "/pair-input?mac=" + (o.hub || api.hub),
-            headers: api.local ? {"Content-Type" : "application/json"} : {
-                "Content-Type" : "application/json",
-                'Authorization': api.authorization
-            },
-            data: JSON.stringify({
-                // "bond":1,
-                // "legacy-oob":o.oob || 0,
-                // "io-capability":o.io || 'NoInputNoOutput'
-                "passkey": o.passkey || "000000"
-            }),
-            success: function(data){
-                console.log('pairInput success', data);
-                o.success && o.success(data);
-            },
-            error: function(err){
-                console.log("pairInput fail", err);
-                o.error && o.error(err);
-            }
-        })
-    }
-
-    api.unPair = function(o){
-        console.log('API - unPair - Start');
-        o = o || {};
-        return    $.ajax({
-            type: 'delete',
-            url: api.server + '/management/nodes/' + o.node + '/bond?mac=' + (o.hub || api.hub),
-            headers: api.local ? {"Content-Type" : "application/json"} : {
-                "Content-Type" : "application/json",
-                'Authorization': api.authorization
-            },
-            success: function(data) {
-                console.log('unPair success',data)
-                o.success && o.success(o.hub || api.hub, o.node, data)
-                //api.trigger('disconn', [o.hub || api.hub, o.node, data])
-            },
-            error: function(err){
-                console.log('unPair fail',err);
-            }
-        })
-    }
-
     api.disconn = function(o) {
         o = o || {}
         $.ajax({
             type: 'delete',
-            url: api.server + '/gap/nodes/' + o.node + '/connection?mac=' + (o.hub || api.hub) + '&access_token=' + api.access_token,
+            url: api.server + '/gap/nodes/' + o.node + '/connection?mac=' + (o.hub || api.hub),
             headers: api.local ? '' : {
                 'Authorization': api.authorization
             },
             success: function(data) {
-                console.log('disconn success',data)
+                console.log(data)
                 o.success && o.success(o.hub || api.hub, o.node, data)
                 api.trigger('disconn', [o.hub || api.hub, o.node, data])
             }
@@ -233,7 +157,7 @@
         o = o || {}
         $.ajax({
             type: 'delete',
-            url: api.server + '/gap/nodes/' + o.node + '/connection?mac=' + (o.hub || api.hub) + '&access_token=' + api.access_token,
+            url: api.server + '/gap/nodes/' + o.node + '/connection?mac=' + (o.hub || api.hub),
             headers: api.local ? '' : {
                 'Authorization': api.authorization
             },
@@ -250,7 +174,7 @@
         o = o || {}
         $.ajax({
             type: 'get',
-            url: api.server + '/gap/nodes/?connection_state=connected&mac=' + (o.hub || api.hub) + '&access_token=' + api.access_token,
+            url: api.server + '/gap/nodes/?connection_state=connected&mac=' + (o.hub || api.hub),
             headers: api.local ? '' : {
                 'Authorization': api.authorization
             },
@@ -282,7 +206,7 @@
         o = o || {}
         return $.ajax({
             type: 'get',
-            url: api.server + '/gatt/nodes/' + o.node + '/handle/' + o.handle + '/value/' + o.value + '/?mac=' + (o.hub || api.hub) + '&access_token=' + api.access_token,
+            url: api.server + '/gatt/nodes/' + o.node + '/handle/' + o.handle + '/value/' + o.value + '/?mac=' + (o.hub || api.hub),
             // headers: {'Authorization': api.authorization},
             success: function(data) {
                 o.success && o.success(data)

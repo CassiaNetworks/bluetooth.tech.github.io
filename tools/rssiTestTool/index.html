@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		header {
+			margin-bottom: 40px;
+		}
+		header input {
+			width: 200px;
+			height: 24px;
+		}
+		.content {
+			margin-top: 40px;
+		}
+		.content .scanInfo{
+			padding: 8px 10px;
+			width: 250px;
+			height: 300px;
+			background-color: pink;
+			margin: 15px;
+			float: left;
+		}
+		.scanInfo p{
+			width: 100%;
+			word-break:break-word;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<label>hub IP:</label>
+		<input type="text" name="" style="width:" id="hubIP">
+		<label> DeviceMac:</label>
+		<input type="text" name="" style="width:" id="deviceMacArr">
+		<button id="startScan">开始扫描</button>
+		<button id="stopScan">停止扫描</button>
+		
+		<input type="text" id="infoText" name="">
+		<button id="infoStart">录入</button>
+		<span>程序执行：</span>
+		<b id="time">0s</b>
+	</header>
+
+	<div class="content" >
+		<!-- <div class="scanInfo" name=''>
+			<p>DeviceMac：</p>
+			<p>Min rssi：</p>
+			<p>Max rssi：</p>
+			<p>Number：</p>
+		</div> -->
+	</div>
+</body>
+<script src="./js/jquery.js"></script>
+<script src="./js/api.js"></script>
+<script src="./js/utils.js"></script>
+<script src="./js/index.js"></script>
+
+</html>
