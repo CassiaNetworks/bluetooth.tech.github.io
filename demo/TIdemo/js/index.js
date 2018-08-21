@@ -535,11 +535,11 @@ $(document).ready(function() {
       }, {
         name: 'y',
         type: 'line',
-        sampling: 'average',
+        sampling: 'average'
       }, {
         name: 'z',
         type: 'line',
-        sampling: 'average',
+        sampling: 'average'
       }]
     });
 

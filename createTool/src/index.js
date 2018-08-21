@@ -9,6 +9,7 @@ import modleConfig from './js/modle.config.js';
 import editors from './js/editor.js';
 import editorStr from './js/editorStr.js';
 import { debugHighlight, defaultDebugInfo, nodeDebugInfo } from './js/showDebugInfo.js';
+import paletteInit from './js/palette.config.js'
 
 import {
   createModle,
@@ -18,7 +19,7 @@ import {
 } from './js/modle.js';
 
 // import reseauInit from './js/reseauInit.js';
-
+paletteInit()
 const firstInstance = jsPlumb.getInstance({});
 
 
