@@ -18,8 +18,10 @@ import {
   getModle
 } from './js/modle.js';
 
-// import reseauInit from './js/reseauInit.js';
+// 左侧列表初始化
 paletteInit()
+
+// 连线工具实例初始化
 const firstInstance = jsPlumb.getInstance({});
 
 
@@ -107,7 +109,7 @@ $('.ui-draggable').draggable({
   zIndex: 1
 });
 
-// 放入事件 TODO  结构优化
+// **放入事件 TODO  结构优化
 $('.ui-droppable').droppable({
   accept: '.ui-draggable',
   scope: "plant",
@@ -123,7 +125,7 @@ $('.ui-droppable').droppable({
     // console.log(modle);
   }
 });
-
+// 给拖拽的元素增加端点
 function jsPmodleInit(m) {
   // console.log('jsPmodleInit', m);
   const modleType = m.attr('name');
@@ -209,7 +211,7 @@ $('body').on('dblclick', '.newModle', function () {
 
 
 /*
-    dialog 删除事件
+    dialog 删除事件 
 */
 $('#node-dialog-delete').on('click', function () {
   $("#editor-stack").hide();
@@ -260,7 +262,7 @@ $('body').on('click', '.red-ui-editableList-addButton', function () {
   $(this).parent().find('ol').append(editorStr[type].itemStr(list.length));
 });
 /*
-scan write  & | 切换
+scan write CONNECT  & | 切换
 */
 $('body').on('click', '.red-ui-editableList-button-logic', function () {
   $(this).html() === '&amp;' ? $(this).html('|') : $(this).html('&amp;');

@@ -41,8 +41,8 @@ $(document).ready(function() {
   });
 
   handle_value = {
-    37: "0100",
-    39: "01",
+    // 37: "0100",
+    // 39: "01",
     45: "0100",
     47: "01",
     53: "0100",
@@ -56,7 +56,7 @@ $(document).ready(function() {
   var host, username, password, APmac, token, isconnect = false;
   var ref = "64"; //采集数据默认值
   var refArr = {
-    41: ref,
+    // 41: ref,
     49: ref,
     57: ref,
     73: ref
@@ -296,27 +296,27 @@ $(document).ready(function() {
     let dateStr = [date.getHours(), date.getMinutes(), date.getSeconds()].join(':');
 
     switch (handle) {
-      case 36:
-        let temp = sensorTmp007Convert(value);
-        let temperatureData = device.real[mac].temperatureData,
-          temperatureDate = device.real[mac].temperatureDate;
-        temperatureData.push(temp);
-        temperatureDate.push(dateStr);
-        if (temperatureData.length >= 12) {
-          temperatureData.shift();
-          temperatureDate.shift();
-        }
+      // case 36:
+      //   let temp = sensorTmp007Convert(value);
+      //   let temperatureData = device.real[mac].temperatureData,
+      //     temperatureDate = device.real[mac].temperatureDate;
+      //   temperatureData.push(temp);
+      //   temperatureDate.push(dateStr);
+      //   if (temperatureData.length >= 12) {
+      //     temperatureData.shift();
+      //     temperatureDate.shift();
+      //   }
 
-        device.real[mac].temperatureChart.setOption({
-          xAxis: {
-            data: temperatureDate
-          },
-          series: [{
-            data: temperatureData
-          }]
-        });
+      //   device.real[mac].temperatureChart.setOption({
+      //     xAxis: {
+      //       data: temperatureDate
+      //     },
+      //     series: [{
+      //       data: temperatureData
+      //     }]
+      //   });
 
-        break;
+      //   break;
 
       case 44:
         //    console.log('##############',device.real[mac]);
@@ -485,7 +485,7 @@ $(document).ready(function() {
     device.real[_mac].gyroChart = echarts.init($('.gyro')[_n]);
     device.real[_mac].magneticChart = echarts.init($('.magnetic')[_n]);
     device.real[_mac].lightChart = echarts.init($('.light')[_n]);
-    device.real[_mac].temperatureChart = echarts.init($('.temperature')[_n]);
+    // device.real[_mac].temperatureChart = echarts.init($('.temperature')[_n]);
     device.real[_mac].humChart = echarts.init($('.hum')[_n]);
     device.real[_mac].pressureChart = echarts.init($('.pressure')[_n]);
 
@@ -614,22 +614,22 @@ $(document).ready(function() {
       }]
     });
 
-    device.real[_mac].temperatureChart.setOption({
-      title: {
-        text: lang[lang.useLang].Temperature
-      },
-      tooltip: tooltip,
-      xAxis: xAxis,
-      yAxis: {
-        name: '℃'
-      },
-      grid: grid,
-      series: [{
-        name: lang[lang.useLang].Temperature,
-        type: 'line',
-        sampling: 'average'
-      }]
-    });
+    // device.real[_mac].temperatureChart.setOption({
+    //   title: {
+    //     text: lang[lang.useLang].Temperature
+    //   },
+    //   tooltip: tooltip,
+    //   xAxis: xAxis,
+    //   yAxis: {
+    //     name: '℃'
+    //   },
+    //   grid: grid,
+    //   series: [{
+    //     name: lang[lang.useLang].Temperature,
+    //     type: 'line',
+    //     sampling: 'average'
+    //   }]
+    // });
 
     device.real[_mac].humChart.setOption({
       title: {
@@ -680,8 +680,8 @@ $(document).ready(function() {
     lightDate: [],
     noiseData: [],
     noiseDate: [],
-    temperatureData: [],
-    temperatureDate: [],
+    // temperatureData: [],
+    // temperatureDate: [],
     humData: [],
     humDate: [],
     pressureData: [],
@@ -704,15 +704,14 @@ $(document).ready(function() {
                 <span class="status hidden">在线</span>
             </div>
             <div class="row">
-              <div class="col-md-3"><div class="temperature pic"></div></div>
-              <div class="col-md-3"><div class="hum pic"></div></div>
-              <div class="col-md-3"><div class="pressure pic"></div></div>
-              <div class="col-md-3"><div class="light pic"></div></div>
+              <div class="col-md-4"><div class="hum pic"></div></div>
+              <div class="col-md-4"><div class="pressure pic"></div></div>
+              <div class="col-md-4"><div class="light pic"></div></div>
             </div>
             <div class="row">
-             <div class="col-md-3"> <div class="gyro pic"></div></div>
-              <div class="col-md-3"><div class="acc pic"></div></div>
-              <div class="col-md-3"><div class="magnetic pic"></div></div>`;
+             <div class="col-md-4"> <div class="gyro pic"></div></div>
+              <div class="col-md-4"><div class="acc pic"></div></div>
+              <div class="col-md-4"><div class="magnetic pic"></div></div>`;
     };
     let chartList = $('#graphic .chart');
     if (chartList[0].dataset.mac === '') {

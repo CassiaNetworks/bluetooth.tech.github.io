@@ -1,12 +1,6 @@
 import modleConfig from './modle.config.js';
 
 const modles = {};
-
-
-
-
-
-
 // 元素拖拽到画板上以后会创建一个新的 modle
 function createModle(parent, ui) {
   // console.log('createModle', parent, ui);
@@ -22,12 +16,9 @@ function createModle(parent, ui) {
   return _newModle;
 }
 
-
 function magic() {
   $('body').find('.newModle').removeClass('newModle-selected');
 };
-
-
 function newModleView(dom) {
   let _newModle = dom.clone()
     .removeClass('palette_node')
