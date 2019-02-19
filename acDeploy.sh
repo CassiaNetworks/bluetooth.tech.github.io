@@ -10,7 +10,7 @@ docker port ac
 if [ $? -eq 0 ]
 then
     docker stop ac
-    docker run -d --name acc --restart always --volumes-from ac -p 443:443 -p 80:80 -p 8001:8001 -p 9999:9999 -p 5246:5246/udp -p 5247:5247/udp -p 6246:6246/udp -p 6247:6247/udp --mac-address=$m cassia/updater
+    docker run -d --name acc --restart always --volumes-from ac -p 443:443 -p 80:80 -p 8001:8001 -p 9999:9999 -p 5246:5246/udp -p 5247:5247/udp -p 6246:6246/udp -p 6247:6247/udp -p 8883:8883 --mac-address=$m cassia/updater
     docker rm -f ac
     echo "from ac run acc"
     exit 0
@@ -21,7 +21,7 @@ docker port acc
 if [ $? -eq 0 ]
 then
     docker stop acc
-    docker run -d --name ac --restart always --volumes-from acc -p 443:443 -p 80:80 -p 8001:8001 -p 9999:9999 -p 5246:5246/udp -p 5247:5247/udp -p 6246:6246/udp -p 6247:6247/udp --mac-address=$m cassia/updater
+    docker run -d --name ac --restart always --volumes-from acc -p 443:443 -p 80:80 -p 8001:8001 -p 9999:9999 -p 5246:5246/udp -p 5247:5247/udp -p 6246:6246/udp -p 6247:6247/udp -p 8883:8883 --mac-address=$m cassia/updater
     docker rm -f acc
     echo "from acc run ac"
     exit 0
@@ -29,4 +29,4 @@ fi
 
 #nothing started
 echo "run ac"
-docker run -d --name ac --restart always -p 443:443 -p 80:80 -p 8001:8001 -p 9999:9999 -p 5246:5246/udp -p 5247:5247/udp -p 6246:6246/udp -p 6247:6247/udp --mac-address=$m cassia/updater
+docker run -d --name ac --restart always -p 443:443 -p 80:80 -p 8001:8001 -p 9999:9999 -p 5246:5246/udp -p 5247:5247/udp -p 6246:6246/udp -p 6247:6247/udp -p 8883:8883 --mac-address=$m cassia/updater
