@@ -31,19 +31,19 @@ function formatServicesData(data,deviceMac) {
 					name: 'properties:' + `<span class='prop-msg'>&nbsp;&nbsp;${method}</span>`
 				})
 				if (method.indexOf('read') !== -1) {
-					// obj.children.push({
-					// 	name: `read:
-					// 				<span class="layui-form-item">
-					// 					<span class="layui-inline">
-					// 						<span class="layui-input-inline" style="width: 100px;">
-					// 							<input type="text" class="layui-input" readonly value='123332'>
-					// 						</span>
-					// 						<span class="layui-form-mid"></span>
-					// 						<button class="layui-btn">read</button>
-					// 					</span>
-					// 				</span>
-					// 			</span>`
-					// })
+					obj.children.push({
+						name: `read:&nbsp;
+									<span class="layui-form-item">
+										<span class="layui-inline">
+											<span class="layui-form-mid"></span>
+											<button class="layui-btn js-try" lay-submit lay-filter='read'  data-devicemac=${deviceMac}  data-action='read' data-handle=${obj.valueHandle}>try</button>
+											<span></span>
+										</span>
+									</span>
+								</span>`,
+						flag: 'read',
+						valueHandle: obj.valueHandle
+					})
 				}
 				if (method.indexOf('write without response') !== -1) {
 					obj.children.push({

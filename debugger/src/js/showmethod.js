@@ -8,6 +8,7 @@ let methodNames = {
     getAllServices: 'disService',
     notify: 'getMsg',
     getConnectState: 'deviceConStateChange',
+    readByHandle: 'readCom',
     writeByHandle: 'writeCom',
     disconnectDevice: 'disCon',
     oAuth:'oAuth',
@@ -57,6 +58,11 @@ let methodConfig = {
         methodName:methodNames.writeByHandle,
         url:''
     },
+    readByHandle: {
+        type: 'GET',
+        methodName:methodNames.readByHandle,
+        url: ''
+    },
     oAuth:{
         type:'POST',
         methodName:methodNames.oAuth,
@@ -82,7 +88,7 @@ let methodConfig = {
 let $showMethods = $('.log .left .order')
 
 function showMethod(method) {
-    console.log("*******88",methodConfig[method])
+    console.log("method map:",methodConfig[method])
     let _methodName = methodConfig[method].methodName,
         _type = methodConfig[method].type,
         _url = methodConfig[method].url,

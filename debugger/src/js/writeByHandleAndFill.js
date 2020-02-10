@@ -10,7 +10,7 @@ import {
 import {
 	showLog
 } from './showlog'
-const writeByHnadleAndFill = (event, {
+const writeByHandleAndFill = (event, {
 	deviceMac,
 	writeValue,
 	handle
@@ -29,16 +29,16 @@ const writeByHnadleAndFill = (event, {
 	})
 
 	if (action === 'writeWithRes') {
-		ajaxResult = api.writeByHnadle(url, null)
+		ajaxResult = api.writeByHandle(url, null)
 		
 	} else if (action === 'writeWithoutRes') {
-		ajaxResult = api.writeByHnadle(url, {
+		ajaxResult = api.writeByHandle(url, {
 			option: 'cmd'
 		})
 	} else if (action === 'notify') {
-		ajaxResult = api.writeByHnadle(url, null)
+		ajaxResult = api.writeByHandle(url, null)
 	} else if (action === 'indicate') {
-		ajaxResult = api.writeByHnadle(url, null)
+		ajaxResult = api.writeByHandle(url, null)
 	}
 	showMethod('writeByHandle')
 	ajaxResult.done(function(e) {
@@ -57,5 +57,5 @@ const writeByHnadleAndFill = (event, {
 }
 
 export {
-	writeByHnadleAndFill
+	writeByHandleAndFill
 }

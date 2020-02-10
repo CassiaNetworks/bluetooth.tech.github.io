@@ -50,7 +50,7 @@ function writeByHandleDeferAndFill(arr, deviceMac) {
 			// console.log('type', type)
 			console.log('url', url)
 			console.log(new Date())
-			ajaxResult = api.writeByHnadle(url, type ? null : {
+			ajaxResult = api.writeByHandle(url, type ? null : {
 				option: 'cmd'
 			}).done(function(e) {
 				// debugger

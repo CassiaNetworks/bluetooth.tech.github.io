@@ -2,8 +2,11 @@ import {
 	api
 } from './api'
 import {
-	writeByHnadleAndFill
-} from './writeByHnadleAndFill.js'
+	readByHandleAndFill
+} from './readByHandleAndFill.js'
+import {
+	writeByHandleAndFill
+} from './writeByHandleAndFill.js'
 import {
 	showMethod
 } from './showmethod'
@@ -71,23 +74,28 @@ function getAllServicesAndFill(deviceMac) {
 				clearTimeout($parent.timer)
 				$parent.timer = setTimeout(function() {
 					const $ul = $(`.l3 ul[data-mac='${deviceMac}']`)
-					let writeValue
+					
 					form.render()
+
 					$ul.find('button.js-try').click(function(e) {
-						mainHandle.linkage(6)
-						const handle = e.target.dataset.handle,
-							deviceMac = e.target.dataset.devicemac
-						if ($ul.find(`input.js${handle}`).length === 2 && e.target.dataset.action === 'writeWithoutRes') {
-							writeValue = $ul.find(`input.js${handle}`).eq(0).val().trim()
-						} else if ($ul.find(`input.js${handle}`).length === 2 && e.target.dataset.action === 'writeWithRes') {
-							writeValue = $ul.find(`input.js${handle}`).eq(1).val().trim()
-						} else
-							writeValue = $ul.find(`input.js${handle}`).eq(0).val().trim()
-						writeByHnadleAndFill(e.target, {
-							deviceMac,
-							writeValue,
-							handle
-						})
+						const handle = e.target.dataset.handle;
+						const deviceMac = e.target.dataset.devicemac;
+						if (e.target.dataset.action === 'read') {
+							mainHandle.linkage(7)
+							readByHandleAndFill(e.target, {deviceMac, handle})
+						} else {
+							let writeValue
+							mainHandle.linkage(6)
+							if ($ul.find(`input.js${handle}`).length === 2 && e.target.dataset.action === 'writeWithoutRes') {
+								writeValue = $ul.find(`input.js${handle}`).eq(0).val().trim()
+							} else if ($ul.find(`input.js${handle}`).length === 2 && e.target.dataset.action === 'writeWithRes') {
+								mainHandle.linkage(6)
+								writeValue = $ul.find(`input.js${handle}`).eq(1).val().trim()
+							} else {
+								writeValue = $ul.find(`input.js${handle}`).eq(0).val().trim()
+							}
+							writeByHandleAndFill(e.target, {deviceMac, writeValue, handle})
+						}
 					})
 
 					form.on('switch(notify)', function(e) {
@@ -96,7 +104,7 @@ function getAllServicesAndFill(deviceMac) {
 							writeValue = e.elem.checked ? '0100' : '0000',
 							deviceMac = e.elem.dataset.devicemac
 
-						writeByHnadleAndFill(e.elem, {
+						writeByHandleAndFill(e.elem, {
 							deviceMac,
 							writeValue,
 							handle
@@ -107,7 +115,7 @@ function getAllServicesAndFill(deviceMac) {
 						const handle = e.elem.dataset.handle,
 							writeValue = e.elem.checked ? '0200' : '0000',
 							deviceMac = e.elem.dataset.devicemac
-						writeByHnadleAndFill(e.elem, {
+						writeByHandleAndFill(e.elem, {
 							deviceMac,
 							writeValue,
 							handle

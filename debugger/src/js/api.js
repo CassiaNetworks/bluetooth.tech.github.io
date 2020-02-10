@@ -152,18 +152,13 @@ function getAllServices(url) {
 }
 
 function readByHandle(url, data) {
-    var _url = addURLParam(url, data, false);
-    $.ajax({
-        url: _url,
+    methodConfig.readByHandle.url = addURLParam(url, data, false)
+    return $.ajax({
+        url: url,
         type: 'GET',
         headers: { "Content-Type": "application/json" },
-        data: data,
-    }).done(function (e) {
-        console.log(e);
-    }).fail(function (e) {
-        console.error(e);
-
-    });
+        data: data
+    })
 }
 
 
@@ -189,7 +184,7 @@ function receiveNotification(url, notifySSE) {
 
 
 
-function writeByHnadle(url, data) {
+function writeByHandle(url, data) {
     methodConfig.writeByHandle.url = addURLParam(url, data, false)
     return $.ajax({
         url: url,
@@ -250,7 +245,7 @@ let api = {
     getConnectState,
     reboot,
     getAllServices,
-    writeByHnadle,
+    writeByHandle,
     readByHandle,
     receiveNotification,
     addURLParam,

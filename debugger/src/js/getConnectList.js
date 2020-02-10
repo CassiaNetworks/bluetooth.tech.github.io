@@ -50,7 +50,7 @@ function htmlTemp(mac, name) {
 
 
 
-function getConnectListAndFiil() {
+function getConnectListAndFill() {
 	const parent1 = $('.l3 ul'),
 		parent2 = $('#connectLists ul'),
 		ajaxResult = api.getConnectList(urlArr.getConnectedDeviceList);
@@ -66,7 +66,7 @@ function getConnectListAndFiil() {
 			message: JSON.stringify(e)
 		});
 		let num = 0;
-		//console.log("getConnectListAndFiil::", e);
+		//console.log("getConnectListAndFill::", e);
 		if(!e.nodes.forEach){
 			parent1.html(temp);
 			$('#connectedNum').html(num);
@@ -92,6 +92,6 @@ function getConnectListAndFiil() {
 
 
 export {
-	getConnectListAndFiil,
+	getConnectListAndFill,
 	htmlTemp
 }
