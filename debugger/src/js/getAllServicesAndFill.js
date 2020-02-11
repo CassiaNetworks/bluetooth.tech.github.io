@@ -14,6 +14,12 @@ import {
 	showLog
 } from './showlog'
 import {
+	gattServices
+} from './gattServices'
+import {
+	gattCharacteristics
+} from './gattCharacteristics'
+import {
     urlArr  
 }from './urlconfig'
 import formatServicesData from './formatServicesData'
@@ -27,7 +33,29 @@ console.log("***********",mainHandle)
 // hasGetServices[deviceMac] = 3  '获取失败'
 // hasGetServices[deviceMac] = {}  '获取成功'
 
-
+function convertGattInfoByUUID(devicesServicesTree) {
+	devicesServicesTree.forEach(function(deviceServiceTree) {
+		deviceServiceTree.children.forEach(function(service) {
+			let id = parseInt(service.uuid.split('-')[0], 16).toString(16).toUpperCase();
+			if (gattServices[id]) { // 标准定义的显示易读，并增加uuid字段显示
+				service.name = gattServices[id];
+				service.children.unshift({name: `uuid:${service.uuid}`}); 
+			}
+			service.name = gattServices[id] || service.name;
+			service.children.forEach(function(serviceChild) {
+				if (serviceChild.name === 'characteristics') { // 处理characteristics
+					serviceChild.children.forEach(function(charChild) {
+						let id = parseInt(charChild.uuid.split('-')[0], 16).toString(16).toUpperCase();
+						if (gattCharacteristics[id]) { // 标准定义的显示易读，并增加uuid字段显示
+							charChild.name = gattCharacteristics[id] || charChild.name;
+							charChild.children.unshift({name: `uuid:${charChild.uuid}`}); // char增加显示uuid字段
+						}
+					});
+				}
+			})
+		})
+	});
+}
 
 function getAllServicesAndFill(deviceMac) {
 	layui.use(['tree', 'form', 'layer'], function() {
@@ -67,6 +95,7 @@ function getAllServicesAndFill(deviceMac) {
 				})
 				hasGetServices[deviceMac] = formatServicesData(e, deviceMac);
 				console.log('getAllServicesAndFill.js',hasGetServices[deviceMac]);
+				convertGattInfoByUUID(hasGetServices[deviceMac]);
 				layui.tree({
 					elem: $parent,
 					nodes: hasGetServices[deviceMac]

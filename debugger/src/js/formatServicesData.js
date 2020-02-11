@@ -32,12 +32,14 @@ function formatServicesData(data,deviceMac) {
 				})
 				if (method.indexOf('read') !== -1) {
 					obj.children.push({
-						name: `read:&nbsp;
+						name: `read:&nbsp;0x
 									<span class="layui-form-item">
 										<span class="layui-inline">
+											<span class="layui-input-inline" style="width: 100px;">
+												<input type="text" class="layui-input"  placeholder='' readonly>
+											</span>
 											<span class="layui-form-mid"></span>
 											<button class="layui-btn js-try" lay-submit lay-filter='read'  data-devicemac=${deviceMac}  data-action='read' data-handle=${obj.valueHandle}>try</button>
-											<span></span>
 										</span>
 									</span>
 								</span>`,

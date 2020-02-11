@@ -55,15 +55,15 @@
 	
 	var handle = _interopRequireWildcard(_mainHandle);
 	
-	var _scan = __webpack_require__(/*! ./src/js/scan */ 115);
+	var _scan = __webpack_require__(/*! ./src/js/scan */ 117);
 	
 	var _scan2 = _interopRequireDefault(_scan);
 	
-	var _notifyStateAndFill = __webpack_require__(/*! ./src/js/notifyStateAndFill */ 111);
+	var _notifyStateAndFill = __webpack_require__(/*! ./src/js/notifyStateAndFill */ 113);
 	
 	var _notifyStateAndFill2 = _interopRequireDefault(_notifyStateAndFill);
 	
-	var _notifyMsgAndFill = __webpack_require__(/*! ./src/js/notifyMsgAndFill */ 110);
+	var _notifyMsgAndFill = __webpack_require__(/*! ./src/js/notifyMsgAndFill */ 112);
 	
 	var _notifyMsgAndFill2 = _interopRequireDefault(_notifyMsgAndFill);
 	
@@ -75,7 +75,7 @@
 	
 	var _i18n2 = _interopRequireDefault(_i18n);
 	
-	var _oAuth = __webpack_require__(/*! ./src/js/oAuth2 */ 125);
+	var _oAuth = __webpack_require__(/*! ./src/js/oAuth2 */ 127);
 	
 	var _api = __webpack_require__(/*! ./src/js/api */ 10);
 	
@@ -208,47 +208,47 @@
 	
 	var _getAllServicesAndFill = __webpack_require__(/*! ./getAllServicesAndFill */ 97);
 	
-	var _notifyMsgAndFill = __webpack_require__(/*! ./notifyMsgAndFill */ 110);
+	var _notifyMsgAndFill = __webpack_require__(/*! ./notifyMsgAndFill */ 112);
 	
 	var _notifyMsgAndFill2 = _interopRequireDefault(_notifyMsgAndFill);
 	
-	var _notifyStateAndFill = __webpack_require__(/*! ./notifyStateAndFill */ 111);
+	var _notifyStateAndFill = __webpack_require__(/*! ./notifyStateAndFill */ 113);
 	
 	var _notifyStateAndFill2 = _interopRequireDefault(_notifyStateAndFill);
 	
-	var _connectTip = __webpack_require__(/*! ./connectTip */ 112);
+	var _connectTip = __webpack_require__(/*! ./connectTip */ 114);
 	
-	var _scanTip = __webpack_require__(/*! ./scanTip */ 114);
+	var _scanTip = __webpack_require__(/*! ./scanTip */ 116);
 	
 	var _scanTip2 = _interopRequireDefault(_scanTip);
 	
-	var _connectListTip = __webpack_require__(/*! ./connectListTip */ 116);
+	var _connectListTip = __webpack_require__(/*! ./connectListTip */ 118);
 	
 	var _connectListTip2 = _interopRequireDefault(_connectListTip);
 	
-	var _getAllServicesTip = __webpack_require__(/*! ./getAllServicesTip */ 117);
+	var _getAllServicesTip = __webpack_require__(/*! ./getAllServicesTip */ 119);
 	
 	var _getAllServicesTip2 = _interopRequireDefault(_getAllServicesTip);
 	
-	var _notifyMsgTip = __webpack_require__(/*! ./notifyMsgTip */ 118);
+	var _notifyMsgTip = __webpack_require__(/*! ./notifyMsgTip */ 120);
 	
 	var _notifyMsgTip2 = _interopRequireDefault(_notifyMsgTip);
 	
-	var _pairTip = __webpack_require__(/*! ./pairTip */ 119);
+	var _pairTip = __webpack_require__(/*! ./pairTip */ 121);
 	
-	var _unpairTip = __webpack_require__(/*! ./unpairTip */ 120);
+	var _unpairTip = __webpack_require__(/*! ./unpairTip */ 122);
 	
 	var _unpairTip2 = _interopRequireDefault(_unpairTip);
 	
-	var _notifyStateTip = __webpack_require__(/*! ./notifyStateTip */ 121);
+	var _notifyStateTip = __webpack_require__(/*! ./notifyStateTip */ 123);
 	
 	var _notifyStateTip2 = _interopRequireDefault(_notifyStateTip);
 	
-	var _disconnectTip = __webpack_require__(/*! ./disconnectTip */ 122);
+	var _disconnectTip = __webpack_require__(/*! ./disconnectTip */ 124);
 	
 	var _disconnectTip2 = _interopRequireDefault(_disconnectTip);
 	
-	var _writeByHandleTip = __webpack_require__(/*! ./writeByHandleTip.js */ 123);
+	var _writeByHandleTip = __webpack_require__(/*! ./writeByHandleTip.js */ 125);
 	
 	var _writeByHandleTip2 = _interopRequireDefault(_writeByHandleTip);
 	
@@ -3626,9 +3626,13 @@
 	
 	var _showlog = __webpack_require__(/*! ./showlog */ 57);
 	
+	var _gattServices = __webpack_require__(/*! ./gattServices */ 100);
+	
+	var _gattCharacteristics = __webpack_require__(/*! ./gattCharacteristics */ 101);
+	
 	var _urlconfig = __webpack_require__(/*! ./urlconfig */ 56);
 	
-	var _formatServicesData = __webpack_require__(/*! ./formatServicesData */ 100);
+	var _formatServicesData = __webpack_require__(/*! ./formatServicesData */ 102);
 	
 	var _formatServicesData2 = _interopRequireDefault(_formatServicesData);
 	
@@ -3642,6 +3646,30 @@
 	
 	var hasGetServices = {};
 	console.log("***********", mainHandle);
+	
+	function convertGattInfoByUUID(devicesServicesTree) {
+		devicesServicesTree.forEach(function (deviceServiceTree) {
+			deviceServiceTree.children.forEach(function (service) {
+				var id = parseInt(service.uuid.split('-')[0], 16).toString(16).toUpperCase();
+				if (_gattServices.gattServices[id]) {
+					service.name = _gattServices.gattServices[id];
+					service.children.unshift({ name: 'uuid:' + service.uuid });
+				}
+				service.name = _gattServices.gattServices[id] || service.name;
+				service.children.forEach(function (serviceChild) {
+					if (serviceChild.name === 'characteristics') {
+						serviceChild.children.forEach(function (charChild) {
+							var id = parseInt(charChild.uuid.split('-')[0], 16).toString(16).toUpperCase();
+							if (_gattCharacteristics.gattCharacteristics[id]) {
+								charChild.name = _gattCharacteristics.gattCharacteristics[id] || charChild.name;
+								charChild.children.unshift({ name: 'uuid:' + charChild.uuid });
+							}
+						});
+					}
+				});
+			});
+		});
+	}
 	
 	function getAllServicesAndFill(deviceMac) {
 		layui.use(['tree', 'form', 'layer'], function () {
@@ -3678,6 +3706,7 @@
 					});
 					hasGetServices[deviceMac] = (0, _formatServicesData2.default)(e, deviceMac);
 					console.log('getAllServicesAndFill.js', hasGetServices[deviceMac]);
+					convertGattInfoByUUID(hasGetServices[deviceMac]);
 					layui.tree({
 						elem: $parent,
 						nodes: hasGetServices[deviceMac]
@@ -3797,19 +3826,21 @@
 	
 		var ajaxResult = _api.api.readByHandle(url, null);
 		(0, _showmethod.showMethod)('readByHandle');
-		$(event).next().text('reading');
+	
+		var $readResult = $($(event).parent().find('input')[0]);
+		$readResult.val('reading');
 		ajaxResult.done(function (e) {
 			(0, _showlog.showLog)($('#readValueLog'), {
 				message: deviceMac + ':' + (0, _stringify2.default)(e),
 				class: 'success'
 			});
-			$(event).next().text('hex: ' + e.value);
+			$readResult.val(e.value || '');
 		}).fail(function (e) {
 			(0, _showlog.showLog)($('#readValueLog'), {
 				message: deviceMac + ':' + (0, _stringify2.default)(e, null, 2),
 				class: 'fail'
 			});
-			$(event).next().text('read failed');
+			$readResult.val('read failed');
 		});
 	};
 	
@@ -3892,6 +3923,317 @@
 
 /***/ }),
 /* 100 */
+/*!********************************!*\
+  !*** ./src/js/gattServices.js ***!
+  \********************************/
+/***/ (function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var gattServices = {
+	  '1800': 'Generic Access',
+	  '1811': 'Alert Notification Service',
+	  '1815': 'Automation IO',
+	  '180F': 'Battery Service',
+	  '183B': 'Binary Sensor',
+	  '1810': 'Blood Pressure',
+	  '181B': 'Body Composition',
+	  '181E': 'Bond Management Service',
+	  '181F': 'Continuous Glucose Monitoring',
+	  '1805': 'Current Time Service',
+	  '1818': 'Cycling Power',
+	  '1816': 'Cycling Speed and Cadence',
+	  '180A': 'Device Information',
+	  '183C': 'Emergency Configuration',
+	  '181A': 'Environmental Sensing',
+	  '1826': 'Fitness Machine',
+	  '1801': 'Generic Attribute',
+	  '1808': 'Glucose',
+	  '1809': 'Health Thermometer',
+	  '180D': 'Heart Rate',
+	  '1823': 'HTTP Proxy',
+	  '1812': 'Human Interface Device',
+	  '1802': 'Immediate Alert',
+	  '1821': 'Indoor Positioning',
+	  '183A': 'Insulin Delivery',
+	  '1820': 'Internet Protocol Support Service',
+	  '1803': 'Link Loss',
+	  '1819': 'Location and Navigation',
+	  '1827': 'Mesh Provisioning Service',
+	  '1828': 'Mesh Proxy Service',
+	  '1807': 'Next DST Change Service',
+	  '1825': 'Object Transfer Service',
+	  '180E': 'Phone Alert Status Service',
+	  '1822': 'Pulse Oximeter Service',
+	  '1829': 'Reconnection Configuration',
+	  '1806': 'Reference Time Update Service',
+	  '1814': 'Running Speed and Cadence',
+	  '1813': 'Scan Parameters',
+	  '1824': 'Transport Discovery',
+	  '1804': 'User Data',
+	  '181D': 'Weight Scale'
+	};
+	
+	exports.gattServices = gattServices;
+
+/***/ }),
+/* 101 */
+/*!***************************************!*\
+  !*** ./src/js/gattCharacteristics.js ***!
+  \***************************************/
+/***/ (function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var gattCharacteristics = {
+	  '2A7E': 'Aerobic Heart Rate Lower Limit',
+	  '2A84': 'Aerobic Heart Rate Upper Limit',
+	  '2A7F': 'Aerobic Threshold',
+	  '2A80': 'Age',
+	  '2A5A': 'Aggregate',
+	  '2A43': 'Alert Category ID',
+	  '2A42': 'Alert Category ID Bit Mask',
+	  '2A06': 'Alert Level',
+	  '2A44': 'Alert Notification Control Point',
+	  '2A3F': 'Alert Status',
+	  '2AB3': 'Altitude',
+	  '2A81': 'Anaerobic Heart Rate Lower Limit',
+	  '2A82': 'Anaerobic Heart Rate Upper Limit',
+	  '2A83': 'Anaerobic Threshold',
+	  '2A58': 'Analog',
+	  '2A59': 'Analog Output',
+	  '2A73': 'Apparent Wind Direction',
+	  '2A72': 'Apparent Wind Speed',
+	  '2A01': 'Appearance',
+	  '2AA3': 'Barometric Pressure Trend',
+	  '2A19': 'Battery Level',
+	  '2A1B': 'Battery Level State',
+	  '2A1A': 'Battery Power State',
+	  '2A49': 'Blood Pressure Feature',
+	  '2A35': 'Blood Pressure Measurement',
+	  '2A9B': 'Body Composition Feature',
+	  '2A9C': 'Body Composition Measurement',
+	  '2A38': 'Body Sensor Location',
+	  '2AA4': 'Bond Management Control Point',
+	  '2AA5': 'Bond Management Features',
+	  '2A22': 'Boot Keyboard Input Report',
+	  '2A32': 'Boot Keyboard Output Report',
+	  '2A33': 'Boot Mouse Input Report',
+	  '2B2B': 'BSS Control Point',
+	  '2B2C': 'BSS Response',
+	  '2AA8': 'CGM Feature',
+	  '2AA7': 'CGM Measurement',
+	  '2AAB': 'CGM Session Run Time',
+	  '2AAA': 'CGM Session Start Time',
+	  '2AAC': 'CGM Specific Ops Control Point',
+	  '2AA9': 'CGM Status',
+	  '2B29': 'Client Supported Features',
+	  '2ACE': 'Cross Trainer Data',
+	  '2A5C': 'CSC Feature',
+	  '2A5B': 'CSC Measurement',
+	  '2A2B': 'Current Time',
+	  '2A66': 'Cycling Power Control Point',
+	  '2A65': 'Cycling Power Feature',
+	  '2A63': 'Cycling Power Measurement',
+	  '2A64': 'Cycling Power Vector',
+	  '2A99': 'Database Change Increment',
+	  '2B2A': 'Database Hash',
+	  '2A85': 'Date of Birth',
+	  '2A86': 'Date of Threshold Assessment',
+	  '2A08': 'Date Time',
+	  '2AED': 'Date UTC',
+	  '2A0A': 'Day Date Time',
+	  '2A09': 'Day of Week',
+	  '2A7D': 'Descriptor Value Changed',
+	  '2A7B': 'Dew Point',
+	  '2A56': 'Digital',
+	  '2A57': 'Digital Output',
+	  '2A0D': 'DST Offset',
+	  '2A6C': 'Elevation',
+	  '2A87': 'Email Address',
+	  '2B2D': 'Emergency ID',
+	  '2B2E': 'Emergency Text',
+	  '2A0B': 'Exact Time 100',
+	  '2A0C': 'Exact Time 256',
+	  '2A88': 'Fat Burn Heart Rate Lower Limit',
+	  '2A89': 'Fat Burn Heart Rate Upper Limit',
+	  '2A26': 'Firmware Revision String',
+	  '2A8A': 'First Name',
+	  '2AD9': 'Fitness Machine Control Point',
+	  '2ACC': 'Fitness Machine Feature',
+	  '2ADA': 'Fitness Machine Status',
+	  '2A8B': 'Five Zone Heart Rate Limits',
+	  '2AB2': 'Floor Number',
+	  '2AA6': 'Central Address Resolution',
+	  '2A00': 'Device Name',
+	  '2A04': 'Peripheral Preferred Connection Parameters',
+	  '2A02': 'Peripheral Privacy Flag',
+	  '2A03': 'Reconnection Address',
+	  '2A05': 'Service Changed',
+	  '2A8C': 'Gender',
+	  '2A51': 'Glucose Feature',
+	  '2A18': 'Glucose Measurement',
+	  '2A34': 'Glucose Measurement Context',
+	  '2A74': 'Gust Factor',
+	  '2A27': 'Hardware Revision String',
+	  '2A39': 'Heart Rate Control Point',
+	  '2A8D': 'Heart Rate Max',
+	  '2A37': 'Heart Rate Measurement',
+	  '2A7A': 'Heat Index',
+	  '2A8E': 'Height',
+	  '2A4C': 'HID Control Point',
+	  '2A4A': 'HID Information',
+	  '2A8F': 'Hip Circumference',
+	  '2ABA': 'HTTP Control Point',
+	  '2AB9': 'HTTP Entity Body',
+	  '2AB7': 'HTTP Headers',
+	  '2AB8': 'HTTP Status Code',
+	  '2ABB': 'HTTPS Security',
+	  '2A6F': 'Humidity',
+	  '2B22': 'IDD Annunciation Status',
+	  '2B25': 'IDD Command Control Point',
+	  '2B26': 'IDD Command Data',
+	  '2B23': 'IDD Features',
+	  '2B28': 'IDD History Data',
+	  '2B27': 'IDD Record Access Control Point',
+	  '2B21': 'IDD Status',
+	  '2B20': 'IDD Status Changed',
+	  '2B24': 'IDD Status Reader Control Point',
+	  '2A2A': 'IEEE 11073-20601 Regulatory Certification Data List',
+	  '2AD2': 'Indoor Bike Data',
+	  '2AAD': 'Indoor Positioning Configuration',
+	  '2A36': 'Intermediate Cuff Pressure',
+	  '2A1E': 'Intermediate Temperature',
+	  '2A77': 'Irradiance',
+	  '2AA2': 'Language',
+	  '2A90': 'Last Name',
+	  '2AAE': 'Latitude',
+	  '2A6B': 'LN Control Point',
+	  '2A6A': 'LN Feature',
+	  '2AB1': 'Local East Coordinate',
+	  '2AB0': 'Local North Coordinate',
+	  '2A0F': 'Local Time Information',
+	  '2A67': 'Location and Speed Characteristic',
+	  '2AB5': 'Location Name',
+	  '2AAF': 'Longitude',
+	  '2A2C': 'Magnetic Declination',
+	  '2AA0': 'Magnetic Flux Density – 2D',
+	  '2AA1': 'Magnetic Flux Density – 3D',
+	  '2A29': 'Manufacturer Name String',
+	  '2A91': 'Maximum Recommended Heart Rate',
+	  '2A21': 'Measurement Interval',
+	  '2A24': 'Model Number String',
+	  '2A68': 'Navigation',
+	  '2A3E': 'Network Availability',
+	  '2A46': 'New Alert',
+	  '2AC5': 'Object Action Control Point',
+	  '2AC8': 'Object Changed',
+	  '2AC1': 'Object First-Created',
+	  '2AC3': 'Object ID',
+	  '2AC2': 'Object Last-Modified',
+	  '2AC6': 'Object List Control Point',
+	  '2AC7': 'Object List Filter',
+	  '2ABE': 'Object Name',
+	  '2AC4': 'Object Properties',
+	  '2AC0': 'Object Size',
+	  '2ABF': 'Object Type',
+	  '2ABD': 'OTS Feature',
+	  '2A5F': 'PLX Continuous Measurement Characteristic',
+	  '2A60': 'PLX Features',
+	  '2A5E': 'PLX Spot-Check Measurement',
+	  '2A50': 'PnP ID',
+	  '2A75': 'Pollen Concentration',
+	  '2A2F': 'Position 2D',
+	  '2A30': 'Position 3D',
+	  '2A69': 'Position Quality',
+	  '2A6D': 'Pressure',
+	  '2A4E': 'Protocol Mode',
+	  '2A62': 'Pulse Oximetry Control Point',
+	  '2A78': 'Rainfall',
+	  '2B1D': 'RC Feature',
+	  '2B1E': 'RC Settings',
+	  '2B1F': 'Reconnection Configuration Control Point',
+	  '2A52': 'Record Access Control Point',
+	  '2A14': 'Reference Time Information',
+	  '2B37': 'Registered User Characteristic',
+	  '2A3A': 'Removable',
+	  '2A4D': 'Report',
+	  '2A4B': 'Report Map',
+	  '2AC9': 'Resolvable Private Address Only',
+	  '2A92': 'Resting Heart Rate',
+	  '2A40': 'Ringer Control point',
+	  '2A41': 'Ringer Setting',
+	  '2AD1': 'Rower Data',
+	  '2A54': 'RSC Feature',
+	  '2A53': 'RSC Measurement',
+	  '2A55': 'SC Control Point',
+	  '2A4F': 'Scan Interval Window',
+	  '2A31': 'Scan Refresh',
+	  '2A3C': 'Scientific Temperature Celsius',
+	  '2A10': 'Secondary Time Zone',
+	  '2A5D': 'Sensor Location',
+	  '2A25': 'Serial Number String',
+	  '2B3A': 'Server Supported Features',
+	  '2A3B': 'Service Required',
+	  '2A28': 'Software Revision String',
+	  '2A93': 'Sport Type for Aerobic and Anaerobic Thresholds',
+	  '2AD0': 'Stair Climber Data',
+	  '2ACF': 'Step Climber Data',
+	  '2A3D': 'String',
+	  '2AD7': 'Supported Heart Rate Range',
+	  '2AD5': 'Supported Inclination Range',
+	  '2A47': 'Supported New Alert Category',
+	  '2AD8': 'Supported Power Range',
+	  '2AD6': 'Supported Resistance Level Range',
+	  '2AD4': 'Supported Speed Range',
+	  '2A48': 'Supported Unread Alert Category',
+	  '2A23': 'System ID',
+	  '2ABC': 'TDS Control Point',
+	  '2A6E': 'Temperature',
+	  '2A1F': 'Temperature Celsius',
+	  '2A20': 'Temperature Fahrenheit',
+	  '2A1C': 'Temperature Measurement',
+	  '2A1D': 'Temperature Type',
+	  '2A94': 'Three Zone Heart Rate Limits',
+	  '2A12': 'Time Accuracy',
+	  '2A15': 'Time Broadcast',
+	  '2A13': 'Time Source',
+	  '2A16': 'Time Update Control Point',
+	  '2A17': 'Time Update State',
+	  '2A11': 'Time with DST',
+	  '2A0E': 'Time Zone',
+	  '2AD3': 'Training Status',
+	  '2ACD': 'Treadmill Data',
+	  '2A71': 'True Wind Direction',
+	  '2A70': 'True Wind Speed',
+	  '2A95': 'Two Zone Heart Rate Limit',
+	  '2A07': 'Tx Power Level',
+	  '2AB4': 'Uncertainty',
+	  '2A45': 'Unread Alert Status',
+	  '2AB6': 'URI',
+	  '2A9F': 'User Control Point',
+	  '2A9A': 'User Index',
+	  '2A76': 'UV Index',
+	  '2A96': 'VO2 Max',
+	  '2A97': 'Waist Circumference',
+	  '2A98': 'Weight',
+	  '2A9D': 'Weight Measurement',
+	  '2A9E': 'Weight Scale Feature',
+	  '2A79': 'Wind Chill'
+	};
+	
+	exports.gattCharacteristics = gattCharacteristics;
+
+/***/ }),
+/* 102 */
 /*!**************************************!*\
   !*** ./src/js/formatServicesData.js ***!
   \**************************************/
@@ -3907,11 +4249,11 @@
 	
 	var _typeof3 = _interopRequireDefault(_typeof2);
 	
-	var _keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 101);
+	var _keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 103);
 	
 	var _keys2 = _interopRequireDefault(_keys);
 	
-	var _properties = __webpack_require__(/*! ./properties */ 105);
+	var _properties = __webpack_require__(/*! ./properties */ 107);
 	
 	var _properties2 = _interopRequireDefault(_properties);
 	
@@ -3948,7 +4290,7 @@
 					});
 					if (method.indexOf('read') !== -1) {
 						obj.children.push({
-							name: 'read:&nbsp;\n\t\t\t\t\t\t\t\t\t<span class="layui-form-item">\n\t\t\t\t\t\t\t\t\t\t<span class="layui-inline">\n\t\t\t\t\t\t\t\t\t\t\t<span class="layui-form-mid"></span>\n\t\t\t\t\t\t\t\t\t\t\t<button class="layui-btn js-try" lay-submit lay-filter=\'read\'  data-devicemac=' + deviceMac + '  data-action=\'read\' data-handle=' + obj.valueHandle + '>try</button>\n\t\t\t\t\t\t\t\t\t\t\t<span></span>\n\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t</span>',
+							name: 'read:&nbsp;0x\n\t\t\t\t\t\t\t\t\t<span class="layui-form-item">\n\t\t\t\t\t\t\t\t\t\t<span class="layui-inline">\n\t\t\t\t\t\t\t\t\t\t\t<span class="layui-input-inline" style="width: 100px;">\n\t\t\t\t\t\t\t\t\t\t\t\t<input type="text" class="layui-input"  placeholder=\'\' readonly>\n\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t\t<span class="layui-form-mid"></span>\n\t\t\t\t\t\t\t\t\t\t\t<button class="layui-btn js-try" lay-submit lay-filter=\'read\'  data-devicemac=' + deviceMac + '  data-action=\'read\' data-handle=' + obj.valueHandle + '>try</button>\n\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t</span>',
 							flag: 'read',
 							valueHandle: obj.valueHandle
 						});
@@ -4084,27 +4426,27 @@
 	exports.default = formatServicesData;
 
 /***/ }),
-/* 101 */
+/* 103 */
 /*!************************************************!*\
   !*** ./~/babel-runtime/core-js/object/keys.js ***!
   \************************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/keys */ 102), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/keys */ 104), __esModule: true };
 
 /***/ }),
-/* 102 */
+/* 104 */
 /*!*********************************************!*\
   !*** ./~/core-js/library/fn/object/keys.js ***!
   \*********************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ../../modules/es6.object.keys */ 103);
+	__webpack_require__(/*! ../../modules/es6.object.keys */ 105);
 	module.exports = __webpack_require__(/*! ../../modules/_core */ 9).Object.keys;
 
 
 /***/ }),
-/* 103 */
+/* 105 */
 /*!******************************************************!*\
   !*** ./~/core-js/library/modules/es6.object.keys.js ***!
   \******************************************************/
@@ -4114,7 +4456,7 @@
 	var toObject = __webpack_require__(/*! ./_to-object */ 47);
 	var $keys = __webpack_require__(/*! ./_object-keys */ 30);
 	
-	__webpack_require__(/*! ./_object-sap */ 104)('keys', function () {
+	__webpack_require__(/*! ./_object-sap */ 106)('keys', function () {
 	  return function keys(it) {
 	    return $keys(toObject(it));
 	  };
@@ -4122,7 +4464,7 @@
 
 
 /***/ }),
-/* 104 */
+/* 106 */
 /*!**************************************************!*\
   !*** ./~/core-js/library/modules/_object-sap.js ***!
   \**************************************************/
@@ -4141,7 +4483,7 @@
 
 
 /***/ }),
-/* 105 */
+/* 107 */
 /*!******************************!*\
   !*** ./src/js/properties.js ***!
   \******************************/
@@ -4153,7 +4495,7 @@
 		value: true
 	});
 	
-	var _isInteger = __webpack_require__(/*! babel-runtime/core-js/number/is-integer */ 106);
+	var _isInteger = __webpack_require__(/*! babel-runtime/core-js/number/is-integer */ 108);
 	
 	var _isInteger2 = _interopRequireDefault(_isInteger);
 	
@@ -4180,27 +4522,27 @@
 	exports.default = checkProp;
 
 /***/ }),
-/* 106 */
+/* 108 */
 /*!******************************************************!*\
   !*** ./~/babel-runtime/core-js/number/is-integer.js ***!
   \******************************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/number/is-integer */ 107), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/number/is-integer */ 109), __esModule: true };
 
 /***/ }),
-/* 107 */
+/* 109 */
 /*!***************************************************!*\
   !*** ./~/core-js/library/fn/number/is-integer.js ***!
   \***************************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ../../modules/es6.number.is-integer */ 108);
+	__webpack_require__(/*! ../../modules/es6.number.is-integer */ 110);
 	module.exports = __webpack_require__(/*! ../../modules/_core */ 9).Number.isInteger;
 
 
 /***/ }),
-/* 108 */
+/* 110 */
 /*!************************************************************!*\
   !*** ./~/core-js/library/modules/es6.number.is-integer.js ***!
   \************************************************************/
@@ -4209,11 +4551,11 @@
 	// 20.1.2.3 Number.isInteger(number)
 	var $export = __webpack_require__(/*! ./_export */ 14);
 	
-	$export($export.S, 'Number', { isInteger: __webpack_require__(/*! ./_is-integer */ 109) });
+	$export($export.S, 'Number', { isInteger: __webpack_require__(/*! ./_is-integer */ 111) });
 
 
 /***/ }),
-/* 109 */
+/* 111 */
 /*!**************************************************!*\
   !*** ./~/core-js/library/modules/_is-integer.js ***!
   \**************************************************/
@@ -4228,7 +4570,7 @@
 
 
 /***/ }),
-/* 110 */
+/* 112 */
 /*!************************************!*\
   !*** ./src/js/notifyMsgAndFill.js ***!
   \************************************/
@@ -4299,7 +4641,7 @@
 	exports.default = notifyMsgAndFill;
 
 /***/ }),
-/* 111 */
+/* 113 */
 /*!**************************************!*\
   !*** ./src/js/notifyStateAndFill.js ***!
   \**************************************/
@@ -4376,7 +4718,7 @@
 	exports.default = notifyStateAndFill;
 
 /***/ }),
-/* 112 */
+/* 114 */
 /*!******************************!*\
   !*** ./src/js/connectTip.js ***!
   \******************************/
@@ -4397,7 +4739,7 @@
 	
 	var _connectDevice2 = _interopRequireDefault(_connectDevice);
 	
-	var _tips = __webpack_require__(/*! ./tips */ 113);
+	var _tips = __webpack_require__(/*! ./tips */ 115);
 	
 	var _tips2 = _interopRequireDefault(_tips);
 	
@@ -4434,7 +4776,7 @@
 	exports.connectTips = connectTips;
 
 /***/ }),
-/* 113 */
+/* 115 */
 /*!************************!*\
   !*** ./src/js/tips.js ***!
   \************************/
@@ -4465,7 +4807,7 @@
 	exports.default = tip;
 
 /***/ }),
-/* 114 */
+/* 116 */
 /*!***************************!*\
   !*** ./src/js/scanTip.js ***!
   \***************************/
@@ -4481,11 +4823,11 @@
 	
 	var _globalData2 = _interopRequireDefault(_globalData);
 	
-	var _scan = __webpack_require__(/*! ./scan */ 115);
+	var _scan = __webpack_require__(/*! ./scan */ 117);
 	
 	var _scan2 = _interopRequireDefault(_scan);
 	
-	var _tips = __webpack_require__(/*! ./tips */ 113);
+	var _tips = __webpack_require__(/*! ./tips */ 115);
 	
 	var _tips2 = _interopRequireDefault(_tips);
 	
@@ -4525,7 +4867,7 @@
 	exports.default = scanTip;
 
 /***/ }),
-/* 115 */
+/* 117 */
 /*!************************!*\
   !*** ./src/js/scan.js ***!
   \************************/
@@ -4705,7 +5047,7 @@
 	exports.default = scan;
 
 /***/ }),
-/* 116 */
+/* 118 */
 /*!**********************************!*\
   !*** ./src/js/connectListTip.js ***!
   \**********************************/
@@ -4717,7 +5059,7 @@
 			value: true
 	});
 	
-	var _tips = __webpack_require__(/*! ./tips */ 113);
+	var _tips = __webpack_require__(/*! ./tips */ 115);
 	
 	var _tips2 = _interopRequireDefault(_tips);
 	
@@ -4750,7 +5092,7 @@
 	exports.default = connectListTip;
 
 /***/ }),
-/* 117 */
+/* 119 */
 /*!*************************************!*\
   !*** ./src/js/getAllServicesTip.js ***!
   \*************************************/
@@ -4766,7 +5108,7 @@
 	
 	var _globalData2 = _interopRequireDefault(_globalData);
 	
-	var _tips = __webpack_require__(/*! ./tips */ 113);
+	var _tips = __webpack_require__(/*! ./tips */ 115);
 	
 	var _tips2 = _interopRequireDefault(_tips);
 	
@@ -4802,7 +5144,7 @@
 	exports.default = getAllServicesTip;
 
 /***/ }),
-/* 118 */
+/* 120 */
 /*!********************************!*\
   !*** ./src/js/notifyMsgTip.js ***!
   \********************************/
@@ -4818,7 +5160,7 @@
 	
 	var _globalData2 = _interopRequireDefault(_globalData);
 	
-	var _tips = __webpack_require__(/*! ./tips */ 113);
+	var _tips = __webpack_require__(/*! ./tips */ 115);
 	
 	var _tips2 = _interopRequireDefault(_tips);
 	
@@ -4861,7 +5203,7 @@
 	exports.default = notifyMsgTip;
 
 /***/ }),
-/* 119 */
+/* 121 */
 /*!***************************!*\
   !*** ./src/js/pairTip.js ***!
   \***************************/
@@ -4882,7 +5224,7 @@
 	
 	var _pair2 = _interopRequireDefault(_pair);
 	
-	var _tips = __webpack_require__(/*! ./tips */ 113);
+	var _tips = __webpack_require__(/*! ./tips */ 115);
 	
 	var _tips2 = _interopRequireDefault(_tips);
 	
@@ -4914,7 +5256,7 @@
 	exports.pairTips = pairTips;
 
 /***/ }),
-/* 120 */
+/* 122 */
 /*!*****************************!*\
   !*** ./src/js/unpairTip.js ***!
   \*****************************/
@@ -4930,7 +5272,7 @@
 	
 	var _globalData2 = _interopRequireDefault(_globalData);
 	
-	var _tips = __webpack_require__(/*! ./tips */ 113);
+	var _tips = __webpack_require__(/*! ./tips */ 115);
 	
 	var _tips2 = _interopRequireDefault(_tips);
 	
@@ -4963,7 +5305,7 @@
 	exports.default = unpairTip;
 
 /***/ }),
-/* 121 */
+/* 123 */
 /*!**********************************!*\
   !*** ./src/js/notifyStateTip.js ***!
   \**********************************/
@@ -4979,11 +5321,11 @@
 	
 	var _globalData2 = _interopRequireDefault(_globalData);
 	
-	var _notifyMsgAndFill = __webpack_require__(/*! ./notifyMsgAndFill */ 110);
+	var _notifyMsgAndFill = __webpack_require__(/*! ./notifyMsgAndFill */ 112);
 	
 	var _notifyMsgAndFill2 = _interopRequireDefault(_notifyMsgAndFill);
 	
-	var _tips = __webpack_require__(/*! ./tips */ 113);
+	var _tips = __webpack_require__(/*! ./tips */ 115);
 	
 	var _tips2 = _interopRequireDefault(_tips);
 	
@@ -5026,7 +5368,7 @@
 	exports.default = notifyStateTip;
 
 /***/ }),
-/* 122 */
+/* 124 */
 /*!*********************************!*\
   !*** ./src/js/disconnectTip.js ***!
   \*********************************/
@@ -5042,7 +5384,7 @@
 	
 	var _globalData2 = _interopRequireDefault(_globalData);
 	
-	var _tips = __webpack_require__(/*! ./tips */ 113);
+	var _tips = __webpack_require__(/*! ./tips */ 115);
 	
 	var _tips2 = _interopRequireDefault(_tips);
 	
@@ -5075,7 +5417,7 @@
 	exports.default = getAllServicesTip;
 
 /***/ }),
-/* 123 */
+/* 125 */
 /*!************************************!*\
   !*** ./src/js/writeByHandleTip.js ***!
   \************************************/
@@ -5091,11 +5433,11 @@
 	
 	var _globalData2 = _interopRequireDefault(_globalData);
 	
-	var _writeByHandleDeferAndFill = __webpack_require__(/*! ./writeByHandleDeferAndFill */ 124);
+	var _writeByHandleDeferAndFill = __webpack_require__(/*! ./writeByHandleDeferAndFill */ 126);
 	
 	var _writeByHandleDeferAndFill2 = _interopRequireDefault(_writeByHandleDeferAndFill);
 	
-	var _tips = __webpack_require__(/*! ./tips */ 113);
+	var _tips = __webpack_require__(/*! ./tips */ 115);
 	
 	var _tips2 = _interopRequireDefault(_tips);
 	
@@ -5160,7 +5502,7 @@
 	exports.default = writeByHnadleTip;
 
 /***/ }),
-/* 124 */
+/* 126 */
 /*!*********************************************!*\
   !*** ./src/js/writeByHandleDeferAndFill.js ***!
   \*********************************************/
@@ -5261,7 +5603,7 @@
 	exports.default = writeByHandleDeferAndFill;
 
 /***/ }),
-/* 125 */
+/* 127 */
 /*!**************************!*\
   !*** ./src/js/oAuth2.js ***!
   \**************************/
@@ -5278,7 +5620,7 @@
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
-	var _defineProperty2 = __webpack_require__(/*! babel-runtime/helpers/defineProperty */ 126);
+	var _defineProperty2 = __webpack_require__(/*! babel-runtime/helpers/defineProperty */ 128);
 	
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 	
@@ -5383,7 +5725,7 @@
 	exports.control = control;
 
 /***/ }),
-/* 126 */
+/* 128 */
 /*!***************************************************!*\
   !*** ./~/babel-runtime/helpers/defineProperty.js ***!
   \***************************************************/
@@ -5393,7 +5735,7 @@
 	
 	exports.__esModule = true;
 	
-	var _defineProperty = __webpack_require__(/*! ../core-js/object/define-property */ 127);
+	var _defineProperty = __webpack_require__(/*! ../core-js/object/define-property */ 129);
 	
 	var _defineProperty2 = _interopRequireDefault(_defineProperty);
 	
@@ -5415,22 +5757,22 @@
 	};
 
 /***/ }),
-/* 127 */
+/* 129 */
 /*!***********************************************************!*\
   !*** ./~/babel-runtime/core-js/object/define-property.js ***!
   \***********************************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/define-property */ 128), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/define-property */ 130), __esModule: true };
 
 /***/ }),
-/* 128 */
+/* 130 */
 /*!********************************************************!*\
   !*** ./~/core-js/library/fn/object/define-property.js ***!
   \********************************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ../../modules/es6.object.define-property */ 129);
+	__webpack_require__(/*! ../../modules/es6.object.define-property */ 131);
 	var $Object = __webpack_require__(/*! ../../modules/_core */ 9).Object;
 	module.exports = function defineProperty(it, key, desc) {
 	  return $Object.defineProperty(it, key, desc);
@@ -5438,7 +5780,7 @@
 
 
 /***/ }),
-/* 129 */
+/* 131 */
 /*!*****************************************************************!*\
   !*** ./~/core-js/library/modules/es6.object.define-property.js ***!
   \*****************************************************************/

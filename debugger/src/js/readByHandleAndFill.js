@@ -27,21 +27,23 @@ const readByHandleAndFill = (event, {
 	})
 
   let ajaxResult = api.readByHandle(url, null);
-  showMethod('readByHandle')
-  $(event).next().text('reading');
+	showMethod('readByHandle');
+	
+	const $readResult = $($(event).parent().find('input')[0]);
+  $readResult.val('reading');
 	ajaxResult.done(function(e) {
 		// debugger
 		showLog($('#readValueLog'), {
 			message: deviceMac + ':' + JSON.stringify(e),
 			class: 'success'
-    })
-    $(event).next().text('hex: ' + e.value);
+		})
+    $readResult.val(e.value || '');
 	}).fail(function(e) {
 		showLog($('#readValueLog'), {
 			message: deviceMac + ':' + JSON.stringify(e, null, 2),
 			class: 'fail'
     });
-    $(event).next().text('read failed');
+    $readResult.val('read failed');
 	})
 }
 
