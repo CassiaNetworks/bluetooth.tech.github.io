@@ -3721,7 +3721,7 @@
 							var handle = e.target.dataset.handle;
 							var deviceMac = e.target.dataset.devicemac;
 							if (e.target.dataset.action === 'read') {
-								mainHandle.linkage(7);
+								mainHandle.linkage(12);
 								(0, _readByHandleAndFill.readByHandleAndFill)(e.target, { deviceMac: deviceMac, handle: handle });
 							} else {
 								var writeValue = void 0;
@@ -4992,7 +4992,8 @@
 	    delete data.allItem[data.mac];
 	};
 	
-	function scanHandle(data, timeout) {
+	function scanHandle(_data, timeout) {
+	    if (_urlconfig.data.access_token) (0, _urlconfig.updateUrlArr)(_globalData2.default.saved.acaddress);
 	    if (_globalData2.default.neverSave.scanSSE.es !== '') return;
 	    _globalData2.default.neverSave.scanSSE.status = 'toOpen';
 	    var _allItem = {},
@@ -5001,7 +5002,7 @@
 	    parentNode.innerHTML = '';
 	    _globalData2.default.neverSave.scanSSE.timer = null;
 	    _globalData2.default.neverSave.scanSSE.es = null;
-	    _api.api.start(url, data, _globalData2.default.neverSave.scanSSE, cb.bind(null, timeout));
+	    _api.api.start(url, _data, _globalData2.default.neverSave.scanSSE, cb.bind(null, timeout));
 	    (0, _showmethod.showMethod)('scan');
 	
 	    _globalData2.default.neverSave.scanSSE.timer = setInterval(function () {

@@ -110,7 +110,7 @@ function getAllServicesAndFill(deviceMac) {
 						const handle = e.target.dataset.handle;
 						const deviceMac = e.target.dataset.devicemac;
 						if (e.target.dataset.action === 'read') {
-							mainHandle.linkage(7)
+							mainHandle.linkage(12)
 							readByHandleAndFill(e.target, {deviceMac, handle})
 						} else {
 							let writeValue
