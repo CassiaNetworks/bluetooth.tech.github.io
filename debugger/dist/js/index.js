@@ -2608,6 +2608,10 @@
 	
 	var _urlconfig = __webpack_require__(/*! ./urlconfig */ 56);
 	
+	var _globalData = __webpack_require__(/*! ./globalData */ 50);
+	
+	var _globalData2 = _interopRequireDefault(_globalData);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function htmlTemp(mac, name) {
@@ -2615,6 +2619,7 @@
 	}
 	
 	function getConnectListAndFill() {
+		if (_urlconfig.data.access_token) (0, _urlconfig.updateUrlArr)(_globalData2.default.saved.acaddress);
 		var parent1 = $('.l3 ul'),
 		    parent2 = $('#connectLists ul'),
 		    ajaxResult = _api.api.getConnectList(_urlconfig.urlArr.getConnectedDeviceList);
@@ -4602,6 +4607,7 @@
 	
 	var notifyMsgAndFill = {};
 	notifyMsgAndFill.start = function () {
+		if (_urlconfig.data.access_token) (0, _urlconfig.updateUrlArr)(_globalData2.default.saved.acaddress);
 		_globalData2.default.neverSave.notifySSE.status = 'toOpen';
 		if (_globalData2.default.neverSave.notifySSE.es !== '') {
 			return;
@@ -4671,6 +4677,7 @@
 	
 	var notifyStateAndFill = {};
 	notifyStateAndFill.start = function () {
+		if (_urlconfig.data.access_token) (0, _urlconfig.updateUrlArr)(_globalData2.default.saved.acaddress);
 		_globalData2.default.neverSave.stateSSE.status = 'toOpen';
 		if (_globalData2.default.neverSave.stateSSE.es !== '') {
 			return;
@@ -4678,14 +4685,14 @@
 		var url = _urlconfig.urlArr.getConnectState,
 		    ajaxResult = _api.api.getConnectState(url, _globalData2.default.neverSave.stateSSE),
 		    $parent = $('#connectState ul');
-		var data = '';
+		var _data = '';
 		ajaxResult.addEventListener('message', function (e) {
 			(0, _showlog.showLog)($parent, {
 				message: e.data
 			});
 			if (!e.data.match("keep-alive")) {
-				data = JSON.parse(e.data);
-				stateNotifyHandle(data);
+				_data = JSON.parse(e.data);
+				stateNotifyHandle(_data);
 			}
 		});
 		(0, _showmethod.showMethod)('getConnectState');

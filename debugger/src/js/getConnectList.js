@@ -8,9 +8,11 @@ import {
 	showLog
 } from './showlog'
 import {
-    urlArr  
+	data,
+	urlArr,
+	updateUrlArr
 }from './urlconfig'
-
+import globalData from './globalData'
 
 function htmlTemp(mac, name) {
 	return `<li data-mac=${mac}>
@@ -51,6 +53,7 @@ function htmlTemp(mac, name) {
 
 
 function getConnectListAndFill() {
+	if (data.access_token) updateUrlArr(globalData.saved.acaddress);
 	const parent1 = $('.l3 ul'),
 		parent2 = $('#connectLists ul'),
 		ajaxResult = api.getConnectList(urlArr.getConnectedDeviceList);

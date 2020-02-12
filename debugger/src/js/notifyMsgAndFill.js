@@ -8,12 +8,15 @@ import {
 	showLog
 } from './showlog'
 import {
-    urlArr  
+	data,
+	urlArr,
+	updateUrlArr
 }from './urlconfig'
 import globalData from './globalData'
 
 const notifyMsgAndFill = {}
 notifyMsgAndFill.start = function() {
+	if (data.access_token) updateUrlArr(globalData.saved.acaddress);
 	globalData.neverSave.notifySSE.status = 'toOpen'
 	if (globalData.neverSave.notifySSE.es !== '') {
 		return
