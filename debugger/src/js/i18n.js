@@ -117,7 +117,9 @@ const i18n = function (language,cb) {
             'write-Tip-p9': 'handle为要写入的handle如20',
             'write-Tip-p10': 'value1 为要写入的值（十六进制）',
             'write-Tip-p11': 'type为写入类型，0代表write without response，1代表write with response',
-            'write-Tip-p12': '多条语句之间用回车键换行'
+            'write-Tip-p12': '多条语句之间用回车键换行',
+            'wiki': 'SDK指南',
+            'new-version': '新版试用'
         },
         en = {
             'control':'Control',
@@ -234,7 +236,9 @@ const i18n = function (language,cb) {
             'write-Tip-p9': 'handle to write the handle as 20',
             'write-Tip-p10': 'value1 is the value to be written (hex)',
             'write-Tip-p11': 'type is write type, 0 means write without response, and 1 means write with response',
-            'write-Tip-p12': 'Use a carriage-return between the multiple statements'
+            'write-Tip-p12': 'Use a carriage-return between the multiple statements',
+            'wiki': 'SDK Guide',
+            'new-version': 'New Version'
         },
 
  
