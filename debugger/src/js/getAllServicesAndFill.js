@@ -2,14 +2,23 @@ import {
 	api
 } from './api'
 import {
-	writeByHnadleAndFill
-} from './writeByHnadleAndFill.js'
+	readByHandleAndFill
+} from './readByHandleAndFill.js'
+import {
+	writeByHandleAndFill
+} from './writeByHandleAndFill.js'
 import {
 	showMethod
 } from './showmethod'
 import {
 	showLog
 } from './showlog'
+import {
+	gattServices
+} from './gattServices'
+import {
+	gattCharacteristics
+} from './gattCharacteristics'
 import {
     urlArr  
 }from './urlconfig'
@@ -24,7 +33,29 @@ console.log("***********",mainHandle)
 // hasGetServices[deviceMac] = 3  '获取失败'
 // hasGetServices[deviceMac] = {}  '获取成功'
 
-
+function convertGattInfoByUUID(devicesServicesTree) {
+	devicesServicesTree.forEach(function(deviceServiceTree) {
+		deviceServiceTree.children.forEach(function(service) {
+			let id = parseInt(service.uuid.split('-')[0], 16).toString(16).toUpperCase();
+			if (gattServices[id]) { // 标准定义的显示易读，并增加uuid字段显示
+				service.name = gattServices[id];
+				service.children.unshift({name: `uuid:${service.uuid}`}); 
+			}
+			service.name = gattServices[id] || service.name;
+			service.children.forEach(function(serviceChild) {
+				if (serviceChild.name === 'characteristics') { // 处理characteristics
+					serviceChild.children.forEach(function(charChild) {
+						let id = parseInt(charChild.uuid.split('-')[0], 16).toString(16).toUpperCase();
+						if (gattCharacteristics[id]) { // 标准定义的显示易读，并增加uuid字段显示
+							charChild.name = gattCharacteristics[id] || charChild.name;
+							charChild.children.unshift({name: `uuid:${charChild.uuid}`}); // char增加显示uuid字段
+						}
+					});
+				}
+			})
+		})
+	});
+}
 
 function getAllServicesAndFill(deviceMac) {
 	layui.use(['tree', 'form', 'layer'], function() {
@@ -64,6 +95,7 @@ function getAllServicesAndFill(deviceMac) {
 				})
 				hasGetServices[deviceMac] = formatServicesData(e, deviceMac);
 				console.log('getAllServicesAndFill.js',hasGetServices[deviceMac]);
+				convertGattInfoByUUID(hasGetServices[deviceMac]);
 				layui.tree({
 					elem: $parent,
 					nodes: hasGetServices[deviceMac]
@@ -71,23 +103,28 @@ function getAllServicesAndFill(deviceMac) {
 				clearTimeout($parent.timer)
 				$parent.timer = setTimeout(function() {
 					const $ul = $(`.l3 ul[data-mac='${deviceMac}']`)
-					let writeValue
+					
 					form.render()
+
 					$ul.find('button.js-try').click(function(e) {
-						mainHandle.linkage(6)
-						const handle = e.target.dataset.handle,
-							deviceMac = e.target.dataset.devicemac
-						if ($ul.find(`input.js${handle}`).length === 2 && e.target.dataset.action === 'writeWithoutRes') {
-							writeValue = $ul.find(`input.js${handle}`).eq(0).val().trim()
-						} else if ($ul.find(`input.js${handle}`).length === 2 && e.target.dataset.action === 'writeWithRes') {
-							writeValue = $ul.find(`input.js${handle}`).eq(1).val().trim()
-						} else
-							writeValue = $ul.find(`input.js${handle}`).eq(0).val().trim()
-						writeByHnadleAndFill(e.target, {
-							deviceMac,
-							writeValue,
-							handle
-						})
+						const handle = e.target.dataset.handle;
+						const deviceMac = e.target.dataset.devicemac;
+						if (e.target.dataset.action === 'read') {
+							mainHandle.linkage(12)
+							readByHandleAndFill(e.target, {deviceMac, handle})
+						} else {
+							let writeValue
+							mainHandle.linkage(6)
+							if ($ul.find(`input.js${handle}`).length === 2 && e.target.dataset.action === 'writeWithoutRes') {
+								writeValue = $ul.find(`input.js${handle}`).eq(0).val().trim()
+							} else if ($ul.find(`input.js${handle}`).length === 2 && e.target.dataset.action === 'writeWithRes') {
+								mainHandle.linkage(6)
+								writeValue = $ul.find(`input.js${handle}`).eq(1).val().trim()
+							} else {
+								writeValue = $ul.find(`input.js${handle}`).eq(0).val().trim()
+							}
+							writeByHandleAndFill(e.target, {deviceMac, writeValue, handle})
+						}
 					})
 
 					form.on('switch(notify)', function(e) {
@@ -96,7 +133,7 @@ function getAllServicesAndFill(deviceMac) {
 							writeValue = e.elem.checked ? '0100' : '0000',
 							deviceMac = e.elem.dataset.devicemac
 
-						writeByHnadleAndFill(e.elem, {
+						writeByHandleAndFill(e.elem, {
 							deviceMac,
 							writeValue,
 							handle
@@ -107,7 +144,7 @@ function getAllServicesAndFill(deviceMac) {
 						const handle = e.elem.dataset.handle,
 							writeValue = e.elem.checked ? '0200' : '0000',
 							deviceMac = e.elem.dataset.devicemac
-						writeByHnadleAndFill(e.elem, {
+						writeByHandleAndFill(e.elem, {
 							deviceMac,
 							writeValue,
 							handle

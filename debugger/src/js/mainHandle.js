@@ -5,7 +5,7 @@ import pairDeviceAndFill from './pairDeviceAndFill'
 import pair from './pair'
 import unpair from './unpair'
 import {
-    getConnectListAndFiil
+    getConnectListAndFill
 } from './getConnectList'
 
 import {
@@ -56,7 +56,7 @@ function mainHandle(layer, form) {
 
             case 'bconnectList':
                 {
-                    e.target.fn = getConnectListAndFiil
+                    e.target.fn = getConnectListAndFill
                     connectListTip(layer, form, e.target)
 
                     break
@@ -174,7 +174,7 @@ function gopair() {
 function getConnectLists() {
     $l3.on('click', '.connectList', function () {
         linkage(2)
-        getConnectListAndFiil()
+        getConnectListAndFill()
     })
 }
 

@@ -9,7 +9,9 @@ import {
     showMethod
 } from './showmethod'
 import {
-    urlArr
+    data,
+    urlArr,
+    updateUrlArr
 } from './urlconfig'
 const scan = {
     start: scanHandle,
@@ -127,7 +129,8 @@ itemHandle.destroy = function (data) {
     delete data.allItem[data.mac]
 }
 
-function scanHandle(data, timeout) {
+function scanHandle(_data, timeout) {
+    if (data.access_token) updateUrlArr(globalData.saved.acaddress);
     if (globalData.neverSave.scanSSE.es !== '')
         return
     globalData.neverSave.scanSSE.status = 'toOpen'
@@ -137,7 +140,7 @@ function scanHandle(data, timeout) {
     parentNode.innerHTML = ''
     globalData.neverSave.scanSSE.timer = null
     globalData.neverSave.scanSSE.es = null
-    api.start(url, data, globalData.neverSave.scanSSE, cb.bind(null, timeout))
+    api.start(url, _data, globalData.neverSave.scanSSE, cb.bind(null, timeout))
     showMethod('scan')
 
     globalData.neverSave.scanSSE.timer = setInterval(function () {

@@ -23,6 +23,7 @@ const i18n = function (language,cb) {
             'connDeviceLog':'连接设备',
             'connedDeviceLog':'已连接设备',
             'writeComLog':'写入指令',
+            'readComLog':'读取指令',
             'openHub':'打开Router',
             'notify':'通知',
             'connDevice': '连接设备',
@@ -33,6 +34,7 @@ const i18n = function (language,cb) {
             'stateChange': '连接状态变化',
             'scanDevice': '扫描设备',
             'writeCom': '写入指令',
+            'readCom': '读取指令',
             // 'stateChangeNotify': '连接状态变化通知',
             'dk':'打开',
             'router':'router通知',
@@ -115,7 +117,9 @@ const i18n = function (language,cb) {
             'write-Tip-p9': 'handle为要写入的handle如20',
             'write-Tip-p10': 'value1 为要写入的值（十六进制）',
             'write-Tip-p11': 'type为写入类型，0代表write without response，1代表write with response',
-            'write-Tip-p12': '多条语句之间用回车键换行'
+            'write-Tip-p12': '多条语句之间用回车键换行',
+            'wiki': 'SDK指南',
+            'new-version': '新版试用'
         },
         en = {
             'control':'Control',
@@ -146,6 +150,7 @@ const i18n = function (language,cb) {
             'connDeviceLog':'Connect Device',
             'connedDeviceLog':'Connected Devices',
             'writeComLog':'Write Instruction',
+            'readComLog':'Read Instruction',
             'router-mac':'Router MAC',
             'router-ip':'Router Ip',
             'openHub':'Open Router',
@@ -157,6 +162,7 @@ const i18n = function (language,cb) {
             'openNotify': 'Open Router Notify',
             'stateChange': 'Connection State Changes',
             'writeCom': 'Write Instruction',
+            'readCom': 'Read Instruction',
             // 'stateChangeNotify': 'Connection State Changes Notify',
             'discoverServices': 'Discover Device Services',
             'dk':'Open',
@@ -230,7 +236,9 @@ const i18n = function (language,cb) {
             'write-Tip-p9': 'handle to write the handle as 20',
             'write-Tip-p10': 'value1 is the value to be written (hex)',
             'write-Tip-p11': 'type is write type, 0 means write without response, and 1 means write with response',
-            'write-Tip-p12': 'Use a carriage-return between the multiple statements'
+            'write-Tip-p12': 'Use a carriage-return between the multiple statements',
+            'wiki': 'SDK Guide',
+            'new-version': 'New Version'
         },
 
  

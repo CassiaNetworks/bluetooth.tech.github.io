@@ -8,9 +8,11 @@ import {
 	showLog
 } from './showlog'
 import {
-    urlArr  
+	data,
+	urlArr,
+	updateUrlArr
 }from './urlconfig'
-
+import globalData from './globalData'
 
 function htmlTemp(mac, name) {
 	return `<li data-mac=${mac}>
@@ -50,7 +52,8 @@ function htmlTemp(mac, name) {
 
 
 
-function getConnectListAndFiil() {
+function getConnectListAndFill() {
+	if (data.access_token) updateUrlArr(globalData.saved.acaddress);
 	const parent1 = $('.l3 ul'),
 		parent2 = $('#connectLists ul'),
 		ajaxResult = api.getConnectList(urlArr.getConnectedDeviceList);
@@ -66,7 +69,7 @@ function getConnectListAndFiil() {
 			message: JSON.stringify(e)
 		});
 		let num = 0;
-		//console.log("getConnectListAndFiil::", e);
+		//console.log("getConnectListAndFill::", e);
 		if(!e.nodes.forEach){
 			parent1.html(temp);
 			$('#connectedNum').html(num);
@@ -92,6 +95,6 @@ function getConnectListAndFiil() {
 
 
 export {
-	getConnectListAndFiil,
+	getConnectListAndFill,
 	htmlTemp
 }

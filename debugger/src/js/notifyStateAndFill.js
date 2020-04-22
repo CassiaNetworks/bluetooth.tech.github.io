@@ -11,13 +11,16 @@ import {
 	htmlTemp
 } from './getConnectList'
 import {
-    urlArr  
+	data,
+	urlArr,
+	updateUrlArr
 }from './urlconfig'
 import globalData from './globalData'
 
 
 const notifyStateAndFill = {}
 notifyStateAndFill.start = function() {
+	if (data.access_token) updateUrlArr(globalData.saved.acaddress);
 	globalData.neverSave.stateSSE.status = 'toOpen'
 	if (globalData.neverSave.stateSSE.es !== '') {
 		return
@@ -25,7 +28,7 @@ notifyStateAndFill.start = function() {
 	const url = urlArr.getConnectState,
 		ajaxResult = api.getConnectState(url, globalData.neverSave.stateSSE),
 		$parent = $('#connectState ul')
-	let data = ''
+	let _data = ''
 	ajaxResult.addEventListener('message', function(e) {
 		//
 		// debugger
@@ -36,8 +39,8 @@ notifyStateAndFill.start = function() {
 		if (!e.data.match("keep-alive")) {
 			// debugger
 			//console.log(typeof e.data +"notifystateandfill"+e.data)
-			data = JSON.parse(e.data)
-			stateNotifyHandle(data)
+			_data = JSON.parse(e.data)
+			stateNotifyHandle(_data)
 				// console.log('notify:',e)
 		}
 	})
