@@ -1,5 +1,4 @@
 const _ = require('lodash');
-import XEUtils from 'xe-utils';
 import apiModule from './api.js';
 import scanModule from './scan.js';
 import serviceModule from './service.js';

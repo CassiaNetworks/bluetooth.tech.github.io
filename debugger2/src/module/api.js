@@ -1,6 +1,5 @@
 const _ = require('lodash');
 import { Buffer } from 'buffer';
-import axios from 'axios';
 import libLogger from '../lib/logger.js';
 import libEnum from '../lib/enum.js';
 import config from '../config/config.js';
