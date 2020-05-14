@@ -1036,7 +1036,7 @@ function createVue() {
     methods: createVueMethods(),
     watch: createWatch(),
     beforeCreate() {
-      dbModule.loadStorage();
+      // dbModule.loadStorage();
     },
     mounted: function() {
       this.store.devConfDisplayVars.language = this.$i18n.locale;
