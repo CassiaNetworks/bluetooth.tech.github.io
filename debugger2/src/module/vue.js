@@ -332,7 +332,7 @@ function createVueMethods(vue) {
         return rest.map(row => {
           const item = Object.assign({}, row);
           searchProps.forEach(key => {
-            item[key] = XEUtils.toString(item[key]).replace(filterRE, match => `<span class="keyword-lighten">${match}</span>`)
+            // item[key] = XEUtils.toString(item[key]).replace(filterRE, match => `<span class="keyword-lighten">${match}</span>`)
           });
           return item;
         });
@@ -986,7 +986,7 @@ function createComputed() {
         return rest.map(row => {
           const item = Object.assign({}, row);
           searchProps.forEach(key => {
-            item[key] = XEUtils.toString(item[key]).replace(filterRE, match => `<span class="keyword-lighten">${match}</span>`)
+            // item[key] = XEUtils.toString(item[key]).replace(filterRE, match => `<span class="keyword-lighten">${match}</span>`)
           });
           return item;
         });
