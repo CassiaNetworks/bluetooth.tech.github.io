@@ -726,7 +726,7 @@ function createVueMethods(vue) {
       this.cache.scanResultList.splice(0); // 清空扫描缓存数据
       this.cache.scanDisplayResultList.splice(0); // 清空扫描展示数据
       this.store.devConfDisplayVars.activeMenuItem = 'scanListMenuItem'; // 跳转扫描结果tab页面
-      notify(`${this.$i18n.t('message.openScanOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+      // notify(`${this.$i18n.t('message.openScanOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
     },
     stopApiScan() {
       const apiType = this.store.devConfDisplayVars.activeApiDebugMenuItem;
