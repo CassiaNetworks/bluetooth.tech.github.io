@@ -42,7 +42,7 @@ function getAccessToken(baseURI, devKey, devSecret) {
   const url = `${baseURI}/oauth2/token`;
   const body = {grant_type: 'client_credentials'};
   const headers = {
-    Authorization: 'Basic ' + Buffer.from(`${devKey}:${devSecret}`).toString('base64')
+    Authorization: 'Basic ' + Buffer.from(`${devKey}:${devSecret}`).toString('base64'),
   };
   const instance = axios.create({
     timeout: config.http.requestTimeout,

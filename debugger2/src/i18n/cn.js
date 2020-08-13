@@ -270,6 +270,9 @@ const cn = {
 
   add2RssiChart: '加入图表',
   removeFromRssiChart: '图表移除',
+
+  apConfigInfo: '请检查 <span style="color: red; font-weight: bold;">网关地址、Allow Origin</span> 配置！<br>是否跳转至网关配置页面？',
+  acConfigInfo: '请检查 <span style="color: red; font-weight: bold;">AC地址、开发者账号配置、Allow Origin</span> 配置！<br>是否跳转至AC配置页面？',
 };
 
 export default {

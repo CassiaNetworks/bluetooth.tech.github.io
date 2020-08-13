@@ -44,16 +44,34 @@ function scanSseMessageHandler(message) {
 }
 
 function scanSseErrorHandler(error) {
+  let devConf = this;
   logger.error('scan sse error:', error);
-  vueModule.notify(`${main.getGlobalVue().$i18n.t('message.closeScanSSE')}: ${error.message || JSON.stringify(error)}`, `${main.getGlobalVue().$i18n.t('message.alert')}`, libEnum.messageType.ERROR);
+  // vueModule.notify(`${main.getGlobalVue().$i18n.t('message.closeScanSSE')}: ${error.message || JSON.stringify(error)}`, `${main.getGlobalVue().$i18n.t('message.alert')}`, libEnum.messageType.ERROR);
   sse.close();
   sse = null;
+
+  let i18nKey = (devConf.controlStyle === 'AP' ? 'message.apConfigInfo' : 'message.acConfigInfo');
+  let content = main.getGlobalVue().$i18n.t(i18nKey);
+  let title = main.getGlobalVue().$i18n.t('message.operationFail');
+  let ok = main.getGlobalVue().$i18n.t('message.ok');
+  let cancel = main.getGlobalVue().$i18n.t('message.cancel');
+
+  main.getGlobalVue().$confirm(content, title, {
+    dangerouslyUseHTMLString: true,
+    confirmButtonText: ok,
+    cancelButtonText: cancel,
+    type: 'warning'
+  }).then(() => {
+    window.open(devConf.baseURI);
+  }).catch(() => {
+    // cancel      
+  });
 }
 
 // 保存配置 -> 启动扫描
 function startScan(devConf) {
   if (sse) return sse;
-  sse = api.startScanByDevConf(devConf, scanSseMessageHandler, scanSseErrorHandler);
+  sse = api.startScanByDevConf(devConf, scanSseMessageHandler, scanSseErrorHandler.bind(devConf));
   return sse;
 }
 

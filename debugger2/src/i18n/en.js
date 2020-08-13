@@ -252,7 +252,10 @@ const en = {
   authInfo: 'When this interface is used for AC debugging, it is authenticated by the developer key and the developer secret to obtain the access_token, and each subsequent interface call needs to carry this token.',
 
   add2RssiChart: 'Add Chart',
-  removeFromRssiChart: 'Chart Remove'
+  removeFromRssiChart: 'Chart Remove',
+
+  apConfigInfo: 'Please check the <span style="color: red; font-weight: bold;">Router URI, Allow Origin</span> configuration.<br>Do you want to jump to the Router configuration page?',
+  acConfigInfo: 'Please check the <span style="color: red; font-weight: bold;">AC URI, developer account, Allow Origin</span> configuration<br>Do you want to jump to the AC configuration page?',
 };
 
 export default {
