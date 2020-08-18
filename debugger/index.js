@@ -16,6 +16,48 @@ import {
 } from './src/js/urlconfig'
 
 
+// 获取url参数对象
+function getUrlVars(url) {
+	var urlParams = url.split("?")[1];
+	if (!urlParams) return {};
+	var paramArray = urlParams.split("&");
+	var len = paramArray.length;
+	var paramObj = {};
+	var arr = [];
+	for (var i = 0; i < len; i++) {
+			arr = paramArray[i].split("=");
+			paramObj[arr[0]] = arr[1];
+	}
+	return paramObj;
+}
+
+// http://xxx:8080/index.html?control=remote... -> xxx:8080/api
+function getHostApiByUrl(url) {
+	var host = (url.split('?') || [])[0] || '';
+	host = host.replace('http://', '').replace('https://', '');
+	host = (host.split('/') || [])[0]; // 只取host+port
+	host += '/api';
+	return host;
+}
+
+// 如果存在ac参数的话初始化ac参数
+// control=remote&devKey=cassia&devSecret=cassia&hubMac=11:22:33:44:55:66&lang=cn
+function initAcVars(form) {
+	var url = window.location.href;
+	var vars = getUrlVars(url);
+	if (!vars['control']) return console.log('not from ac, do nothing:', url);
+	if (vars['lang'] == 'cn') $('#control').val('远程');
+	else $('#control').val('remote');
+	globalData.saved.acaddress = getHostApiByUrl(url);
+	globalData.saved.oAuth_dev = vars['devKey'];
+	globalData.saved.secret = vars['devSecret'];
+	$('#hubMac').val(vars['hubMac']);
+	$('#hubMac').trigger('blur');
+	// globalData.saved.hubMac = vars['hubMac'];
+	globalData.lang = vars['lang'] || 'en';
+	i18n(globalData.lang);
+	control(vars['control'], form);
+}
 
 i18n();
 (function () {
@@ -41,10 +83,15 @@ layui.use(['layer', 'form'], function () {
 	form.on('select(control)',function(data){
 		control(data.value,form);
 	});
+
+
 	form.on('select(lang)',function(data){
 		i18n(data.value,form.render)
 		// setTimeout(form.render,500)
 	});
+
+	initAcVars(form); // AC集成参数处理
+
 	form.on('switch(switchScan)', function (data) {
 		handle.linkage(0)
 		if (data.elem.checked) {
