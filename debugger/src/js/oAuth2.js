@@ -43,9 +43,7 @@ function control(val,form){
 		  	},
 		});	
 	}
-    i18n(globalData.lang);
-	form.render(); 
-
+	i18n(globalData.lang, form.render);
 }
 
 var htmlString = function() {
@@ -99,11 +97,11 @@ var yes = function(){
 			layer.msg('输入不能为空', {icon:5,title:'oAuth2',time:1000});
 		return
 	}
-	methodConfig.oAuth.url = "http://"+$('#host').val()+"/oauth2/token";
+	methodConfig.oAuth.url = `${globalData.getCurProtocol()}://`+$('#host').val()+"/oauth2/token"; // 用于显示api日志
 	var parentoAuth = $('#oAuthLog ul');
 	$.ajax({
 			 type: 'POST',
-			 url: "http://"+$('#host').val()+"/oauth2/token",
+			 url: methodConfig.oAuth.url,
 			 data: { "grant_type": "client_credentials"}, //data: {key:value}, 
 			 headers : {
 			 				"Authorization":'Basic '+btoa($('#userName').val()+':'+$('#password').val()),

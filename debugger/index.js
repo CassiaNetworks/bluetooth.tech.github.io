@@ -46,8 +46,7 @@ function initAcVars(form) {
 	var url = window.location.href;
 	var vars = getUrlVars(url);
 	if (!vars['control']) return console.log('not from ac, do nothing:', url);
-	if (vars['lang'] == 'cn') $('#control').val('远程');
-	else $('#control').val('remote');
+	$('#control').val('remote');
 	globalData.saved.acaddress = getHostApiByUrl(url);
 	globalData.saved.oAuth_dev = vars['devKey'];
 	globalData.saved.secret = vars['devSecret'];
@@ -55,7 +54,6 @@ function initAcVars(form) {
 	$('#hubMac').trigger('blur');
 	// globalData.saved.hubMac = vars['hubMac'];
 	globalData.lang = vars['lang'] || 'en';
-	i18n(globalData.lang);
 	control(vars['control'], form);
 }
 
@@ -69,7 +67,10 @@ layui.use(['layer', 'form'], function () {
 	
 	// form.render()
 	var layer = layui.layer,
-		form = layui.form()
+		form = layui.form();
+
+	initAcVars(form); // AC集成参数处理
+	
 	$('#reboot').click(function () {
 		console.log(urlArr.reboot)
 		api.reboot(urlArr.reboot).done(
@@ -79,18 +80,15 @@ layui.use(['layer', 'form'], function () {
 		)
 	});
 
-
 	form.on('select(control)',function(data){
 		control(data.value,form);
 	});
 
 
 	form.on('select(lang)',function(data){
-		i18n(data.value,form.render)
+		i18n(globalData.lang, form.render)
 		// setTimeout(form.render,500)
 	});
-
-	initAcVars(form); // AC集成参数处理
 
 	form.on('switch(switchScan)', function (data) {
 		handle.linkage(0)

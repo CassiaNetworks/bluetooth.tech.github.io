@@ -114,11 +114,16 @@ if (firstFlag) {
 	saved = readStorage(localStorageKey, savedInit)
 }
 
+// 通过url判断当前使用的是http还是https，有全局参数配置则使用全局参数配置
+function getCurProtocol() {
+	var p = window.location.href.startsWith('https') ? 'https' : 'http';
+	return p;
+}
 
 const globalData = {
 	neverSave,
-	saved
-
+	saved,
+	getCurProtocol,
 }
 
 
