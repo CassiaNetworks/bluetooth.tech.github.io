@@ -119,7 +119,7 @@ const i18n = function (language,cb) {
             'write-Tip-p11': 'type为写入类型，0代表write without response，1代表write with response',
             'write-Tip-p12': '多条语句之间用回车键换行',
             'wiki': 'SDK指南',
-            'new-version': '新版试用'
+            'new-version': '新版(Beta)'
         },
         en = {
             'control':'Control',
@@ -238,7 +238,7 @@ const i18n = function (language,cb) {
             'write-Tip-p11': 'type is write type, 0 means write without response, and 1 means write with response',
             'write-Tip-p12': 'Use a carriage-return between the multiple statements',
             'wiki': 'SDK Guide',
-            'new-version': 'New Version'
+            'new-version': 'New Version(Beta)'
         },
 
  
