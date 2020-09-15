@@ -682,6 +682,8 @@ function createVueMethods(vue) {
         this.$refs.apiDebuggerDemoMenu.activeIndex = this.store.devConfDisplayVars.activeApiDemoMenuItem;
       } else if (key === 'toolsMenuItem') {
         this.store.devConfDisplayVars.activeMenuItem = key;
+      } else if (key === 'resourcesMenuItem') {
+        this.store.devConfDisplayVars.activeMenuItem = key;
       }
     },
     apiLogVuxTableForceResize() {

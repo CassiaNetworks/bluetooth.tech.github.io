@@ -27,6 +27,7 @@ const cn = {
   apiDebugger: '接口调试',
   apiDemo: '场景示例',
   tools: '常用工具',
+  resources: '相关资源',
 
   // scan result tab
   scanResult: '扫描结果',
@@ -274,7 +275,7 @@ const cn = {
   apConfigInfo: '请检查 <span style="color: red; font-weight: bold;">网关地址、Allow Origin</span> 配置！<br>是否跳转至网关配置页面？',
   acConfigInfo: '请检查 <span style="color: red; font-weight: bold;">AC地址、开发者账号配置、Allow Origin</span> 配置！<br>是否跳转至AC配置页面？',
 
-  configOrigin: '从v2.0.3起，默认情况下，AC和路由器上的CORS被禁用。在http://www.bluetooth.tech/debugger2/中使用蓝牙调试工具时，请在AC设置和路由器网页中将“访问控制允许起源”设置为*或确切的URL http://www.bluetooth.tech',
+  configOrigin: '从v2.0.3版本开始，默认情况下，AC和路由器上的CORS被禁用。使用此蓝牙调试工具时，请在控制台设置中设置“Access Control Allow Origin”。请参考《Cassia用户手册》了解详细说明。',
 };
 
 export default {

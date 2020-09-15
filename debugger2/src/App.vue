@@ -128,10 +128,13 @@
                 <i class="icon-tools" :style="{'font-size': '16px', 'color': store.devConfDisplayVars.activeMenuItem === 'toolsMenuItem' ? '#0089ff' : '#232635', 'margin-right': '10px'}"></i>
                 <span slot="title">{{$t('message.tools')}}</span>
               </el-menu-item>
+              <el-menu-item index="resourcesMenuItem" :style="{'color': store.devConfDisplayVars.activeMenuItem === 'resourcesMenuItem' ? '#0089ff' : '#232635'}">
+                <i class="icon-API-log" :style="{'font-size': '16px', 'color': store.devConfDisplayVars.activeMenuItem === 'resourcesMenuItem' ? '#0089ff' : '#232635', 'margin-right': '10px'}"></i>
+                <span slot="title">{{$t('message.resources')}}</span>
+              </el-menu-item>
               <el-menu-item style="position: absolute; bottom: 50px; padding: 0; width: 152px; text-align: center; border-top: 0px solid #e8eaed;">
                 <span>v2.0.3</span>
               </el-menu-item>
-
             </el-menu>
           </el-aside>
 
@@ -1126,6 +1129,16 @@
                 </el-card>
               </el-tab-pane>
             </el-tabs>
+            <el-tabs v-show="store.devConfDisplayVars.activeMenuItem === 'resourcesMenuItem'" class="resourcesPage">
+              <el-tab-pane>
+                <span slot="label"> {{$t('message.resources')}}</span>
+                <ul>
+                  <li><a target="_blank" href="https://www.cassianetworks.com/knowledge-base/general-documents/">Cassia User Manual</a></li>
+                  <li><a target="_blank" href="https://github.com/CassiaNetworks/CassiaSDKGuide/wiki">Cassia SDK & RESTful API</a></li>
+                  <li><a target="_blank" href="https://www.cassianetworks.com/support/">Contact Cassia Support</a></li>
+                </ul>
+              </el-tab-pane>
+            </el-tabs>
           </el-main>
         </el-container>
       </el-main>
@@ -1355,6 +1368,10 @@ code {
 }
 
 .apiLog a {
+  color: #2897ff;
+}
+
+.resourcesPage a {
   color: #2897ff;
 }
 
