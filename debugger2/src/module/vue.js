@@ -1046,6 +1046,10 @@ function createVue() {
         this.cache.clientHeight = `${document.documentElement.clientHeight}`;
         this.cache.vxeGridHeight = this.cache.clientHeight - 240;
       };
+      this.$alert(this.$i18n.t('message.configOrigin'), this.$i18n.t('message.alert'), {
+        confirmButtonText: this.$i18n.t('message.ok'),
+        callback: action => {}
+      });
     }
   };
 }

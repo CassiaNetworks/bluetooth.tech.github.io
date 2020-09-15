@@ -1,6 +1,6 @@
 const en = {
   // header
-  title: 'Cassia Bluetooth Debug Tool',
+  title: 'Cassia Bluetooth Debug Tool v2 (Beta)',
   
   // left
   configConnectParams: 'Control Settings',
@@ -256,6 +256,8 @@ const en = {
 
   apConfigInfo: 'Please check the <span style="color: red; font-weight: bold;">Router URI, Allow Origin</span> configuration.<br>Do you want to jump to the Router configuration page?',
   acConfigInfo: 'Please check the <span style="color: red; font-weight: bold;">AC URI, developer account, Allow Origin</span> configuration<br>Do you want to jump to the AC configuration page?',
+
+  configOrigin: 'From v2.0.3, CORS is disabled by default on AC and Router. When using the Bluetooth debugger in http://www.bluetooth.tech/debugger2/, please set ‘Access Control Allow Origin’ in AC settings and router webpage other tab to * or the exact URL http://www.bluetooth.tech',
 };
 
 export default {

@@ -5,7 +5,7 @@ module.exports = {
   pages: {
     index: {
       entry: 'src/main.js',
-      title: 'Cassia 蓝牙调试工具'
+      title: 'Cassia 蓝牙调试工具v2(Beta)'
     }
   },
   configureWebpack: {
