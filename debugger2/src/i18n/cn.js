@@ -14,7 +14,7 @@ const cn = {
   filterName: '过滤名称',
   filterMac: '过滤MAC',
   fitlerRSSI: '过滤RSSI',
-  restartAP: '重启AP',
+  restartAP: '重启网关',
   startScan: '开始扫描',
   stopScan: '停止扫描',
 

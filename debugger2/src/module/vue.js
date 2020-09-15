@@ -168,6 +168,7 @@ function createVueMethods(vue) {
       const tk = this.store.devConfDisplayVars.pairByLegacyOOB.tk;
       apiModule.pairByLegacyOOBByDevConf(this.store.devConf, deviceMac, tk).then(() => {
         notify(`${this.$i18n.t('message.pairOk')} ${deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+        this.store.devConfDisplayVars.pairByPasskey.visible = false;
       }).catch(ex => {
         notify(`${this.$i18n.t('message.pairFail')} ${deviceMac} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       });
@@ -178,6 +179,7 @@ function createVueMethods(vue) {
       const confirm = this.store.devConfDisplayVars.pairBySecurityOOB.confirm;
       apiModule.pairBySecurityOOBByDevConf(this.store.devConf, deviceMac, rand, confirm).then(() => {
         notify(`${this.$i18n.t('message.pairOk')} ${deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+        this.store.devConfDisplayVars.pairByPasskey.visible = false;
       }).catch(ex => {
         notify(`${this.$i18n.t('message.pairFail')} ${deviceMac} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       });
@@ -187,6 +189,7 @@ function createVueMethods(vue) {
       const passkey = this.store.devConfDisplayVars.pairByPasskey.passkey;
       apiModule.pairByPasskeyByDevConf(this.store.devConf, deviceMac, passkey).then(() => {
         notify(`${this.$i18n.t('message.pairOk')} ${deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+        this.store.devConfDisplayVars.pairByPasskey.visible = false;
       }).catch(ex => {
         notify(`${this.$i18n.t('message.pairFail')} ${deviceMac} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       });

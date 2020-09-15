@@ -14,7 +14,7 @@ const en = {
   filterName: 'Name Filter',
   filterMac: 'MAC Filter',
   fitlerRSSI: 'RSSI Filter',
-  restartAP: 'Reboot AP',
+  restartAP: 'Reboot Router',
   startScan: 'Start Scan',
   stopScan: 'Stop Scan',
 
