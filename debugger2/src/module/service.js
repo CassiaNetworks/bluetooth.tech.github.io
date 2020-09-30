@@ -32,7 +32,7 @@ function procDeviceServiceList(data) {
     _.forEach(service.characteristics, char => {
       char.name = charLib.getNameByUuid(char.uuid);
       char.propertiesStr = properties2Str(char.properties);
-      if (_.includes(char.propertiesStr, libEnum.operation.NOTIFY)) {
+      if (_.includes(char.propertiesStr, libEnum.operation.NOTIFY) || _.includes(char.propertiesStr, libEnum.operation.INDICATE)) {
         const descriptor = _.find(char.descriptors, d => d.uuid.startsWith('00002902'));
         if (descriptor) char.notifyHandle = descriptor.handle;
       }
