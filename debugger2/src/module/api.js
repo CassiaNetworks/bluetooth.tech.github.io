@@ -38,7 +38,7 @@ function getFields(devConf, fields, withToken=true) {
 }
 
 // 请求accessToken
-function getAccessToken(baseURI, devKey, devSecret) {
+function getAccessToken(baseURI, devKey, devSecret, isAddApiLog=true) {
   const url = `${baseURI}/oauth2/token`;
   const body = {grant_type: 'client_credentials'};
   const headers = {
@@ -48,7 +48,7 @@ function getAccessToken(baseURI, devKey, devSecret) {
     timeout: config.http.requestTimeout,
     headers: headers,
   });
-  addApiLogItem(main.getGlobalVue().$i18n.t('message.apiGetToken'), 'POST', url, {}, body, {}, headers);
+  if (isAddApiLog) addApiLogItem(main.getGlobalVue().$i18n.t('message.apiGetToken'), 'POST', url, {}, body, {}, headers);
   return new Promise((resolve, reject) => {
     instance.post(url, body).then(function(response) {
       logger.info('get access token success:', response);
@@ -629,7 +629,7 @@ function replayApi(apiContent) {
 }
 
 function getAcRouterList(token) {
-  const url = `${dbModule.getDevConf().serverURI}/api/ac/ap?access_token=${token}`;
+  const url = `${dbModule.getDevConf().acServerURI}/api/ac/ap?access_token=${token}`;
   return new Promise((resolve, reject) => {
     axios.get(url).then(function(response) {
       logger.info('get ac router list success:', response);

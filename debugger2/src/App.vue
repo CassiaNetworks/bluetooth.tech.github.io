@@ -38,13 +38,16 @@
                   <span>{{ $t('message.configConnectParams') }}</span>
                 </el-row>
                 <el-form-item :label="$t('message.connectStyle')" style="margin-top: 15px;">
-                  <el-radio-group v-model="store.devConf.controlStyle">
+                  <el-radio-group v-model="store.devConf.controlStyle" @change="controlStyleChange">
                     <el-radio-button label="AP">Router</el-radio-button>
                     <el-radio-button label="AC"></el-radio-button>
                   </el-radio-group>
                 </el-form-item>
-                <el-form-item :label="$t('message.serviceURI')" prop="serverURI" style="margin-top: 15px;">
-                  <el-input v-model="store.devConf.serverURI" class="server-ip" clearable placeholder="http://192.168.0.100"></el-input>
+                <el-form-item :label="$t('message.serviceURI')" prop="apServerURI" v-show="store.devConf.controlStyle === 'AP'" style="margin-top: 15px;">
+                  <el-input v-model="store.devConf.apServerURI" class="server-ip" clearable placeholder="http://192.168.0.100"></el-input>
+                </el-form-item>
+                <el-form-item :label="$t('message.serviceURI')" prop="acServerURI" v-show="store.devConf.controlStyle === 'AC'" style="margin-top: 15px;">
+                  <el-input v-model="store.devConf.acServerURI" class="server-ip" clearable placeholder="http://192.168.0.100"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('message.devKey')" prop="acDevKey" v-show="store.devConf.controlStyle === 'AC'" style="margin-top: 15px;">
                   <el-input v-model="store.devConf.acDevKey" class="ac-dev-key" clearable></el-input>
@@ -133,7 +136,7 @@
                 <span slot="title">{{$t('message.resources')}}</span>
               </el-menu-item>
               <el-menu-item style="position: absolute; bottom: 50px; padding: 0; width: 152px; text-align: center; border-top: 0px solid #e8eaed;">
-                <span>v2.0.3</span>
+                <span>v2.0.4</span>
               </el-menu-item>
             </el-menu>
           </el-aside>
@@ -191,7 +194,7 @@
                     <span slot="label"> {{$t('message.auth')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.serviceURI')">
-                        <el-input v-model="store.devConf.serverURI"></el-input>
+                        <el-input v-model="store.devConf.acServerURI"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.devKey')">
                         <el-input v-model="store.devConf.acDevKey"></el-input>
@@ -211,7 +214,7 @@
                     <span slot="label"> {{$t('message.scanDevices')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.serverURI : store.devConf.mac"></el-input>
+                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.useChip')">
                         <el-radio-group v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].chip" size="small">
@@ -244,7 +247,7 @@
                     <span slot="label"> {{$t('message.connectDevice')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.serverURI : store.devConf.mac"></el-input>
+                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.useChip')">
                         <el-radio-group v-model="store.devConfDisplayVars.apiDebuggerParams['connect'].chip" size="small">
@@ -273,7 +276,7 @@
                     <span slot="label"> {{$t('message.readData')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.serverURI : store.devConf.mac"></el-input>
+                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
                       </el-form-item>
                       <el-form-item label="HANDLE">
                         <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['read'].handle"></el-input>
@@ -293,7 +296,7 @@
                     <span slot="label"> {{$t('message.writeData')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.serverURI : store.devConf.mac"></el-input>
+                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
                       </el-form-item>
                       <el-form-item label="HANDLE">
                         <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['write'].handle"></el-input>
@@ -322,7 +325,7 @@
                     <span slot="label"> {{$t('message.disConnect')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.serverURI : store.devConf.mac"></el-input>
+                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.deviceAddr')">
                         <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['disconnect'].deviceMac"></el-input>
@@ -339,7 +342,7 @@
                     <span slot="label"> {{$t('message.connectList')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.serverURI : store.devConf.mac"></el-input>
+                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
                       </el-form-item>
                       <el-form-item align="right">
                         <el-button size="small" @click="genCode">{{$t('message.genCode')}}</el-button>
@@ -353,7 +356,7 @@
                     <span slot="label"> {{$t('message.deviceServices')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.serverURI : store.devConf.mac"></el-input>
+                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.deviceAddr')">
                         <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['discover'].deviceMac"></el-input>
@@ -370,7 +373,7 @@
                     <span slot="label"> {{$t('message.openNotify')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.serverURI : store.devConf.mac"></el-input>
+                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
                       </el-form-item>
                       <el-form-item align="right">
                         <el-button size="small" @click="genCode">{{$t('message.genCode')}}</el-button>
@@ -384,7 +387,7 @@
                     <span slot="label"> {{$t('message.connectStatus')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.serverURI : store.devConf.mac"></el-input>
+                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
                       </el-form-item>
                       <el-form-item align="right">
                         <el-button size="small" @click="genCode">{{$t('message.genCode')}}</el-button>
@@ -398,7 +401,7 @@
                     <span slot="label"> {{$t('message.pair')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.serverURI : store.devConf.mac"></el-input>
+                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.deviceAddr')">
                         <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['pair'].deviceMac"></el-input>
@@ -424,7 +427,7 @@
                     <span slot="label"> {{$t('message.pairInput')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.serverURI : store.devConf.mac"></el-input>
+                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.deviceAddr')">
                         <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['pairInput'].deviceMac"></el-input>
@@ -460,7 +463,7 @@
                     <span slot="label"> {{$t('message.unpair')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.serverURI : store.devConf.mac"></el-input>
+                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.deviceAddr')">
                         <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['unpair'].deviceMac"></el-input>

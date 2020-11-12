@@ -11,7 +11,8 @@ let storage = {
   accessToken: '', // ac连接方式token
   devConf: {
     controlStyle: libEnum.controlStyle.AP, // 连接方式
-    serverURI: 'http://192.168.5.100', // 服务器地址
+    apServerURI: 'http://192.168.5.100', // AP服务器地址
+    acServerURI: 'http://192.168.5.100', // AC服务器地址
     baseURI: 'http://192.168.5.100', //
     acDevKey: 'cassia', // 开发者账号
     acDevSecret: 'cassia', // 开发者密码
@@ -136,7 +137,13 @@ let storage = {
 
 let cache = { 
   devConfRules: {
-    'serverURI': [
+    'apServerURI': [
+      { validator: function(rule, value, callback) {
+        if(!/(http|https):\/\/.*[^/^api]$/.test(value)) callback('Eg: http://192.168.5.100');
+        else callback();
+      }, trigger: 'change' }
+    ],
+    'acServerURI': [
       { validator: function(rule, value, callback) {
         if(!/(http|https):\/\/.*[^/^api]$/.test(value)) callback('Eg: http://192.168.5.100');
         else callback();
@@ -319,8 +326,9 @@ function get(key) {
 }
 
 function getBaseURI(devConf) {
-  let url = devConf.serverURI;
+  let url = devConf.apServerURI;
   if (devConf.controlStyle === libEnum.controlStyle.AC) {
+    url = devConf.acServerURI;
     url = url + '/api'; 
   }
   return url;
@@ -329,7 +337,7 @@ function getBaseURI(devConf) {
 function saveApDevConf(_devConf) {
   _devConf.baseURI = getBaseURI(_devConf);
   storage.devConf = _devConf;
-  save(storageKey, JSON.stringify(storage));
+  save(storageKey, JSON.stringify(storage.devConf)); // 只保存配置，其他缓存不保存
 }
 
 // 更新接口地址
@@ -340,7 +348,7 @@ function saveAcDevConf(_devConf) {
   return new Promise(function(resolve, reject) {
     apiModule.getAccessToken(_devConf.baseURI, _devConf.acDevKey, _devConf.acDevSecret).then(function(data) {
       storage.accessToken = data.access_token;
-      save(storageKey, JSON.stringify(storage));
+      save(storageKey, JSON.stringify(storage.devConf)); // 只保存配置，其他缓存不保存
       resolve();
     }).catch(function(error) {
       reject(error);
@@ -376,7 +384,19 @@ function getStorage() {
 }
 
 function loadStorage() {
-  storage = JSON.parse(get(storageKey)) || storage;
+  storage.devConf = JSON.parse(get(storageKey)) || storage.devConf;
+  // 如果是AC方式，则更新token
+  let _devConf = storage.devConf;
+  if (storage.devConf.controlStyle === libEnum.controlStyle.AC) {
+    return new Promise(function(resolve, reject) {
+      apiModule.getAccessToken(_devConf.baseURI, _devConf.acDevKey, _devConf.acDevSecret, false).then(function(data) {
+        storage.accessToken = data.access_token;
+        resolve();
+      }).catch(function(error) {
+        reject(error);
+      });
+    });
+  }
 }
 
 function listAddOrUpdate(array, filterObj, arrayItem) {

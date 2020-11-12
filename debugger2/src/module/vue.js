@@ -109,7 +109,7 @@ function createVueMethods(vue) {
     getAcRouterList(keyword) {
       this.cache.isGettingAcRouterList = true;
       this.cache.acRouterList = [];
-      apiModule.getAccessToken(this.store.devConf.serverURI + '/api', this.store.devConf.acDevKey, this.store.devConf.acDevSecret)
+      apiModule.getAccessToken(this.store.devConf.acServerURI + '/api', this.store.devConf.acDevKey, this.store.devConf.acDevSecret)
       .then(data => {
         return apiModule.getAcRouterList(data.access_token);
       }).then(data => {
@@ -733,6 +733,12 @@ function createVueMethods(vue) {
       this.store.devConfDisplayVars.activeMenuItem = 'scanListMenuItem'; // 跳转扫描结果tab页面
       // notify(`${this.$i18n.t('message.openScanOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
     },
+    controlStyleChange() {
+      console.log('control style changed, stop scan');
+      if (this.store.devConfDisplayVars.isScanning) {
+        this.stopScan();
+      }
+    },
     stopApiScan() {
       const apiType = this.store.devConfDisplayVars.activeApiDebugMenuItem;
       const apiResult = this.cache.apiDebuggerResult[apiType];
@@ -916,7 +922,7 @@ function createWatch() {
     'cache.apiDebuggerResult.scanCodeCurl': function(val, oldVal) {
       initHighlightingRefresh();
     },
-    'store.devConf': { // 配置变化，重新加载初始化操作
+    'store.devConf': { // 配置变化，重新加载初始化操作，停止扫描
       handler: function(val, oldVal) {
         dbModule.saveDevConf(val);
       },
@@ -1041,7 +1047,7 @@ function createVue() {
     methods: createVueMethods(),
     watch: createWatch(),
     beforeCreate() {
-      // dbModule.loadStorage();
+      dbModule.loadStorage();
     },
     mounted: function() {
       this.store.devConfDisplayVars.language = this.$i18n.locale;
