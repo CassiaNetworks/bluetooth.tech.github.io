@@ -6,6 +6,7 @@ import notifyMsg from './src/js/notifyMsgAndFill'
 import globalData from './src/js/globalData'
 import i18n from  './src/js/i18n'
 import {control} from './src/js/oAuth2'
+import {advertiseBoxShow} from './src/js/advertise'
 import {
 	api
 } from './src/js/api'
@@ -78,6 +79,11 @@ layui.use(['layer', 'form'], function () {
 				time: 5 * 1000
 			})
 		)
+	});
+
+	// 自定义广播: 点击跳出参数配置对话框 -> 开始/停止
+	$('#advertise').click(function () {
+		advertiseBoxShow(form);
 	});
 
 	form.on('select(control)',function(data){

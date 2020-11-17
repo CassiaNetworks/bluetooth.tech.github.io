@@ -12,6 +12,9 @@ let methodNames = {
     writeByHandle: 'writeCom',
     disconnectDevice: 'disCon',
     oAuth:'oAuth',
+    advertiseStart: 'advertiseStart',
+    advertiseStop: 'advertiseStop',
+    cassiaInfo: 'cassiaInfo',
     pair:'pair',
     pair_input:'pair_input',
     unpair:'unpair'
@@ -66,6 +69,21 @@ let methodConfig = {
     oAuth:{
         type:'POST',
         methodName:methodNames.oAuth,
+        url:''
+    },
+    advertiseStart:{
+        type:'GET',
+        methodName:methodNames.advertiseStart,
+        url:''
+    },
+    advertiseStop:{
+        type:'GET',
+        methodName:methodNames.advertiseStop,
+        url:''
+    },
+    cassiaInfo:{
+        type:'GET',
+        methodName:methodNames.cassiaInfo,
         url:''
     },
     pair:{

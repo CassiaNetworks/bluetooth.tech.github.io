@@ -31,7 +31,12 @@ const localStorageKey = 'cassiaSDKTool',
 		_commond: '',
 		_oAuth_dev:'',
 		_secret:'',
-		_acaddress:''
+		_acaddress:'',
+		_adType: '0',
+		_adData: '0201020416372A6007161C2A00000F30',
+		_adRespData: '10094361737369612044656D6F20417070',
+		_adChannelmap: '7',
+		_adInterval: '500',
 	}
 Object.defineProperties(savedInit, {
 	deviceMac: {
@@ -105,7 +110,52 @@ Object.defineProperties(savedInit, {
 			this._acaddress = newValue
 			storage(localStorageKey, this)
 		}
-	}
+	},
+	adType: {
+		get() {
+			return this._adType
+		},
+		set(newValue) {
+			this._adType = newValue
+			storage(localStorageKey, this)
+		}
+	},
+	adData: {
+		get() {
+			return this._adData
+		},
+		set(newValue) {
+			this._adData = newValue
+			storage(localStorageKey, this)
+		}
+	},
+	adRespData: {
+		get() {
+			return this._adRespData
+		},
+		set(newValue) {
+			this._adRespData = newValue
+			storage(localStorageKey, this)
+		}
+	},
+	adChannelmap: {
+		get() {
+			return this._adChannelmap
+		},
+		set(newValue) {
+			this._adChannelmap = newValue
+			storage(localStorageKey, this)
+		}
+	},
+	adInterval: {
+		get() {
+			return this._adInterval
+		},
+		set(newValue) {
+			this._adInterval = newValue
+			storage(localStorageKey, this)
+		}
+	},
 })
 
 

@@ -30,6 +30,9 @@ function updateUrlArr(hubIp) {
     urlArr.pair_input = `${p}://${hubIp}/management/nodes/${data.perMac}/pair-input?&access_token=${data.access_token}`
     urlArr.unpair=`${p}://${hubIp}/management/nodes/${data.perMac}/bond?&access_token=${data.access_token}`
     urlArr.pair = `${p}://${hubIp}/management/nodes/${data.perMac}/pair?&access_token=${data.access_token}`
+    urlArr.advertiseStart = `${p}://${hubIp}/advertise/start?mac=${data.hubMac}&access_token=${data.access_token}`;
+    urlArr.advertiseStop = `${p}://${hubIp}/advertise/stop?mac=${data.hubMac}&access_token=${data.access_token}`;
+    urlArr.cassiaInfo = `${p}://${hubIp}/cassia/info?mac=${data.hubMac}&access_token=${data.access_token}`;
 }
 updateUrlArr(data.hubIp)
 

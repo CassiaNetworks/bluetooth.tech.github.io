@@ -194,6 +194,42 @@ function writeByHandle(url, data) {
     })
 }
 
+function advertiseStart(url, success, error) {
+    console.log('api advertise start:', url);
+    methodConfig.advertiseStart.url = url;
+    return $.ajax({
+        url: url,
+        type: 'GET',
+        headers: { "Content-Type": "application/json" },
+        success: success,
+        error: error
+    });
+}
+
+function advertiseStop(url, success, error) {
+    console.log('api advertise start:', url);
+    methodConfig.advertiseStop.url = url;
+    return $.ajax({
+        url: url,
+        type: 'GET',
+        headers: { "Content-Type": "application/json" },
+        success: success,
+        error: error
+    });
+}
+
+function cassiaInfo(url, success, error) {
+    console.log('api cassia info:', url);
+    methodConfig.cassiaInfo.url = url;
+    return $.ajax({
+        url: url,
+        type: 'GET',
+        headers: { "Content-Type": "application/json" },
+        success: success,
+        error: error
+    });
+}
+
 function pair(url) {
     methodConfig.pair.url = url
     // _data=data
@@ -251,8 +287,10 @@ let api = {
     addURLParam,
     pair,
     pairInput,
-    unpair
-
+    unpair,
+    advertiseStart,
+    advertiseStop,
+    cassiaInfo
 }
 
 export {
