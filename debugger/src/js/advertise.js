@@ -50,6 +50,7 @@ function advertiseBoxShow(form){
 
 	$('#adType').val(globalData.saved.adType || '0');
 
+	console.log('open advertise setting:', globalData.lang);
 	i18n(globalData.lang, form.render);
 }
 
@@ -87,7 +88,7 @@ var htmlString = function() {
 			</div>
 		</div>
 		<div class="layui-form-item" class="adInterval">
-			<label class="layui-form-label" i18n="interval">Adv Interval:</label>
+			<label class="layui-form-label" i18n="adInterval">Adv Interval:</label>
 			<div class="layui-input-block">
 				<input type="text" value="${globalData.saved.adInterval}"  class="layui-input" id="adInterval" placeholder="">
 			</div>

@@ -123,7 +123,12 @@ const i18n = function (language,cb) {
             'write-Tip-p11': 'type为写入类型，0代表write without response，1代表write with response',
             'write-Tip-p12': '多条语句之间用回车键换行',
             'wiki': 'SDK指南',
-            'new-version': '新版(Beta)'
+            'new-version': '新版(Beta)',
+            'adType': '广播类型:',
+            'adData': '广播包:',
+            'adRespData': '扫描包:',
+            'adChannelmap': 'Channel:',
+            'adInterval': '广播间隔:'
         },
         en = {
             'control':'Control',
@@ -246,7 +251,12 @@ const i18n = function (language,cb) {
             'write-Tip-p11': 'type is write type, 0 means write without response, and 1 means write with response',
             'write-Tip-p12': 'Use a carriage-return between the multiple statements',
             'wiki': 'SDK Guide',
-            'new-version': 'New Version(Beta)'
+            'new-version': 'New Version(Beta)',
+            'adType': 'Adv Type:',
+            'adData': 'Adv Data:',
+            'adRespData': 'Resp Data:',
+            'adChannelmap': 'Channel:',
+            'adInterval': 'Adv Interval:'
         },
 
  

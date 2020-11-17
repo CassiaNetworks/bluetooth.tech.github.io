@@ -91,7 +91,9 @@ layui.use(['layer', 'form'], function () {
 	});
 
 
-	form.on('select(lang)',function(data){
+	form.on('select(lang)',function(data) {
+		console.log('language changed:', data.value, globalData.lang);
+		globalData.lang = data.value;
 		i18n(globalData.lang, form.render)
 		// setTimeout(form.render,500)
 	});
