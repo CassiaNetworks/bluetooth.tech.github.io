@@ -16,6 +16,12 @@ import notifyStateAndFill from './notifyStateAndFill'
 import {
     connectTips
 } from './connectTip'
+import {
+    advertiseStartTips
+} from './advertiseStartTip'
+import {
+    advertiseStopTips
+} from './advertiseStopTip'
 import scanTip from './scanTip'
 import connectListTip from './connectListTip'
 import getAllServicesTip from './getAllServicesTip'
@@ -115,6 +121,18 @@ function mainHandle(layer, form) {
                     unpairTips(layer, form, e.target)
                     break
                 }
+            case 'advertiseStart': {
+                {
+                    advertiseStartTips(layer, form, e.target)
+                    break
+                }
+            }
+            case 'advertiseStop': {
+                {
+                    advertiseStopTips(layer, form, e.target)
+                    break
+                }
+            }
         }
         i18n(globalData.lang)
         form.render();

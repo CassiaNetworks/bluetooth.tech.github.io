@@ -10,7 +10,7 @@
 	<meta http-equiv="expires" content="0">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<link rel="stylesheet" href="./dist/lib/layui/css/layui.css">
-	<link rel="stylesheet" href="./dist/css/index.css?v=202011180126">
+	<link rel="stylesheet" href="./dist/css/index.css?v=20201119">
 
 </head>
 
@@ -20,20 +20,20 @@
 	</fieldset>
 	<div class="top layui-form">
 		<div class="layui-inline">
-			<label class="layui-form-label" i18n="router-mac">Router MAC:</label>
+			<label class="layui-form-label" style="width:90px" i18n="router-mac">Router MAC:</label>
 			<div class="layui-input-inline">
 				<input type="text" name="number" id="hubMac" lay-verify="deviceMac" class="layui-input" placeholder="CC:1B:E0:E0:22:60">
 			</div>
 		</div>
 		<div class="layui-inline">
-			<label class="layui-form-label" i18n="router-ip">Router Local IP:</label>
+			<label class="layui-form-label" style="width: 110px" i18n="router-ip">Router Local IP:</label>
 			<div class="layui-input-inline">
 				<input type="text" name="title" lay-verify="hubIp" id="hubIp" class="layui-input" placeholder="192.168.199.150">
 			</div>
 		</div>
 		<div class="layui-inline">
 			<button class="layui-btn layui-btn-primary reboot" i18n='reboot' id="reboot">重启</button>
-			<button class="layui-btn layui-btn-primary advertise" i18n='advertise' id="advertise">Advertise</button>
+			<button lay-filter='submit' id='verify' hidden lay-submit>submit</button>
 		</div>
 
 		<div class="layui-inline">
@@ -59,8 +59,8 @@
 		<div class="layui-inline">
 			<div class="layui-input-inline">
 				<a href="https://github.com/CassiaNetworks/CassiaSDKGuide/wiki" target="_blank" style="margin-left: 26px; color: rgba(77,183,217,.8);" i18n="wiki">SDK指南</a>
-				<a href="https://github.com/CassiaNetworks/node-cassia-sdk" target="_blank" style="margin-left: 10px; color: rgba(77,183,217,.8);">SDK</a>
-				<a href="http://bluetooth.tech/debugger2/dist" target="_blank" style="margin-left: 10px; color: rgba(77,183,217,.8);" i18n="new-version">新版试用</a>
+				<a href="https://github.com/CassiaNetworks/node-cassia-sdk" target="_blank" style="margin-left: 26px; color: rgba(77,183,217,.8);">SDK</a>
+				<a href="http://bluetooth.tech/debugger2/dist" target="_blank" style="margin-left: 26px; color: rgba(77,183,217,.8);" i18n="new-version">新版试用</a>
 			</div>			
 		</div>
 
@@ -101,6 +101,12 @@
 				</li>
 				<li>
 					<button id="bunpair" i18n='unpair' class="layui-btn  layui-btn-primary funBtn">取消配对</button>
+				</li>
+				<li>
+					<button id="advertiseStart" class="layui-btn layui-btn-primary funBtn"><span i18n="start" id="advertiseStart">开始</span></br><span i18n="advertise" id="advertiseStart">广播</span></button>
+				</li>
+				<li>
+					<button id="advertiseStop" class="layui-btn layui-btn-primary funBtn"><span i18n="stop" id="advertiseStop">停止</span></br><span i18n="advertise" id="advertiseStop">广播</span></button>
 				</li>
 			</ul>
 		</div>
@@ -261,7 +267,8 @@
 					<li class="touch" i18n='pairInput'>写入配对码</li>
 					<li class="touch" i18n='unpair'>取消配对</li>
 					<li class="touch" i18n='readComLog'>读取指令</li>
-					<li class="touch" i18n='advertiseLog'>发送广播</li>
+					<li class="touch" i18n='advertiseStartLog'>开启广播</li>
+					<li class="touch" i18n='advertiseStopLog'>停止广播</li>
 				</ul>
 				<div class="layui-tab-content">
 					<div class="layui-tab-item layui-show" id="scanLog">
@@ -312,7 +319,10 @@
 					<div class="layui-tab-item" id="readValueLog">
 						<ul></ul>
 					</div>
-					<div class="layui-tab-item" id="advertiseLog">
+					<div class="layui-tab-item" id="advertiseStartLog">
+						<ul></ul>
+					</div>
+					<div class="layui-tab-item" id="advertiseStopLog">
 						<ul></ul>
 					</div>
 				</div>
@@ -323,6 +333,6 @@
 <script src='./dist/lib/jquery.min.js'></script>
 <script src='./dist/lib/eventsource.min.js'></script>
 <script src="./dist/lib/layui/layui.js"></script>
-<script src="./dist/js/index.js?v=202011180126"></script>
+<script src="./dist/js/index.js?v=20201119"></script>
 
 </html>

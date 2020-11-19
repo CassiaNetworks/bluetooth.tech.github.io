@@ -37,6 +37,7 @@ const localStorageKey = 'cassiaSDKTool',
 		_adRespData: '10094361737369612044656D6F20417070',
 		_adChannelmap: '7',
 		_adInterval: '500',
+		_adChip: '0'
 	}
 Object.defineProperties(savedInit, {
 	deviceMac: {
@@ -108,6 +109,15 @@ Object.defineProperties(savedInit, {
 		},
 		set(newValue) {
 			this._acaddress = newValue
+			storage(localStorageKey, this)
+		}
+	},
+	adChip: {
+		get() {
+			return this._adChip
+		},
+		set(newValue) {
+			this._adChip = newValue
 			storage(localStorageKey, this)
 		}
 	},
