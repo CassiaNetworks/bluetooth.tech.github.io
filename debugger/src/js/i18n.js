@@ -154,7 +154,7 @@ const i18n = function (language,cb) {
             'pair':'Pair',
             'Pair':'Pair',
             'Unpair':'Unpair',
-            'Seri':'Serivices',
+            'Seri':'Services',
             'Disc':'Disconnect',
             'pair_input':'Pair_input',
             'ylj':'Connected',
