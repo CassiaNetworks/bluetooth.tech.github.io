@@ -33,6 +33,7 @@ function getUrlVars(url) {
 }
 
 // http://xxx:8080/index.html?control=remote... -> xxx:8080/api
+// eg. https://q1.lunxue.cc/debugger/index.html?view&devKey=cassia&devSecret=cassia&lang=cn&control=remote&hubMac=CC:1B:E0:E0:E1:90
 function getHostApiByUrl(url) {
 	var host = (url.split('?') || [])[0] || '';
 	host = host.replace('http://', '').replace('https://', '');
