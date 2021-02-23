@@ -20,21 +20,21 @@ function updateUrlArr(hubIp) {
     let prefix = hubIp;
     if (!hubIp.startsWith('http')) prefix = `${p}://`;
     urlArr.scan = `${prefix}/gap/nodes/?mac=${data.hubMac}&access_token=${data.access_token}&active=1`
-    urlArr.connectDevice = `${prefix}://${hubIp}/gap/nodes/${data.perMac}/connection/?mac=${data.hubMac}&access_token=${data.access_token}`
-    urlArr.disconnectDevice = `${prefix}://${hubIp}/gap/nodes/${data.perMac}/connection?mac=${data.hubMac}&access_token=${data.access_token}`
-    urlArr.getConnectedDeviceList = `${prefix}://${hubIp}/gap/nodes/?connection_state=connected&mac=${data.hubMac}&access_token=${data.access_token}`
-    urlArr.getConnectState = `${prefix}://${hubIp}/management/nodes/connection-state?mac=${data.hubMac}&access_token=${data.access_token}`
-    urlArr.getAllServices = `${prefix}://${hubIp}/gatt/nodes/${data.perMac}/services/characteristics/descriptors?mac=${data.hubMac}&access_token=${data.access_token}`
-    urlArr.readByHandle = `${prefix}://${hubIp}/gatt/nodes/${data.perMac}/handle/${data.handle}/value/?mac=${data.hubMac}&access_token=${data.access_token}`
-    urlArr.notifyMsg = `${prefix}://${hubIp}/gatt/nodes/?mac=${data.hubMac}&event=1&access_token=${data.access_token}`
-    urlArr.writeByHandle = `${prefix}://${hubIp}/gatt/nodes/${data.perMac}/handle/${data.handle}/value/${data.writeValue}/?mac=${data.hubMac}&access_token=${data.access_token}`
-    urlArr.reboot = `${prefix}://${hubIp}/cassia/reboot/?mac=${data.hubMac}&access_token=${data.access_token}`
-    urlArr.pair_input = `${prefix}://${hubIp}/management/nodes/${data.perMac}/pair-input?&access_token=${data.access_token}`
-    urlArr.unpair=`${prefix}://${hubIp}/management/nodes/${data.perMac}/bond?&access_token=${data.access_token}`
-    urlArr.pair = `${prefix}://${hubIp}/management/nodes/${data.perMac}/pair?&access_token=${data.access_token}`
-    urlArr.advertiseStart = `${prefix}://${hubIp}/advertise/start?mac=${data.hubMac}&access_token=${data.access_token}`;
-    urlArr.advertiseStop = `${prefix}://${hubIp}/advertise/stop?mac=${data.hubMac}&access_token=${data.access_token}`;
-    urlArr.cassiaInfo = `${prefix}://${hubIp}/cassia/info?mac=${data.hubMac}&access_token=${data.access_token}`;
+    urlArr.connectDevice = `${prefix}/gap/nodes/${data.perMac}/connection/?mac=${data.hubMac}&access_token=${data.access_token}`
+    urlArr.disconnectDevice = `${prefix}/gap/nodes/${data.perMac}/connection?mac=${data.hubMac}&access_token=${data.access_token}`
+    urlArr.getConnectedDeviceList = `${prefix}/gap/nodes/?connection_state=connected&mac=${data.hubMac}&access_token=${data.access_token}`
+    urlArr.getConnectState = `${prefix}/management/nodes/connection-state?mac=${data.hubMac}&access_token=${data.access_token}`
+    urlArr.getAllServices = `${prefix}/gatt/nodes/${data.perMac}/services/characteristics/descriptors?mac=${data.hubMac}&access_token=${data.access_token}`
+    urlArr.readByHandle = `${prefix}/gatt/nodes/${data.perMac}/handle/${data.handle}/value/?mac=${data.hubMac}&access_token=${data.access_token}`
+    urlArr.notifyMsg = `${prefix}/gatt/nodes/?mac=${data.hubMac}&event=1&access_token=${data.access_token}`
+    urlArr.writeByHandle = `${prefix}/gatt/nodes/${data.perMac}/handle/${data.handle}/value/${data.writeValue}/?mac=${data.hubMac}&access_token=${data.access_token}`
+    urlArr.reboot = `${prefix}/cassia/reboot/?mac=${data.hubMac}&access_token=${data.access_token}`
+    urlArr.pair_input = `${prefix}/management/nodes/${data.perMac}/pair-input?&access_token=${data.access_token}`
+    urlArr.unpair=`${prefix}/management/nodes/${data.perMac}/bond?&access_token=${data.access_token}`
+    urlArr.pair = `${prefix}/management/nodes/${data.perMac}/pair?&access_token=${data.access_token}`
+    urlArr.advertiseStart = `${prefix}/advertise/start?mac=${data.hubMac}&access_token=${data.access_token}`;
+    urlArr.advertiseStop = `${prefix}/advertise/stop?mac=${data.hubMac}&access_token=${data.access_token}`;
+    urlArr.cassiaInfo = `${prefix}/cassia/info?mac=${data.hubMac}&access_token=${data.access_token}`;
 }
 updateUrlArr(data.hubIp)
 
