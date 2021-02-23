@@ -512,11 +512,11 @@ const i18n = function (language,cb) {
             'wiki': 'Ghid SDK',
             'new-version': 'Versiune Noua (Beta)'
         },
-        jp = {
+        ja = {
             'control':'コントロール',
             'local':'ローカル',
             'remote':'リモート',
-            '_lang': 'jp',
+            '_lang': 'ja',
             'lang': '言語',
             'title': 'Cassia Bluetooth デバッグツール',
             'header': 'Cassia Bluetooth デバッグツール',
@@ -631,7 +631,125 @@ const i18n = function (language,cb) {
             'wiki': 'SDK ガイド',
             'new-version': 'New Version(Beta)'
         },
-
+        mo = {
+            'control':'Control',
+            'local':'Local',
+            'remote':'De la distanta',
+            '_lang': 'mo',
+            'lang': 'Limba',
+            'title': 'Cassia Bluetooth Debug Tool',
+            'header': 'Cassia Bluetooth Debug  Tool',
+            'reboot': 'Repornire',
+            'allApi': ' Info API',
+            'firstCode':'Intai cuplati',
+            'sm':'Scanare',
+            'sb':'Dispozitiv',
+            'lj':'Conectare',
+            'unpair':'Decuplare',
+            'pairInput':'Input cuplaj',
+            'pair':'Cuplare',
+            'Pair':'Cuplare',
+            'Unpair':'Decuplare',
+            'Seri':'Servicii',
+            'Disc':'Deconectare',
+            'pair_input':'Input_cuplaj',
+            'ylj':'Conectat',
+            'fx':'Descopera',
+            'fw':'Servicii',
+            'sb-fw':'Dispozitiv',
+            'connDeviceLog':'Conectare dispozitiv',
+            'connedDeviceLog':'Dispozitive conectate',
+            'writeComLog':'Scriere instructiuni',
+            'readComLog':'Citire instructiuni',
+            'router-mac':'MAC Router',
+            'router-ip':'Ip Router',
+            'openHub':'Router deschis',
+            'notify':'Notificare',
+            'connDevice': 'Conectare dispozitiv',
+            'connedDevice': 'Dispozitive conectate',
+            // 'connectedNum':'numar conectare: ',
+            'scanDevice': 'Scanare\rDispozitiv',
+            'openNotify': 'Notificare router deschis',
+            'stateChange': 'Schimbari in starea conexiunii',
+            'writeCom': 'Scriere instructiuni',
+            'readCom': 'Citire instructiuni',
+            // 'stateChangeNotify': 'Notificare schimbari in starea conexiunii',
+            'discoverServices': 'Descopera servicii dispozitiv',
+            'dk':'Deschide',
+            'router':'Router',
+            'tz':'Notifica',
+            'xr':'Scrie',
+            'zl':'Instructiune',
+            'ljj':'Conexiune',
+            'zt':'Stare',
+            'bh':'Schimbari',
+            'getCond':'Conectat',
+            'disCon': 'Deconectare',
+            'scanList': 'Lista scanari',
+            'startScan': 'Start scanare',
+            'devcieAndService': 'Lista dispozitive si servicii',
+            // 'getList': 'Dispozitive conectate',
+            'co-st':'Stare conexiune',
+            'ch-no':'Notificare',
+            'notifyList': 'Lista notificari',
+            // 'openHubNotify': 'Notificare router deschis',
+            'clearList': 'Sterge lista',
+            'apiSocket': 'Interfete API',
+            'scanResult': 'Rezultate scanare',
+            'disService': 'Descopera servicii',
+            'getMsg': 'Mesajele dispozitivului',
+            'deviceConStateChange': 'Schimbari stare',
+            'arguments': 'Parametru',
+            'optional': '(optional)',
+            'required': '(obligatoriu)',
+            'description': 'Descriere',
+            'hubNotifyStatus': 'Notificare stare router',
+            'method': 'Metoda',
+            'addMore': 'Adauga mai multe',
+            'username':'Cheie utilizator:',
+            'password':'Parola utilizator:',
+            'pleaseCode':'Introduceti codul cuplajului',
+            'host':'Adresa Server AC:',
+            'yes':'da',
+            'input':'input',
+            'close':'inchide',
+            'cond':'Conectat',
+            'num':'Numar:',
+            'interfaceURL':'<b>URL Interfata:</b>apeland interfata, acest URL este generat automat in fereastra de sub "Interfata API".',
+            'oAouh-Tip-p2':'<b>Descriere interfata:</b>Aceasta interfata este realizata prin intermediul protocolului oAuth2.0. Cheia si parola utilizatorului la codificarea base64 au fost adaugate la parametrii request-ului, acces de 1 ora acordat dupa autentificarea cu succes cu access_token, puteti adauga parametrii access_token pentru a accesa alte API-uri, pentru a obtine control de la distanta.',
+            'oAouh-Tip-p3':'<b>Explicatie parametru:Cheie utilizator / Parola utilizator:</b>Date de autentificare utilizator cerute de la Cassia (vor fi adaugate la request prin codificare base64).',
+            'oAouh-Tip-p4':'<b>Adresa AC: </b>Adresa Serverului AC care interactioneaza cu routerul Bluetooth.',
+            'connectList-Tip-p2': '<b>Descriere interfata:</b>Aceasta interfata este un GET request. Dupa apelarea interfetei, routerul Bluetooth va returna lista dispozitivelor conectate actual la PC.',
+            'connect-Tip-p1': '<b>cip：</b>Exista doua cipuri in routerul Bluetooth, cipul 0 si cipul 1, la apelarea interfetei, puteti selecta cipul (? cip = 0 sau? cip = 1) adaugand queryString, limita de conexiuni a fiecarui cip este de 20 de dispozitive pentru routerul E1000. In lipsa acestui parametru, routerul Bluetooth va cupla automat cipul in functie de numarul de conexiuni.',
+            'connect-Tip-p2': '<b>deviceMac：</b>Adresa MAC a dispozitivului cu care se stabileste conexiunea.',
+            'pair-Tip-p2': '<b>deviceMac：</b>Adresa MAC a dispozitivului cu care se stabileste cuplajul.',
+            'connect-Tip-p3': `<b>type：</b>Acest parametru este necesar in body. Adresele MAC ale dispozitivelor Bluetooth sunt impartite pe aleatoriu si public, astfel incat, la conectarea dispozitivelor, trebuie sa precizati tipul de difuzare al dispozitivului, ceea ce se poate obtine din datele scanate.`,
+            'disconn-Tip-p2': '<b>Descriere interfata:</b>Dupa apelarea interfatei, routerul Bluetooth va fi deconectat de la dispozitivul Bluetooth cu adresa MAC specificata.</p>',
+            'disconn-Tip-p3': '<b>Explicatie parametru: deviceMac:</b>Adresa MAC a dispozitivului care urmeaza sa fie deconectat.</p>',
+            'unpair-Tip-p2': '<b>Descriere interfata:</b>Dupa apelarea interfetei, routerul Bluetooth va fi decuplat de la dispozitivul Bluetooth cu adresa MAC specificata.</p>',
+            'unpair-Tip-p3': '<b>Explicatie parametru: deviceMac:</b>Adresa MAC a dispozitivului care urmeaza sa fie decuplat.</p>',
+            'services-Tip-p1': `<b>Descriere interfata: </b>Aceasta interfata este un GET request. Dupa apelarea interfetei, routerul Bluetooth va cere de la dispozitivul Bluetooth specificat arborele serviciilor sale. Scopul principal al apelarii interfetei secundare este de a obtine citirile / valoarea dispozitivului Bluetooth, ceea ce corespunde cu valueHandle sau handle.`,
+            'services-Tip-p2': '<b>Explicatie parametru: deviceMac:</b>Adresa MAC a dispozitivului la care se solicita lista de servicii.',
+            'notify-Tip-p1': '<b>Descriere interfata: </b>Aceasta interfata foloseste o conexiune continua prin intermediul protocolului SSE, atunci cand deschideti notificarea / indicatiile dispozitivului Bluetooth, dispozitivul Bluetooth va raporta mesajul catre routerul Bluetooth, insa, daca doriti sa primit acest mesaj pe PC, va trebui sa apelati aceasta interfata pentru a stabili calea de date de la routerul Bluetooth catre PC, astfel incat datele primite de catre routerul Bluetooth de la dispozitivul Bluetooth sa fie transmise catre PC.',
+            'notify-Tip-p2': '<b>SSE：</b>Server-Sent Events (SSE) este o tehnologie care permite clientului sa primeasca update-uri automate de la un server (router) prin conexiune HTTP. Utilizatorul poate, de asemenea, sa introduca URL-ul de SEE direct in web browser, pentru a primi un flux de events (ex. mesaje de notificare de la dispozitiv). Fiecare event incepe cu “data:” la inceputul fiecarei linii. La fiecare 30 de secunde, se trimite un mesaj de mentinere (keep-alive) de la server catre client, in SSE. Odata realizata, conexiunea SSE se mentine pana cand este oprita manual. Utilizatorul trebuie sa mentina o conexiune continua prin HTTP, si sa monitorizeze aceasta mentinere (keep-alive) in SSE. Utilizatorul sa nu deschida/inchida SEE prea frecvent, nici sa creeze prea multe conexiuni SSE, pentru ca altfel routerul poate returna eroare HTTP 502, daca numarul conexiunilor SSE pe router atinge limita de 32. Utilizand HTTP obisnuit, request-urile nu pot solicita date (un http request generic este returnat dupa solicitarea tuturor datelor), actualmente oferim un demo iOS / java / nodejs / js / c # pentru efectuarea apelului SSE, daca intampinati dificultati, va puteti referi la acesta. In plus, la apelarea SSE, este recomandat sa se monitorizeze conexiunea continua, pentru a o reporni in cazul unei erori sau opriri neasteptate sau altor operatiuni.',
+            'connState-Tip-p1': '<b>Descrierea interfetei:</b>Aceasta interfata foloseste o conexiune continua prin intermediul protocolului SSE, atunci cand se modifica starea conexiunii routerului Bluetooth de pe dispozitivul Bluetooth (conexiunea s-a efectuat cu succes sau s-a deconectat), acest lucru va fi comunicat catre PC prin aceasta interfata.',
+            'scan-Tip-p1': `<b>Descrierea interfetei:</b>Aceasta este o interfata de apel cu conexiune continua prin protocolului SSE, routerul Bluetooth va scana dispozitivele din apropiere, impreuna cu adresa MAC (bdaddr), tipul de difuzare (bdaddrType), datele difuzate (adData / scanData), numele dispozitivului (name), puterea semnalului (rssi) si alte informatii sub forma http-response (datele originale, vezi fereastra "http response".`,
+            'scan-Tip-p2': '<b>Parametrii: cip: </b>Routerul Bluetooth are doua cipuri, cipul 0 si cipul 1, la apelarea interfetei, acestea pot fi adaugate prin intermediul queryString cip (? cip = 0 sau cip = 1), daca lasati necompletat, se va scana cu cipul 0 (default), distanta de scanare cu cip 0 este mai buna decat cu cip 1, in circumstante normale, se recomanda scanarea cu cipul 0.',
+            'write-Tip-p1': '<b>Descrierea interfetei:</b>Aceasta interfata este responsabila de comunicarea cu interfata principala a dispozitivului. Este responsabila de scrierea instructiunilor catre dispozitivul Bluetooth si de deschiderea notificarilor / indicatiilor dispozitivului Bluetooth. Mai jos gasiti instructiunile pentru implementarea acestor doua functii.',
+            'write-Tip-p2': '<b>1、Scrie comanda catre dispozitivul Bluetooth:</b>La scrierea comenzilor catre dispozitivul Bluetooth cu caracteristici specifice, prima data se apeleaza interfata "gasire service", dupa care se revine la arborele serviciilor de informatii ale dispozitivului Bluetooth, gasiti caracteristica corespunzatoare valueHandle (property-ul contine handle, valueHandle, property-uri, descriptori si alte atribute), dupa care apelati aceasta interfata, de ex. pentru handle “37”, pentru a deschide notificarea cu API-ul de scriere, setati valoarea la "0100"; pentru a deschide indicatia, setati valoare la "0200"; pentru a inchide notificarile / indicatiile, setati valoarea la "0000" (37, 0100, 0200 si 0000 sunt exemple).',
+            'write-Tip-p3': '<b>2、deschideti notificarile / indicatiile dispozitivului Bluetooth: </b>Pentru a primi datele trimise de catre dispozitivul Bluetooth, trebuie sa deschideti notificarile sau indicatiile dispozitivului Bluetooth (procedura de deschidere este defapt o instructiune emisa de dispozitivul Bluetooth), la nevoie, deschideti notificarile sau indicatiile caracteristicilor specificate, acest lucru se mai numeste si metoda "servicii de descoperire" pentru gasirea descriptorilor care corespund caracteristicii specificate, deschideti descriptorii, gasiti uuid continand "00002902" corespunzator handle-ului, apoi apelati aceasta interfata, handle-ul este cel al descriptorului de mai sus. Daca este deschis, valoarea corespunde cu "0100". Daca indicatia este pornita, valoarea corespunde cu "0200". Daca notificarea / indicatia este oprita, valoarea corespunde cu "0000".',
+            'write-Tip-p4': '<b><b>Explicatia parametrului: deviceMac:</b>Adresa MAC a dispozitivului la care se vor scrie instructiunile.',
+            'write-Tip-p5': '<b>handle：</b>valueHandle sau handle corespunzand caracteristicii gasite prin Interfata Serviciilor de Descoperire.',
+            'write-Tip-p6': '<b>value：</b>Valoarea comenzii care va fi scrisa, sau "0100" (deschidere notificari), "0200" (deschidere indicatii), "0000" (inchidere notificari si indicatii).',
+            'write-Tip-p7': ' <b>Formatul inputului pentru handle si valoare</b>',
+            'write-Tip-p8': 'Formatul instructiunii unice handle: value1, type',
+            'write-Tip-p9': 'handle pentru a scrie handle 20',
+            'write-Tip-p10': 'value1 este valoarea care va fi scrisa (hex)',
+            'write-Tip-p11': 'type este tipul de scriere, 0 semnifica scriere fara raspuns, iar 1 semnifica scriere cu raspuns',
+            'write-Tip-p12': 'Folositi carriage-return intre statement-uri multiple',
+            'wiki': 'Ghid SDK',
+            'new-version': 'Versiune Noua (Beta)'
+        },
  
 
 
@@ -645,8 +763,9 @@ const i18n = function (language,cb) {
             var bl = (navigator.language || navigator.browserLanguage).toLowerCase();
             if (bl.match('cn')) lang = cn;
             else if (bl.match('ru')) lang = ru;
-            else if (bl.match('jp')) lang = jp;
+            else if (bl.match('ja')) lang = ja;
             else if (bl.match('ro')) lang = ro;
+            else if (bl.match('mo')) lang = mo;
             else lang = en;
         };
 
@@ -659,8 +778,9 @@ const i18n = function (language,cb) {
             } else {
                 if (s.language === 'cn') lang = cn;
                 else if (s.language === 'ru') lang = ru;
-                else if (s.language === 'jp') lang = jp;
+                else if (s.language === 'ja') lang = ja;
                 else if (s.language === 'ro') lang = ro;
+                else if (s.language === 'mo') lang = mo;
                 else lang = en;
             }
         } catch (e) {
@@ -670,10 +790,12 @@ const i18n = function (language,cb) {
         lang = cn;
     } else if (language === 'ru') {
         lang = ru;
-    } else if (language === 'jp') {
-        lang = jp;
+    } else if (language === 'ja') {
+        lang = ja;
     } else if (language === 'ro') {
         lang = ro;
+    } else if (language === 'mo') {
+        lang = mo;
     } else {
         lang = en;
     }
