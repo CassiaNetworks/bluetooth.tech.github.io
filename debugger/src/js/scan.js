@@ -131,6 +131,7 @@ itemHandle.destroy = function (data) {
 
 function scanHandle(_data, timeout) {
     if (data.access_token) updateUrlArr(globalData.saved.acaddress);
+    else updateUrlArr(data.hubIp.startsWith('http') ? data.hubIp.startsWith('http') : `http://${data.hubIp}`);
     if (globalData.neverSave.scanSSE.es !== '')
         return
     globalData.neverSave.scanSSE.status = 'toOpen'
