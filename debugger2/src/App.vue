@@ -21,6 +21,10 @@
         <el-select class="language" @change="changeLanguage" v-model="store.devConfDisplayVars.language" size="small" style="width: 120px; padding-right: 15px;">
           <el-option label="中文" value="cn"></el-option>
           <el-option label="English" value="en"></el-option>
+          <el-option label="日本語" value="ja"></el-option>
+          <el-option label="русский" value="ru"></el-option>
+          <el-option label="Română" value="ro"></el-option>
+          <el-option label="Limba" value="mo"></el-option>
         </el-select>
       </span>
     </el-header>

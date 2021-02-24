@@ -73,7 +73,11 @@ const pairingStatusCode = {
 
 const language = {
   CN: 'cn',
-  EN: 'en'
+  EN: 'en',
+  JA: 'ja', // 日语
+  RO: 'ro', // 罗马尼亚语
+  RU: 'ru', // 俄语
+  MO: 'mo', // 罗马尼亚语(摩尔多瓦)
 };
 
 export default {
