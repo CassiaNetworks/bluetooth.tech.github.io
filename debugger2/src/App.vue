@@ -11,7 +11,7 @@
           'line-height': '50px',
           'position': 'fixed',
           'z-index': '999',
-          'left': store.devConfDisplayVars.isConfigMenuItemOpen ? '326px' : '0px'}
+          'left': store.devConfDisplayVars.isConfigMenuItemOpen ? store.devConfDisplayVars.leftConfWidth : '0px'}
           ">
       <span class="icon-logo" style="display: inline-block; font-size: 30px; vertical-align: middle; margin-bottom: 5px;"></span>
       <span style="font-size: 18px;">
@@ -30,14 +30,14 @@
     </el-header>
     <el-container>
       <!-- 左侧配置 -->
-      <el-drawer :with-header="false" :modal="true" :wrapperClosable="true" :visible.sync="store.devConfDisplayVars.isConfigMenuItemOpen" direction="ltr" size="326px">
+      <el-drawer :with-header="false" :modal="true" :wrapperClosable="true" :visible.sync="store.devConfDisplayVars.isConfigMenuItemOpen" direction="ltr" :size="store.devConfDisplayVars.leftConfWidth">
         <template slot="title">
           <span></span>
         </template>
-        <el-aside style="width: 326px; border-right: 1px solid #f2f2f2; background-color: #F2F4F8; height: 100%;">
-          <el-container style="height: 100%; width: 100%;">
+        <el-aside :style="{'width': store.devConfDisplayVars.leftConfWidth}" style="border-right: 1px solid #f2f2f2; background-color: #F2F4F8; height: 100%; ">
+          <el-container :style="{'height': store.devConfDisplayVars.leftConfHeight}" style="width: 100%;">
             <el-main>
-              <el-form label-width="85px" size="small" :model="store.devConf" :rules="cache.devConfRules">
+              <el-form :label-width="store.devConfDisplayVars.leftConfLabelWidth" size="small" :model="store.devConf" :rules="cache.devConfRules">
                 <el-row style="font-size: 16px; border-bottom: 1px solid #ddd; margin-top: 10px;">
                   <span>{{ $t('message.configConnectParams') }}</span>
                 </el-row>
@@ -67,7 +67,7 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
-                <el-row style="font-size: 16px; border-bottom: 1px solid #ddd; margin-top: 50px;">
+                <el-row style="font-size: 16px; border-bottom: 1px solid #ddd; margin-top: 30px;">
                   <span>{{$t('message.configScanParams')}}</span>
                 </el-row>
                 <el-form-item :label="$t('message.useChip')" style="margin-top: 15px;">
@@ -76,7 +76,7 @@
                     <el-option :label="$t('message.chip1')" value="1"></el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item :label="$t('message.filterName')" style="margin-top: 15px;">
+                <el-form-item :label="$t('message.filterName')">
                   <el-select v-model="store.devConf.filter_name" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
                   </el-select>
                 </el-form-item>
@@ -88,9 +88,30 @@
                   <el-slider v-model="store.devConf.filter_rssi" :min="-85" :max="0">
                   </el-slider>
                 </el-form-item>
+                <el-row style="font-size: 16px; border-bottom: 1px solid #ddd; margin-top: 30px;">
+                  <span>{{$t('message.configConnParams')}}</span>
+                </el-row>
+                <el-form-item :label="$t('message.useChip')" style="margin-top: 15px;">
+                  <el-select v-model="store.devConf.connChip" style="width: 100%">
+                    <el-option :label="$t('message.chip0')" value="0"></el-option>
+                    <el-option :label="$t('message.chip1')" value="1"></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item :label="$t('message.discovergatt')" style="margin-top: 15px;">
+                  <el-select v-model="store.devConf.discovergatt" style="width: 100%">
+                    <el-option :label="$t('message.open')" value="1"></el-option>
+                    <el-option :label="$t('message.close')" value="0"></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item :label="$t('message.connTimeout')" prop="connTimeout">
+                  <el-input v-model="store.devConf.connTimeout"></el-input>
+                </el-form-item>
+                <el-form-item :label="$t('message.others')">
+                  <el-input v-model="store.devConf.connParams" placeholder="key1=value1&key2=value2"></el-input>
+                </el-form-item>
               </el-form>
             </el-main>
-            <el-footer style="border-top: 1px solid #ddd; width: 326px; height: 85px; line-height: 85px; vertial-align: middle; text-align: center; position: fixed; bottom: 0; left: 0;">
+            <el-footer :style="{'width': store.devConfDisplayVars.leftConfWidth}" style="border-top: 1px solid #ddd; background-color: #F2F4F8; height: 85px; line-height: 85px; vertial-align: middle; text-align: center; position: fixed; bottom: 0; left: 0;">
               <el-button size="small" @click="reboot" style="margin-right: 15px;">{{$t('message.restartAP')}}</el-button>
               <el-button size="small" style="margin-left: 15px;" type="primary" @click="startScan" v-show="!store.devConfDisplayVars.isScanning">{{$t('message.startScan')}}</el-button>
               <el-button size="small" style="margin-left: 15px;" type="primary" @click="stopScan" v-show="store.devConfDisplayVars.isScanning">{{$t('message.stopScan')}}</el-button>
@@ -98,7 +119,7 @@
           </el-container>
         </el-aside>
       </el-drawer>
-      <el-main :style="{'background-color': '#fff', 'padding': 0, 'margin-left': store.devConfDisplayVars.isConfigMenuItemOpen ? '326px' : '0px', 'margin-top': '50px'}">
+      <el-main :style="{'background-color': '#fff', 'padding': 0, 'margin-left': store.devConfDisplayVars.isConfigMenuItemOpen ? store.devConfDisplayVars.leftConfWidth : '0px', 'margin-top': '50px'}">
         <el-container style="height: 100%; background-color: #fff;">
           <!-- 菜单栏 -->
           <el-aside width="150px" style="height: 100%; background-color: #F8FAFF; box-shadow:-1px 0px 6px 0px rgba(195,212,227,0.28); position: fixed; z-index: 999;">
@@ -140,7 +161,7 @@
                 <span slot="title">{{$t('message.resources')}}</span>
               </el-menu-item>
               <el-menu-item style="position: absolute; bottom: 50px; padding: 0; width: 152px; text-align: center; border-top: 0px solid #e8eaed;">
-                <span>v2.0.4</span>
+                <span>v2.0.5</span>
               </el-menu-item>
             </el-menu>
           </el-aside>

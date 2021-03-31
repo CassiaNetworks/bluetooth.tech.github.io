@@ -17,6 +17,11 @@ const cn = {
   restartAP: '重启网关',
   startScan: '开始扫描',
   stopScan: '停止扫描',
+  
+  configConnParams: '连接配置',
+  discovergatt: '发现GATT',
+  connTimeout: '超时时间(s)',
+  others: '其他参数',
 
   // menu
   configParams: '配置参数',

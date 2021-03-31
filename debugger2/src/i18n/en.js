@@ -17,6 +17,11 @@ const en = {
   restartAP: 'Reboot Router',
   startScan: 'Start Scan',
   stopScan: 'Stop Scan',
+  
+  configConnParams: 'Connect Settings',
+  discovergatt: 'GATT',
+  connTimeout: 'Timeout(s)',
+  others: 'Others',
 
   // menu
   configParams: 'Settings',

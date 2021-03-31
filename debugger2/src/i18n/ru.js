@@ -18,6 +18,11 @@ const ru = {
   startScan: 'Начать сканирование',
   stopScan: 'Остановить сканирование',
 
+  configConnParams: 'Connect Settings',
+  discovergatt: 'GATT',
+  connTimeout: 'Timeout(s)',
+  others: 'Others',
+
   // menu
   configParams: 'Настройки',
   scanList: 'Сканировать устройства',

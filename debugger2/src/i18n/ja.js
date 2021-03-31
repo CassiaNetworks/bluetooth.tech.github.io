@@ -18,6 +18,11 @@ const ja = {
   startScan: 'スキャン開始',
   stopScan: 'スキャン停止',
 
+  configConnParams: 'Connect Settings',
+  discovergatt: 'GATT',
+  connTimeout: 'Timeout(s)',
+  others: 'Others',
+
   // menu
   configParams: '設定',
   scanList: 'デバイススキャン',

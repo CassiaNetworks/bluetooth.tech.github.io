@@ -135,6 +135,14 @@ function createVueMethods(vue) {
     },
     changeLanguage() {
       this.$i18n.locale = this.store.devConfDisplayVars.language;
+      let noramlWidthLns = ['cn', 'en', 'ro', 'ru'];
+      if (noramlWidthLns.includes(this.store.devConfDisplayVars.language)) {
+        this.store.devConfDisplayVars.leftConfWidth = '326px';
+        this.store.devConfDisplayVars.leftConfLabelWidth = '85px';
+      } else {
+        this.store.devConfDisplayVars.leftConfWidth = '426px';
+        this.store.devConfDisplayVars.leftConfLabelWidth = '125px';
+      }
     },
     apInfo() {
       if (this.store.devConf.controlStyle === libEnum.controlStyle.AP) {
@@ -738,6 +746,11 @@ function createVueMethods(vue) {
       if (this.store.devConfDisplayVars.isScanning) {
         this.stopScan();
       }
+      if (this.store.devConf.controlStyle === libEnum.controlStyle.AP) {
+        this.store.devConfDisplayVars.leftConfHeight = '100%';
+      } else {
+        this.store.devConfDisplayVars.leftConfHeight = '85%';
+      }
     },
     stopApiScan() {
       const apiType = this.store.devConfDisplayVars.activeApiDebugMenuItem;
@@ -755,9 +768,31 @@ function createVueMethods(vue) {
       }
       this.store.devConfDisplayVars.isScanning = false;
     },
+    // 获取url参数对象
+    getUrlVars(queryStr) {
+      if (!queryStr) return {};
+      var paramArray = queryStr.split("&");
+      var len = paramArray.length;
+      var paramObj = {};
+      var arr = [];
+      for (var i = 0; i < len; i++) {
+          arr = paramArray[i].split("=");
+          if (arr[0] && arr[1]) paramObj[arr[0]] = arr[1];
+      }
+      return paramObj;
+    },
     connectDeviceByRow(row, deviceMac) { // notify通过连接状态SSE通知
       main.setObjProperty(this.cache.devicesConnectLoading, deviceMac, true);
-      apiModule.connectByDevConf(this.store.devConf, deviceMac, null, this.store.devConf.chip).then(() => {
+      // 处理配置参数
+      let params = {
+        discovergatt: _.get(this.store.devConf, 'discovergatt') || 1,
+        timeout: _.get(this.store.devConf, 'connTimeout') || 10
+      };
+      if (params.timeout < 0.2 || params.timeout > 20) params.timeout = 15;
+      params.timeout = params.timeout * 1000;
+      let otherParams = this.getUrlVars(_.get(this.store.devConf, 'connParams'));
+      params = _.merge(params, otherParams);
+      apiModule.connectByDevConf(this.store.devConf, deviceMac, null, this.store.devConf.connChip || this.store.devConf.chip, params).then(() => {
         // notify(`连接设备 ${deviceMac} 成功`, '设备连接成功', libEnum.messageType.SUCCESS);
         _.remove(this.cache.scanResultList, {mac: deviceMac});
         let removedList = _.remove(this.cache.scanDisplayResultList, {mac: deviceMac}); // 连接成功从扫描列表中移除

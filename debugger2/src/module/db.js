@@ -21,8 +21,15 @@ let storage = {
     filter_mac: [], // 扫描mac过滤
     filter_rssi: -75,
     chip: 0, // 扫描使用的芯片
+    connChip: 0, // 连接使用的芯片
+    discovergatt: 1, // 是否开启，默认开启，与API默认参数保持一致
+    connTimeout: 15, // 连接超时时间，单位秒，默认为10秒
+    connParams: '', // 连接接口其他参数
   },
   devConfDisplayVars: {
+    leftConfWidth: '326px', // 左侧配置栏宽度
+    leftConfLabelWidth: '85px', // 左侧label宽度
+    leftConfHeight: '100%', // 左侧配置栏高度
     scanTabsActiveTab: 'scanResult', // 当前激活的扫描tab页
     apiDemoTabsActiveTab: 'singleDevice', // API demo激活的tab页
     pairBySecurityOOB: { // security pair
@@ -157,6 +164,13 @@ let cache = {
     ],
     'mac': [
       { required: true, message: 'require', trigger: 'blur' },
+    ],
+    'connTimeout': [
+      { validator: function(rule, value, callback) {
+        value = +value;
+        if(!(value >= 0.2 && value <= 20)) callback('Eg: value >= 0.2 && value <= 20');
+        else callback();
+      }, trigger: 'change' }
     ]
   }, // devConf检查规则
 

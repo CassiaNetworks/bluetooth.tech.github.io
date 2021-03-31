@@ -283,9 +283,10 @@ function pairBySecurityOOB(baseURI, query, deviceMac, rand, confirm) {
   });
 }
 
-function connect(baseURI, query, deviceMac, addrType) {
+function connect(baseURI, query, deviceMac, addrType, bodyParams) {
   const url = `${baseURI}/gap/nodes/${deviceMac}/connection/?${obj2QueryStr(query)}`;
-  const body = {timeout: config.http.requestTimeout, type: addrType};
+  let body = {type: addrType};
+  body = _.merge(body, bodyParams);
   addApiLogItem(main.getGlobalVue().$i18n.t('message.apiConnect'), 'POST', url, query, body, {deviceMac});
   return new Promise((resolve, reject) => {
     axios.post(url, body).then(function(response) {
@@ -526,7 +527,7 @@ function startNotifyByDevConf(devConf, messageHandler, errorHandler) {
   return openNotifySse(devConf.baseURI, params, messageHandler, errorHandler);
 }
 
-function connectByDevConf(devConf, deviceMac, addrType, chip=0) {
+function connectByDevConf(devConf, deviceMac, addrType, chip=0, bodyParams) {
   const params = getFields(devConf, []);
   const scanDisplayResultList = dbModule.getCache().scanDisplayResultList;
   if (!addrType) { // 没有传入则从扫描结果里面找设备地址类型
@@ -535,7 +536,7 @@ function connectByDevConf(devConf, deviceMac, addrType, chip=0) {
     addrType = item.bdaddrType;
   }
   if (+chip === 0 || +chip === 1) params.chip = chip;
-  return connect(devConf.baseURI, params, deviceMac, addrType);
+  return connect(devConf.baseURI, params, deviceMac, addrType, bodyParams);
 }
 
 function pairByDevConf(devConf, deviceMac) {

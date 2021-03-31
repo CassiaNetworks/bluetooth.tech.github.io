@@ -18,6 +18,11 @@ const mo = {
   startScan: 'Start Scanare',
   stopScan: 'Stop Scanare',
 
+  configConnParams: 'Connect Settings',
+  discovergatt: 'GATT',
+  connTimeout: 'Timeout(s)',
+  others: 'Others',
+
   // menu
   configParams: 'Setari',
   scanList: 'Scanare dispozitive',
