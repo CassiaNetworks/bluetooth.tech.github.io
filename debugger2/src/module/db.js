@@ -399,6 +399,13 @@ function getStorage() {
 
 function loadStorage() {
   storage.devConf = JSON.parse(get(storageKey)) || storage.devConf;
+
+  // 新版本兼容老版本的本地存储
+  if (!_.has(storage.devConf, 'connChip')) storage.devConf.connChip = 0;
+  if (!_.has(storage.devConf, 'discovergatt')) storage.devConf.discovergatt = 1;
+  if (!_.has(storage.devConf, 'connTimeout')) storage.devConf.connTimeout = 15;
+  if (!_.has(storage.devConf, 'connParams')) storage.devConf.connParams = '';
+
   // 如果是AC方式，则更新token
   let _devConf = storage.devConf;
   if (storage.devConf.controlStyle === libEnum.controlStyle.AC) {
