@@ -215,7 +215,7 @@ function reboot(baseURI, query) {
 // 配对
 function pair(baseURI, query, deviceMac, body={}) {
   const url = `${baseURI}/management/nodes/${deviceMac}/pair/?${obj2QueryStr(query)}`;
-  if (!body.iocapability) body.iocapability = 'KeyboardDisplay';
+  if (!body.iocapability) body.iocapability = 'KeyboardOnly';
   addApiLogItem(main.getGlobalVue().$i18n.t('message.apiPair'), 'POST', url, query, {deviceMac});
   return new Promise((resolve, reject) => {
     axios.post(url, body).then(function(response) {
@@ -539,9 +539,15 @@ function connectByDevConf(devConf, deviceMac, addrType, chip=0, bodyParams) {
   return connect(devConf.baseURI, params, deviceMac, addrType, bodyParams);
 }
 
-function pairByDevConf(devConf, deviceMac) {
+function pairByDevConf(devConf, deviceMac, addrType) {
   const params = getFields(devConf, []);
-  return pair(devConf.baseURI, params, deviceMac);
+  const connectedList = dbModule.getCache().connectedList;
+  if (!addrType) { // 没有传入则从扫描结果里面找设备地址类型
+    const item = _.find(connectedList, {mac: deviceMac});
+    if (!item) return Promise.reject('can not get addr type');
+    addrType = item.bdaddrType;
+  }
+  return pair(devConf.baseURI, params, deviceMac, {type: addrType, bond: 0});
 }
 
 function rebootByDevConf(devConf) {
