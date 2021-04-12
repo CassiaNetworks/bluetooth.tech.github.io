@@ -25,6 +25,8 @@ let storage = {
     discovergatt: 1, // 是否开启，默认开启，与API默认参数保持一致
     connTimeout: 15, // 连接超时时间，单位秒，默认为10秒
     connParams: '', // 连接接口其他参数
+    autoSelectionOn: 'off', // 是否开启优选，默认不开启
+    aps: [], // 优选选择的网关列表
   },
   devConfDisplayVars: {
     leftConfWidth: '326px', // 左侧配置栏宽度
@@ -32,6 +34,12 @@ let storage = {
     leftConfHeight: '100%', // 左侧配置栏高度
     scanTabsActiveTab: 'scanResult', // 当前激活的扫描tab页
     apiDemoTabsActiveTab: 'singleDevice', // API demo激活的tab页
+    pair: { // pair
+      visible: false,
+      timeout: 5, // 单位秒 
+      iocapability: 'KeyboardDisplay',
+      bond: '1'
+    },
     pairBySecurityOOB: { // security pair
       visible: false, 
       deviceMac: '',
@@ -405,6 +413,8 @@ function loadStorage() {
   if (!_.has(storage.devConf, 'discovergatt')) storage.devConf.discovergatt = 1;
   if (!_.has(storage.devConf, 'connTimeout')) storage.devConf.connTimeout = 15;
   if (!_.has(storage.devConf, 'connParams')) storage.devConf.connParams = '';
+  if (!_.has(storage.devConf, 'autoSelectionOn')) storage.devConf.autoSelectionOn = 'off';
+  if (!_.has(storage.devConf, 'aps')) storage.devConf.aps = storage.devConf.mac || ['*'];
 
   // 如果是AC方式，则更新token
   let _devConf = storage.devConf;

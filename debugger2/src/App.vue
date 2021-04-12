@@ -36,7 +36,7 @@
         </template>
         <el-aside :style="{'width': store.devConfDisplayVars.leftConfWidth}" style="border-right: 1px solid #f2f2f2; background-color: #F2F4F8; height: 100%; ">
           <el-container :style="{'height': store.devConfDisplayVars.leftConfHeight}" style="width: 100%;">
-            <el-main>
+            <el-main style="margin-bottom: 85px;">
               <el-form :label-width="store.devConfDisplayVars.leftConfLabelWidth" size="small" :model="store.devConf" :rules="cache.devConfRules">
                 <el-row style="font-size: 16px; border-bottom: 1px solid #ddd; margin-top: 10px;">
                   <span>{{ $t('message.configConnectParams') }}</span>
@@ -60,7 +60,7 @@
                   <el-input v-model="store.devConf.acDevSecret" class="ac-dev-secret" clearable></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('message.apMac')" prop="mac" v-show="store.devConf.controlStyle === 'AC'" style="margin-top: 15px;">
-                  <el-select @focus="getAcRouterList" :remote-method="getAcRouterList" :loading="cache.isGettingAcRouterList" v-model="store.devConf.mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" filterable remote style="width: 100%">
+                  <el-select @focus="getAcRouterList" :remote-method="getAcRouterList" :loading="cache.isGettingAcRouterList" v-model="store.devConf.mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" filterable remote style="width: 100%" @change="routerChange">
                     <el-option v-for="item in cache.acRouterList" :key="item.mac" :label="item.label" :value="item.mac">
                       <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
                       <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
@@ -91,7 +91,21 @@
                 <el-row style="font-size: 16px; border-bottom: 1px solid #ddd; margin-top: 30px;">
                   <span>{{$t('message.configConnParams')}}</span>
                 </el-row>
-                <el-form-item :label="$t('message.useChip')" style="margin-top: 15px;">
+                <el-form-item :label="$t('message.autoSelectionOn')" style="margin-top: 15px;" v-show="store.devConf.controlStyle === 'AC'">
+                  <el-select v-model="store.devConf.autoSelectionOn" style="width: 100%">
+                    <el-option :label="$t('message.on')" value="on"></el-option>
+                    <el-option :label="$t('message.off')" value="off"></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item :label="$t('message.aps')" prop="mac" v-show="store.devConf.controlStyle === 'AC' && store.devConf.autoSelectionOn === 'on'" style="margin-top: 15px;">
+                  <el-select @focus="getAcRouterListWillAll" :remote-method="getAcRouterListWillAll" :loading="cache.isGettingAcRouterList" v-model="store.devConf.aps" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" placeholder="" multiple filterable remote style="width: 100%" @change="autoSelectionRouterChanged">
+                    <el-option v-for="item in cache.acRouterList" :key="item.mac" :label="item.label" :value="item.mac">
+                      <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
+                      <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item :label="$t('message.useChip')" v-show="store.devConf.autoSelectionOn === 'off'" style="margin-top: 15px;">
                   <el-select v-model="store.devConf.connChip" style="width: 100%">
                     <el-option :label="$t('message.chip0')" value="0"></el-option>
                     <el-option :label="$t('message.chip1')" value="1"></el-option>
@@ -111,7 +125,7 @@
                 </el-form-item>
               </el-form>
             </el-main>
-            <el-footer :style="{'width': store.devConfDisplayVars.leftConfWidth}" style="border-top: 1px solid #ddd; background-color: #F2F4F8; height: 85px; line-height: 85px; vertial-align: middle; text-align: center; position: fixed; bottom: 0; left: 0;">
+            <el-footer :style="{'width': store.devConfDisplayVars.leftConfWidth}" style="z-index: 999; border-top: 1px solid #ddd; background-color: #F2F4F8; height: 85px; line-height: 85px; vertial-align: middle; text-align: center; position: fixed; bottom: 0; left: 0;">
               <el-button size="small" @click="reboot" style="margin-right: 15px;">{{$t('message.restartAP')}}</el-button>
               <el-button size="small" style="margin-left: 15px;" type="primary" @click="startScan" v-show="!store.devConfDisplayVars.isScanning">{{$t('message.startScan')}}</el-button>
               <el-button size="small" style="margin-left: 15px;" type="primary" @click="stopScan" v-show="store.devConfDisplayVars.isScanning">{{$t('message.stopScan')}}</el-button>
@@ -161,7 +175,7 @@
                 <span slot="title">{{$t('message.resources')}}</span>
               </el-menu-item>
               <el-menu-item style="position: absolute; bottom: 50px; padding: 0; width: 152px; text-align: center; border-top: 0px solid #e8eaed;">
-                <span>v2.0.5</span>
+                <span>v2.0.6</span>
               </el-menu-item>
             </el-menu>
           </el-aside>
@@ -923,7 +937,7 @@
                       <el-button-group>
                         <el-button plain type="primary" size="small" @click="getDeviceServices(row.mac)">{{$t('message.services')}}</el-button>
                         <el-button plain type="primary" size="small" @click="disconnectDevice(row.mac)">{{$t('message.disconnect')}}</el-button>
-                        <el-button plain type="primary" size="small" @click="pair(row.mac)">{{$t('message.pair')}}</el-button>
+                        <el-button plain type="primary" size="small" @click="showPairDialog(row.mac)">{{$t('message.pair')}}</el-button>
                         <el-button plain type="primary" size="small" @click="unpair(row.mac)">{{$t('message.unpair')}}</el-button>
                         <el-button plain type="primary" size="small" @click="exportDeviceServices(device.mac)">{{$t('message.export')}}</el-button>
                       </el-button-group>
@@ -949,7 +963,7 @@
                     <el-button-group style="float: right; ">
                       <el-button size="small" @click="getDeviceServices(device.mac)" style="color: #2897ff">{{$t('message.services')}}</el-button>
                       <el-button size="small" @click="disconnectDevice(device.mac)" style="color: #2897ff">{{$t('message.disconnect')}}</el-button>
-                      <el-button size="small" @click="pair(device.mac)" style="color: #2897ff">{{$t('message.pair')}}</el-button>
+                      <el-button size="small" @click="showPairDialog(device.mac)" style="color: #2897ff">{{$t('message.pair')}}</el-button>
                       <el-button size="small" @click="unpair(device.mac)" style="color: #2897ff">{{$t('message.unpair')}}</el-button>
                       <el-button size="small" @click="exportDeviceServices(device.mac)" style="color: #2897ff">{{$t('message.export')}}</el-button>
                     </el-button-group>
@@ -1217,6 +1231,35 @@
       <el-button type="primary" @click="pairByPasskey">{{$t('message.ok')}}</el-button>
     </span>
   </el-dialog>
+  <el-dialog title="Pair" center :visible.sync="store.devConfDisplayVars.pair.visible">
+    <el-form label-width="130px" size="small">
+      <el-form-item label="Device Mac">
+        <el-input v-model="store.devConfDisplayVars.pair.deviceMac" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="Timeout(Seconds)">
+        <el-input v-model="store.devConfDisplayVars.pair.timeout"></el-input>
+      </el-form-item>
+      <el-form-item label="Io Capability">
+        <el-select v-model="store.devConfDisplayVars.pair.iocapability" style="width: 100%">
+          <el-option label="KeyboardDisplay" value="KeyboardDisplay"></el-option>
+          <el-option label="DisplayOnly" value="DisplayOnly"></el-option>
+          <el-option label="DisplayYesNo" value="DisplayYesNo"></el-option>
+          <el-option label="KeyboardOnly" value="KeyboardOnly"></el-option>
+          <el-option label="NoInputNoOutput" value="NoInputNoOutput"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="Bond">
+        <el-select v-model="store.devConfDisplayVars.pair.bond" style="width: 100%">
+          <el-option label="YES" value="1"></el-option>
+          <el-option label="NO" value="0"></el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="store.devConfDisplayVars.pair.visible = false" size="small">{{$t('message.cancel')}}</el-button>
+      <el-button type="primary" @click="pair" size="small">{{$t('message.ok')}}</el-button>
+    </span>
+  </el-dialog>
 </div>
 </template>
 
@@ -1322,6 +1365,10 @@ BODY {
   width: 100%;
   height: 100%;
   text-align: left;
+}
+
+.el-drawer__body { 
+  overflow: auto; 
 }
 
 .el-menu-api-demo,

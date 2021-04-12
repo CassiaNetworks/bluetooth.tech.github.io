@@ -215,7 +215,7 @@ function reboot(baseURI, query) {
 // 配对
 function pair(baseURI, query, deviceMac, body={}) {
   const url = `${baseURI}/management/nodes/${deviceMac}/pair/?${obj2QueryStr(query)}`;
-  if (!body.iocapability) body.iocapability = 'KeyboardOnly';
+  if (!body.iocapability) body.iocapability = 'KeyboardDisplay';
   addApiLogItem(main.getGlobalVue().$i18n.t('message.apiPair'), 'POST', url, query, {deviceMac});
   return new Promise((resolve, reject) => {
     axios.post(url, body).then(function(response) {
@@ -280,6 +280,24 @@ function pairBySecurityOOB(baseURI, query, deviceMac, rand, confirm) {
     logger.info('pair by security OOB device success:', deviceMac, rand, confirm);
   }).catch(ex => {
     logger.error('pair by security OOB device error:', deviceMac, rand, confirm, ex);
+  });
+}
+
+function connectByAutoSelection(baseURI, query, deviceMac, bodyParams) {
+  const url = `${baseURI}/aps/connections/connect?${obj2QueryStr(query)}`;
+  let body = {devices: [deviceMac]};
+  if (_.get(bodyParams, 'aps').includes('*')) bodyParams.aps = '*';
+  body = _.merge(body, bodyParams);
+  // TODO: 增加API日志
+  return new Promise((resolve, reject) => {
+    axios.post(url, body).then(function(response) {
+      logger.info('connect device success by auto selection:', response);
+      resolve(response.data);
+    }).catch(function(error) {
+      let info = _.get(error, 'response.data.error') || _.get(error, 'response.data') || error;
+      logger.error('connect device error by auto selection:', info);
+      reject(info);
+    });
   });
 }
 
@@ -527,7 +545,8 @@ function startNotifyByDevConf(devConf, messageHandler, errorHandler) {
   return openNotifySse(devConf.baseURI, params, messageHandler, errorHandler);
 }
 
-function connectByDevConf(devConf, deviceMac, addrType, chip=0, bodyParams) {
+// 普通方式建连
+function connectByDevConfNormal(devConf, deviceMac, addrType, chip=0, bodyParams) {
   const params = getFields(devConf, []);
   const scanDisplayResultList = dbModule.getCache().scanDisplayResultList;
   if (!addrType) { // 没有传入则从扫描结果里面找设备地址类型
@@ -539,15 +558,37 @@ function connectByDevConf(devConf, deviceMac, addrType, chip=0, bodyParams) {
   return connect(devConf.baseURI, params, deviceMac, addrType, bodyParams);
 }
 
-function pairByDevConf(devConf, deviceMac, addrType) {
+// 优选方式建连
+// aps, devices, timeout, discovergatt, 用户自定义输入
+function connectByDevConfAutoSelection(devConf, deviceMac, bodyParams) {
+  const params = getFields(devConf, []);
+  return connectByAutoSelection(devConf.baseURI, params, deviceMac, bodyParams);
+}
+
+// 是否开启了优选，开启了优选使用优选方式建连
+// 否则使用普通方式建连
+// 注意，优选方式不支持chip参数，其他的目前都支持
+function connectByDevConf(devConf, deviceMac, addrType, chip=0, bodyParams) {
+  let autoSelectionOn = _.get(bodyParams, 'autoSelectionOn');
+  delete bodyParams['autoSelectionOn']; // 辅助变量，直接删除
+  if (autoSelectionOn === 'on' && devConf.controlStyle === 'AC') {
+    return connectByDevConfAutoSelection(devConf, deviceMac, bodyParams);
+  } else {
+    // 支持chip, timeout, discovergatt, 用户自定义输入
+    delete bodyParams['aps'];
+    return connectByDevConfNormal(devConf, deviceMac, addrType, chip=0, bodyParams);
+  }
+}
+
+function pairByDevConf(devConf, deviceMac, bodyParam) {
   const params = getFields(devConf, []);
   const connectedList = dbModule.getCache().connectedList;
-  if (!addrType) { // 没有传入则从扫描结果里面找设备地址类型
+  if (!bodyParam.type) { // 没有传入则从扫描结果里面找设备地址类型
     const item = _.find(connectedList, {mac: deviceMac});
     if (!item) return Promise.reject('can not get addr type');
-    addrType = item.bdaddrType;
+    bodyParam.type = item.bdaddrType;
   }
-  return pair(devConf.baseURI, params, deviceMac, {type: addrType, bond: 0});
+  return pair(devConf.baseURI, params, deviceMac, bodyParam);
 }
 
 function rebootByDevConf(devConf) {

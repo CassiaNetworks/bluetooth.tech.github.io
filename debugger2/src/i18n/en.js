@@ -264,6 +264,11 @@ const en = {
   acConfigInfo: 'Please check the <span style="color: red; font-weight: bold;">AC URI, developer account, Allow Origin</span> configuration<br>Do you want to jump to the AC configuration page?',
 
   configOrigin: 'Starting v2.0.3 release, CORS is disabled by default on AC and Router. When using this Bluetooth Debug Tool, please set ‘Access Control Allow Origin’ in the console setting. Please refer to <a target="_blank" style="color: #2897ff; text-decoration: none;" href="https://www.cassianetworks.com/download/docs/Cassia_User_Manual.pdf">Cassia User Manual</a> for detailed instruction. ',
+
+  autoSelectionOn: 'Auto-Selection',
+  on: 'ON',
+  off: 'OFF',
+  aps: 'Routers',
 };
 
 export default {

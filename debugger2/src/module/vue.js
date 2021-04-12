@@ -106,6 +106,35 @@ function createRssiChart() {
 
 function createVueMethods(vue) {
   return {
+    autoSelectionRouterChanged() { // 优选使用的网关列表变化
+      if (this.store.devConf.aps.includes('*')) { // 当包含*号时，移除其他选择的网关
+        this.store.devConf.aps.splice(0, this.store.devConf.aps.length);
+        this.store.devConf.aps.push('*');
+      } else if (this.store.devConf.aps.length === 0) { // 当无网关时，默认为扫描使用的网关
+        this.store.devConf.aps.push(this.store.devConf.mac);
+      }
+    },
+    getAcRouterListWillAll(keyword) {
+      this.cache.isGettingAcRouterList = true;
+      this.cache.acRouterList = [];
+      apiModule.getAccessToken(this.store.devConf.acServerURI + '/api', this.store.devConf.acDevKey, this.store.devConf.acDevSecret)
+      .then(data => {
+        return apiModule.getAcRouterList(data.access_token);
+      }).then(data => {
+        if (_.isEmpty(keyword) || !_.isString(keyword)) this.cache.acRouterList = data;
+        else {
+          keyword = keyword.toLowerCase();
+          this.cache.acRouterList = _.filter(data, item => {
+            return item.name.toLowerCase().includes(keyword) || item.mac.toLowerCase().includes(keyword);
+          });
+        }
+        this.cache.acRouterList.splice(0, 0, {id: '*', mac: '*', name: 'All Routers'});
+      }).catch(ex => {
+        notify(`${this.$i18n.t('message.getAcRouterListFail')} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+      }).finally(() => {
+        this.cache.isGettingAcRouterList = false;
+      });
+    },
     getAcRouterList(keyword) {
       this.cache.isGettingAcRouterList = true;
       this.cache.acRouterList = [];
@@ -202,8 +231,19 @@ function createVueMethods(vue) {
         notify(`${this.$i18n.t('message.pairFail')} ${deviceMac} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       });
     },
-    pair(deviceMac) {
-      apiModule.pairByDevConf(this.store.devConf, deviceMac).then((x) => {
+    showPairDialog(deviceMac) {
+      this.store.devConfDisplayVars.pair.deviceMac = deviceMac;
+      this.store.devConfDisplayVars.pair.visible = true;
+    },
+    pair() {
+      let deviceMac = this.store.devConfDisplayVars.pair.deviceMac;
+      let bodyParam = {
+        type: null, // 自动从历史中获取
+        iocapability: this.store.devConfDisplayVars.pair.iocapability || 'KeyboardDisplay',
+        timeout: +(this.store.devConfDisplayVars.pair.timeout || 5) * 1000,
+        bond: +(this.store.devConfDisplayVars.pair.bond || 1)
+      };
+      apiModule.pairByDevConf(this.store.devConf, deviceMac, bodyParam).then((x) => {
         if (x.pairingStatusCode === libEnum.pairingStatusCode.SUCCESS) {
           return notify(`${this.$i18n.t('message.pairOk')} ${deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
         } 
@@ -235,6 +275,8 @@ function createVueMethods(vue) {
             notify(`${this.$i18n.t('message.pairFail')} ${deviceMac} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
           });
         }
+      }).finally(() => {
+        this.store.devConfDisplayVars.pair.visible = false;
       });
     },
     disconnectAll() { // 断连所有
@@ -508,7 +550,7 @@ function createVueMethods(vue) {
         });
         notify(`${this.$i18n.t('message.openConnectStatusOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
       } else if (apiType === libEnum.apiType.PAIR) {
-        apiModule.pairByDevConf(this.store.devConf, apiParams.deviceMac).then((data) => {
+        apiModule.pairByDevConf(this.store.devConf, apiParams.deviceMac, {}).then((data) => {
           notify(`${this.$i18n.t('message.pairOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
           apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairOk')}, ${JSON.stringify(data)}`);
         }).catch(ex => {
@@ -713,6 +755,10 @@ function createVueMethods(vue) {
     propertyClick(operation, deviceMac, char) {
       operationModule.dispatch(operation, deviceMac, char);
     },
+    routerChange(router) { // 当选择网关时，优选自动选择此网关
+      this.store.devConf.aps.splice(0, this.store.devConf.aps.length);
+      this.store.devConf.aps.push(router);
+    },
     getDeviceServices(deviceMac) {
       serviceModule.getDeviceServiceList(deviceMac).then(() => {
         this.cache.currentConnectedTab = deviceMac; // 点击服务激活此设备tab页面
@@ -749,7 +795,7 @@ function createVueMethods(vue) {
       if (this.store.devConf.controlStyle === libEnum.controlStyle.AP) {
         this.store.devConfDisplayVars.leftConfHeight = '100%';
       } else {
-        this.store.devConfDisplayVars.leftConfHeight = '85%';
+        this.store.devConfDisplayVars.leftConfHeight = '100%';
       }
     },
     stopApiScan() {
@@ -783,14 +829,16 @@ function createVueMethods(vue) {
     },
     connectDeviceByRow(row, deviceMac) { // notify通过连接状态SSE通知
       main.setObjProperty(this.cache.devicesConnectLoading, deviceMac, true);
-      // 处理配置参数
       let params = {
-        discovergatt: _.get(this.store.devConf, 'discovergatt') || 1,
-        timeout: _.get(this.store.devConf, 'connTimeout') || 10
+        discovergatt: _.get(this.store.devConf, 'discovergatt') || 1, // 优选和普通方式都支持
+        timeout: _.get(this.store.devConf, 'connTimeout') || 10, // 优选和普通方式都支持
+        aps: _.get(this.store.devConf, 'aps') || '*', // 优选参数
+        autoSelectionOn: _.get(this.store.devConf, 'autoSelectionOn') || 'off' // 辅助参数
       };
-      if (params.timeout < 0.2 || params.timeout > 20) params.timeout = 15;
+      if (params.timeout < 0.2 || params.timeout > 20) params.timeout = 15; // timeout范围处理
       params.timeout = params.timeout * 1000;
-      let otherParams = this.getUrlVars(_.get(this.store.devConf, 'connParams'));
+
+      let otherParams = this.getUrlVars(_.get(this.store.devConf, 'connParams')); // 自定义输入，用户自己保证支持
       params = _.merge(params, otherParams);
       apiModule.connectByDevConf(this.store.devConf, deviceMac, null, this.store.devConf.connChip || this.store.devConf.chip, params).then(() => {
         // notify(`连接设备 ${deviceMac} 成功`, '设备连接成功', libEnum.messageType.SUCCESS);
