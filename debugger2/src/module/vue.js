@@ -269,7 +269,7 @@ function createVueMethods(vue) {
           return;
         }
         if (x.pairingStatusCode === libEnum.pairingStatusCode.NUM_CMP_EXPECTED) {
-          apiModule.pairByNumbericComparisonByDevConf(this.store.devConf, deviceMac).then(() => {
+          apiModule.pairByNumbericComparisonByDevConf(this.store.devConf, deviceMac, x.display).then(() => {
             notify(`${this.$i18n.t('message.pairOk')} ${deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
           }).catch(ex => {
             notify(`${this.$i18n.t('message.pairFail')} ${deviceMac} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
