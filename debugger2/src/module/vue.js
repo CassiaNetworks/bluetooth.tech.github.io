@@ -164,7 +164,7 @@ function createVueMethods(vue) {
     },
     changeLanguage() {
       this.$i18n.locale = this.store.devConfDisplayVars.language;
-      let noramlWidthLns = ['cn', 'en', 'ro', 'ru'];
+      let noramlWidthLns = ['cn'];
       if (noramlWidthLns.includes(this.store.devConfDisplayVars.language)) {
         this.store.devConfDisplayVars.leftConfWidth = '326px';
         this.store.devConfDisplayVars.leftConfLabelWidth = '85px';
