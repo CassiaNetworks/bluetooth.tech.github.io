@@ -283,6 +283,22 @@ function pairBySecurityOOB(baseURI, query, deviceMac, rand, confirm) {
   });
 }
 
+// 获取优选开关状态
+function getAutoSelectionStatus(baseURI, query) {
+  const url = `${baseURI}/aps/ap-select-switch?${obj2QueryStr(query)}`;
+  // TODO: 增加API日志
+  return new Promise((resolve, reject) => {
+    axios.get(url).then(function(response) {
+      logger.info('get auto select flag success:', response);
+      resolve(response.data);
+    }).catch(function(error) {
+      let info = _.get(error, 'response.data.error') || _.get(error, 'response.data') || error;
+      logger.error('get auto select flag error:', info);
+      reject(info);
+    });
+  });
+}
+
 function connectByAutoSelection(baseURI, query, deviceMac, bodyParams) {
   const url = `${baseURI}/aps/connections/connect?${obj2QueryStr(query)}`;
   let body = {devices: [deviceMac]};
@@ -558,11 +574,20 @@ function connectByDevConfNormal(devConf, deviceMac, addrType, chip=0, bodyParams
   return connect(devConf.baseURI, params, deviceMac, addrType, bodyParams);
 }
 
+function checkAutoSelection(baseURI, query, deviceMac, bodyParams) {
+  return getAutoSelectionStatus(baseURI, query).then(ret => {
+    if (ret.status !== 'success' || ret.flag !== 1) {
+      throw(main.getGlobalVue().$i18n.t('message.configAutoSelection'));
+    }
+    return connectByAutoSelection(baseURI, query, deviceMac, bodyParams);
+  });
+}
+
 // 优选方式建连
 // aps, devices, timeout, discovergatt, 用户自定义输入
 function connectByDevConfAutoSelection(devConf, deviceMac, bodyParams) {
   const params = getFields(devConf, []);
-  return connectByAutoSelection(devConf.baseURI, params, deviceMac, bodyParams);
+  return checkAutoSelection(devConf.baseURI, params, deviceMac, bodyParams);
 }
 
 // 是否开启了优选，开启了优选使用优选方式建连

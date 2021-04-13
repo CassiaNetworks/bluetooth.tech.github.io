@@ -269,6 +269,7 @@ const ro = {
   on: 'ON',
   off: 'OFF',
   aps: 'Routers',
+  configAutoSelection: 'Please make sure that the AC configuration page has opened the Auto-Selection, by default its closed.',
 };
 
 export default {

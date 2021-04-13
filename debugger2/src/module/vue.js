@@ -162,6 +162,15 @@ function createVueMethods(vue) {
         notify(`${this.$i18n.t('message.replayApiFail')} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       });
     },
+    autoSelectionChanged(value) {
+      if (value === 'on') {
+        this.$alert(this.$i18n.t('message.configAutoSelection'), this.$i18n.t('message.alert'), {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: this.$i18n.t('message.ok'),
+          callback: action => {}
+        });
+      }
+    },
     changeLanguage() {
       this.$i18n.locale = this.store.devConfDisplayVars.language;
       let noramlWidthLns = ['cn'];

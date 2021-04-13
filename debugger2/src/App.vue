@@ -92,7 +92,7 @@
                   <span>{{$t('message.configConnParams')}}</span>
                 </el-row>
                 <el-form-item :label="$t('message.autoSelectionOn')" style="margin-top: 15px;" v-show="store.devConf.controlStyle === 'AC'">
-                  <el-select v-model="store.devConf.autoSelectionOn" style="width: 100%">
+                  <el-select v-model="store.devConf.autoSelectionOn" style="width: 100%" @change="autoSelectionChanged">
                     <el-option :label="$t('message.on')" value="on"></el-option>
                     <el-option :label="$t('message.off')" value="off"></el-option>
                   </el-select>

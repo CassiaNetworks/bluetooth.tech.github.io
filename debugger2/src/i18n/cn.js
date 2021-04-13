@@ -286,6 +286,7 @@ const cn = {
   on: '开启',
   off: '关闭',
   aps: '网关列表',
+  configAutoSelection: '请确保AC配置页面已打开优选功能，默认优选功能关闭',
 };
 
 export default {
