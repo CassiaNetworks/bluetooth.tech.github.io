@@ -18,7 +18,7 @@ data.access_token = '';
 function updateUrlArr(hubIp) {
     var p = globalData.getCurProtocol();
     let prefix = hubIp;
-    if (!hubIp.startsWith('http')) prefix = `${p}://`;
+    if (!hubIp.startsWith('http')) prefix = `${p}://${hubIp}`;
     urlArr.scan = `${prefix}/gap/nodes/?mac=${data.hubMac}&access_token=${data.access_token}&active=1`
     urlArr.connectDevice = `${prefix}/gap/nodes/${data.perMac}/connection/?mac=${data.hubMac}&access_token=${data.access_token}`
     urlArr.disconnectDevice = `${prefix}/gap/nodes/${data.perMac}/connection?mac=${data.hubMac}&access_token=${data.access_token}`
