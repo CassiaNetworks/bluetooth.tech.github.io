@@ -29,6 +29,7 @@ let storage = {
     aps: [], // 优选选择的网关列表
   },
   devConfDisplayVars: {
+    oldVersionUrl: '#', // 老版本debugger链接
     leftConfWidth: '326px', // 左侧配置栏宽度
     leftConfLabelWidth: '85px', // 左侧label宽度
     leftConfHeight: '100%', // 左侧配置栏高度

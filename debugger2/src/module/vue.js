@@ -1149,10 +1149,29 @@ function createVue() {
         this.cache.clientHeight = `${document.documentElement.clientHeight}`;
         this.cache.vxeGridHeight = this.cache.clientHeight - 240;
       };
+      // 设置老版本链接
+      this.store.devConfDisplayVars.oldVersionUrl = window.location.href.replace('debugger2', 'debugger');
+
+      // 初始化AC过来的参数列表
+      // devKey=cassia&devSecret=cassia&lang=en&control=remote&hubMac=CC:1B:E0:E0:E1:90
+      let params = this.getUrlVars(window.location.search.replace(/\?/g, ''));
+      if (params.control === 'remote' && params.devKey && params.devSecret && params.hubMac) {
+        this.store.devConf.controlStyle = 'AC';
+        this.store.devConf.acDevKey = params.devKey;
+        this.store.devConf.acDevSecret = params.devSecret;
+        this.store.devConf.mac = params.hubMac;
+        this.store.devConf.acServerURI = `${window.location.protocol}//${window.location.host}`;
+        dbModule.saveDevConf(this.store.devConf);
+        this.store.devConfDisplayVars.language = params.lang || 'en';
+        this.changeLanguage();
+      }
+
       this.$alert(this.$i18n.t('message.configOrigin'), this.$i18n.t('message.alert'), {
         dangerouslyUseHTMLString: true,
         confirmButtonText: this.$i18n.t('message.ok'),
-        callback: action => {}
+        callback: action => {
+          
+        }
       });
     }
   };

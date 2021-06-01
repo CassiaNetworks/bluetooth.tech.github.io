@@ -17,7 +17,9 @@
       <span style="font-size: 18px;">
         {{ $t('message.title') }}
       </span>
-      <span style="float: right; font-size: 12px;">Language
+      <span style="float: right; font-size: 12px;">
+        <a target="_blank" :href="store.devConfDisplayVars.oldVersionUrl" style="font-weight: 700; padding-top: 2px; color: #fff; margin-right: 10px; text-decoration: none;">{{ $t('message.oldVersion') }}</a>
+        Language
         <el-select class="language" @change="changeLanguage" v-model="store.devConfDisplayVars.language" size="small" style="width: 120px; padding-right: 15px;">
           <el-option label="中文" value="cn"></el-option>
           <el-option label="English" value="en"></el-option>
