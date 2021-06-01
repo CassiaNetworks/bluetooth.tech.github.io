@@ -8,13 +8,13 @@ const ro = {
   serviceURI: 'Server',
   devKey: 'Cheie',
   devSecret: 'Parola',
-  apMac: 'Router',
+  apMac: 'Gateway',
   configScanParams: 'Setari scanare',
   useChip: 'Cip',
   filterName: 'Filtru nume',
   filterMac: 'Filtru MAC',
   fitlerRSSI: 'Filtru RSSI',
-  restartAP: 'Repornire Router',
+  restartAP: 'Repornire Gateway',
   startScan: 'Start Scanare',
   stopScan: 'Stop Scanare',
 
@@ -90,7 +90,7 @@ const ro = {
 
   // api debugger
   scanDevices: 'Scanare dispozitive',
-  scanDevicesInfo: 'Acest API foloseste o conexiune continua prin intermediul protocolului SSE. Dupa apelarea API-ului, routerul Bluetooth va scana dispozitivele din apropiere si va seta adresa MAC (bdaddr), tipul adresei (bdaddrType), datele difuzate (adData / scanData), si numele (name) dispozitivului Bluetooth, puterea semnalului (rssi) si alte informatii sunt returnate sub forma unor raspunsuri http.',
+  scanDevicesInfo: 'Acest API foloseste o conexiune continua prin intermediul protocolului SSE. Dupa apelarea API-ului, gateway Bluetooth va scana dispozitivele din apropiere si va seta adresa MAC (bdaddr), tipul adresei (bdaddrType), datele difuzate (adData / scanData), si numele (name) dispozitivului Bluetooth, puterea semnalului (rssi) si alte informatii sunt returnate sub forma unor raspunsuri http.',
   more: 'Mai mult',
   chip0: 'Cip0',
   chip1: 'Cip1',
@@ -98,7 +98,7 @@ const ro = {
   genCode: 'Cod',
   
   connectDevice: 'Conectare dispozitiv',
-  connectDeviceInfo: 'Acest API este o interfață de conexiune sincronă. Dupa apelarea API-ului, routerul Bluetooth va stabili o conexiune cu dispozitivul specificat si va returna rezultatul conexiunii.',
+  connectDeviceInfo: 'Acest API este o interfață de conexiune sincronă. Dupa apelarea API-ului, gateway Bluetooth va stabili o conexiune cu dispozitivul specificat si va returna rezultatul conexiunii.',
   addrType: 'Tip adresa',
   deviceAddr: 'MAC dispozitiv',
 
@@ -112,18 +112,18 @@ const ro = {
   noWait: 'Fara asteptare',
 
   disConnect: 'Deconectare',
-  disConnectInfo: 'Acest API este un DELETE request. Dupa apelarea interfetei, routerul Bluetooth se va deconecta de la dispozitivul Bluetooth cu adresa MAC specificata.',
+  disConnectInfo: 'Acest API este un DELETE request. Dupa apelarea interfetei, gateway Bluetooth se va deconecta de la dispozitivul Bluetooth cu adresa MAC specificata.',
   
-  connectListInfo: 'Acest API este un GET request. Dupa apelarea interfetei, routerul Bluetooth va returna o lista a dispozitivelor conectate actual.',
+  connectListInfo: 'Acest API este un GET request. Dupa apelarea interfetei, gateway Bluetooth va returna o lista a dispozitivelor conectate actual.',
 
   deviceServices: 'Servicii dispozitiv',
-  deivceServicesInfo: 'Acest API este un GET request. Dupa apelarea interfetei, routerul Bluetooth va solicita un arbore al serviciilor de la dispozitivul Bluetooth specificat. Scopul principal al apelarii interfetei secundare este de a obtine corespondenta caracteristica a dispozitivului Bluetooth, atunci cand se citeste si se scrie la dispozitivul Bluetooth. ValueHandle sau handle.',
+  deivceServicesInfo: 'Acest API este un GET request. Dupa apelarea interfetei, gateway Bluetooth va solicita un arbore al serviciilor de la dispozitivul Bluetooth specificat. Scopul principal al apelarii interfetei secundare este de a obtine corespondenta caracteristica a dispozitivului Bluetooth, atunci cand se citeste si se scrie la dispozitivul Bluetooth. ValueHandle sau handle.',
 
   openNotify: 'Deschide notificare',
-  openNotifyInfo: `Acest API foloseste o conexiune continua prin intermediul protocolului SSE. Atunci cand sunt pornite notificarile / indicatiile dispozitivului Bluetooth, acesta va raporta un mesaj de notificare catre routerul Bluetooth.`,
+  openNotifyInfo: `Acest API foloseste o conexiune continua prin intermediul protocolului SSE. Atunci cand sunt pornite notificarile / indicatiile dispozitivului Bluetooth, acesta va raporta un mesaj de notificare catre gateway Bluetooth.`,
 
   connectStatus: 'Starea conexiunii',
-  connectStatusInfo: 'Acest API foloseste o conexiune continua prin intermediul protocolului SSE. Atunci cand se modifica starea conexiunii dispozitivului Bluetooth pe routerul Bluetooth (conexiune realizata cu succes sau deconectare), PC-ul este notificat cu mesaj prin aceasta interfata.',
+  connectStatusInfo: 'Acest API foloseste o conexiune continua prin intermediul protocolului SSE. Atunci cand se modifica starea conexiunii dispozitivului Bluetooth pe gateway Bluetooth (conexiune realizata cu succes sau deconectare), PC-ul este notificat cu mesaj prin aceasta interfata.',
 
   pairInfo: 'Prin aceasta interfata, puteti efectua cuplari cu dispozitive Bluetooth.',
   ioCap: 'Capabilitate IO',
@@ -132,7 +132,7 @@ const ro = {
   pairInputInfo: 'Prin acest API, puteti efectua operatiunea de input cuplaj cu dispozitivul Bluetooth.',
   inputType: 'Tip input',
 
-  unpairInfo: 'Acest API este un DELETE request. Dupa apelarea API-ului, routerul Bluetooth se va decupla de la dispozitivul Bluetooth cu adresa Mac specificata.',
+  unpairInfo: 'Acest API este un DELETE request. Dupa apelarea API-ului, gateway Bluetooth se va decupla de la dispozitivul Bluetooth cu adresa Mac specificata.',
 
   debugResult: 'Rezultate Debug',
   connectWriteNotify: '[Dispozitiv unic] Conectare->Scriere->Primire notificari',
@@ -155,7 +155,7 @@ const ro = {
   cancel: 'Anulare',
   ok: 'OK',
 
-  router: 'Router',
+  router: 'Gateway',
   noData: 'Nu exista date',
   pleaseSelect: 'Va rugam, selectati',
   pleaseInput: 'Va rugam, introduceti',
@@ -260,15 +260,15 @@ const ro = {
   add2RssiChart: 'Adaugare grafic',
   removeFromRssiChart: 'Indepartare grafic',
 
-  apConfigInfo: 'Va rugam, verificati configurarea <span style="color: red; font-weight: bold;">Router URI, Allow Origin</span>.<br>Doriti sa treceti la pagina de configurare a routerului?',
+  apConfigInfo: 'Va rugam, verificati configurarea <span style="color: red; font-weight: bold;">Gateway URI, Allow Origin</span>.<br>Doriti sa treceti la pagina de configurare a routerului?',
   acConfigInfo: 'Va rugam, verificati configurarea <span style="color: red; font-weight: bold;">AC URI, cont utilizator, Allow Origin</span>.<br>Doriti sa treceti la pagina de configurare a AC-ului?',
 
-  configOrigin: 'Incepand cu versiunea v2.0.3, CORS este dezactivat implicit pe AC si router. La utilizarea acestui Bluetooth Debug Tool, va rugam sa setati ‘Access Control Allow Origin’ in setarile de consola. Pentru instructiuni detaliate, va puteti referi la <a target="_blank" style="color: #2897ff; text-decoration: none;" href="https://www.cassianetworks.com/download/docs/Cassia_User_Manual.pdf">manualul de utilizare Cassia</a>. ',
+  configOrigin: 'Incepand cu versiunea v2.0.3, CORS este dezactivat implicit pe AC si gateway. La utilizarea acestui Bluetooth Debug Tool, va rugam sa setati ‘Access Control Allow Origin’ in setarile de consola. Pentru instructiuni detaliate, va puteti referi la <a target="_blank" style="color: #2897ff; text-decoration: none;" href="https://www.cassianetworks.com/download/docs/Cassia_User_Manual.pdf">manualul de utilizare Cassia</a>. ',
 
   autoSelectionOn: 'Auto-Selection',
   on: 'ON',
   off: 'OFF',
-  aps: 'Routers',
+  aps: 'Gateways',
   configAutoSelection: 'Please make sure that the AC configuration page has opened the Auto-Selection, by default its closed.',
 
   oldVersion: 'Old Version',

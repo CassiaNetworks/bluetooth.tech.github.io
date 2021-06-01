@@ -8,13 +8,13 @@ const en = {
   serviceURI: 'Server',
   devKey: 'Key',
   devSecret: 'Secret',
-  apMac: 'Router',
+  apMac: 'Gateway',
   configScanParams: 'Scan Settings',
   useChip: 'Chip',
   filterName: 'Name Filter',
   filterMac: 'MAC Filter',
   fitlerRSSI: 'RSSI Filter',
-  restartAP: 'Reboot Router',
+  restartAP: 'Reboot Gateway',
   startScan: 'Start Scan',
   stopScan: 'Stop Scan',
   
@@ -90,7 +90,7 @@ const en = {
 
   // api debugger
   scanDevices: 'Scan Devices',
-  scanDevicesInfo: 'This API is a long connection by SSE. After calling the API, the Bluetooth router will scan the surrounding devices and set the MAC address (bdaddr), address type (bdaddrType), broadcast data (adData / scanData), and device name (name) of the Bluetooth device, Signal strength (rssi) and other information are returned in the form of http response.',
+  scanDevicesInfo: 'This API is a long connection by SSE. After calling the API, the Bluetooth gateway will scan the surrounding devices and set the MAC address (bdaddr), address type (bdaddrType), broadcast data (adData / scanData), and device name (name) of the Bluetooth device, Signal strength (rssi) and other information are returned in the form of http response.',
   more: 'More',
   chip0: 'Chip0',
   chip1: 'Chip1',
@@ -98,7 +98,7 @@ const en = {
   genCode: 'Code',
   
   connectDevice: 'Connect Device',
-  connectDeviceInfo: 'This API is a synchronous connection interface. After calling the API, the Bluetooth router will establish a connection with the specified device and return the connection result.',
+  connectDeviceInfo: 'This API is a synchronous connection interface. After calling the API, the Bluetooth gateway will establish a connection with the specified device and return the connection result.',
   addrType: 'Address Type',
   deviceAddr: 'Device MAC',
 
@@ -112,18 +112,18 @@ const en = {
   noWait: 'No Wait',
 
   disConnect: 'Disconnect',
-  disConnectInfo: 'This API is a DELETE request. After calling the interface, the Bluetooth router will disconnect from the Bluetooth device with the specified MAC address.',
+  disConnectInfo: 'This API is a DELETE request. After calling the interface, the Bluetooth gateway will disconnect from the Bluetooth device with the specified MAC address.',
   
-  connectListInfo: 'This API is a GET request. After calling the interface, the Bluetooth router will return a list of currently connected devices.',
+  connectListInfo: 'This API is a GET request. After calling the interface, the Bluetooth gateway will return a list of currently connected devices.',
 
   deviceServices: 'Device Services',
-  deivceServicesInfo: 'This API is a GET request. After calling the interface, the Bluetooth router will request a tree list of its services from the specified Bluetooth device. The main purpose of calling the sub-interface is to obtain the characteristic correspondence of the Bluetooth device when reading and writing to the Bluetooth device. ValueHandle or handle.',
+  deivceServicesInfo: 'This API is a GET request. After calling the interface, the Bluetooth gateway will request a tree list of its services from the specified Bluetooth device. The main purpose of calling the sub-interface is to obtain the characteristic correspondence of the Bluetooth device when reading and writing to the Bluetooth device. ValueHandle or handle.',
 
   openNotify: 'Open Notification',
-  openNotifyInfo: `This API is a SSE long connection. When the Bluetooth device's notification / indication is turned on, the Bluetooth device will report a notification message to the Bluetooth router.`,
+  openNotifyInfo: `This API is a SSE long connection. When the Bluetooth device's notification / indication is turned on, the Bluetooth device will report a notification message to the Bluetooth gateway.`,
 
   connectStatus: 'Connection Status',
-  connectStatusInfo: 'This API is a SSE long connection. When the connection status of the Bluetooth device on the Bluetooth router changes (successful connection or disconnection occurs), the PC will be notified of the message through this interface.',
+  connectStatusInfo: 'This API is a SSE long connection. When the connection status of the Bluetooth device on the Bluetooth gateway changes (successful connection or disconnection occurs), the PC will be notified of the message through this interface.',
 
   pairInfo: 'Through this interface, you can establish pairing with Bluetooth devices.',
   ioCap: 'IO Capability',
@@ -132,7 +132,7 @@ const en = {
   pairInputInfo: 'Through this API, you can complete the pairing input operation with the Bluetooth device.',
   inputType: 'Input Type',
 
-  unpairInfo: 'This API is a DELETE request. After calling the API, the Bluetooth router will unpair with the Bluetooth device with the specified MAC address.',
+  unpairInfo: 'This API is a DELETE request. After calling the API, the Bluetooth gateway will unpair with the Bluetooth device with the specified MAC address.',
 
   debugResult: 'Debug Results',
   connectWriteNotify: '[Single Device] Connect->Write->Receive notifications',
@@ -155,7 +155,7 @@ const en = {
   cancel: 'Cancel',
   ok: 'OK',
 
-  router: 'Router',
+  router: 'Gateway',
   noData: 'No Data',
   pleaseSelect: 'Please Select',
   pleaseInput: 'Please Input',
@@ -260,15 +260,15 @@ const en = {
   add2RssiChart: 'Add Chart',
   removeFromRssiChart: 'Chart Remove',
 
-  apConfigInfo: 'Please check the <span style="color: red; font-weight: bold;">Router URI, Allow Origin</span> configuration.<br>Do you want to jump to the Router configuration page?',
+  apConfigInfo: 'Please check the <span style="color: red; font-weight: bold;">Gateway URI, Allow Origin</span> configuration.<br>Do you want to jump to the Gateway configuration page?',
   acConfigInfo: 'Please check the <span style="color: red; font-weight: bold;">AC URI, developer account, Allow Origin</span> configuration<br>Do you want to jump to the AC configuration page?',
 
-  configOrigin: 'Starting v2.0.3 release, CORS is disabled by default on AC and Router. When using this Bluetooth Debug Tool, please set ‘Access Control Allow Origin’ in the console setting. Please refer to <a target="_blank" style="color: #2897ff; text-decoration: none;" href="https://www.cassianetworks.com/download/docs/Cassia_User_Manual.pdf">Cassia User Manual</a> for detailed instruction. ',
+  configOrigin: 'Starting v2.0.3 release, CORS is disabled by default on AC and Gateway. When using this Bluetooth Debug Tool, please set ‘Access Control Allow Origin’ in the console setting. Please refer to <a target="_blank" style="color: #2897ff; text-decoration: none;" href="https://www.cassianetworks.com/download/docs/Cassia_User_Manual.pdf">Cassia User Manual</a> for detailed instruction. ',
 
   autoSelectionOn: 'Auto-Selection',
   on: 'ON',
   off: 'OFF',
-  aps: 'Routers',
+  aps: 'Gateways',
   configAutoSelection: 'Please make sure that the AC configuration page has opened the Auto-Selection, by default its closed.',
 
   oldVersion: 'Old Version',

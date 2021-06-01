@@ -263,12 +263,12 @@ const ru = {
   apConfigInfo: 'Пожалуйста, проверьте <span style="color: red; font-weight: bold;">URI маршрутизатора, Разрешить источник</span> configuration.<br>Вы хотите перейти на страницу конфигурации маршрутизатора?',
   acConfigInfo: 'Пожалуйста, проверьте <span style="color: red; font-weight: bold;">AC URI, аккаунт разработчика, Разрешить источник</span> configuration<br>Вы хотите перейти на страницу конфигурации AC?',
 
-  configOrigin: 'Начиная с выпуска v2.0.3, CORS по умолчанию отключен для AC и Router. При использовании этого Bluetooth Debug Tool установите «Access Control Allow Origin» в настройках консоли. См. <a target="_blank" style="color: #2897ff; text-decoration: none;" href="https://www.cassianetworks.com/download/docs/Cassia_User_Manual.pdf">Руководство пользователя Cassia </a> для получения подробных инструкций. ',
+  configOrigin: 'Начиная с выпуска v2.0.3, CORS по умолчанию отключен для AC и Gateway. При использовании этого Bluetooth Debug Tool установите «Access Control Allow Origin» в настройках консоли. См. <a target="_blank" style="color: #2897ff; text-decoration: none;" href="https://www.cassianetworks.com/download/docs/Cassia_User_Manual.pdf">Руководство пользователя Cassia </a> для получения подробных инструкций. ',
 
   autoSelectionOn: 'Auto-Selection',
   on: 'ON',
   off: 'OFF',
-  aps: 'Routers',
+  aps: 'Gateways',
   configAutoSelection: 'Please make sure that the AC configuration page has opened the Auto-Selection, by default its closed.',
 
   oldVersion: 'Old Version',

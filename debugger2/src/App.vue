@@ -45,7 +45,7 @@
                 </el-row>
                 <el-form-item :label="$t('message.connectStyle')" style="margin-top: 15px;">
                   <el-radio-group v-model="store.devConf.controlStyle" @change="controlStyleChange">
-                    <el-radio-button label="AP">Router</el-radio-button>
+                    <el-radio-button label="AP">Gateway</el-radio-button>
                     <el-radio-button label="AC"></el-radio-button>
                   </el-radio-group>
                 </el-form-item>

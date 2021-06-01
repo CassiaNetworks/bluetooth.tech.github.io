@@ -128,7 +128,7 @@ function createVueMethods(vue) {
             return item.name.toLowerCase().includes(keyword) || item.mac.toLowerCase().includes(keyword);
           });
         }
-        this.cache.acRouterList.splice(0, 0, {id: '*', mac: '*', name: 'All Routers'});
+        this.cache.acRouterList.splice(0, 0, {id: '*', mac: '*', name: 'All Gateways'});
       }).catch(ex => {
         notify(`${this.$i18n.t('message.getAcRouterListFail')} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       }).finally(() => {

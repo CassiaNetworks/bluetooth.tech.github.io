@@ -705,11 +705,11 @@ function getAcRouterList(token) {
   const url = `${dbModule.getDevConf().acServerURI}/api/ac/ap?access_token=${token}`;
   return new Promise((resolve, reject) => {
     axios.get(url).then(function(response) {
-      logger.info('get ac router list success:', response);
+      logger.info('get ac gateway list success:', response);
       resolve(response.data);
     }).catch(function(error) {
       let info = error.response ? error.response.data : error;
-      logger.error('get ac router list error:', info);
+      logger.error('get ac gateway list error:', info);
       reject(info);
     });
   });
