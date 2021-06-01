@@ -272,6 +272,7 @@ const ro = {
   configAutoSelection: 'Please make sure that the AC configuration page has opened the Auto-Selection, by default its closed.',
 
   oldVersion: 'Old Version',
+  auth: 'Auth Token',
 };
 
 export default {
