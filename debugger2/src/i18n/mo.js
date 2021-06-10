@@ -1,6 +1,6 @@
 const mo = {
   // header
-  title: 'Cassia Bluetooth Debug Tool v2 (Beta)',
+  title: 'Cassia Bluetooth Debug Tool v2',
   
   // left
   configConnectParams: 'Setari control',
@@ -18,10 +18,10 @@ const mo = {
   startScan: 'Start Scanare',
   stopScan: 'Stop Scanare',
 
-  configConnParams: 'Connect Settings',
+  configConnParams: 'Connect Setting',
   discovergatt: 'GATT',
   connTimeout: 'Timeout(s)',
-  others: 'Others',
+  others: 'Other',
 
   // menu
   configParams: 'Setari',
@@ -268,7 +268,7 @@ const mo = {
   autoSelectionOn: 'Auto-Selection',
   on: 'ON',
   off: 'OFF',
-  aps: 'Gateways',
+  aps: 'Gateway',
   configAutoSelection: 'Please make sure that the AC configuration page has opened the Auto-Selection, by default its closed.',
 
   oldVersion: 'Old Version',

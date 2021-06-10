@@ -957,6 +957,16 @@ function createVueMethods(vue) {
       this.store.devConfDisplayVars.scanFilterMacsInputVisible = false;
       this.store.devConfDisplayVars.scanFilterMacsInputValue = '';
     },
+    acServerURIBlur() {
+      let curUrl = `${window.location.protocol}//${window.location.host}`;
+      if (curUrl !== this.store.devConf.acServerURI) {
+        this.$alert(this.$i18n.t('message.configOrigin'), this.$i18n.t('message.alert'), {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: this.$i18n.t('message.ok'),
+          callback: action => {}
+        });
+      }
+    }
   };
 }
 
@@ -1165,14 +1175,6 @@ function createVue() {
         this.store.devConfDisplayVars.language = params.lang || 'en';
         this.changeLanguage();
       }
-
-      this.$alert(this.$i18n.t('message.configOrigin'), this.$i18n.t('message.alert'), {
-        dangerouslyUseHTMLString: true,
-        confirmButtonText: this.$i18n.t('message.ok'),
-        callback: action => {
-          
-        }
-      });
     }
   };
 }

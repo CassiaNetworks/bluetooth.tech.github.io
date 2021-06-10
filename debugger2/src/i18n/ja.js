@@ -1,6 +1,6 @@
 const ja = {
   // header
-  title: 'Cassia Bluetooth Debug Tool v2 (Beta)',
+  title: 'Cassia Bluetooth Debug Tool v2',
   
   // left
   configConnectParams: '操作設定',
@@ -18,10 +18,10 @@ const ja = {
   startScan: 'スキャン開始',
   stopScan: 'スキャン停止',
 
-  configConnParams: 'Connect Settings',
+  configConnParams: 'Connect Setting',
   discovergatt: 'GATT',
   connTimeout: 'Timeout(s)',
-  others: 'Others',
+  others: 'Other',
 
   // menu
   configParams: '設定',
@@ -268,7 +268,7 @@ const ja = {
   autoSelectionOn: 'Auto-Selection',
   on: 'ON',
   off: 'OFF',
-  aps: 'Gateways',
+  aps: 'Gateway',
   configAutoSelection: 'Please make sure that the AC configuration page has opened the Auto-Selection, by default its closed.',
 
   oldVersion: 'Old Version',

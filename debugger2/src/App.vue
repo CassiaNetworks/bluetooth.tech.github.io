@@ -53,7 +53,7 @@
                   <el-input v-model="store.devConf.apServerURI" class="server-ip" clearable placeholder="http://192.168.0.100"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('message.serviceURI')" prop="acServerURI" v-show="store.devConf.controlStyle === 'AC'" style="margin-top: 15px;">
-                  <el-input v-model="store.devConf.acServerURI" class="server-ip" clearable placeholder="http://192.168.0.100"></el-input>
+                  <el-input v-model="store.devConf.acServerURI" class="server-ip" @blur="acServerURIBlur" clearable placeholder="http://192.168.0.100"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('message.devKey')" prop="acDevKey" v-show="store.devConf.controlStyle === 'AC'" style="margin-top: 15px;">
                   <el-input v-model="store.devConf.acDevKey" class="ac-dev-key" clearable></el-input>
@@ -1179,6 +1179,7 @@
                 <ul>
                   <li><a target="_blank" href="https://www.cassianetworks.com/knowledge-base/general-documents/">Cassia User Manual</a></li>
                   <li><a target="_blank" href="https://github.com/CassiaNetworks/CassiaSDKGuide/wiki">Cassia SDK & RESTful API</a></li>
+                  <li><a target="_blank" href="https://github.com/CassiaNetworks/CassiaSDKGuide">Cassia RESTful API Sample Code</a></li>
                   <li><a target="_blank" href="https://www.cassianetworks.com/support/">Contact Cassia Support</a></li>
                 </ul>
               </el-tab-pane>

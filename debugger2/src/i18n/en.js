@@ -1,15 +1,15 @@
 const en = {
   // header
-  title: 'Cassia Bluetooth Debug Tool v2 (Beta)',
+  title: 'Cassia Bluetooth Debug Tool v2',
   
   // left
-  configConnectParams: 'Control Settings',
+  configConnectParams: 'Control Setting',
   connectStyle: 'Control',
   serviceURI: 'Server',
   devKey: 'Key',
   devSecret: 'Secret',
   apMac: 'Gateway',
-  configScanParams: 'Scan Settings',
+  configScanParams: 'Scan Setting',
   useChip: 'Chip',
   filterName: 'Name Filter',
   filterMac: 'MAC Filter',
@@ -18,24 +18,24 @@ const en = {
   startScan: 'Start Scan',
   stopScan: 'Stop Scan',
   
-  configConnParams: 'Connect Settings',
+  configConnParams: 'Connect Setting',
   discovergatt: 'GATT',
   connTimeout: 'Timeout(s)',
-  others: 'Others',
+  others: 'Other',
 
   // menu
-  configParams: 'Settings',
-  scanList: 'Scan Devices',
+  configParams: 'Setting',
+  scanList: 'Scan Device',
   connectList: 'Connection',
   notifyList: 'Notification',
   apiLogList: 'API Log',
   apiDebugger: 'API Debugger',
   apiDemo: 'API Demo',
-  tools: 'Tools',
-  resources: 'Resources',
+  tools: 'Tool',
+  resources: 'Resource',
 
   // scan result tab
-  scanResult: 'Scan Results',
+  scanResult: 'Scan Result',
   devicesCount: 'Devices Count',
   searchMacOrName: 'Search MAC or Name',
   export: 'Export',
@@ -65,10 +65,10 @@ const en = {
   close: 'Close',
 
   // connect list tab
-  connectedDevices: 'Connected Devices',
+  connectedDevices: 'Connected Device',
   disconnectAll: 'Disconnect All',
   chip: 'Chip',
-  services: 'Services',
+  services: 'Service',
   disconnect: 'Disconnect',
   pair: 'Pair',
   unpair: 'Unpair',
@@ -89,7 +89,7 @@ const en = {
   reqContent: 'Request',
 
   // api debugger
-  scanDevices: 'Scan Devices',
+  scanDevices: 'Scan Device',
   scanDevicesInfo: 'This API is a long connection by SSE. After calling the API, the Bluetooth gateway will scan the surrounding devices and set the MAC address (bdaddr), address type (bdaddrType), broadcast data (adData / scanData), and device name (name) of the Bluetooth device, Signal strength (rssi) and other information are returned in the form of http response.',
   more: 'More',
   chip0: 'Chip0',
@@ -116,7 +116,7 @@ const en = {
   
   connectListInfo: 'This API is a GET request. After calling the interface, the Bluetooth gateway will return a list of currently connected devices.',
 
-  deviceServices: 'Device Services',
+  deviceServices: 'Device Service',
   deivceServicesInfo: 'This API is a GET request. After calling the interface, the Bluetooth gateway will request a tree list of its services from the specified Bluetooth device. The main purpose of calling the sub-interface is to obtain the characteristic correspondence of the Bluetooth device when reading and writing to the Bluetooth device. ValueHandle or handle.',
 
   openNotify: 'Open Notification',
@@ -134,20 +134,20 @@ const en = {
 
   unpairInfo: 'This API is a DELETE request. After calling the API, the Bluetooth gateway will unpair with the Bluetooth device with the specified MAC address.',
 
-  debugResult: 'Debug Results',
-  connectWriteNotify: '[Single Device] Connect->Write->Receive notifications',
+  debugResult: 'Debug Result',
+  connectWriteNotify: '[Single Device] Connect->Write->Receive notification',
   test: 'Test',
   historyApi: 'History API',
 
   writeCmd: 'Write Cmd',
 
-  receiveNotify: 'Receive Notifications',
+  receiveNotify: 'Receive Notification',
   receiveDataBySSE: 'Receive Data by SSE',
 
   clearData: 'Clear Data',
 
   scanConnectWriteNotify: '[Multiple Devices] Scan->Connect->Write',
-  connectScannedDevices: 'Connect Scanned Devices',
+  connectScannedDevices: 'Connect Scanned Device',
 
   binaryConversion: 'Base Conversion',
   jsonFormatter: 'JSON Formatter',
@@ -232,8 +232,8 @@ const en = {
   apiPairInput: 'Pair Input',
   apiConnect: 'Connect',
   apiDisconnect: 'Disconnect',
-  apiConnectList: 'Connections',
-  apiServiceList: 'Services',
+  apiConnectList: 'Connection',
+  apiServiceList: 'Service',
   apiRead: 'Read',
   apiWrite: 'Write',
   apiScan: 'Scan',
@@ -247,7 +247,7 @@ const en = {
 
   apiDescription: 'API Info',
   apiDemoDescription: 'Demo Info',
-  demo1Info: 'This example is an example of an operation guide device for connecting a device, writing instructions, and receiving a device Notify',
+  demo1Info: 'This is example of connecting a device, writing instructions, and receiving a device Notify',
   demo2Info: 'This example is to operate multiple devices. Whenever a device with suitable conditions is scanned, connect the device and write instructions',
 
   demo1: 'Demo 1',
@@ -268,7 +268,7 @@ const en = {
   autoSelectionOn: 'Auto-Selection',
   on: 'ON',
   off: 'OFF',
-  aps: 'Gateways',
+  aps: 'Gateway',
   configAutoSelection: 'Please make sure that the AC configuration page has opened the Auto-Selection, by default its closed.',
 
   oldVersion: 'Old Version',
