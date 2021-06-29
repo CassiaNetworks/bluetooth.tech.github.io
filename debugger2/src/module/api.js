@@ -594,6 +594,7 @@ function connectByDevConfAutoSelection(devConf, deviceMac, bodyParams) {
 // 否则使用普通方式建连
 // 注意，优选方式不支持chip参数，其他的目前都支持
 function connectByDevConf(devConf, deviceMac, addrType, chip=0, bodyParams) {
+  bodyParams = bodyParams || {};
   let autoSelectionOn = _.get(bodyParams, 'autoSelectionOn');
   delete bodyParams['autoSelectionOn']; // 辅助变量，直接删除
   if (autoSelectionOn === 'on' && devConf.controlStyle === 'AC') {
