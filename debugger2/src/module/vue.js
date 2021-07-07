@@ -1038,8 +1038,13 @@ function createWatch() {
     'store.devConfDisplayVars.toolsBase64.type': {
       handler: function(val, oldVal) {
         let value = this.store.devConfDisplayVars.toolsBase64.value;
-        if (oldVal === 'base64') this.store.devConfDisplayVars.toolsBase64.value = Buffer.from(value, 'base64').toString();
-        else this.store.devConfDisplayVars.toolsBase64.value = Buffer.from(value).toString('base64');
+        if (oldVal === 'base64') {
+          this.store.devConfDisplayVars.toolsBase64.value = Buffer.from(value, 'base64').toString();
+          console.log('base64 to text', this.store.devConfDisplayVars.toolsBase64.value);
+        } else {
+          this.store.devConfDisplayVars.toolsBase64.value = Buffer.from(value).toString('base64');
+          console.log('text to base64', this.store.devConfDisplayVars.toolsBase64.value);
+        }
       }
     },
     'store.devConfDisplayVars.toolsJsonConversion.inline': {

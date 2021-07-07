@@ -1,5 +1,4 @@
 const _ = require('lodash');
-import { Buffer } from 'buffer';
 import libLogger from '../lib/logger.js';
 import libEnum from '../lib/enum.js';
 import config from '../config/config.js';

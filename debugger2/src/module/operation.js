@@ -1,4 +1,3 @@
-import Buffer from 'buffer';
 import libEnum from '../lib/enum.js';
 import libLogger from '../lib/logger.js';
 import libCharReadParser from '../lib/characteristics_read_parser.js';
