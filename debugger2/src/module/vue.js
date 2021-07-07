@@ -1031,8 +1031,13 @@ function createWatch() {
     'store.devConfDisplayVars.toolsHexTextConversion.type': {
       handler: function(val, oldVal) {
         let value = this.store.devConfDisplayVars.toolsHexTextConversion.value;
-        if (oldVal === 'hex') this.store.devConfDisplayVars.toolsHexTextConversion.value = Buffer.from(value, 'hex').toString();
-        else this.store.devConfDisplayVars.toolsHexTextConversion.value = Buffer.from(value).toString('hex');
+        if (oldVal === 'hex') {
+          this.store.devConfDisplayVars.toolsHexTextConversion.value = Buffer.from(value, 'hex').toString();
+          console.log('hex to text:', this.store.devConfDisplayVars.toolsHexTextConversion.value);
+        } else {
+          this.store.devConfDisplayVars.toolsHexTextConversion.value = Buffer.from(value).toString('hex');
+          console.log('text to hex:', this.store.devConfDisplayVars.toolsHexTextConversion.value);
+        }
       }
     },
     'store.devConfDisplayVars.toolsBase64.type': {
