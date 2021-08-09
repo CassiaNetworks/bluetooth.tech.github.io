@@ -1165,7 +1165,7 @@ function createVue() {
       // 初始化AC过来的参数列表
       // devKey=cassia&devSecret=cassia&lang=en&control=remote&hubMac=CC:1B:E0:E0:E1:90
       let params = this.getUrlVars(window.location.search.replace(/\?/g, ''));
-      if (params.control === 'remote' && params.devKey && params.devSecret && params.hubMac) {
+      if (params.control === 'remote' && params.devKey && params.devSecret) {
         this.store.devConf.controlStyle = 'AC';
         this.store.devConf.acDevKey = params.devKey;
         this.store.devConf.acDevSecret = params.devSecret;
