@@ -159,20 +159,34 @@ let cache = {
         else callback();
       }, trigger: 'change' }
     ],
-    'acServerURI': [
+    'acServerURI': [ // AC模式才检查
       { validator: function(rule, value, callback) {
-        if(!/(http|https):\/\/.*[^/^api]$/.test(value)) callback('Eg: http://192.168.5.100');
+        if (storage.devConf.controlStyle !== 'AC') return callback();
+        if (!/(http|https):\/\/.*[^/^api]$/.test(value)) callback('Eg: http://192.168.5.100');
         else callback();
       }, trigger: 'change' }
     ],
-    'acDevKey': [
-      { required: true, message: 'require', trigger: 'blur' },
+    'acDevKey': [ // AC模式才检查
+      { validator: function(rule, value, callback) {
+        if (storage.devConf.controlStyle !== 'AC') return callback();
+        if(!value) callback('require');
+        else callback();
+      }, trigger: 'blur' }
     ],
-    'acDevSecret': [
-      { required: true, message: 'require', trigger: 'blur' },
+    'acDevSecret': [ // AC模式才检查
+      { validator: function(rule, value, callback) {
+        if (storage.devConf.controlStyle !== 'AC') return callback();
+        if(!value) callback('require');
+        else callback();
+      }, trigger: 'blur' }
     ],
-    'mac': [
-      { required: true, message: 'require', trigger: 'blur' },
+    'mac': [ // AC模式才检查
+      { validator: function(rule, value, callback) {
+        console.log('mac check', storage.devConf.controlStyle, value);
+        if (storage.devConf.controlStyle !== 'AC') return callback();
+        if(!value) callback('require');
+        else callback();
+      }, trigger: 'change' }
     ],
     'connTimeout': [
       { validator: function(rule, value, callback) {

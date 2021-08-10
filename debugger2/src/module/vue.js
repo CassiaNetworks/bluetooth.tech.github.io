@@ -789,12 +789,15 @@ function createVueMethods(vue) {
       });
     },
     startScan() {
-      scanModule.startScan(this.store.devConf);
-      this.store.devConfDisplayVars.isScanning = true;
-      this.cache.scanResultList.splice(0); // 清空扫描缓存数据
-      this.cache.scanDisplayResultList.splice(0); // 清空扫描展示数据
-      this.store.devConfDisplayVars.activeMenuItem = 'scanListMenuItem'; // 跳转扫描结果tab页面
-      // notify(`${this.$i18n.t('message.openScanOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+      this.$refs.refConfig.validate((isOK, failed) => {
+        if (!isOK) return console.log('config form check failed:', isOK, failed);
+        scanModule.startScan(this.store.devConf);
+        this.store.devConfDisplayVars.isScanning = true;
+        this.cache.scanResultList.splice(0); // 清空扫描缓存数据
+        this.cache.scanDisplayResultList.splice(0); // 清空扫描展示数据
+        this.store.devConfDisplayVars.activeMenuItem = 'scanListMenuItem'; // 跳转扫描结果tab页面
+        // notify(`${this.$i18n.t('message.openScanOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+      });
     },
     controlStyleChange() {
       console.log('control style changed, stop scan');

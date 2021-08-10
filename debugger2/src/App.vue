@@ -39,7 +39,7 @@
         <el-aside :style="{'width': store.devConfDisplayVars.leftConfWidth}" style="border-right: 1px solid #f2f2f2; background-color: #F2F4F8; height: 100%; ">
           <el-container :style="{'height': store.devConfDisplayVars.leftConfHeight}" style="width: 100%;">
             <el-main style="margin-bottom: 85px;">
-              <el-form :label-width="store.devConfDisplayVars.leftConfLabelWidth" size="small" :model="store.devConf" :rules="cache.devConfRules">
+              <el-form ref="refConfig" :label-width="store.devConfDisplayVars.leftConfLabelWidth" size="small" :model="store.devConf" :rules="cache.devConfRules">
                 <el-row style="font-size: 16px; border-bottom: 1px solid #ddd; margin-top: 10px;">
                   <span>{{ $t('message.configConnectParams') }}</span>
                 </el-row>
