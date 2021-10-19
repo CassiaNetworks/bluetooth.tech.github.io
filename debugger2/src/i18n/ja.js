@@ -263,7 +263,7 @@ const ja = {
   apConfigInfo: '<span style="color: red; font-weight: bold;">Router URI, Allow Origin</span>の設定を確認してくださいルーター構成ページへ飛びますか?',
   acConfigInfo: '<span style="color: red; font-weight: bold;">AC URIの設定を確認してください, デヴェロッパーアカウント, 許可する</span> 構成<br>AC構成ページへ飛びますか?',
 
-  configOrigin: 'v2.0.3リリースが開始, CORSはACとルータのデフォルトで表示されます。When using this Bluetoothデバッグツールを使用するとき、コンソールの設定で‘Access Control Allow Origin’を設定してください。 Please refer to <a target="_blank" style="color: #2897ff; text-decoration: none;" href="https://www.cassianetworks.com/download/docs/Cassia_User_Manual.pdf">Cassia User Manual</a> for detailed instruction. ',
+  configOrigin: 'v2.0.3リリースが開始, CORSはACとルータのデフォルトで表示されます。When using this Bluetoothデバッグツールを使用するとき、コンソールの設定で‘Access Control Allow Origin’を設定してください。 Please refer to <a target="_blank" style="color: #2897ff; text-decoration: none;" href="https://www.cassianetworks.com/download/docs/Cassia_User_Manual.pdf">Cassia User Manual</a> for detailed instruction. If using <span style="color: #ff0000; font-weight: bold;">Chrome version>=94</span>, please copy this link and open it in Chrome<span style="color: #2897ff;"> chrome://flags/#block-insecure-private-network-requests</span> is set to Disabled.',
 
   autoSelectionOn: 'Auto-Selection',
   on: 'ON',
