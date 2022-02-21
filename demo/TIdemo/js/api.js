@@ -40,7 +40,10 @@
         //     // }[o.server] || 'api') + '.cassianetworks.com'
         // }
         api.local = o.local;
-        api.server = 'http://' + o.server || 'http://api.cassianetworks.com';
+        api.server = o.server || 'api.cassianetworks.com';
+        if (!o.server.startsWith('http://') && !o.server.startsWith('https://')) {
+          api.server = 'http://' + api.server;
+        }
         api.developer = o.developer || 'tester'
         api.key = o.key || '10b83f9a2e823c47'
         api.base64_dev_key = 'Basic ' + btoa(o.developer + ':' + o.key)
