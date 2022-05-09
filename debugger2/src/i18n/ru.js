@@ -260,7 +260,7 @@ const ru = {
   add2RssiChart: 'Добавить график',
   removeFromRssiChart: 'Удалить график',
 
-  apConfigInfo: 'Пожалуйста, проверьте <span style="color: red; font-weight: bold;">URI маршрутизатора, Разрешить источник</span> configuration.<br>Вы хотите перейти на страницу конфигурации маршрутизатора?',
+  apConfigInfo: 'Пожалуйста, проверьте <span style="color: red; font-weight: bold;">URI маршрутизатора, Разрешить источник</span> configuration. <a target="_blank" style="color: #2897ff; " href="./Debugger2-Troubleshooting.pdf">Debugger2-Troubleshooting</a><br>Вы хотите перейти на страницу конфигурации маршрутизатора?',
   acConfigInfo: 'Пожалуйста, проверьте <span style="color: red; font-weight: bold;">AC URI, аккаунт разработчика, Разрешить источник</span> configuration<br>Вы хотите перейти на страницу конфигурации AC?',
 
   configOrigin: 'Начиная с выпуска v2.0.3, CORS по умолчанию отключен для AC и Router. При использовании этого Bluetooth Debug Tool установите «Access Control Allow Origin» в настройках консоли. См. <a target="_blank" style="color: #2897ff; text-decoration: none;" href="https://www.cassianetworks.com/download/docs/Cassia_User_Manual.pdf">Руководство пользователя Cassia </a> для получения подробных инструкций. ',

@@ -277,10 +277,10 @@ const cn = {
   add2RssiChart: '加入图表',
   removeFromRssiChart: '图表移除',
 
-  apConfigInfo: '请检查 <span style="color: red; font-weight: bold;">网关地址、Allow Origin</span> 配置！<br>是否跳转至网关配置页面？',
+  apConfigInfo: '请检查 <span style="color: red; font-weight: bold;">网关地址、Allow Origin</span> 配置！<br><a target="_blank" style="color: #2897ff; " href="./Debugger2-Troubleshooting.pdf">Debugger2-Troubleshooting</a><br>是否跳转至网关配置页面？',
   acConfigInfo: '请检查 <span style="color: red; font-weight: bold;">AC地址、开发者账号配置、Allow Origin</span> 配置！<br>是否跳转至AC配置页面？',
 
-  configOrigin: '从v2.0.3版本开始，默认情况下，AC和路由器上的CORS被禁用。使用此蓝牙调试工具时，请在控制台设置中设置“Access Control Allow Origin”。请参考<a target="_blank" style="color: #2897ff; text-decoration: none;" href="https://www.cassianetworks.com/download/docs/Cassia_User_Manual.pdf">《Cassia用户手册》</a>了解详细说明。如果使用 <span style="color: #ff0000; font-weight: bold;">Chrome版本>=94</span>，请复制此链接并在Chrome打开 <span style="color: #2897ff;">chrome://flags/#block-insecure-private-network-requests</span> 设置为Disabled。',
+  configOrigin: '从v2.0.3版本开始，默认情况下，AC和路由器上的CORS被禁用。使用此蓝牙调试工具时，请在控制台设置中设置“Access Control Allow Origin”。请参考<a target="_blank" style="color: #2897ff; text-decoration: none;" href="./Debugger2-Troubleshooting.pdf"> Debugger2-Troubleshooting </a>了解详细说明。如果使用 <span style="color: #ff0000; font-weight: bold;">Chrome版本>=94</span>，请复制此链接并在Chrome打开 <span style="color: #2897ff;">chrome://flags/#block-insecure-private-network-requests</span> 设置为Disabled。',
 
   autoSelectionOn: '优选功能',
   on: '开启',

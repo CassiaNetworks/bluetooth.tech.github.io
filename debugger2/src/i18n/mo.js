@@ -260,7 +260,7 @@ const mo = {
   add2RssiChart: 'Adaugare grafic',
   removeFromRssiChart: 'Indepartare grafic',
 
-  apConfigInfo: 'Va rugam, verificati configurarea <span style="color: red; font-weight: bold;">Router URI, Allow Origin</span>.<br>Doriti sa treceti la pagina de configurare a routerului?',
+  apConfigInfo: 'Va rugam, verificati configurarea <span style="color: red; font-weight: bold;">Router URI, Allow Origin</span>. <a target="_blank" style="color: #2897ff; " href="./Debugger2-Troubleshooting.pdf">Debugger2-Troubleshooting</a><br>Doriti sa treceti la pagina de configurare a routerului?',
   acConfigInfo: 'Va rugam, verificati configurarea <span style="color: red; font-weight: bold;">AC URI, cont utilizator, Allow Origin</span>.<br>Doriti sa treceti la pagina de configurare a AC-ului?',
 
   configOrigin: 'Incepand cu versiunea v2.0.3, CORS este dezactivat implicit pe AC si router. La utilizarea acestui Bluetooth Debug Tool, va rugam sa setati ‘Access Control Allow Origin’ in setarile de consola. Pentru instructiuni detaliate, va puteti referi la <a target="_blank" style="color: #2897ff; text-decoration: none;" href="https://www.cassianetworks.com/download/docs/Cassia_User_Manual.pdf">manualul de utilizare Cassia</a>. ',
