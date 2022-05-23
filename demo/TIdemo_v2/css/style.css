@@ -1,0 +1,153 @@
+/* ===============
+    style.css
+    Cassia Networks 3/1/2019  
+   =============== */
+
+.refbtn{
+  float: right;
+  margin :0 0 0 15px;    
+}
+
+.header,.content{
+  margin:8px 10px;
+}
+
+.pic{
+  width: auto;
+  height: 270px;
+}
+
+input:-webkit-autofill {
+  background-color: rgb(255, 255, 255);
+　 background-image: none;
+　 color: rgb(0, 0, 0);
+  -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
+}
+
+.fixed-col {
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+}
+
+.fixed-col2 {
+  -ms-flex: 0 0 300px;
+  flex: 0 0 300px;
+}
+
+/* This hides .fixed-col items if the window size is a certain width. */
+/*@media (max-width: 500px) {
+  .fixed-col {
+    display: none; 
+  } 
+}*/
+
+.flt-left {
+  float: left;
+}
+
+.flt-right {
+  float: right;
+}
+
+.clr-div {
+  clear: both;
+}
+
+.pad-top-bottom {
+  padding-top: 13px;
+  padding-bottom: 13px
+}
+
+.pad-moretop-bottom {
+  padding-top: 20px;
+  padding-bottom: 15px
+}
+
+.pad-sides {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.pad-left {
+  padding-left: 5px;
+}
+
+.margin-sides {
+  margin-left: 5px;
+}
+
+#remote-crl {
+  display: none;
+}
+
+#content-div {
+  /*padding-left: 50px;*/
+}
+
+#wrapper-div {
+  margin: auto;
+  width: 90%;
+  padding-bottom: 52px;
+}
+
+#title-div {
+  padding-top: 55px;
+  padding-bottom: 20px;
+}
+
+.center-title {
+  text-align: center;
+}
+
+#_work {
+  font-weight: bold;
+}
+
+.txt-center {
+  text-align: center;
+}
+
+.txt-left {
+  text-align: left;
+}
+
+.in-line-block {
+  display: inline-block;
+}
+
+.in-line-block-margin-padding {
+  display: inline-block;
+  margin-left: 70px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
+.device-font {
+  font-size: 20px;
+  color: #003399;
+}
+
+.min-width-200 {
+  min-width: 200px;
+}
+
+.min-width-250 {
+  min-width: 250px;
+}
+
+.btn-group button {
+  margin: 0 5px;
+}
+
+.chart {
+  margin-top: 35px;
+  padding-bottom: 40px;
+}
+
+.chart-separator-line {
+  border-top: 1px dashed black;
+}
