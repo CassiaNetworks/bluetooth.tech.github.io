@@ -601,7 +601,7 @@ function connectByDevConf(devConf, deviceMac, addrType, chip=0, bodyParams) {
   } else {
     // 支持chip, timeout, discovergatt, 用户自定义输入
     delete bodyParams['aps'];
-    return connectByDevConfNormal(devConf, deviceMac, addrType, chip=0, bodyParams);
+    return connectByDevConfNormal(devConf, deviceMac, addrType, chip, bodyParams);
   }
 }
 
