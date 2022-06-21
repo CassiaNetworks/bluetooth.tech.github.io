@@ -6,9 +6,9 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
+    "@babel/compat-data": "^7.18.5",
     "@vue/cli-plugin-babel": "^4.2.0",
     "@vue/cli-service": "^4.2.0",
     "babel-plugin-component": "^1.1.1",
