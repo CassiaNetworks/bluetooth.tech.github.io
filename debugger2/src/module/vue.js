@@ -1168,15 +1168,37 @@ function createVue() {
       // 初始化AC过来的参数列表
       // devKey=cassia&devSecret=cassia&lang=en&control=remote&hubMac=CC:1B:E0:E0:E1:90
       let params = this.getUrlVars(window.location.search.replace(/\?/g, ''));
-      if (params.control === 'remote' && params.devKey && params.devSecret) {
-        this.store.devConf.controlStyle = 'AC';
-        this.store.devConf.acDevKey = params.devKey;
-        this.store.devConf.acDevSecret = params.devSecret;
-        this.store.devConf.mac = params.hubMac;
-        this.store.devConf.acServerURI = `${window.location.protocol}//${window.location.host}`;
-        dbModule.saveDevConf(this.store.devConf);
-        this.store.devConfDisplayVars.language = params.lang || 'en';
-        this.changeLanguage();
+      if (params.control === 'remote') { 
+        // 调用AC接口获取settings
+        let settingUrl = `${window.location.protocol}//${window.location.host}/setting`;
+        let that = this;
+        axios.get(settingUrl).then(function(response) {
+          logger.info('get ac setting success:', response);
+          that.store.devConf.controlStyle = 'AC';
+          let oauthUser = _.get(response, 'data.oauth-user') || '';
+          if (oauthUser === '********') oauthUser = ''; // readonly传过来的为空
+          let oauthSecret = _.get(response, 'data.oauth-secret') || '';
+          if (oauthSecret === '********') oauthSecret = ''; // readonly传过来的为空
+          that.store.devConf.acDevKey = oauthUser;
+          that.store.devConf.acDevSecret = oauthSecret;
+          that.store.devConf.mac = params.hubMac;
+          that.store.devConf.acServerURI = `${window.location.protocol}//${window.location.host}`;
+          dbModule.saveDevConf(that.store.devConf);
+          that.store.devConfDisplayVars.language = params.lang || 'en';
+          that.changeLanguage();
+        }).catch(function(error) { // 获取ac配置失败, 保持key+secret为空
+          let info = error.response ? error.response.data : error;
+          logger.error('get ac setting error:', info);
+          that.store.devConf.controlStyle = 'AC';
+          that.store.devConf.acDevKey = '';
+          that.store.devConf.acDevSecret = '';
+          that.store.devConf.mac = params.hubMac;
+          that.store.devConf.acServerURI = `${window.location.protocol}//${window.location.host}`;
+          dbModule.saveDevConf(that.store.devConf);
+          that.store.devConfDisplayVars.language = params.lang || 'en';
+          that.changeLanguage();
+        });
+        
       }
     }
   };
