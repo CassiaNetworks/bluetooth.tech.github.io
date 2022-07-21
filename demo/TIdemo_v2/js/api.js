@@ -164,7 +164,7 @@
         o = o || {}
         $.ajax({
             type: 'delete',
-            url: api.server + '/gap/nodes/' + o.node + '/connection?mac=' + (o.hub || api.hub) + '&access_token=' + api.access_token,
+            url: api.server + '/gap/nodes/' + o.node + '/connection/?mac=' + (o.hub || api.hub) + '&access_token=' + api.access_token,
             headers: api.local ? '' : {
                 'Authorization': api.authorization
             },

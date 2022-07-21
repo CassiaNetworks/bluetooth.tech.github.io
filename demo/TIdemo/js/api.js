@@ -116,7 +116,7 @@
         o = o || {}
         $.ajax({
             type: 'post',
-            url: api.server + '/gap/nodes/' + o.node + '/connection?mac=' + (o.hub || api.hub) + '&access_token=' + api.access_token,
+            url: api.server + '/gap/nodes/' + o.node + '/connection/?mac=' + (o.hub || api.hub) + '&access_token=' + api.access_token,
             /*headers: api.local ? {
                 "Content-Type" : "application/json"
             } : {
