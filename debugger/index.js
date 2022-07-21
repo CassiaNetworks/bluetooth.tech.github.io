@@ -153,8 +153,48 @@ layui.use(['layer', 'form'], function () {
 	handle.gopair()
 	handle.cancelpair()
 
-
+	showCrosAlertDialog();
 });
+
+// 开启cros配置提示信息对话框
+function showCrosAlertDialog() {
+	var htmlString = function() {
+		let info =  '从v2.0.3版本开始，默认情况下，AC和路由器上的CORS被禁用。使用此蓝牙调试工具时，请在控制台设置中设置“Access Control Allow Origin”。请参考<a target="_blank" style="color: #2897ff; text-decoration: none;" href="../debugger2/dist/Debugger2-Troubleshooting.pdf"> Debugger2-Troubleshooting </a>了解详细说明。如果使用 <span style="color: #ff0000; font-weight: bold;">Chrome版本>=94</span>，请复制此链接并在Chrome打开 <span style="color: #2897ff;">chrome://flags/#block-insecure-private-network-requests</span> 设置为Disabled。';
+		if (globalData.lang !== 'cn') {
+			info = 'Starting v2.0.3 release, CORS is disabled by default on AC and Router. When using this Bluetooth Debug Tool, please set ‘Access Control Allow Origin’ in the console setting. Please refer to <a target="_blank" style="color: #2897ff; text-decoration: none;" href="../debugger2/dist/Debugger2-Troubleshooting.pdf">Debugger2-Troubleshooting</a> for detailed instruction. If using <span style="color: #ff0000; font-weight: bold;">Chrome version>=94</span>, please copy this link and open it in Chrome<span style="color: #2897ff;"> chrome://flags/#block-insecure-private-network-requests</span> is set to Disabled.';
+		}
+			return `
+			<form class="layui-form" action="#" style="">
+				<div class="layui-form-item" style="padding: 25px; line-height: 25px;" i18n="configOrigin">
+					${info}
+				</div>
+			</form>`
+	};
+	layer.open({
+		title: '',
+		type: 6,
+		area: ['460px', 'auto'],
+		shade: 0,
+		shadeClose:true,
+		closeBtn: 1,
+		shadeClose: true,
+		fixed: true,
+		maxmin: false,
+		anim: 5, //0-6的动画形式，-1不开启
+		tips: [2, '#2F4056'],
+		content:htmlString(),
+		btn: [],
+		btn1: function() {
+			// form.render()
+		},
+		btn2:function(index, layero){
+			// form.render()
+		},
+		cancel:function(index, layero){
+			// form.render()
+		},
+	});	
+}
 
 layui.use(['element'], function () {
 	let element = layui.element();
