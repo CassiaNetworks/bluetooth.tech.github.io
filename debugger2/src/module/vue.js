@@ -1167,7 +1167,10 @@ function createVue() {
 
       // 初始化AC过来的参数列表
       // devKey=cassia&devSecret=cassia&lang=en&control=remote&hubMac=CC:1B:E0:E0:E1:90
-      let params = this.getUrlVars(window.location.search.replace(/\?/g, ''));
+      let url = window.location.href;
+      let idx = url.indexOf('?');
+      url = idx === -1 ? '' : url.substr(idx);
+      let params = this.getUrlVars(url);
       if (params.control === 'remote') { 
         // 调用AC接口获取settings
         let settingUrl = `${window.location.protocol}//${window.location.host}/setting`;
@@ -1179,8 +1182,8 @@ function createVue() {
           if (oauthUser === '********') oauthUser = ''; // readonly传过来的为空
           let oauthSecret = _.get(response, 'data.oauth-secret') || '';
           if (oauthSecret === '********') oauthSecret = ''; // readonly传过来的为空
-          that.store.devConf.acDevKey = oauthUser;
-          that.store.devConf.acDevSecret = oauthSecret;
+          that.store.devConf.acDevKey = oauthUser || params.devKey;
+          that.store.devConf.acDevSecret = oauthSecret || params.devSecret;
           that.store.devConf.mac = params.hubMac;
           that.store.devConf.acServerURI = `${window.location.protocol}//${window.location.host}`;
           dbModule.saveDevConf(that.store.devConf);
@@ -1190,8 +1193,8 @@ function createVue() {
           let info = error.response ? error.response.data : error;
           logger.error('get ac setting error:', info);
           that.store.devConf.controlStyle = 'AC';
-          that.store.devConf.acDevKey = '';
-          that.store.devConf.acDevSecret = '';
+          that.store.devConf.acDevKey = params.devKey || '';
+          that.store.devConf.acDevSecret = params.devSecret || '';
           that.store.devConf.mac = params.hubMac;
           that.store.devConf.acServerURI = `${window.location.protocol}//${window.location.host}`;
           dbModule.saveDevConf(that.store.devConf);
