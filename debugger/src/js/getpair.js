@@ -39,7 +39,7 @@ function htmlString() {
   </fieldset>
   <div class="layui-form-item layui-form-text">
     <div class="descriptors getpair-des">
-      <p i18n="getpair-Tip-p1"><b>chip：</b>蓝牙路由器共有两个芯片，芯片0和芯片1，在调用接口时可以通过添加queryString来选择芯片(?chip=0或者?chip=1)，每个芯片的连接上限是11个设备，如果不填此参数，蓝牙路由器会根据连接数量自动匹配芯片。</p>
+      <p i18n="getpair-Tip-p1"><b>chip：</b>蓝牙网关共有两个芯片，芯片0和芯片1，在调用接口时可以通过添加queryString来选择芯片(?chip=0或者?chip=1)，每个芯片的连接上限是11个设备，如果不填此参数，蓝牙网关会根据连接数量自动匹配芯片。</p>
       <p i18n="getpair-Tip-p2"><b>deviceMac：</b>要连接的设备的MAC地址。</p>
       <p i18n="getpair-Tip-p3"><b>type：</b>此参数在body中，是必填项。蓝牙设备的MAC地址分为random和public两种，所以在连接设备时，需要指出设备的广播type，广播type可以从扫描数据中获取。</p>
     </div>

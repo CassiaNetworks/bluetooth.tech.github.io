@@ -25,7 +25,7 @@ function getAllServicesTip(layer, form, $dom) {
   <div class="layui-form-item layui-form-text">
     <div class="descriptors connect-des">
       <p i18n="interfaceURL"><b>接口URL：</b>调用接口后，此URL会自动生成在下面的”API接口”的窗口中。</p>
-      <p i18n="services-Tip-p1"><b>接口描述：</b>此接口是GET请求，调用接口后，蓝牙路由器会向指定的蓝牙设备请求其服务的树形列表，调用次接口的主要目的是为对蓝牙设备进行读写操作时，获取蓝牙设备的characteristic所对应的valueHandle或者handle。</p>
+      <p i18n="services-Tip-p1"><b>接口描述：</b>此接口是GET请求，调用接口后，蓝牙网关会向指定的蓝牙设备请求其服务的树形列表，调用次接口的主要目的是为对蓝牙设备进行读写操作时，获取蓝牙设备的characteristic所对应的valueHandle或者handle。</p>
       <p i18n="services-Tip-p2"><b>参数解释：deviceMac：</b>要请求服务列表的设备的MAC地址。</p>
     </div>
   </div>

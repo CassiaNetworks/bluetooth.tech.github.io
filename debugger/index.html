@@ -20,13 +20,13 @@
 	</fieldset>
 	<div class="top layui-form">
 		<div class="layui-inline">
-			<label class="layui-form-label" style="width:90px" i18n="router-mac">Router MAC:</label>
+			<label class="layui-form-label" style="width:90px" i18n="router-mac">Gateway MAC:</label>
 			<div class="layui-input-inline">
 				<input type="text" name="number" id="hubMac" lay-verify="deviceMac" class="layui-input" placeholder="CC:1B:E0:E0:22:60">
 			</div>
 		</div>
 		<div class="layui-inline">
-			<label class="layui-form-label" style="width: 110px" i18n="router-ip">Router Local IP:</label>
+			<label class="layui-form-label" style="width: 110px" i18n="router-ip">Gateway Local IP:</label>
 			<div class="layui-input-inline">
 				<input type="text" name="title" lay-verify="hubIp" id="hubIp" class="layui-input" placeholder="192.168.199.150">
 			</div>
@@ -86,7 +86,7 @@
 					<button id="bdiscoverSer" class="layui-btn  layui-btn-primary funBtn"><span i18n="fx" id="bdiscoverSer">发现</span></br><span i18n="sb-fw" id="bdiscoverSer">设备</span></br><span i18n="fw" id="bdiscoverSer">服务</span></button>
 				</li>
 				<li>
-					<button id="bnotify" class="layui-btn  layui-btn-primary funBtn"><span i18n="dk" id="bnotify">打开</span></br><span i18n="router" id="bnotify">router</span></br><span i18n="tz" id="bnotify">通知</span></button>
+					<button id="bnotify" class="layui-btn  layui-btn-primary funBtn"><span i18n="dk" id="bnotify">打开</span></br><span i18n="router" id="bnotify">gateway</span></br><span i18n="tz" id="bnotify">通知</span></button>
 				</li>
 				<li>
 					<button id="bnotifyState" class="layui-btn  layui-btn-primary funBtn"><span i18n="ljj" id="bnotifyState">连接</span></br><span i18n="zt" id="bnotifyState">状态</span></br><span i18n="bh" id="bnotifyState">变化</span></button>
@@ -337,6 +337,7 @@
 <script src='./dist/lib/jquery.min.js'></script>
 <script src='./dist/lib/eventsource.min.js'></script>
 <script src="./dist/lib/layui/layui.js"></script>
+<script src="./dist/lib/xss.js"></script>
 <script src="./dist/js/index.js?v=20210427"></script>
 
 </html>

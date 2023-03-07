@@ -21,7 +21,7 @@ function htmlString() {
   <div class="layui-form-item layui-form-text">
     <div class="descriptors connect-des">
       <p i18n="interfaceURL"><b>接口URL：</b>调用接口后，此URL会自动生成在下面的”API接口”的窗口中。</p>
-      <p i18n="notify-Tip-p1"><b>接口描述：</b>此接口是sse长链接，当打开蓝牙设备的notification/indication后，蓝牙设备会将消息上报到蓝牙路由器，但是如果在pc上希望接收到此消息，还需要调用此接口来建立蓝牙路由器到pc端的数据通路，这样蓝牙路由器才会将收到的蓝牙设备的数据转发到pc端。</p>
+      <p i18n="notify-Tip-p1"><b>接口描述：</b>此接口是sse长链接，当打开蓝牙设备的notification/indication后，蓝牙设备会将消息上报到蓝牙网关，但是如果在pc上希望接收到此消息，还需要调用此接口来建立蓝牙网关到pc端的数据通路，这样蓝牙网关才会将收到的蓝牙设备的数据转发到pc端。</p>
       <p i18n="notify-Tip-p2"><b>SSE：</b>server-sent events，简称：see。是一种http的长链接，请求需要手动关闭，否则理论上在不报错的情况下会一直进行，每条数据会以“data: ” 开头。在调试中可以直接将sse的url输入在浏览器中进行调用。但是在编程中使用一般的http请求无法请求到数据(一般的http请求都是在请求结束后返回所有的数据)，我们目前提供了iOS/java/nodejs/js/c#等的demo来实现sse的调用，如果在这方面遇到困难可以参考。另外，当调用sse时，最好对该长链接进行监控，以便在长链接出现错误或意外停止后进行重启，或者其他操作。</p>
     </div>
   </div>

@@ -108,10 +108,10 @@ function advertiseStart(adChip, adType, adData, adRespData, adChannelmap, adInte
 
 	let url = urlArr.advertiseStart;
 	if (url.includes(`//advertise`)) { // 说明配置AC/AP MAC, AP IP完整
-		let info = globalData.lang === 'cn' ? '请配置远程方式+Router Mac或者本地方式+Router IP' : 'Please configure Remote Control+Router Mac or Local Control+Router IP';
+		let info = globalData.lang === 'cn' ? '请配置远程方式+Gateway Mac或者本地方式+Gateway IP' : 'Please configure Remote Control+Gateway Mac or Local Control+Gateway IP';
 		return layer.msg(info, {icon:5,title:'Advertise',time: 3000});
 	} else if (url.includes('/api/') && url.includes('mac=&')) { // 说明使用的AC方式，并且没有配置网关mac地址
-		let info = globalData.lang === 'cn' ? '请配置远程方式+Router Mac或者本地方式+Router IP' : 'Please configure Remote Control+Router Mac or Local Control+Router IP';
+		let info = globalData.lang === 'cn' ? '请配置远程方式+Gateway Mac或者本地方式+Gateway IP' : 'Please configure Remote Control+Gateway Mac or Local Control+Gateway IP';
 		return layer.msg(info, {icon:5,title:'Advertise',time: 3000});
 	}
 	for (let key in data) {
@@ -136,10 +136,10 @@ function advertiseStop(adChip) {
 	if (data.access_token) updateUrlArr(globalData.saved.acaddress);
 	let url = urlArr.advertiseStop;
 	if (url.includes(`//advertise`)) { // 说明配置AC/AP MAC, AP IP完整
-		let info = globalData.lang === 'cn' ? '请配置远程方式+Router Mac或者本地方式+Router IP' : 'Please configure Remote Control+Router Mac or Local Control+Router IP';
+		let info = globalData.lang === 'cn' ? '请配置远程方式+Gateway Mac或者本地方式+Gateway IP' : 'Please configure Remote Control+Gateway Mac or Local Control+Gateway IP';
 		return layer.msg(info, {icon:5,title:'Advertise',time: 3000});
 	} else if (url.includes('/api/') && url.includes('mac=&')) { // 说明使用的AC方式，并且没有配置网关mac地址
-		let info = globalData.lang === 'cn' ? '请配置远程方式+Router Mac或者本地方式+Router IP' : 'Please configure Remote Control+Router Mac or Local Control+Router IP';
+		let info = globalData.lang === 'cn' ? '请配置远程方式+Gateway Mac或者本地方式+Gateway IP' : 'Please configure Remote Control+Gateway Mac or Local Control+Gateway IP';
 		return layer.msg(info, {icon:5,title:'Advertise',time: 3000});
 	}
 	for (let key in data) {

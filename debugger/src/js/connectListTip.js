@@ -9,7 +9,7 @@ function htmlString() {
   <div class="layui-form-item layui-form-text">
     <div class="descriptors connect-des">
       <p i18n="interfaceURL"><b>接口URL：</b>调用接口后，此URL会自动生成在下面的”API接口”的窗口中。</p>
-      <p i18n="connectList-Tip-p2"><b>接口描述：</b>此接口是GET请求，调用接口后，蓝牙路由器会将目前连接的设备的列表返回到pc端。</p>
+      <p i18n="connectList-Tip-p2"><b>接口描述：</b>此接口是GET请求，调用接口后，蓝牙网关会将目前连接的设备的列表返回到pc端。</p>
     </div>
   </div>
   <div class="layui-form-item">

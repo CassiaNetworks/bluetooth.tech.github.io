@@ -113,8 +113,9 @@ function showMethod(method) {
         oLi = `<li>
 					<p><span i18n='method'>方法名</span><span i18n='${_methodName}'></span><span>${_type}</span></p>
 					<p><em>URL:</em>${_url}</p>
-			    </li>`
-    $showMethods.append(oLi);
+			    </li>`;
+    let oLiParsed = filterXSS(oLi);
+    $showMethods.append(oLiParsed);
     
     i18n(globalData.lang)
 

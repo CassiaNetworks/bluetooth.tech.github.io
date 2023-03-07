@@ -22,7 +22,7 @@ function htmlString() {
   <div class="layui-form-item layui-form-text">
     <div class="descriptors connect-des">
       <p i18n="interfaceURL"><b>接口URL：</b>调用接口后，此URL会自动生成在下面的”API接口”的窗口中。</p>
-      <p i18n="unpair-Tip-p2"><b>接口描述：</b>此接口是DELETE请求，调用接口后，蓝牙路由器会与指定MAC地址的蓝牙设备断连。</p>
+      <p i18n="unpair-Tip-p2"><b>接口描述：</b>此接口是DELETE请求，调用接口后，蓝牙网关会与指定MAC地址的蓝牙设备断连。</p>
       <p i18n="unpair-Tip-p3"><b>参数解释：deviceMac：</b>要取消配对的设备的MAC地址。</p>
     </div>
   </div>
