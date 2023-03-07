@@ -380,8 +380,14 @@ function saveApDevConf(_devConf) {
 // 更新接口地址
 function saveAcDevConf(_devConf) {
   _devConf.baseURI = getBaseURI(_devConf);
+
+  // XSS过滤
+  _.forEach(_devConf, (v, k) => {
+    if (_.isString(v)) _devConf[k] = filterXSS(v);
+  });
+  storage.devConf = _devConf;
+  
   // TODO: 优化定时获取token
-  storage.devConf = _devConf;  
   return new Promise(function(resolve, reject) {
     apiModule.getAccessToken(_devConf.baseURI, _devConf.acDevKey, _devConf.acDevSecret).then(function(data) {
       storage.accessToken = data.access_token;
