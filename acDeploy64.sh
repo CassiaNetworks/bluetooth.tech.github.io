@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 VERSION=1.01
 SCRIPT_NAME=$(basename "$0")
@@ -13,7 +13,7 @@ MAC=$(cat /sys/class/net/$one/address)
 DOCKER_RUN_OPT="--mac-address=$MAC"
 DOCKER_ENTRY=""
 
-set -x
+#set -x
 
 # Display help message
 display_help() {
@@ -32,7 +32,7 @@ if [ $# -eq 0 ]; then
 fi
 
 # Parse command-line arguments
-while [[ $# -gt 0 ]]; do
+while [ $# -gt 0 ]; do
   opt="$1"
   arg="$2"
 
@@ -70,7 +70,7 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
-function docker_run_ac() {
+docker_run_ac() {
   local optPort="-p 443:443 -p 80:80 -p 8001:8001 -p 9999:9999 -p 5246:5246/udp -p 5247:5247/udp -p 6246:6246/udp -p 6247:6247/udp -p 8883:8883"
   docker port ac
   if [ $? -eq 0 ]; then
