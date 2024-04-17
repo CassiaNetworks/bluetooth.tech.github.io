@@ -12,6 +12,7 @@ one=$(echo $all | cut -d " " -f 1)
 MAC=$(cat /sys/class/net/$one/address)
 DOCKER_RUN_OPT="--mac-address=$MAC"
 DOCKER_ENTRY=""
+CONTAINER_NAME=ac64
 
 #set -x
 
@@ -72,16 +73,16 @@ done
 
 docker_run_ac() {
   local optPort="-p 443:443 -p 80:80 -p 8001:8001 -p 9999:9999 -p 5246:5246/udp -p 5247:5247/udp -p 6246:6246/udp -p 6247:6247/udp -p 8883:8883"
-  docker port ac
+  docker port $CONTAINER_NAME
   if [ $? -eq 0 ]; then
     echo "start Cassia AC container from existing container"
-    docker rename ac ac_tmp
+    docker rename $CONTAINER_NAME ac_tmp
     docker stop ac_tmp
-    docker run -d --name ac --restart always --volumes-from ac_tmp $optPort $DOCKER_RUN_OPT $IMG_NAME $DOCKER_ENTRY
+    docker run -d --name $CONTAINER_NAME --restart always --volumes-from ac_tmp $optPort $DOCKER_RUN_OPT $IMG_NAME $DOCKER_ENTRY
     docker rm -f ac_tmp
   else
     echo "start new Cassia AC container"
-    docker run -d --name ac --restart always $optPort $DOCKER_RUN_OPT $IMG_NAME $DOCKER_ENTRY
+    docker run -d --name $CONTAINER_NAME --restart always $optPort $DOCKER_RUN_OPT $IMG_NAME $DOCKER_ENTRY
   fi
 }
 
