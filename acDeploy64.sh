@@ -48,7 +48,7 @@ while [ $# -gt 0 ]; do
       ;;
     -m|--image)
       echo "Docker Image Name: $arg"
-      if [ x$arg == x"" ]; then
+      if [ x"$arg" == x"" ]; then
         DO_RESTART_AC=1
         echo "Image not found, use default image $IMG_NAME"
       else
@@ -58,7 +58,7 @@ while [ $# -gt 0 ]; do
       fi
       ;;
     -k|--keep)
-      DOCKER_RUN_OPT="$DOCKER_RUN_OPT --net=host --privileged=true"
+      DOCKER_RUN_OPT="--net=host --privileged=true"
       DO_RESTART_AC=1
       ;;
     *)
