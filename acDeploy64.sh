@@ -23,7 +23,7 @@ display_help() {
     echo "Options:"
     echo "  -h, --help     Display this help message"
     echo "  -v, --version  Display script version"
-    echo "  -m, --image    Create new AC container with input docker image and run"
+    echo "  -m, --image    To create and run a new AC container based on the input Docker image"
     echo "                 ${CMD_STR} -m $IMG_NAME"
     echo "  -k, --keep     Create new AC container in privileged mode, shared host net"
 }
@@ -78,6 +78,7 @@ docker_run_ac() {
     echo "start Cassia AC container from existing container"
     docker rename $CONTAINER_NAME ac_tmp
     docker stop ac_tmp
+    docker pull
     docker run -d --name $CONTAINER_NAME --restart always --volumes-from ac_tmp $optPort $DOCKER_RUN_OPT $IMG_NAME $DOCKER_ENTRY
     docker rm -f ac_tmp
   else
