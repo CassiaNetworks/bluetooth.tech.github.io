@@ -27,6 +27,11 @@ const hash = $(location).prop("hash");
 //     },
 // });
 $(document).ready(function() {
+    function isValidIP(ip) {
+        const ipPattern = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+        return ipPattern.test(ip);
+    }
+
     const getwayIpInput = $('#gateway_ip');
 
     // 页面加载时从 localStorage 加载内容到输入框
@@ -35,11 +40,23 @@ $(document).ready(function() {
         getwayIpInput.val(gatewayIpls);
     }
 
-    // 输入框内容变化时自动保存到 localStorage
-    getwayIpInput.on('input', function() {
-        const inputValue = getwayIpInput.val();
-        localStorage.setItem('gatewayIP', inputValue);
+    getwayIpInput.on('blur', function() {
+        const ip = $(this).val();
+        const $error = $('#error');
+
+        // 清除之前的错误信息
+        $error.text('');
+        getwayIpInput.removeClass('input-error');
+
+        if (!isValidIP(ip)) {
+            $error.text('Invalid IP address.');
+            getwayIpInput.addClass('input-error');
+        } else {
+            const inputValue = getwayIpInput.val();
+            localStorage.setItem('gatewayIP', inputValue);
+        }
     });
+
 
     const ip = getwayIpInput.val();
 

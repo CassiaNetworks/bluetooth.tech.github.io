@@ -166,6 +166,13 @@
             right: 0; /* Increase/Decrease this value for cross-browser compatibility */
             overflow-y: scroll;
         }
+        .error {
+            color: red;
+            margin-left: 10px;
+        }
+        .input-error {
+            border-color: red;
+        }
     </style>
 </head>
 <body>
@@ -187,8 +194,9 @@
                         style="width: 64px;height: 32px;background: #1F90FF;border-radius: 0 16px 16px 0;">Clear
                 </button>
             </div>
-            <label for="gateway_ip">Gateway IP: </label>
-            <input type="text" id="gateway_ip">
+            <label for="gateway_ip">Local Gateway IP: </label>
+            <input type="text" id="gateway_ip" placeholder="192.168.0.100">
+            <span id="error" class="error"></span>
             <!--            <button id="control" class="icomoon icon-pause a" style="display: "";"></button>-->
         </div>
         <div id="chartView" class="chartWrapper" style="display: none;">
