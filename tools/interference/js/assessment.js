@@ -1046,7 +1046,7 @@ koDjJ4kuQ7TvLTOGjdfNjJzaXt6izqtHO9fT0CaSLwH/hOrkjjL5MnAAAAAElFTkSuQmCC" alt="" /
     };
 
     function checkConnected() {
-        $.get(`http://${ip}gap/nodes/?connection_state=connected`).done((response) => {
+        $.get(`http://${ip}/gap/nodes/?connection_state=connected`).done((response) => {
             if (response?.nodes.length > 0) {
                 alert(
                     "Can't use this feature when the gateway has connected devices"
