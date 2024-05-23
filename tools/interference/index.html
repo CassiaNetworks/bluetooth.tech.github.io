@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cassia BLE Interference Monitor</title>
+    <link href="css/main.min.css?v=202102201720" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        #chart {
+            width: 100%;
+            height: 100%;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .main {
+            margin-top: 3.2em;
+            background: unset;
+        }
+
+        table, th, td {
+            border: unset;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            position: unset;
+        }
+
+        tbody tr:hover {
+            background: #EFF2F6;
+        }
+
+        td {
+            border-bottom: 1px solid #EFF2F6;
+        }
+
+        th {
+            height: 1px;
+            border-bottom: 1px solid #DDDFE6;
+            border-left: 1px solid #DDDFE6;
+            background: #EFF2F6;
+        }
+
+        thead tr:nth-child(n+1) > th:nth-child(1) {
+            border-left: 0;
+        }
+
+        table th, table td {
+            font-size: .9rem;
+            text-align: center;
+        }
+
+        table thead {
+            height: 62px;
+        }
+
+        .low {
+            margin: 0 auto;
+            width: 55px;
+            height: 19px;
+            color: white;
+            border-radius: 1px;
+            background: #e4514b;
+        }
+
+        .medium {
+            margin: 0 auto;
+            width: 55px;
+            height: 19px;
+            color: white;
+            border-radius: 1px;
+            background: #f3aa3d;
+        }
+
+        .high {
+            margin: 0 auto;
+            width: 55px;
+            height: 19px;
+            color: white;
+            border-radius: 1px;
+            background: #7599e4;
+        }
+
+        .highest {
+            margin: 0 auto;
+            width: 55px;
+            height: 19px;
+            color: white;
+            border-radius: 1px;
+            background: #90cc7d;
+        }
+
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+
+        button {
+            padding: 0;
+            background-color: DodgerBlue;
+            border: none;
+            border-radius: 16px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .table_switch_btn {
+            width: 92px;
+            height: 41px;
+            font-size: 14px;
+            color: black;
+            border-radius: 0;
+            background: #FFFFFF;
+            border-top: 4px #FFFFFF solid;
+        }
+
+        .table_switch_btn:not(.active):hover {
+            background: #dfe3e8;
+        }
+
+        .active {
+            font-family: Helvetica-Bold;
+            color: #0089FF;
+            font-weight: 700;
+            background: #EFF2F6;
+            border-top: 4px #0089FF solid;
+        }
+
+        .chartWrapper {
+            position: relative;
+            margin: auto;
+            /*margin: auto;*/
+            /*height: 90%;*/
+            /*width: 80vw;*/
+        }
+
+        .a::before {
+            content: "\e902";
+        }
+
+        .b::before {
+            content: "\e903";
+        }
+
+        /*.chartWrapper {
+           position: relative;
+           width: 100%;
+           height: 85%;
+           overflow: hidden;
+        }*/
+        /*.chartWrapper > canvas {
+           position: absolute;
+           left: 0;
+           top: 0;
+           pointer-events:none;
+        }*/
+        .chartAreaWrapper {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0; /* Increase/Decrease this value for cross-browser compatibility */
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+<body>
+<div id="container content">
+    <div class="main">
+        <div style="padding-left: 2rem; padding-top: 2rem;">
+            <div style="position: absolute;top: 45px;">
+                <span style="color: gray;">tips: This feature can only be run for 3 minutes. Then it will revert to worked normally status.</span>
+            </div>
+            <button id="btnTable" style="width: 64px; height: 32px">Table</button>
+            <button id="btnChart" style="width: 64px; height: 32px">Chart</button>
+            <div style="display: inline-block; margin-left: 1rem; font-size: 0">
+                <button id="timeBtn"
+                        disabled
+                        style="padding: 0; width: 42px;height: 32px;background: #FFFFFF;border: 1px solid rgba(191,196,205,1);border-radius: 16px 0 0 16px; font-size: 14px;color: #606266;text-align: center;font-weight: 400; cursor: text">
+                    0s
+                </button>
+                <button id="btnClear"
+                        style="width: 64px;height: 32px;background: #1F90FF;border-radius: 0 16px 16px 0;">Clear
+                </button>
+            </div>
+            <label for="gateway_ip">Gateway IP: </label>
+            <input type="text" id="gateway_ip">
+            <!--            <button id="control" class="icomoon icon-pause a" style="display: "";"></button>-->
+        </div>
+        <div id="chartView" class="chartWrapper" style="display: none;">
+            <!-- <div class="chartAreaWrapper"> -->
+            <div id="chart"></div>
+            <!-- </div>  -->
+            <!-- <canvas id="myChartAxis" height="300" width="0"></canvas>-->
+        </div>
+        <div id="tableView" style="margin-left: 2rem; margin-right: 2rem; margin-top: 1rem;">
+            <div style="display: inline-flex;">
+                <button id="btnBle" class="table_switch_btn active">Bluetooth</button>
+                <button id="btnWifi" class="table_switch_btn">Wi-Fi</button>
+            </div>
+            <table id="ble_table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th colspan="3" style="border-left: 0">RSSI</th>
+                    <th rowspan="2" style="width: 15rem">Packet retransmission rate</th>
+                    <th rowspan="2" style="width: 15rem">Channel Quality</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th style="border-left: 0">Max</th>
+                    <th>Current</th>
+                    <th>Average</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <table id="wifi_table" class="hidden">
+                <thead style="height: 40px;">
+                <tr>
+                    <th>#</th>
+                    <th>Address</th>
+                    <th>SSID</th>
+                    <th>Channel</th>
+                    <th>Mode</th>
+                    <th>Signal</th>
+                    <th>Encryption</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="pure-topnav">
+        <h1>
+            <i class="icomoon icon-icon-logo" style="font-weight: normal;font-size: 160%;vertical-align: middle"></i>
+            <span i18n="navbar.title">Cassia BLE Interference Monitor</span>
+            <small></small>
+        </h1>
+    </div>
+</div>
+<script src="js/utils.js"></script>
+<script src="js/echarts.min.js"></script>
+<script src="js/jquery-3.5.1.min.js"></script>
+<script src="js/lodash.min.js"></script>
+<script src="js/assessment.js?v=202102251539"></script>
+</body>
+</html>
