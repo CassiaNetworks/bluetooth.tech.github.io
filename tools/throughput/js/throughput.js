@@ -932,27 +932,27 @@ $(document).ready(function() {
     }
 
     // labels: ['2020-12-14 24:00', '2020-12-14 24:00', '2020-12-14 24:00', '2020-12-14 24:00', '2020-12-14 24:00'],
-    $.get(`http://${ip}/cassia/info`).done(function(data) {
-        if (data["local-api"] === "0" && data["fat"] === "0") {
-            return alert("please open the local api!");
-        }
-    }).fail(function(jqXHR, textStatus, errorThrown) {
-        let errorMessage;
-        switch (jqXHR.status) {
-            case 0:
-                errorMessage = 'Not connected. Verify Network.';
-                break;
-            case 404:
-                errorMessage = 'Requested page not found. [404]';
-                break;
-            case 500:
-                errorMessage = 'Internal Server Error [500].';
-                break;
-            default:
-                errorMessage = 'Uncaught Error.\n' + jqXHR.responseText;
-        }
-        return alert(errorMessage)
-    });
+    // $.get(`http://${ip}/cassia/info`).done(function(data) {
+    //     if (data["local-api"] === "0" && data["fat"] === "0") {
+    //         return alert("please open the local api!");
+    //     }
+    // }).fail(function(jqXHR, textStatus, errorThrown) {
+    //     let errorMessage;
+    //     switch (jqXHR.status) {
+    //         case 0:
+    //             errorMessage = 'Not connected. Verify Network.';
+    //             break;
+    //         case 404:
+    //             errorMessage = 'Requested page not found. [404]';
+    //             break;
+    //         case 500:
+    //             errorMessage = 'Internal Server Error [500].';
+    //             break;
+    //         default:
+    //             errorMessage = 'Uncaught Error.\n' + jqXHR.responseText;
+    //     }
+    //     return alert(errorMessage)
+    // });
     getSpeedAndInterference();
     setInterval(() => {
         if (fetchData) getSpeedAndInterference();
