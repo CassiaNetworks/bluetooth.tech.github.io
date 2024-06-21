@@ -245,7 +245,7 @@ $(document).ready(function() {
         chart.update(); // Update the chart to apply the changes
     }
 
-    let onItemClick = (params, event) => {
+    window.onItemClick = (params, event) => {
         const checkboxes = $('input[type="checkbox"]:not(#selectAll)');
         const allChecked =
             checkboxes.length === checkboxes.filter(":checked").length;
