@@ -75,18 +75,7 @@ let columnsHidden = true;
 let color_mapping = {};
 const table = $("table");
 const ids = {};
-$.ajax({
-    url: "/cassia/info",
-    type: "GET",
-    dataType: "json", // or the data type you expect (e.g., "xml", "html", "text")
-    success: function (data) {},
-    error: function (jqXHR) {
-        window.location = "/cassia/login";
-        console.error(
-            "Request failed: " + jqXHR.status + ", " + jqXHR.statusText
-        );
-    },
-});
+
 $("#rssi_header, #pkt_loss_header, #tput_header")
     .wrapInner('<span title="sort this column"/>')
     .each(function () {
