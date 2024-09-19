@@ -10,7 +10,7 @@ DO_RESTART_AC=0
 all=$(ls -l /sys/class/net/ | grep -v virtual | awk '{print $9}')
 one=$(echo $all | cut -d " " -f 1)
 MAC=$(cat /sys/class/net/$one/address)
-DOCKER_RUN_OPT="--mac-address=$MAC"
+DOCKER_RUN_OPT="--mac-address=$MAC --security-opt seccomp=unconfined"
 DOCKER_ENTRY=""
 CONTAINER_NAME=ac64
 
