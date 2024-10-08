@@ -78,7 +78,7 @@ docker_run_ac() {
     echo "start Cassia AC container from existing container"
     docker rename $CONTAINER_NAME ac_tmp
     docker stop ac_tmp
-    docker pull
+    docker pull $IMG_NAME
     docker run -d --name $CONTAINER_NAME --restart always --volumes-from ac_tmp $optPort $DOCKER_RUN_OPT $IMG_NAME $DOCKER_ENTRY
     docker rm -f ac_tmp
   else
