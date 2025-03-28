@@ -94,6 +94,7 @@ const ru = {
   more: 'Больше',
   chip0: 'Микросхема 0',
   chip1: 'Микросхема 1',
+  chipAll: 'Both',
   startDebug: 'Отладка',
   genCode: 'Код',
   

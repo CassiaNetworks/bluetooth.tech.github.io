@@ -94,6 +94,7 @@ const en = {
   more: 'More',
   chip0: 'Chip0',
   chip1: 'Chip1',
+  chipAll: 'Both',
   startDebug: 'Debug',
   genCode: 'Code',
   

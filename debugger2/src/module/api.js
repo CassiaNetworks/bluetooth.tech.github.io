@@ -528,22 +528,38 @@ function addApiLogItem(apiName, method, url, query = {}, body = {}, params = {},
   });
 }
 
+function getUrlVars(queryStr) {
+  if (!queryStr) return {};
+  var paramArray = queryStr.split("&");
+  var len = paramArray.length;
+  var paramObj = {};
+  var arr = [];
+  for (var i = 0; i < len; i++) {
+      arr = paramArray[i].split("=");
+      if (arr[0] && arr[1]) paramObj[arr[0]] = arr[1];
+  }
+  return paramObj;
+}
+
 function startScanByDevConf(devConf, messageHandler, errorHandler) {
   const fields = ['chip', 'filter_mac', 'filter_name', 'filter_rssi'];
-  const query = getFields(devConf, fields);
+  let query = getFields(devConf, fields);
   query.active = 1;
   query.event = 1;
+  let scanParams = getUrlVars(devConf.scanParams);
+  query = _.merge(query, scanParams)
   let url = `${devConf.baseURI}/gap/nodes?${obj2QueryStr(query)}`;
   addApiLogItem(main.getGlobalVue().$i18n.t('message.apiScan'), 'GET/SSE', url, query);
   return startScan(url, messageHandler, errorHandler);
 }
 
-function startScanByUserParams(devConf, chip, filter_mac, filter_name, filter_rssi, messageHandler, errorHandler) {
+function startScanByUserParams(devConf, chip, filter_mac, filter_name, filter_rssi, scanParams, messageHandler, errorHandler) {
   const _devConf = _.cloneDeep(devConf);
   _devConf.chip = chip;
   _devConf.filter_mac = filter_mac;
   _devConf.filter_name = filter_name;
   _devConf.filter_rssi = filter_rssi;
+  _devConf.scanParams = scanParams;
   return startScanByDevConf(_devConf, messageHandler, errorHandler);
 }
 

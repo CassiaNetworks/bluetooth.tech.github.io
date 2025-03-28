@@ -96,6 +96,7 @@ const cn = {
   more: '更多参考',
   chip0: '芯片0',
   chip1: '芯片1',
+  chipAll: 'Both',
   startDebug: '开始调试',
   genCode: '生成代码',
   

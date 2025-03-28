@@ -308,7 +308,7 @@ function createVueMethods(vue) {
     },
     apiDemoScanTest() {
       const scanParams = this.store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan;
-      let sse = apiModule.startScanByUserParams(this.store.devConf, scanParams.chip, scanParams.filter_mac, scanParams.filter_name, scanParams.filter_rssi, () => {
+      let sse = apiModule.startScanByUserParams(this.store.devConf, scanParams.chip, scanParams.filter_mac, scanParams.filter_name, scanParams.filter_rssi, '', () => {
         notify(`${this.$i18n.t('message.testScanOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
         sse.close();
       }, (error) => {
@@ -476,7 +476,7 @@ function createVueMethods(vue) {
           apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.getAccessTokenFail')}, ${JSON.stringify({apiParams, ex})}`);
         });
       } else if (apiType === libEnum.apiType.SCAN) {
-        apiResult.sse = apiModule.startScanByUserParams(this.store.devConf, apiParams.chip, apiParams.filter_mac, apiParams.filter_name, apiParams.filter_rssi, (message) => {
+        apiResult.sse = apiModule.startScanByUserParams(this.store.devConf, apiParams.chip, apiParams.filter_mac, apiParams.filter_name, apiParams.filter_rssi, apiParams.scanParams, (message) => {
           apiResult.resultList.push(`${new Date().toISOString()}: ${message.data}`);
           if (apiResult.resultList.length < 5) return;
           apiResult.resultList = apiResult.resultList.splice(0);
