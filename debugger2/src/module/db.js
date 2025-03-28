@@ -21,6 +21,7 @@ let storage = {
     filter_mac: [], // 扫描mac过滤
     filter_rssi: -75,
     chip: 0, // 扫描使用的芯片
+    scanParams: '', // 扫描接口其他参数
     connChip: 0, // 连接使用的芯片
     discovergatt: 1, // 是否开启，默认开启，与API默认参数保持一致
     connTimeout: 15, // 连接超时时间，单位秒，默认为10秒
@@ -434,6 +435,7 @@ function loadStorage() {
   if (!_.has(storage.devConf, 'discovergatt')) storage.devConf.discovergatt = 1;
   if (!_.has(storage.devConf, 'connTimeout')) storage.devConf.connTimeout = 15;
   if (!_.has(storage.devConf, 'connParams')) storage.devConf.connParams = '';
+  if (!_.has(storage.devConf, 'scanParams')) storage.devConf.scanParams = '';
   if (!_.has(storage.devConf, 'autoSelectionOn')) storage.devConf.autoSelectionOn = 'off';
   if (!_.has(storage.devConf, 'aps')) storage.devConf.aps = storage.devConf.mac || ['*'];
 

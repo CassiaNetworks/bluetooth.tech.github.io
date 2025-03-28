@@ -76,6 +76,7 @@
                   <el-select v-model="store.devConf.chip" style="width: 100%">
                     <el-option :label="$t('message.chip0')" value="0"></el-option>
                     <el-option :label="$t('message.chip1')" value="1"></el-option>
+                    <el-option :label="$t('message.chipAll')" value="all"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('message.filterName')">
@@ -89,6 +90,9 @@
                 <el-form-item :label="$t('message.fitlerRSSI')">
                   <el-slider v-model="store.devConf.filter_rssi" :min="-85" :max="0">
                   </el-slider>
+                </el-form-item>
+                <el-form-item :label="$t('message.others')">
+                  <el-input v-model="store.devConf.scanParams" placeholder="key1=value1&key2=value2"></el-input>
                 </el-form-item>
                 <el-row style="font-size: 16px; border-bottom: 1px solid #ddd; margin-top: 30px;">
                   <span>{{$t('message.configConnParams')}}</span>
@@ -177,7 +181,7 @@
                 <span slot="title">{{$t('message.resources')}}</span>
               </el-menu-item>
               <el-menu-item style="position: absolute; bottom: 50px; padding: 0; width: 152px; text-align: center; border-top: 0px solid #e8eaed;">
-                <span>v2.0.6</span>
+                <span>v2.0.7</span>
               </el-menu-item>
             </el-menu>
           </el-aside>
@@ -261,6 +265,7 @@
                         <el-radio-group v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].chip" size="small">
                           <el-radio-button :label="0">{{$t('message.chip0')}}</el-radio-button>
                           <el-radio-button :label="1">{{$t('message.chip1')}}</el-radio-button>
+                          <el-radio-button :label="'all'">{{$t('message.chipAll')}}</el-radio-button>
                         </el-radio-group>
                       </el-form-item>
                       <el-form-item :label="$t('message.filterName')">
@@ -274,6 +279,9 @@
                       <el-form-item :label="$t('message.fitlerRSSI')">
                         <el-slider v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].filter_rssi" show-input :min="-85" :max="0">
                         </el-slider>
+                      </el-form-item>
+                      <el-form-item :label="$t('message.others')">
+                        <el-input v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].scanParams" placeholder="key1=value1&key2=value2"></el-input>
                       </el-form-item>
                       <el-form-item align="right">
                         <el-button size="small" @click="genCode">{{$t('message.genCode')}}</el-button>

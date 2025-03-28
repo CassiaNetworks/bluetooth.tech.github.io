@@ -94,6 +94,7 @@ const ja = {
   more: 'More',
   chip0: 'Chip0',
   chip1: 'Chip1',
+  chipAll: 'Both',
   startDebug: 'デバッグ',
   genCode: 'コード',
   

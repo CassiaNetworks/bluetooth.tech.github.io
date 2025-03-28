@@ -94,6 +94,7 @@ const mo = {
   more: 'Mai mult',
   chip0: 'Cip0',
   chip1: 'Cip1',
+  chipAll: 'Both',
   startDebug: 'Debug',
   genCode: 'Cod',
   
