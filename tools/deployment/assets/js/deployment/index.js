@@ -18,6 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		location.reload();
 	});
 
+	// 第一次打开页面弹出提示框，提醒设置网关跨域
+	if (!localStorage.getItem('bluetooth_tech_cross_origin_tip_shown')) {
+		alert(
+			'请前往网关设置跨域选项，否则页面无法正常访问网关接口。\n please set the cross-origin option in the gateway settings, otherwise the page cannot access the gateway interface properly.',
+		);
+		localStorage.setItem('bluetooth_tech_cross_origin_tip_shown', '1');
+	}
+
 	function getUrlVars() {
 		var vars = [],
 			hash;
@@ -110,8 +118,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		$('#connTimes').val(filterXSS($('#connTimes').val()));
 	}
 
+	// 自动填充 hubIP
+	if (localStorage.getItem('hubIP')) {
+		$('#hubIP').val(localStorage.getItem('hubIP'));
+	}
 	$('#startScan').on('click', function () {
 		xssFilter();
+		localStorage.setItem('hubIP', $('#hubIP').val().trim());
 		$('#scan_tab > tbody').html('');
 		scan_table_mapping = {};
 		device = {};
@@ -203,6 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	$('#startConn').on('click', () => {
 		xssFilter();
+		localStorage.setItem('hubIP', $('#hubIP').val().trim());
 		$('#conn_tab > tbody').html('');
 		let connTimeout = parseInt($('#connTimeout').val().trim()) || 10;
 		conn_table_mapping = {};
