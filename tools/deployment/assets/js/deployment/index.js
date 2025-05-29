@@ -189,7 +189,13 @@ document.addEventListener('DOMContentLoaded', () => {
 				server: `${hubIP}`,
 			})
 			.scan(params)
-			.on('scan', scan2conn);
+			.on('scan', scan2conn)
+			.on('error', (err) => {
+				console.error('Scan error:', err);
+				$('#startScan').removeAttr('disabled');
+				$('#startConn').removeAttr('disabled');
+				$('#loader').removeClass('spinner');
+			});
 		$('#startScan').attr('disabled', true);
 		$('#startConn').attr('disabled', true);
 		$('#loader').addClass('spinner');
