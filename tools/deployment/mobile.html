@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width， initial-scale=1" />
+    <title>Cassia Deployment Tool</title>
+    <style type="text/css">
+        .btn {
+            cursor: pointer;
+            margin-top: .5em;
+            margin-bottom: .5em;
+            width: 29%;
+            background: #0089FF;
+            color: white;
+            border: none;
+            border-radius: .3em;
+            font-size: 1.2em;
+        }
+
+        button[disabled]{
+            background-color: #E2E2E2;
+            cursor: not-allowed;
+        }
+
+        #scan_tab{
+            width: 100%;
+        }
+
+        table.center {
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        th{
+            background: #F9F9F9;
+        }
+        table th, table td{
+            /*padding: 10px;*/
+            font-size: 0.95em;
+            text-align: center;
+            border: 1px solid #DFE6EE;
+        }
+        table {
+            width: 100%;
+            border-spacing: 0px;
+            border-collapse: collapse;
+        }
+/*        table thead tr th{
+            border: none;
+        }*/
+        table tbody {
+            display: row;
+            width: calc(100% + 1px);
+            height: 300px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+</head>
+<body>
+    <div style="height: 20%; width: 100%; margin-top: 1.5em; text-align: center;">
+        <select id="devtype">
+            <option value="tBeacon">T100</option>
+            <option value="cgm">CGM</option>
+            <option value="cname" i18n="deployment.deviceName">Device Name</option>
+            <option value="cmac" i18n="deployment.deviceMac">Device MAC</option>
+        </select>
+        <input id="rule" type="text" value="tBeacon" placeholder="mac or name support *" readonly>
+        <div style="margin-top: .5em">
+            <select id="select_route">
+            </select>
+            <input id="hubMac" type="text" value="" readonly>        
+        </div>
+        <div style="margin-top: 1.2em"><label i18n='deployment.scanDuration'>Scan Time </label><input id="scanTimeout" type="text" value="60" style="width: 3.6em;text-align: center;"></div>
+        <button class="btn" id="startScan" i18n="deployment.startScan">Start Scan</button>
+    </div>
+
+    <div style="height: 80%;">
+        <table id="scan_tab">
+            <thead>
+                <tr>
+                    <th rowspan="2" i18n="deployment.deviceMac">Device MAC</th>
+                    <th rowspan="2" i18n="deployment.deviceName">Device Name</th>
+                    <th colspan="3" i18n="deployment.RSSI">RSSI</th>
+                    <th rowspan="2" i18n="deployment.pkgNum">Package Number</th>
+                </tr>
+                <tr>
+                    <th i18n="deployment.min">Min</th>
+                    <th i18n="deployment.max">Max</th>
+                    <th i18n="deployment.avg">Avg</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>        
+    </div> 
+    <script src="../assets/js/zepto/1.2.0/zepto.min.js"></script>
+    <script src="../assets/js/deployment/api.js?v=2103232023"></script>
+    <script src="../assets/js/i18n.js?v=2103232023"></script>
+    <script src="../assets/js/deployment/devicemacName.js"></script>
+    <script src="../assets/js/deployment/mobile.js"></script>
+    <script src="../assets/js/deployment/numberToWords.min.js"></script>
+    <script type="text/javascript">
+        i18n.render();
+    </script>
+</body>
+</html>
