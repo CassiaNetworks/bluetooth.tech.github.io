@@ -451,7 +451,7 @@
                 <el-tabs v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'updatePhy'" style="min-height: 380px;">
                   <el-tab-pane>
                     <span slot="label"> {{$t('message.updatePhy')}}</span>
-                    <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
+                    <el-form label-width="150px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
                         <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
                       </el-form-item>
