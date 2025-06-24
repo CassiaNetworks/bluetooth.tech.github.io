@@ -22,6 +22,9 @@
 - 优化更新
     - 调整配置栏宽度
     - 修复设备GATT服务列表折叠icon显示异常
+    - AC点击扫描报错时，打开AC settings页面
+    - AC模式选择网关时，增加online/offline分组展示，方便调试
+    - 多选下拉框增加clear功能（filter_name, filter_mac, phy等）
 ---
 
 ## v2.0.7 <Badge type="warning" text="2025-03-28" />

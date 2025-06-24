@@ -63,10 +63,19 @@
                 </el-form-item>
                 <el-form-item :label="$t('message.apMac')" prop="mac" v-show="store.devConf.controlStyle === 'AC'" style="margin-top: 15px;">
                   <el-select @focus="getAcRouterList" :remote-method="getAcRouterList" :loading="cache.isGettingAcRouterList" v-model="store.devConf.mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" filterable remote style="width: 100%" @change="routerChange">
-                    <el-option v-for="item in cache.acRouterList" :key="item.mac" :label="item.label" :value="item.mac">
-                      <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
-                      <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
-                    </el-option>
+                    <el-option-group key="Online" label="Online">
+                      <el-option v-for="item in cache.acRouterList.filter(x => x.status === 'online')" :key="item.mac" :label="item.label" :value="item.mac">
+                        <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+                      </el-option>
+                    </el-option-group>
+
+                    <el-option-group key="Offline" label="Offline">
+                      <el-option v-for="item in cache.acRouterList.filter(x => x.status && x.status !== 'online')" :key="item.mac" :label="item.label" :value="item.mac">
+                        <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+                      </el-option>
+                    </el-option-group>
                   </el-select>
                 </el-form-item>
                 <el-row style="font-size: 16px; border-bottom: 1px solid #ddd; margin-top: 30px;">
@@ -80,15 +89,15 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('message.filterName')">
-                  <el-select v-model="store.devConf.filter_name" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                  <el-select v-model="store.devConf.filter_name" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option clearable style="width: 100%">
                   </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('message.filterMac')">
-                  <el-select v-model="store.devConf.filter_mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                  <el-select v-model="store.devConf.filter_mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option clearable style="width: 100%">
                   </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('message.phy')">
-                  <el-select v-model="store.devConf.phy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                  <el-select v-model="store.devConf.phy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option clearable style="width: 100%">
                     <el-option label="1M" value="1M" key="1M"></el-option>
                     <el-option label="2M" value="2M" key="2M"></el-option>
                     <el-option label="CODED" value="CODED" key="CODED"></el-option>
@@ -111,11 +120,27 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('message.aps')" prop="mac" v-show="store.devConf.controlStyle === 'AC' && store.devConf.autoSelectionOn === 'on'" style="margin-top: 15px;">
-                  <el-select @focus="getAcRouterListWillAll" :remote-method="getAcRouterListWillAll" :loading="cache.isGettingAcRouterList" v-model="store.devConf.aps" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" placeholder="" multiple filterable remote style="width: 100%" @change="autoSelectionRouterChanged">
-                    <el-option v-for="item in cache.acRouterList" :key="item.mac" :label="item.label" :value="item.mac">
-                      <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
-                      <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
-                    </el-option>
+                  <el-select @focus="getAcRouterListWillAll" :remote-method="getAcRouterListWillAll" :loading="cache.isGettingAcRouterList" v-model="store.devConf.aps" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" placeholder="" multiple filterable clearable remote style="width: 100%" @change="autoSelectionRouterChanged">
+                    <el-option-group key="All" label="All">
+                      <el-option v-for="item in cache.acRouterList.filter(x => x.mac === '*')" :key="item.mac" :label="item.label" :value="item.mac">
+                        <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+                      </el-option>
+                    </el-option-group>
+
+                    <el-option-group key="Online" label="Online">
+                      <el-option v-for="item in cache.acRouterList.filter(x => x.status === 'online')" :key="item.mac" :label="item.label" :value="item.mac">
+                        <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+                      </el-option>
+                    </el-option-group>
+
+                    <el-option-group key="Offline" label="Offline">
+                      <el-option v-for="item in cache.acRouterList.filter(x => x.status && x.status !== 'online')" :key="item.mac" :label="item.label" :value="item.mac">
+                        <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+                      </el-option>
+                    </el-option-group>
                   </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('message.useChip')" v-show="store.devConf.autoSelectionOn === 'off'" style="margin-top: 15px;">
@@ -134,13 +159,13 @@
                   <el-input v-model="store.devConf.connTimeout"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('message.phy')" v-show="store.devConf.autoSelectionOn === 'off'">
-                  <el-select v-model="store.devConf.connPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                  <el-select v-model="store.devConf.connPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                     <el-option label="1M" value="1M" key="1M"></el-option>
                     <el-option label="CODED" value="CODED" key="CODED"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('message.secondaryPhy')" v-show="store.devConf.autoSelectionOn === 'off'">
-                  <el-select v-model="store.devConf.secondaryPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                  <el-select v-model="store.devConf.secondaryPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                     <el-option label="1M" value="1M" key="1M"></el-option>
                     <el-option label="2M" value="2M" key="2M"></el-option>
                     <el-option label="CODED" value="CODED" key="CODED"></el-option>
@@ -296,15 +321,15 @@
                         </el-radio-group>
                       </el-form-item>
                       <el-form-item :label="$t('message.filterName')">
-                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].filter_name" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].filter_name" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                         </el-select>
                       </el-form-item>
                       <el-form-item :label="$t('message.filterMac')">
-                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].filter_mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].filter_mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                         </el-select>
                       </el-form-item>
                       <el-form-item :label="$t('message.phy')">
-                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].phy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].phy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                           <el-option label="1M" value="1M" key="1M"></el-option>
                           <el-option label="2M" value="2M" key="2M"></el-option>
                           <el-option label="CODED" value="CODED" key="CODED"></el-option>
@@ -362,13 +387,13 @@
                             <el-input v-model="store.devConfDisplayVars.apiDebuggerParams['connect'].connTimeout"></el-input>
                           </el-form-item>
                           <el-form-item :label="$t('message.phy')">
-                              <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['connect'].connPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                              <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['connect'].connPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                               <el-option label="1M" value="1M" key="1M"></el-option>
                               <el-option label="CODED" value="CODED" key="CODED"></el-option>
                               </el-select>
                           </el-form-item>
                           <el-form-item :label="$t('message.secondaryPhy')">
-                              <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['connect'].secondaryPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                              <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['connect'].secondaryPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                               <el-option label="1M" value="1M" key="1M"></el-option>
                               <el-option label="2M" value="2M" key="2M"></el-option>
                               <el-option label="CODED" value="CODED" key="CODED"></el-option>
@@ -434,14 +459,14 @@
                         <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['updatePhy'].deviceMac"></el-input>
                       </el-form-item>
                       <el-form-item label="TX PHY">
-                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['updatePhy'].tx" multiple filterable style="width: 100%">
+                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['updatePhy'].tx" clearable multiple filterable style="width: 100%">
                           <el-option label="1M" value="1M" key="1M"></el-option>
                           <el-option label="2M" value="2M" key="2M"></el-option>
                           <el-option label="CODED" value="CODED" key="CODED"></el-option>
                         </el-select>
                       </el-form-item>
                       <el-form-item label="RX PHY">
-                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['updatePhy'].rx" multiple filterable style="width: 100%">
+                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['updatePhy'].rx" clearable multiple filterable style="width: 100%">
                           <el-option label="1M" value="1M" key="1M"></el-option>
                           <el-option label="2M" value="2M" key="2M"></el-option>
                           <el-option label="CODED" value="CODED" key="CODED"></el-option>
@@ -903,15 +928,15 @@
                           </el-radio-group>
                         </el-form-item>
                         <el-form-item :label="$t('message.filterName')">
-                          <el-select v-model="store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan.filter_name" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                          <el-select v-model="store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan.filter_name" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                           </el-select>
                         </el-form-item>
                         <el-form-item :label="$t('message.filterMac')">
-                          <el-select v-model="store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan.filter_mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                          <el-select v-model="store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan.filter_mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                           </el-select>
                         </el-form-item>
                         <el-form-item :label="$t('message.phy')">
-                          <el-select v-model="store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan.phy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                          <el-select v-model="store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan.phy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                           </el-select>
                         </el-form-item>
                         <el-form-item :label="$t('message.fitlerRSSI')">
@@ -1408,14 +1433,14 @@
         <el-input v-model="store.devConfDisplayVars.updatePhy.deviceMac" disabled></el-input>
       </el-form-item>
       <el-form-item label="TX PHY">
-        <el-select v-model="store.devConfDisplayVars.updatePhy.tx" multiple filterable style="width: 100%">
+        <el-select v-model="store.devConfDisplayVars.updatePhy.tx" clearable multiple filterable style="width: 100%">
           <el-option label="1M" value="1M" key="1M"></el-option>
           <el-option label="2M" value="2M" key="2M"></el-option>
           <el-option label="CODED" value="CODED" key="CODED"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="RX PHY">
-        <el-select v-model="store.devConfDisplayVars.updatePhy.rx" multiple filterable style="width: 100%">
+        <el-select v-model="store.devConfDisplayVars.updatePhy.rx" clearable multiple filterable style="width: 100%">
           <el-option label="1M" value="1M" key="1M"></el-option>
           <el-option label="2M" value="2M" key="2M"></el-option>
           <el-option label="CODED" value="CODED" key="CODED"></el-option>

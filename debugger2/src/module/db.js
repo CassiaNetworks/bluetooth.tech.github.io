@@ -34,8 +34,8 @@ let storage = {
   },
   devConfDisplayVars: {
     oldVersionUrl: '#', // 老版本debugger链接
-    leftConfWidth: '326px', // 左侧配置栏宽度
-    leftConfLabelWidth: '85px', // 左侧label宽度
+    leftConfWidth: '430px', // 左侧配置栏宽度
+    leftConfLabelWidth: '125px', // 左侧label宽度
     leftConfHeight: '100%', // 左侧配置栏高度
     scanTabsActiveTab: 'scanResult', // 当前激活的扫描tab页
     apiDemoTabsActiveTab: 'singleDevice', // API demo激活的tab页

@@ -175,10 +175,10 @@ function createVueMethods(vue) {
       this.$i18n.locale = this.store.devConfDisplayVars.language;
       let noramlWidthLns = ['cn'];
       if (noramlWidthLns.includes(this.store.devConfDisplayVars.language)) {
-        this.store.devConfDisplayVars.leftConfWidth = '426px';
+        this.store.devConfDisplayVars.leftConfWidth = '430px';
         this.store.devConfDisplayVars.leftConfLabelWidth = '125px';
       } else {
-        this.store.devConfDisplayVars.leftConfWidth = '426px';
+        this.store.devConfDisplayVars.leftConfWidth = '430px';
         this.store.devConfDisplayVars.leftConfLabelWidth = '125px';
       }
     },
