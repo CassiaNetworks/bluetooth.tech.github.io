@@ -36,6 +36,14 @@ const apiUrlGetter = {
     const devConf = dbModule.getDevConf();
     return apiModule.getReadUrlByDevConf(devConf, apiParams.deviceMac, apiParams.handle);
   },
+  [libEnum.apiType.READ_PHY]: function(apiParams) {
+    const devConf = dbModule.getDevConf();
+    return apiModule.getReadPhyUrlByDevConf(devConf, apiParams.deviceMac, apiParams.handle);
+  },
+  [libEnum.apiType.UPDATE_PHY]: function(apiParams) {
+    const devConf = dbModule.getDevConf();
+    return apiModule.getUpdatePhyUrlByDevConf(devConf, apiParams.deviceMac, apiParams.handle);
+  },
   [libEnum.apiType.WRITE]: function(apiParams) {
     const devConf = dbModule.getDevConf();
     return apiModule.getWriteUrlByDevConf(devConf, apiParams.deviceMac, apiParams.handle, apiParams.value, apiParams.noresponse);
@@ -115,7 +123,7 @@ const demoParamsGetter = {
       const connectStatusUrl = apiModule.getConnectStatusUrlByDevConf(devConf);
       const scanParams = params.scanParams;
       const writeParams = params.writeParams;
-      const scanUrl = apiModule.getScanUrlByUserParams(devConf, scanParams.chip, scanParams.filter_mac, scanParams.filter_name, scanParams.filter_rssi);
+      const scanUrl = apiModule.getScanUrlByUserParams(devConf, scanParams.chip, scanParams.filter_mac, scanParams.phy, scanParams.filter_name, scanParams.filter_rssi);
       return {devConf, connectUrl, connectStatusUrl, scanUrl, scanParams, writeParams};
     },
     AC: function(devConf, params) {
@@ -124,7 +132,7 @@ const demoParamsGetter = {
       const connectStatusUrl = apiModule.getConnectStatusUrlByDevConf(devConf, false);
       const scanParams = params.scanParams;
       const writeParams = params.writeParams;
-      const scanUrl = apiModule.getScanUrlByUserParams(devConf, scanParams.chip, scanParams.filter_mac, scanParams.filter_name, scanParams.filter_rssi, false);
+      const scanUrl = apiModule.getScanUrlByUserParams(devConf, scanParams.chip, scanParams.filter_mac, scanParams.phy, scanParams.filter_name, scanParams.filter_rssi, false);
       return {devConf, oauth2Url, connectUrl, connectStatusUrl, scanUrl, scanParams, writeParams};
     }
   }

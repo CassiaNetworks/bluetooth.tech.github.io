@@ -19,12 +19,15 @@ let storage = {
     mac: '', // 路由器MAC
     filter_name: [], // 扫描name过滤
     filter_mac: [], // 扫描mac过滤
+    phy: [], // 扫描phy
     filter_rssi: -75,
     chip: 0, // 扫描使用的芯片
     scanParams: '', // 扫描接口其他参数
     connChip: 0, // 连接使用的芯片
     discovergatt: 1, // 是否开启，默认开启，与API默认参数保持一致
     connTimeout: 15, // 连接超时时间，单位秒，默认为10秒
+    connPhy: '',
+    secondaryPhy: '',
     connParams: '', // 连接接口其他参数
     autoSelectionOn: 'off', // 是否开启优选，默认不开启
     aps: [], // 优选选择的网关列表
@@ -36,6 +39,13 @@ let storage = {
     leftConfHeight: '100%', // 左侧配置栏高度
     scanTabsActiveTab: 'scanResult', // 当前激活的扫描tab页
     apiDemoTabsActiveTab: 'singleDevice', // API demo激活的tab页
+    updatePhy: {
+      visible: false,
+      deviceMac: '',
+      tx: '',
+      rx: '',
+      codedOption: '',
+    },
     pair: { // pair
       visible: false,
       timeout: 5, // 单位秒 
@@ -104,9 +114,25 @@ let storage = {
     rssiChartDataCount:  (60 * 1000 / 2000), // rssiChartPeriod * 1000 / rssiChartDataSpan;
     apiDebuggerParams: { // 调试工具参数
       [libEnum.apiType.AUTH]: {},
-      [libEnum.apiType.SCAN]: {chip: 0, filter_name: [], filter_mac: [], filter_rssi: -65},
-      [libEnum.apiType.CONNECT]: {chip: 0, deviceMac: 'C0:00:5B:D1:AA:BC', addrType: libEnum.deviceAddrType.PUBLIC},
+      [libEnum.apiType.SCAN]: {chip: 0, filter_name: [], filter_mac: [], phy: [], filter_rssi: -65},
+      [libEnum.apiType.CONNECT]: {
+        chip: 0, 
+        deviceMac: 'C0:00:5B:D1:AA:BC', 
+        addrType: libEnum.deviceAddrType.PUBLIC, 
+        discovergatt: 1, 
+        connTimeout: 15,
+        connPhy: '', 
+        secondaryPhy: '', 
+        connParams: ''
+      },
       [libEnum.apiType.READ]: {deviceMac: 'C0:00:5B:D1:AA:BC', handle: '39'},
+      [libEnum.apiType.READ_PHY]: {deviceMac: 'C0:00:5B:D1:AA:BC'},
+      [libEnum.apiType.UPDATE_PHY]: {
+        deviceMac: 'C0:00:5B:D1:AA:BC',
+        tx: '',
+        rx: '',
+        codedOption: '',
+      },
       [libEnum.apiType.WRITE]: {deviceMac: 'C0:00:5B:D1:AA:BC', handle: '39', value: '21ff310302ff31', noresponse: false},
       [libEnum.apiType.DISCONNECT]: {deviceMac: 'C0:00:5B:D1:AA:BC'},
       [libEnum.apiType.DISCOVER]: {deviceMac: 'C0:00:5B:D1:AA:BC'},
@@ -138,6 +164,7 @@ let storage = {
           chip: 0,
           filter_name: [],
           filter_mac: [],
+          phy: [],
           filter_rssi: -75
         },
         write: {
@@ -195,7 +222,7 @@ let cache = {
         if(!(value >= 0.2 && value <= 20)) callback('Eg: value >= 0.2 && value <= 20');
         else callback();
       }, trigger: 'change' }
-    ]
+    ],
   }, // devConf检查规则
 
   isGettingAcRouterList: false, // AC动态获取router列表
@@ -240,6 +267,20 @@ let cache = {
       }
     },
     [libEnum.apiType.READ]: {
+      resultList: [],
+      code: {
+        [libEnum.codeType.CURL]: '',
+        [libEnum.codeType.NODEJS]: ''
+      }
+    },
+    [libEnum.apiType.READ_PHY]: {
+      resultList: [],
+      code: {
+        [libEnum.codeType.CURL]: '',
+        [libEnum.codeType.NODEJS]: ''
+      }
+    },
+    [libEnum.apiType.UPDATE_PHY]: {
       resultList: [],
       code: {
         [libEnum.codeType.CURL]: '',
@@ -314,6 +355,14 @@ let cache = {
     // {name: 'UNKNOWN', mac: 'CC:1B:E0:E0:DD:70', bdaddrType: 'public', rssi: -75, adData: '0201061BFF5701006BFCA25D5ED51C0B3E60820178B901BE01D40B59A1259C'},
     // {name: 'MI BAND 3', mac: 'CC:1B:E0:E0:DD:71', bdaddrType: 'random', rssi: -75, adData: '0201061BFF5701006BFCA25D5ED51C0B3E60820178B901BE01D40B59A1259C'},
   ],
+  deviceScanDetail: { // 设备扫描数据详情，点击detail -> 打开dialog -> 开启SSE -> 记录数据 -> 关闭dialog -> 关闭SSE -> 释放数据
+    visiable: false,
+    deviceMac: '',
+    sse: null,
+    updateQueue: [], // 防抖
+    updateTimer: null, // 防抖
+    data: [],
+  },
   notifyDisplayResultList: [
 
   ],

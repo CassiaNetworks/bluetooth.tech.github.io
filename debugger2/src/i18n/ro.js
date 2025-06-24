@@ -274,6 +274,21 @@ const ro = {
 
   oldVersion: 'Old Version',
   auth: 'Auth Token',
+
+  phy: 'PHY',
+  secondaryPhy: 'Secondary PHY',
+  showDeviceScanData: 'Detail',
+  readPhy: 'Read PHY',
+  updatePhy: 'Update PHY',
+  moreArgs: 'More Parameters',
+  newTab: 'Open New Tab',
+  scanDetailInfo: 'To prevent page lag, data updates every 10ms with a maximum of 2000 entries. For real-time monitoring data, [Open New Tab]',
+  readPhyFail: 'Read PHY failed',
+  readPhyOK: 'Read PHY successfully',
+  updatePhyFail: 'Update PHY failed',
+  updatePhyOK: 'Update PHY successfully',
+  apiReadPhy: 'Read PHY',
+  apiUpdatePhy: 'Update PHY',
 };
 
 export default {

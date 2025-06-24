@@ -2,6 +2,7 @@
 
 ## Project setup
 ```
+nvm use 10
 yarn install
 npm update --depth 5 @babel/compat-data
 ```

@@ -1,6 +1,6 @@
 const cn = {
   // header
-  title: 'Cassia 蓝牙调试工具 v2(Beta)',
+  title: 'Cassia 蓝牙调试工具 v2',
   
   // left
   configConnectParams: '接入配置',
@@ -290,6 +290,21 @@ const cn = {
   configAutoSelection: '请确保AC配置页面已打开优选功能，默认优选功能关闭',
 
   oldVersion: '老版本',
+
+  phy: 'PHY',
+  secondaryPhy: 'Secondary PHY',
+  showDeviceScanData: '详情',
+  readPhy: '获取PHY',
+  updatePhy: '更新PHY',
+  moreArgs: '更多参数',
+  newTab: '新标签打开',
+  scanDetailInfo: '为了防止页面卡顿，周期10毫秒更新数据，最多支持2000条数据。获取实时监控数据，请【新标签打开】',
+  readPhyFail: '读取PHY失败',
+  readPhyOK: '读取PHY成功',
+  updatePhyFail: '更新PHY失败',
+  updatePhyOK: '更新PHY成功',
+  apiReadPhy: 'Read PHY',
+  apiUpdatePhy: 'Update PHY',
 };
 
 export default {

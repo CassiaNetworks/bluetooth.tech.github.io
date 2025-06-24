@@ -274,6 +274,21 @@ const ja = {
 
   oldVersion: 'Old Version',
   auth: 'Auth Token',
+
+  phy: 'PHY',
+  secondaryPhy: 'セカンダリPHY',
+  showDeviceScanData: '詳細',
+  readPhy: 'PHYを読み取る',
+  updatePhy: 'PHYを更新',
+  moreArgs: '詳細パラメータ',
+  newTab: '新しいタブで開く',
+  scanDetailInfo: 'ページのラグを防ぐため、データは10ミリ秒ごとに更新され、最大2000エントリまで対応しています。リアルタイム監視データについては[新しいタブで開く]を選択してください',
+  readPhyFail: 'PHYの読み取りに失敗',
+  readPhyOK: 'PHYの読み取り成功',
+  updatePhyFail: 'PHYの更新に失敗',
+  updatePhyOK: 'PHYの更新成功',
+  apiReadPhy: 'PHY読み取り',
+  apiUpdatePhy: 'PHY更新'
 };
 
 export default {
