@@ -622,10 +622,10 @@ function createVueMethods(vue) {
         
         apiModule.updatePhyByDevConf(this.store.devConf, apiParams.deviceMac, bodyParam).then((body) => {
           notify(`${this.$i18n.t('message.updatePhyOK')}: ${apiParams.deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.updatePhyOK')}, ${JSON.stringify(apiParams)}, ${JSON.stringify(body)}`);
+          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.updatePhyOK')}, ${JSON.stringify(bodyParam)}, ${JSON.stringify(body)}`);
         }).catch(ex => {
           notify(`${this.$i18n.t('message.updatePhyFail')}: ${apiParams.deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.updatePhyFail')}, ${JSON.stringify(apiParams)}, ${JSON.stringify({ apiParams, ex })}`);
+          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.updatePhyFail')}, ${JSON.stringify(bodyParam)}, ${JSON.stringify({ ex })}`);
         });
       } else if (apiType === libEnum.apiType.WRITE) {
         apiModule.writeByHandleByDevConf(this.store.devConf, apiParams.deviceMac, apiParams.handle, apiParams.value, apiParams.noresponse).then(() => {
