@@ -267,20 +267,21 @@ function createVueMethods(vue) {
       }
     },
     showDeviceScanDetailNewTab() {
-      let url = apiModule.getScanUrlByUserParams(this.store.devConf, this.store.devConf.chip, this.cache.deviceScanDetail.deviceMac, this.store.devConf.phy, '', '');
+      let url = apiModule.getScanUrlByUserParams(this.store.devConf, this.store.devConf.chip, '', this.store.devConf.phy, '', '');
       const newWindow = window.open(url, '_blank');
   
       if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
         window.location.href = url;
       }
     },
-    showDeviceScanDataByRow(deviceMac) {
-      this.handleDeviceScanDetailClose();
-      this.cache.deviceScanDetail.visible = true;
-      this.cache.deviceScanDetail.deviceMac = deviceMac;
+    openDeviceScanData() {
+      this.closeDeviceScanDetail();
+      this.store.devConfDisplayVars.deviceScanDataSwitch = true;
+      this.cache.deviceScanDetail.data = [];
 
       // 开启此设备的扫描
-      this.cache.deviceScanDetail.sse = apiModule.startScanByUserParams(this.store.devConf, this.store.devConf.chip, deviceMac, this.store.devConf.phy, '', '', '', (msg) => {
+      const scanParamsQs = `filter_duplicates=${this.store.devConfDisplayVars.deviceScanDataFilterDuplicate}`;
+      this.cache.deviceScanDetail.sse = apiModule.startScanByUserParams(this.store.devConf, this.store.devConf.chip, this.store.devConf.filter_mac, this.store.devConf.phy, this.store.devConf.filter_name, this.store.devConf.filter_rssi, scanParamsQs, (msg) => {
         // notify(`${this.$i18n.t('message.testScanOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
         let jsonMsg = msg.data;
         this.scanDataPushToQueue(jsonMsg);
@@ -288,9 +289,8 @@ function createVueMethods(vue) {
         notify(`${this.$i18n.t('message.testScanFail')}: ${error}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       });
     },
-    handleDeviceScanDetailClose() {
-      this.cache.deviceScanDetail.visible = false;
-      this.cache.deviceScanDetail.deviceMac = '';
+    closeDeviceScanDetail() {
+      this.store.devConfDisplayVars.deviceScanDataSwitch = false;
       if (this.cache.deviceScanDetail.sse) {
         this.cache.deviceScanDetail.sse.close();
         this.cache.deviceScanDetail.sse = null;
@@ -301,7 +301,6 @@ function createVueMethods(vue) {
       }
 
       this.cache.deviceScanDetail.updateQueue = [];
-      this.cache.deviceScanDetail.data = [];
     },
     updatePhy() {
       let deviceMac = this.store.devConfDisplayVars.updatePhy.deviceMac;
@@ -805,6 +804,11 @@ function createVueMethods(vue) {
     rssiChartDataSpanChange() { // 统计间隔变化，重建图表
       if (this.store.devConfDisplayVars.rssiChartSwitch) {
         this.destoryAndCreateRssiChart();
+      }
+    },
+    deviceScanDataFilterChange() {
+      if (this.store.devConfDisplayVars.deviceScanDataSwitch) {
+        this.openDeviceScanData();
       }
     },
     genCode() {

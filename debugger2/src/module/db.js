@@ -112,6 +112,11 @@ let storage = {
     rssiChartPeriod: 60, // 单位秒，统计周期
     rssiChartDataSpan: 2000, // 单位毫秒, 统计间隔, 此毫秒长度认为1个广播点
     rssiChartDataCount:  (60 * 1000 / 2000), // rssiChartPeriod * 1000 / rssiChartDataSpan;
+
+    deviceScanDataStopped: false,
+    deviceScanDataSwitch: false, // 是否开启了数据
+    deviceScanDataFilterDuplicate: '1000',
+
     apiDebuggerParams: { // 调试工具参数
       [libEnum.apiType.AUTH]: {},
       [libEnum.apiType.SCAN]: {chip: 0, filter_name: [], filter_mac: [], phy: [], filter_rssi: -65},
@@ -356,8 +361,6 @@ let cache = {
     // {name: 'MI BAND 3', mac: 'CC:1B:E0:E0:DD:71', bdaddrType: 'random', rssi: -75, adData: '0201061BFF5701006BFCA25D5ED51C0B3E60820178B901BE01D40B59A1259C'},
   ],
   deviceScanDetail: { // 设备扫描数据详情，点击detail -> 打开dialog -> 开启SSE -> 记录数据 -> 关闭dialog -> 关闭SSE -> 释放数据
-    visiable: false,
-    deviceMac: '',
     sse: null,
     updateQueue: [], // 防抖
     updateTimer: null, // 防抖

@@ -277,18 +277,23 @@ const mo = {
 
   phy: 'PHY',
   secondaryPhy: 'Secondary PHY',
-  showDeviceScanData: 'Detail',
   readPhy: 'Read PHY',
   updatePhy: 'Update PHY',
   moreArgs: 'More Parameters',
-  newTab: 'Open New Tab',
-  scanDetailInfo: 'To prevent page lag, data updates every 10ms with a maximum of 2000 entries. For real-time monitoring data, [Open New Tab]',
   readPhyFail: 'Read PHY failed',
   readPhyOK: 'Read PHY successfully',
   updatePhyFail: 'Update PHY failed',
   updatePhyOK: 'Update PHY successfully',
   apiReadPhy: 'Read PHY',
   apiUpdatePhy: 'Update PHY',
+
+  deviceScanData: 'Scan Data',
+  filterDuplicate: 'Filter Duplicates',
+  newTab: 'Realtime Data',
+  scanDetailInfo: 'Data updates every 10ms with up to 2000 entries to avoid lag. See [Realtime Data] for live monitoring.',
+
+  apiReadPhyInfo: 'This is a GET request. When called, the Bluetooth gateway retrieves the PHY information of the specified MAC address, primarily for BLE 5 scenarios.',
+  apiUpdatePhyInfo: 'This is a POST request. When called, the Bluetooth gateway updates the PHY information of the specified MAC address, primarily for BLE 5 scenarios.',
 };
 
 export default {

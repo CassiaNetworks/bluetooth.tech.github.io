@@ -818,6 +818,24 @@
                     </el-row>
                   </el-tab-pane>
                 </el-tabs>
+                <el-tabs v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'readPhy'">
+                  <el-tab-pane>
+                    <span slot="label"> {{$t('message.apiDescription')}}</span>
+                    <el-row class="apiHelp">
+                      {{$t('message.apiReadPhyInfo')}}
+                      <p><a href="https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/BLE-5-Interface-Specification-For-X2000#11-update-phy-for-ble-connection" target="_blank">{{$t('message.more')}}</a></p>
+                    </el-row>
+                  </el-tab-pane>
+                </el-tabs>
+                <el-tabs v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'updatePhy'">
+                  <el-tab-pane>
+                    <span slot="label"> {{$t('message.apiDescription')}}</span>
+                    <el-row class="apiHelp">
+                      {{$t('message.apiUpdatePhyInfo')}}
+                      <p><a href="https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/BLE-5-Interface-Specification-For-X2000#11-update-phy-for-ble-connection" target="_blank">{{$t('message.more')}}</a></p>
+                    </el-row>
+                  </el-tab-pane>
+                </el-tabs>
               </el-col>
             </el-main>
           </el-row>
@@ -1032,7 +1050,6 @@
                   <vxe-table-column :title="$t('message.operation')" width="30%">
                     <template v-slot="{ row }">
                       <vxe-button status="primary" size="small" @click="connectDeviceByRow(row, row.mac)" :loading="cache.devicesConnectLoading[row.mac]">{{$t('message.connect')}}</vxe-button>
-                      <vxe-button size="small" @click="showDeviceScanDataByRow(row.mac)">{{$t('message.showDeviceScanData')}}</vxe-button>
                       <vxe-button size="small" v-show="!(cache.scanDevicesRssiHistory[row.mac] && cache.scanDevicesRssiHistory[row.mac].length !== 0)" @click="add2RssiChart(row, row.mac)">{{$t('message.add2RssiChart')}}</vxe-button>
                       <vxe-button size="small" v-show="(cache.scanDevicesRssiHistory[row.mac] && cache.scanDevicesRssiHistory[row.mac].length !== 0)" @click="removeFromRssiChart(row, row.mac)">{{$t('message.removeFromRssiChart')}}</vxe-button>
                     </template>
@@ -1073,6 +1090,37 @@
                   </el-form>
                 </el-row>
                 <v-chart :options="chartOptions" ref="rssiChart" :autoresize="true" :style="{width: '100%', height: cache.vxeGridHeight + 'px'}"></v-chart>
+              </el-tab-pane>
+              <el-tab-pane name="deviceScanData" style="width: 100%;">
+                <span slot="label"> {{$t('message.deviceScanData')}}</span>
+                <el-row>
+                  <el-form inline size="small">
+                    <el-form-item :label="$t('message.filterDuplicate')">
+                      <el-select v-model="store.devConfDisplayVars.deviceScanDataFilterDuplicate" :placeholder="$t('message.statsInterval')" @change="deviceScanDataFilterChange" style="width: 100px;">
+                        <el-option label="OFF" value=""></el-option>
+                        <el-option :label="$t('message.seconds1')" value="1000"></el-option>
+                        <el-option :label="$t('message.seconds2')" value="2000"></el-option>
+                        <el-option :label="$t('message.seconds5')" value="5000"></el-option>
+                        <el-option :label="$t('message.seconds10')" value="10000"></el-option>
+                        <el-option :label="$t('message.seconds30')" value="30000"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-tooltip class="item" effect="dark" :content="$t('message.scanDetailInfo')">
+                        <el-button v-show="!store.devConfDisplayVars.deviceScanDataSwitch" size="small" @click="openDeviceScanData" type="primary">{{$t('message.open')}}<i class="el-icon-info el-icon--right"></i></el-button>
+                      </el-tooltip>
+                      <el-tooltip class="item" effect="dark" :content="$t('message.scanDetailInfo')">
+                        <el-button v-show="store.devConfDisplayVars.deviceScanDataSwitch" size="small" @click="closeDeviceScanDetail">{{$t('message.close')}}<i class="el-icon-info el-icon--right"></i></el-button>
+                      </el-tooltip>
+                      <el-button type="primary" @click="showDeviceScanDetailNewTab" size="small">{{$t('message.newTab')}}</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-row>
+                <el-row style="padding: 15px 3px 15px 15px; height: calc(100vh - 200px); background-color: #f0f0f0; width: 100%; ">
+                  <div class="code scanDataDetail" lang="javascript" style="color: #505050; font-size: 12px; height: 100%; background-color: #f0f0f0; word-break: break-all; overflow-y: auto;" v-if="cache.deviceScanDetail.data">
+                    <p v-for="item in (cache.deviceScanDetail.data)">{{item}}</p>
+                  </div>
+                </el-row>
               </el-tab-pane>
             </el-tabs>
             <el-tabs @tab-click="connectTabsClick" v-model="cache.currentConnectedTab" @tab-remove="connectedListTabRemove" v-show="store.devConfDisplayVars.activeMenuItem === 'connectListMenuItem'">
@@ -1457,21 +1505,6 @@
     <span slot="footer" class="dialog-footer">
       <el-button @click="store.devConfDisplayVars.updatePhy.visible = false" size="small">{{$t('message.cancel')}}</el-button>
       <el-button type="primary" @click="updatePhy" size="small">{{$t('message.ok')}}</el-button>
-    </span>
-  </el-dialog>
-
-  <el-dialog :title="cache.deviceScanDetail.deviceMac" :visible.sync="cache.deviceScanDetail.visible" :before-close="handleDeviceScanDetailClose">
-    <el-row style="padding: 15px 0px 15px 15px; min-height: 240px; background-color: #f0f0f0; width: 100%; max-height: 400px;">
-      <div class="code scanDataDetail" lang="javascript" style="color: #505050; font-size: 12px; min-height: 240px; max-height: 360px; background-color: #f0f0f0; word-break: break-all; overflow-y: auto;" v-if="cache.deviceScanDetail.data">
-        <p v-for="item in (cache.deviceScanDetail.data)">{{item}}</p>
-      </div>
-    </el-row>
-    <el-row style="margin-top: 6px; margin-bottom: -30px; font-size: 12px; color: #999;">
-      {{$t('message.scanDetailInfo')}}
-    </el-row>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="handleDeviceScanDetailClose" size="small">{{$t('message.cancel')}}</el-button>
-      <el-button type="primary" @click="showDeviceScanDetailNewTab" size="small">{{$t('message.newTab')}}</el-button>
     </span>
   </el-dialog>
 </div>
