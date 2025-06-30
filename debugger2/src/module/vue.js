@@ -275,7 +275,7 @@ function createVueMethods(vue) {
       }
     },
     showDeviceNotificationDataRealTimeNewTab() {
-      let url = apiModule.getNotificationUrlByUserParams(this.store.devConf, this.cache.notifyDisplayTimestamp);
+      let url = apiModule.getNotificationUrlByUserParams(this.store.devConf, this.cache.notifyDisplayTimestamp, this.cache.notifyDisplaySequence);
       const newWindow = window.open(url, '_blank');
   
       if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
@@ -758,7 +758,8 @@ function createVueMethods(vue) {
     },
     openNotify() {
       const timestamp = this.cache.notifyDisplayTimestamp;
-      notifyModule.openNotifySse(timestamp);
+      const sequence = this.cache.notifyDisplaySequence;
+      notifyModule.openNotifySse(timestamp, sequence);
       this.store.devConfDisplayVars.isNotifyOn = true;
       notify(`${this.$i18n.t('message.openNotifyOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
     },
@@ -1284,7 +1285,7 @@ function createComputed() {
           return item;
         })
       }
-      return this.cache.notifyDisplayResultList
+      return this.cache.notifyDisplayResultList;
     },
     getComputedScanDisplayResultList() { // 全局搜索扫描列表
       const filterName = XEUtils.toString(this.cache.scanDisplayFilterContent).trim().toLowerCase();

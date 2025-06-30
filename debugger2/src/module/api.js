@@ -529,10 +529,11 @@ function getScanUrlByUserParams(devConf, chip, filter_mac, phy, filter_name, fil
   return getScanUrl(devConf.baseURI, params);
 }
 
-function getNotificationUrlByUserParams(devConf, timestamp, withToken=true) {
+function getNotificationUrlByUserParams(devConf, timestamp, sequence, withToken=true) {
   const _devConf = _.cloneDeep(devConf);
   _devConf.timestamp = timestamp;
-  const fields = ['timestamp'];
+  _devConf.sequence = sequence;
+  const fields = ['timestamp', 'sequence'];
   const params = getFields(_devConf, fields, withToken);
   params.event = 1;
   return getNotifyUrl(devConf.baseURI, params);
@@ -617,7 +618,7 @@ function openConnectStatusSseByDevConf(devConf, messageHandler, errorHandler) {
 }
 
 function startNotifyByDevConf(devConf, messageHandler, errorHandler) {
-  const fields = ['timestamp'];
+  const fields = ['timestamp', 'sequence'];
   const params = getFields(devConf, fields);
   params.event = 1;
   return openNotifySse(devConf.baseURI, params, messageHandler, errorHandler);

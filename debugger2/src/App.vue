@@ -1275,12 +1275,22 @@
                       <el-tooltip class="item" effect="light" :content="$t('message.timestampInfo')">
                         <span style="margin-right: 8px;">{{$t('message.timestamp')}}<i class="el-icon-info el-icon--right"></i></span>
                       </el-tooltip>
-                      <el-select v-model="cache.notifyDisplayTimestamp" :placeholder="$t('message.timestamp')" size="small" @change="deviceScanDataFilterChange" style="width: 140px; margin-right: 20px;">
+                      <el-select v-model="cache.notifyDisplayTimestamp" :placeholder="$t('message.timestamp')" size="small" @change="deviceScanDataFilterChange" style="width: 110px; margin-right: 20px;">
                         <el-option label="OFF" value="0"></el-option>
+                        <el-option label="Local Time" value="1"></el-option>
                         <el-option label="ISO 8601" value="2"></el-option>
-                        <el-option label="UTC Timestamp" value="3"></el-option>
-                        <el-option label="Time String" value="1"></el-option>
+                        <el-option label="Timestamp" value="3"></el-option>
                       </el-select>
+
+                      <el-tooltip class="item" effect="light" :content="$t('message.timestampInfo')">
+                        <span style="margin-right: 8px;">{{$t('message.notificationSequence')}}<i class="el-icon-info el-icon--right"></i></span>
+                      </el-tooltip>
+                      <el-select v-model="cache.notifyDisplaySequence" :placeholder="$t('message.timestamp')" size="small" @change="deviceScanDataFilterChange" style="width: 90px; margin-right: 20px;">
+                        <el-option label="OFF" value="0"></el-option>
+                        <el-option label="Global" value="1"></el-option>
+                        <el-option label="Device" value="2"></el-option>
+                      </el-select>
+
                       <el-tooltip class="item" effect="light" :content="$t('message.notificationDetailInfo')">
                         <vxe-button @click="openNotify" status="primary" size="small" v-show="!store.devConfDisplayVars.isNotifyOn">{{$t('message.open')}}<i class="el-icon-info el-icon--right"></i></vxe-button>
                       </el-tooltip>
@@ -1294,7 +1304,8 @@
                   </vxe-toolbar>
                   <!-- 注意设置为固定高度，否则页面在过多的数据时候会造成卡顿，TODO: 是否考虑使用分页优化? -->
                   <vxe-grid border="none" show-overflow stripe :height="cache.vxeGridHeight + 'px'" highlight-hover-row :header-row-style="{'background-color': '#f4f5f6'}" ref="refNotifyDisplayResultGrid" :sort-config="{trigger: 'cell'}" :data="getComputedNotifyDisplayResultList">
-                    <vxe-table-column field="time" :title="$t('message.timestamp')" type="html" width="20%" sortable></vxe-table-column>
+                    <vxe-table-column field="seqNum" :title="$t('message.notificationSequence')" type="html" width="15%" sortable></vxe-table-column>
+                    <vxe-table-column field="time" :title="$t('message.timestamp')" type="html" width="15%" sortable></vxe-table-column>
                     <vxe-table-column field="mac" :title="$t('message.addr')" type="html" width="15%" show-overflow></vxe-table-column>
                     <vxe-table-column field="handle" title="HANDLE" width="10%"></vxe-table-column>
                     <vxe-table-column field="value" title="VALUE" width="40%" show-overflow></vxe-table-column>

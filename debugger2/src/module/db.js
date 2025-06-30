@@ -249,6 +249,7 @@ let cache = {
   
   notifyDisplayFilterContent: '',
   notifyDisplayTimestamp: '0',
+  notifyDisplaySequence: '0',
 
   apiLogDisplayFilterContent: '',
   isApiDebuggerLoading: false,
