@@ -1112,7 +1112,7 @@
                       <el-tooltip class="item" effect="dark" :content="$t('message.scanDetailInfo')">
                         <el-button v-show="store.devConfDisplayVars.deviceScanDataSwitch" size="small" @click="closeDeviceScanDetail">{{$t('message.close')}}<i class="el-icon-info el-icon--right"></i></el-button>
                       </el-tooltip>
-                      <el-button type="primary" @click="showDeviceScanDetailNewTab" size="small">{{$t('message.newTab')}}</el-button>
+                      <el-button type="primary" @click="showDeviceScanDataRealTimeNewTab" size="small">{{$t('message.deviceScanDataRealTime')}}</el-button>
                     </el-form-item>
                   </el-form>
                 </el-row>

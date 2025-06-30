@@ -305,7 +305,7 @@ const cn = {
   
   deviceScanData: '扫描数据',
   filterDuplicate: 'Filter Duplicates',
-  newTab: '实时数据',
+  deviceScanDataRealTime: '实时数据',
   scanDetailInfo: '为了防止页面卡顿，周期10毫秒更新数据，最多支持2000条数据。获取实时数据，请【实时数据】',
 
   apiReadPhyInfo: '此接口是GET请求，调用接口，蓝牙网关会获取指定MAC的PHY信息，主要用于BLE5场景',

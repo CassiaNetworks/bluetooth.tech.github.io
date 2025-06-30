@@ -266,7 +266,7 @@ function createVueMethods(vue) {
         }, 10);
       }
     },
-    showDeviceScanDetailNewTab() {
+    showDeviceScanDataRealTimeNewTab() {
       let url = apiModule.getScanUrlByUserParams(this.store.devConf, this.store.devConf.chip, '', this.store.devConf.phy, '', '');
       const newWindow = window.open(url, '_blank');
   

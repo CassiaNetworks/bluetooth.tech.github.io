@@ -289,7 +289,7 @@ const ja = {
 
   deviceScanData: 'スキャンデータ',
   filterDuplicate: 'Filter Duplicates',
-  newTab: 'リアルタイムデータ',
+  deviceScanDataRealTime: 'リアルタイムデータ',
   scanDetailInfo: 'ページの遅延を防ぐため、10ミリ秒ごとにデータを更新し、最大2000件まで対応します。リアルタイムデータを取得するには【リアルタイムデータ】をご覧ください。',
 
   apiReadPhyInfo: 'このインターフェースはGETリクエストです。呼び出すと、Bluetoothゲートウェイが指定されたMACアドレスのPHY情報を取得します（主にBLE5のシナリオ向け）。',

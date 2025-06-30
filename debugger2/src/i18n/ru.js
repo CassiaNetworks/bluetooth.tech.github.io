@@ -289,7 +289,7 @@ const ru = {
 
   deviceScanData: 'Scan Data',
   filterDuplicate: 'Filter Duplicates',
-  newTab: 'Realtime Data',
+  deviceScanDataRealTime: 'Realtime Data',
   scanDetailInfo: 'Data updates every 10ms with up to 2000 entries to avoid lag. See [Realtime Data] for live monitoring.',
 
   apiReadPhyInfo: 'This is a GET request. When called, the Bluetooth gateway retrieves the PHY information of the specified MAC address, primarily for BLE 5 scenarios.',
