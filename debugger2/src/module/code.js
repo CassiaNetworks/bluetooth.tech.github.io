@@ -66,7 +66,11 @@ const apiUrlGetter = {
   },
   [libEnum.apiType.NOTIFY]: function(apiParams) {
     const devConf = dbModule.getDevConf();
-    return apiModule.getNotifyUrlByDevConf(devConf);
+    let _devConf = _.cloneDeep(devConf);
+    _.forEach(apiParams, (v, k) => { // 更新为自定义的api参数配置
+      if (v !== undefined && v !== null) _devConf[k] = v;
+    });
+    return apiModule.getNotifyUrlByDevConf(_devConf);
   },
   [libEnum.apiType.PAIR]: function(apiParams) {
     const devConf = dbModule.getDevConf();

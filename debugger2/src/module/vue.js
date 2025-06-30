@@ -673,7 +673,10 @@ function createVueMethods(vue) {
           apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.getDeviceServiceListFail')}, ${JSON.stringify({ ex })}`);
         });
       } else if (apiType === libEnum.apiType.NOTIFY) {
-        apiResult.sse = apiModule.startNotifyByDevConf(this.store.devConf, (message) => {
+        const devConf = _.cloneDeep(this.store.devConf);
+        devConf.timestamp = apiParams.timestamp;
+        devConf.sequence = apiParams.sequence;
+        apiResult.sse = apiModule.startNotifyByDevConf(devConf, (message) => {
           this.cache.apiDebuggerResult[libEnum.apiType.NOTIFY].resultList.push(`${new Date().toISOString()}: ${message.data}`);
           if (!apiResult.sse) return;
           if (apiResult.resultList.length < 5) return;
@@ -755,6 +758,13 @@ function createVueMethods(vue) {
       this.cache.notifyResultList.splice(0);
       this.cache.notifyDisplayResultList.splice(0);
       notify(`${this.$i18n.t('message.clearNotifyOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+    },
+    deviceNotificationDataFilterChange() {
+      if (this.store.devConfDisplayVars.isNotifyOn) {
+        this.closeNotify();
+        this.clearNotify();
+        this.openNotify();
+      }
     },
     openNotify() {
       const timestamp = this.cache.notifyDisplayTimestamp;

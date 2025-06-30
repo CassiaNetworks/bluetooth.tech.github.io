@@ -508,7 +508,7 @@ function getAsyncConnectUrlByDevConf(devConf, withToken=true) {
 }
 
 function getScanUrlByDevConf(devConf) {
-  const fields = ['chip', 'filter_mac', 'phy', 'filter_name', 'filter_rssi'];
+  const fields = ['chip', 'filter_mac', 'phy', 'filter_name', 'filter_rssi', 'timestamp'];
   const params = getFields(devConf, fields);
   params.active = 1;
   params.event = 1;
@@ -545,7 +545,7 @@ function getOauth2UrlByDevConf(devConf) {
 }
 
 function getNotifyUrlByDevConf(devConf, withToken=true) {
-  const fields = ['timestamp'];
+  const fields = ['timestamp', 'sequence'];
   const params = getFields(devConf, fields, withToken);
   params.event = 1;
   return getNotifyUrl(devConf.baseURI, params);
