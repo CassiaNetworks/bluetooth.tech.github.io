@@ -274,6 +274,14 @@ function createVueMethods(vue) {
         window.location.href = url;
       }
     },
+    showDeviceNotificationDataRealTimeNewTab() {
+      let url = apiModule.getNotificationUrlByUserParams(this.store.devConf, this.cache.notifyDisplayTimestamp);
+      const newWindow = window.open(url, '_blank');
+  
+      if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+        window.location.href = url;
+      }
+    },
     openDeviceScanData() {
       this.closeDeviceScanDetail();
       this.store.devConfDisplayVars.deviceScanDataSwitch = true;
@@ -749,7 +757,8 @@ function createVueMethods(vue) {
       notify(`${this.$i18n.t('message.clearNotifyOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
     },
     openNotify() {
-      notifyModule.openNotifySse();
+      const timestamp = this.cache.notifyDisplayTimestamp;
+      notifyModule.openNotifySse(timestamp);
       this.store.devConfDisplayVars.isNotifyOn = true;
       notify(`${this.$i18n.t('message.openNotifyOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
     },

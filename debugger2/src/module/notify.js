@@ -13,7 +13,7 @@ function notifySseMessageHandler(message) {
   const data = JSON.parse(message.data);
   logger.info('notify sse message:', message);
   const cache = dbModule.getCache();
-  cache.notifyResultList.push({time: Date.now(), mac: data.id, handle: data.handle, value: data.value});
+  cache.notifyResultList.push({time: data.timestamp || Date.now(), mac: data.id, handle: data.handle, value: data.value});
 }
 
 function notifySseErrorHandler(error) {
@@ -24,9 +24,10 @@ function notifySseErrorHandler(error) {
 }
 
 // 保存配置 -> 启动扫描
-function openNotifySse() {
+function openNotifySse(timestamp='') {
   if (sse) return sse;
-  const devConf = dbModule.getDevConf();
+  const devConf = _.cloneDeep(dbModule.getDevConf());
+  devConf.timestamp = timestamp;
   sse = api.startNotifyByDevConf(devConf, notifySseMessageHandler, notifySseErrorHandler);
 }
 

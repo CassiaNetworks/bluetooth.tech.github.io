@@ -529,13 +529,22 @@ function getScanUrlByUserParams(devConf, chip, filter_mac, phy, filter_name, fil
   return getScanUrl(devConf.baseURI, params);
 }
 
+function getNotificationUrlByUserParams(devConf, timestamp, withToken=true) {
+  const _devConf = _.cloneDeep(devConf);
+  _devConf.timestamp = timestamp;
+  const fields = ['timestamp'];
+  const params = getFields(_devConf, fields, withToken);
+  params.event = 1;
+  return getNotifyUrl(devConf.baseURI, params);
+}
+
 function getOauth2UrlByDevConf(devConf) {
   const url = `${devConf.baseURI}/oauth2/token`;
   return url;
 }
 
 function getNotifyUrlByDevConf(devConf, withToken=true) {
-  const fields = [];
+  const fields = ['timestamp'];
   const params = getFields(devConf, fields, withToken);
   params.event = 1;
   return getNotifyUrl(devConf.baseURI, params);
@@ -608,7 +617,7 @@ function openConnectStatusSseByDevConf(devConf, messageHandler, errorHandler) {
 }
 
 function startNotifyByDevConf(devConf, messageHandler, errorHandler) {
-  const fields = [];
+  const fields = ['timestamp'];
   const params = getFields(devConf, fields);
   params.event = 1;
   return openNotifySse(devConf.baseURI, params, messageHandler, errorHandler);
@@ -815,6 +824,7 @@ export default {
   getNotifyUrlByDevConf,
   getOauth2UrlByDevConf,
   getScanUrlByUserParams,
+  getNotificationUrlByUserParams,
   getAsyncConnectUrlByDevConf,
   getConnectStatusUrlByDevConf,
   pairByDevConf,

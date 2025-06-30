@@ -294,6 +294,8 @@ const ja = {
 
   apiReadPhyInfo: 'このインターフェースはGETリクエストです。呼び出すと、Bluetoothゲートウェイが指定されたMACアドレスのPHY情報を取得します（主にBLE5のシナリオ向け）。',
   apiUpdatePhyInfo: 'このインターフェースはPOSTリクエストです。呼び出すと、Bluetoothゲートウェイが指定されたMACアドレスのPHY情報を更新します（主にBLE5のシナリオ向け）。',
+  notificationDetailInfo: 'ページの遅延を防ぐため、500ミリ秒ごとにデータを更新します。リアルタイムデータを取得するには【リアルタイムデータ】をご覧ください。',
+  timestampInfo: 'タイムスタンプを有効にすると、データ内の時間が使用され、無効の場合はページがデータを受信した時間が使用されます。',
 };
 
 export default {

@@ -246,7 +246,10 @@ let cache = {
   currentConnectedTab: 'connectTab0',
   scanDisplayFilterContent: '',
   connectDisplayFilterContent: '',
+  
   notifyDisplayFilterContent: '',
+  notifyDisplayTimestamp: '0',
+
   apiLogDisplayFilterContent: '',
   isApiDebuggerLoading: false,
   isNotifyLoading: false,

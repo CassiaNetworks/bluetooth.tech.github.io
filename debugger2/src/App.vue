@@ -1118,10 +1118,10 @@
                       </el-select>
                     </el-form-item>
                     <el-form-item>
-                      <el-tooltip class="item" effect="dark" :content="$t('message.scanDetailInfo')">
+                      <el-tooltip class="item" effect="light" :content="$t('message.scanDetailInfo')">
                         <el-button v-show="!store.devConfDisplayVars.deviceScanDataSwitch" size="small" @click="openDeviceScanData" type="primary">{{$t('message.open')}}<i class="el-icon-info el-icon--right"></i></el-button>
                       </el-tooltip>
-                      <el-tooltip class="item" effect="dark" :content="$t('message.scanDetailInfo')">
+                      <el-tooltip class="item" effect="light" :content="$t('message.scanDetailInfo')">
                         <el-button v-show="store.devConfDisplayVars.deviceScanDataSwitch" size="small" @click="closeDeviceScanDetail">{{$t('message.close')}}<i class="el-icon-info el-icon--right"></i></el-button>
                       </el-tooltip>
                       <el-button type="primary" @click="showDeviceScanDataRealTimeNewTab" size="small">{{$t('message.deviceScanDataRealTime')}}</el-button>
@@ -1271,10 +1271,25 @@
                     <template v-slot:buttons>
                       <span>{{$t('message.receivedNotifys')}}: <span style="font-weight: bold; color: #409eff; margin-right: 20px;">{{ getComputedNotifyDisplayResultList.length }} </span></span>
                       <vxe-input v-model="cache.notifyDisplayFilterContent" type="search" :placeholder="$t('message.searchMac')" size="small" style="margin-right: 20px;"></vxe-input>
-                      <vxe-button @click="openNotify" status="primary" size="small" v-show="!store.devConfDisplayVars.isNotifyOn">{{$t('message.open')}}</vxe-button>
-                      <vxe-button @click="closeNotify" size="small" v-show="store.devConfDisplayVars.isNotifyOn">{{$t('message.close')}}</vxe-button>
+                      
+                      <el-tooltip class="item" effect="light" :content="$t('message.timestampInfo')">
+                        <span style="margin-right: 8px;">{{$t('message.timestamp')}}<i class="el-icon-info el-icon--right"></i></span>
+                      </el-tooltip>
+                      <el-select v-model="cache.notifyDisplayTimestamp" :placeholder="$t('message.timestamp')" size="small" @change="deviceScanDataFilterChange" style="width: 140px; margin-right: 20px;">
+                        <el-option label="OFF" value="0"></el-option>
+                        <el-option label="ISO 8601" value="2"></el-option>
+                        <el-option label="UTC Timestamp" value="3"></el-option>
+                        <el-option label="Time String" value="1"></el-option>
+                      </el-select>
+                      <el-tooltip class="item" effect="light" :content="$t('message.notificationDetailInfo')">
+                        <vxe-button @click="openNotify" status="primary" size="small" v-show="!store.devConfDisplayVars.isNotifyOn">{{$t('message.open')}}<i class="el-icon-info el-icon--right"></i></vxe-button>
+                      </el-tooltip>
+                      <el-tooltip class="item" effect="light" :content="$t('message.notificationDetailInfo')">
+                        <vxe-button @click="closeNotify" size="small" v-show="store.devConfDisplayVars.isNotifyOn">{{$t('message.close')}}<i class="el-icon-info el-icon--right"></i></vxe-button>
+                      </el-tooltip>
                       <vxe-button @click="notifyDisplayResultExport" status="primary" size="small">{{$t('message.export')}}</vxe-button>
-                      <vxe-button @click="notifyDisplayResultClear" size="small">{{$t('message.clear')}}</vxe-button>
+                      <vxe-button @click="notifyDisplayResultClear" size="small" style="margin-right: 10px">{{$t('message.clear')}}</vxe-button>
+                      <vxe-button type="primary" @click="showDeviceNotificationDataRealTimeNewTab" size="small">{{$t('message.deviceScanDataRealTime')}}</vxe-button>
                     </template>
                   </vxe-toolbar>
                   <!-- 注意设置为固定高度，否则页面在过多的数据时候会造成卡顿，TODO: 是否考虑使用分页优化? -->

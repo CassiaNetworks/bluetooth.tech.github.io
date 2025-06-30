@@ -310,6 +310,8 @@ const cn = {
 
   apiReadPhyInfo: '此接口是GET请求，调用接口，蓝牙网关会获取指定MAC的PHY信息，主要用于BLE5场景',
   apiUpdatePhyInfo: '此接口是POST请求，调用接口，蓝牙网关会更新指定MAC的PHY信息，主要用于BLE5场景',
+  notificationDetailInfo: '为了防止页面卡顿，周期500毫秒更新数据。获取实时数据，请【实时数据】',
+  timestampInfo: '开启时使用数据中的时间信息，未开启使用页面收到数据时间',
 };
 
 export default {

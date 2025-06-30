@@ -294,6 +294,8 @@ const mo = {
 
   apiReadPhyInfo: 'This is a GET request. When called, the Bluetooth gateway retrieves the PHY information of the specified MAC address, primarily for BLE 5 scenarios.',
   apiUpdatePhyInfo: 'This is a POST request. When called, the Bluetooth gateway updates the PHY information of the specified MAC address, primarily for BLE 5 scenarios.',
+  notificationDetailInfo: 'Data updates every 500ms to avoid lag. See [Realtime Data] for live monitoring.',
+  timestampInfo: 'When the timestamp is enabled, the time in the data is used. When disabled, the time the page receives the data is used.',
 };
 
 export default {
