@@ -339,6 +339,12 @@
                         <el-slider v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].filter_rssi" show-input :min="-85" :max="0">
                         </el-slider>
                       </el-form-item>
+                      <el-form-item :label="$t('message.timestamp')">
+                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].timestamp" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" default-first-option style="width: 100%">
+                          <el-option label="ON" value="1" key="ON"></el-option>
+                          <el-option label="OFF" value="0" key="OFF"></el-option>
+                        </el-select>
+                      </el-form-item>
                       <el-form-item :label="$t('message.others')">
                         <el-input v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].scanParams" placeholder="key1=value1&key2=value2"></el-input>
                       </el-form-item>
@@ -1095,8 +1101,14 @@
                 <span slot="label"> {{$t('message.deviceScanData')}}</span>
                 <el-row>
                   <el-form inline size="small">
+                    <el-form-item :label="$t('message.timestamp')">
+                      <el-select v-model="store.devConfDisplayVars.deviceScanDataTimestamp" :placeholder="$t('message.timestamp')" @change="deviceScanDataFilterChange" style="width: 100px;">
+                        <el-option label="OFF" value="0"></el-option>
+                        <el-option label="ON" value="1"></el-option>
+                      </el-select>
+                    </el-form-item>
                     <el-form-item :label="$t('message.filterDuplicate')">
-                      <el-select v-model="store.devConfDisplayVars.deviceScanDataFilterDuplicate" :placeholder="$t('message.statsInterval')" @change="deviceScanDataFilterChange" style="width: 100px;">
+                      <el-select v-model="store.devConfDisplayVars.deviceScanDataFilterDuplicate" :placeholder="$t('message.deviceScanDataFilterDuplicate')" @change="deviceScanDataFilterChange" style="width: 100px;">
                         <el-option label="OFF" value=""></el-option>
                         <el-option :label="$t('message.seconds1')" value="1000"></el-option>
                         <el-option :label="$t('message.seconds2')" value="2000"></el-option>

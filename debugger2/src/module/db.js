@@ -116,10 +116,18 @@ let storage = {
     deviceScanDataStopped: false,
     deviceScanDataSwitch: false, // 是否开启了数据
     deviceScanDataFilterDuplicate: '1000',
+    deviceScanDataTimestamp: '0',
 
     apiDebuggerParams: { // 调试工具参数
       [libEnum.apiType.AUTH]: {},
-      [libEnum.apiType.SCAN]: {chip: 0, filter_name: [], filter_mac: [], phy: [], filter_rssi: -65},
+      [libEnum.apiType.SCAN]: {
+        chip: 0, 
+        filter_name: [], 
+        filter_mac: [], 
+        phy: [], 
+        filter_rssi: -65,
+        timestamp: '0',
+      },
       [libEnum.apiType.CONNECT]: {
         chip: 0, 
         deviceMac: 'C0:00:5B:D1:AA:BC', 

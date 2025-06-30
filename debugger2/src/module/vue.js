@@ -280,7 +280,7 @@ function createVueMethods(vue) {
       this.cache.deviceScanDetail.data = [];
 
       // 开启此设备的扫描
-      const scanParamsQs = `filter_duplicates=${this.store.devConfDisplayVars.deviceScanDataFilterDuplicate}`;
+      const scanParamsQs = `filter_duplicates=${this.store.devConfDisplayVars.deviceScanDataFilterDuplicate}&timestamp=${this.store.devConfDisplayVars.deviceScanDataTimestamp}`;
       this.cache.deviceScanDetail.sse = apiModule.startScanByUserParams(this.store.devConf, this.store.devConf.chip, this.store.devConf.filter_mac, this.store.devConf.phy, this.store.devConf.filter_name, this.store.devConf.filter_rssi, scanParamsQs, (msg) => {
         // notify(`${this.$i18n.t('message.testScanOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
         let jsonMsg = msg.data;
@@ -554,7 +554,13 @@ function createVueMethods(vue) {
           apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.getAccessTokenFail')}, ${JSON.stringify({ apiParams, ex })}`);
         });
       } else if (apiType === libEnum.apiType.SCAN) {
-        apiResult.sse = apiModule.startScanByUserParams(this.store.devConf, apiParams.chip, apiParams.filter_mac, apiParams.phy, apiParams.filter_name, apiParams.filter_rssi, apiParams.scanParams, (message) => {
+        let scanParamQs = `timestamp=${apiParams.timestamp}`;
+        if (apiParams.scanParams && apiParams.scanParams.startsWith('&')) {
+          scanParamQs += apiParams.scanParams;
+        } else {
+          scanParamQs = scanParamQs + '&' + apiParams.scanParams;
+        }
+        apiResult.sse = apiModule.startScanByUserParams(this.store.devConf, apiParams.chip, apiParams.filter_mac, apiParams.phy, apiParams.filter_name, apiParams.filter_rssi, scanParamQs, (message) => {
           apiResult.resultList.push(`${new Date().toISOString()}: ${message.data}`);
           if (apiResult.resultList.length < 5) return;
           apiResult.resultList = apiResult.resultList.splice(0);
