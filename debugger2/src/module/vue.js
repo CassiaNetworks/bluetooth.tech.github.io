@@ -142,6 +142,12 @@ function createVueMethods(vue) {
         .then(data => {
           return apiModule.getAcRouterList(data.access_token);
         }).then(data => {
+          const gatewayList = data || [];
+          const gateway = gatewayList.find(x => x.mac === this.store.mac);
+          this.cache.model = _.get(gateway, 'model') || '';
+          console.log('cache update model by get gateway list:', this.cache.model);
+          dbModule.checkAndClearPhyParams(this.cache.model);
+
           if (_.isEmpty(keyword) || !_.isString(keyword)) this.cache.acRouterList = data;
           else {
             keyword = keyword.toLowerCase();
@@ -920,6 +926,11 @@ function createVueMethods(vue) {
     routerChange(router) { // 当选择网关时，优选自动选择此网关
       this.store.devConf.aps.splice(0, this.store.devConf.aps.length);
       this.store.devConf.aps.push(router);
+
+      let gateway = this.cache.acRouterList.find(x => x.mac === router);
+      this.cache.model = _.get(gateway, 'model') || '';
+      console.log('cache update model:', this.cache.model);
+      dbModule.checkAndClearPhyParams(this.cache.model);
     },
     readDevicePhy(deviceMac) {
       apiModule.readPhyByDevConf(this.store.devConf, deviceMac).then((rawBody) => {

@@ -243,6 +243,7 @@ let cache = {
 
   isGettingAcRouterList: false, // AC动态获取router列表
   acRouterList: [], // AC动态获取router列表
+  model: '', // 当前选择的网关对应model
 
   clientHeight: 0, // dom高度, 响应动态变化
   vxeGridHeight: 0, // vxe表格高度, 响应动态变化
@@ -460,11 +461,25 @@ function saveAcDevConf(_devConf) {
     apiModule.getAccessToken(_devConf.baseURI, _devConf.acDevKey, _devConf.acDevSecret).then(function(data) {
       storage.accessToken = data.access_token;
       save(storageKey, JSON.stringify(storage.devConf)); // 只保存配置，其他缓存不保存
-      resolve();
+      resolve(data.access_token);
     }).catch(function(error) {
       reject(error);
     });
   });
+}
+
+function checkAndClearPhyParams(model) {
+  if (model !== 'X1000') {
+    return;
+  }
+
+  storage.devConf.phy = '';
+  storage.devConf.connPhy = '';
+  storage.devConf.secondaryPhy = '';
+
+  storage.devConfDisplayVars.apiDebuggerParams[libEnum.apiType.SCAN].phy = '';
+  storage.devConfDisplayVars.apiDebuggerParams[libEnum.apiType.CONNECT].connPhy = '';
+  storage.devConfDisplayVars.apiDebuggerParams[libEnum.apiType.CONNECT].secondaryPhy = '';
 }
 
 function saveDevConf(_devConf) {
@@ -472,7 +487,16 @@ function saveDevConf(_devConf) {
   storage.devConfSaveTimer = setTimeout(function() {
     logger.info('save dev conf:', _devConf);
     if (_devConf.controlStyle === libEnum.controlStyle.AC) {
-      return saveAcDevConf(_devConf);
+      return saveAcDevConf(_devConf).then((token) => {
+        console.log('try get model by mac:', _devConf.mac);
+        if (_devConf.mac) {
+          apiModule.getAcGateway(token, _devConf.mac).then(data => {
+            cache.model = _.get(data, 'model') || '';
+            checkAndClearPhyParams(cache.model);
+            console.log('cache update model by get gateway:', cache.model);
+          });
+        }
+      });
     }
     return saveApDevConf(_devConf);
   }, 1000); // 1秒防止抖动
@@ -541,5 +565,6 @@ export default {
   getCache,
   getStorage,
   getDevConfDisplayVars,
-  listAddOrUpdate
+  listAddOrUpdate,
+  checkAndClearPhyParams,
 }

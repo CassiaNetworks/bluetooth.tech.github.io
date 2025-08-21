@@ -790,7 +790,7 @@ function replayApi(apiContent) {
 }
 
 function getAcRouterList(token) {
-  const url = `${dbModule.getDevConf().acServerURI}/api/ac/ap?access_token=${token}`;
+  const url = `${dbModule.getDevConf().baseURI}/ac/ap?access_token=${token}`;
   return new Promise((resolve, reject) => {
     axios.get(url).then(function(response) {
       logger.info('get ac gateway list success:', response);
@@ -798,6 +798,20 @@ function getAcRouterList(token) {
     }).catch(function(error) {
       let info = error.response ? error.response.data : error;
       logger.error('get ac gateway list error:', info);
+      reject(info);
+    });
+  });
+}
+
+function getAcGateway(token, mac) {
+  const url = `${dbModule.getDevConf().baseURI}/ac/ap/${mac}?access_token=${token}`;
+  return new Promise((resolve, reject) => {
+    axios.get(url).then(function(response) {
+      logger.info('get ac gateway success:', response);
+      resolve(response.data);
+    }).catch(function(error) {
+      let info = error.response ? error.response.data : error;
+      logger.error('get ac gateway error:', info);
       reject(info);
     });
   });
@@ -843,6 +857,7 @@ export default {
   getUnpairUrlByDevConf,
   replayApi,
   getAcRouterList,
+  getAcGateway,
   readPhyByDevConf,
   updatePhyByDevConf,
 }
