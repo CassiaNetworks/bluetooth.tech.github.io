@@ -24,7 +24,7 @@ MQTT库目前使用的是micropython-mqtt开源库。对比参考 `micropython-m
          server,MQTT Broker地址,test.mosquitto.org
          port,MQTT Broker端口,1884
          user,用户名,rw
-         password,readwrite,3
+         password,密码,readwrite
          upstream topic,发布Topic,/cassia/test/up
          downstream topic,订阅Topic,/cassia/test/down
 

@@ -4,7 +4,7 @@
 
 基于现有的API和库，实现了一个简单的完整示例。
 
-.. image::  demo_2.png
+.. image::  demo_1.png
 
 ..
     .. mermaid::
