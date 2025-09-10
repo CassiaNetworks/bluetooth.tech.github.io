@@ -40,3 +40,7 @@
 .mermaid line {
     stroke: #9bd2fc !important;
 }
+
+.red {
+    color: red;
+}
