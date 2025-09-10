@@ -1,0 +1,158 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, CassiaNetworks
+# This file is distributed under the same license as the Micro APP package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Micro APP 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-10 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:3
+msgid "获取连接列表"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:5
+msgid "用于获取当前已连接的设备列表。"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:7
+msgid "对应于RESTful-API `Get the Device List Connected <https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/RESTful-API#get-the-device-list-connected-to-a-router-ac-managed>`_"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+#: ../../source/cassiablue_api/get_connected_devices.rst:11
+msgid "示例"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:18
+msgid "API"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:23
+msgid "用于获取当前已连接的设备列表。结果返回JSON字符串。"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:25
+msgid "连接列表为空"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:33
+msgid "连接列表有设备"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:58
+msgid "字段说明"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "字段"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "类型"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "说明"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "bdaddr"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "str"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "设备MAC地址"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "20:00:00:00:00:01"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "bdaddrType"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "设备地址类型"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "random"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "id"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "chipId"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "int"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "芯片"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "0"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "rssi"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "RSSI"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "-21"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "packetLossRate"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "丢包率"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "3"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "tx_phy"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "Tx Phy"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "1M"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "rx_phy"
+msgstr ""
+
+#: ../../source/cassiablue_api/get_connected_devices.rst:1
+msgid "Rx Phy"
+msgstr ""

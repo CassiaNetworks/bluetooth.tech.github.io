@@ -1,0 +1,61 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, CassiaNetworks
+# This file is distributed under the same license as the Micro APP package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Micro APP 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-10 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/third_libs/microdot.rst:3
+msgid "microdot"
+msgstr ""
+
+#: ../../source/third_libs/microdot.rst:5
+msgid "提供HTTP服务可以使用开源的 ``microdot`` 库。具体参考 `microdot <https://github.com/miguelgrinberg/microdot>`_。"
+msgstr ""
+
+#: ../../source/third_libs/microdot.rst:8
+msgid "网关内默认没有集成此库，需要自己选择合并到脚本中使用。"
+msgstr ""
+
+#: ../../source/third_libs/microdot.rst:9
+msgid "静态页面比较大的话，可以考虑使用云端静态资源方式。"
+msgstr ""
+
+#: ../../source/third_libs/microdot.rst:13
+msgid "示例"
+msgstr ""
+
+#: ../../source/third_libs/microdot.rst:17
+msgid "说明"
+msgstr ""
+
+#: ../../source/third_libs/microdot.rst:19
+msgid "示例使用microdot在60000端口提供了HTTP服务，并注册了3个路由。"
+msgstr ""
+
+#: ../../source/third_libs/microdot.rst:21
+msgid "``/``: 输出静态页面响应"
+msgstr ""
+
+#: ../../source/third_libs/microdot.rst:22
+msgid "``/hello``: 输出JSON响应"
+msgstr ""
+
+#: ../../source/third_libs/microdot.rst:23
+msgid "``/api/app/config/meta``: 输出JSON响应，用于静态页面请求的RESTful接口"
+msgstr ""
+
+#: ../../source/third_libs/microdot.rst:28
+msgid "代码"
+msgstr ""

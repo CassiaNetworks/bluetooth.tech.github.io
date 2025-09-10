@@ -1,0 +1,7 @@
+=====
+platform
+=====
+
+.. literalinclude:: ../../../../../example/python_standard_libs/platform_test.py
+   :language: python
+   :linenos:

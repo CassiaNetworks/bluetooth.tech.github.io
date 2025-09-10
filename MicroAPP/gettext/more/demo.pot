@@ -1,0 +1,77 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, CassiaNetworks
+# This file is distributed under the same license as the Micro APP package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Micro APP 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-10 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/more/demo.rst:3
+msgid "完整示例"
+msgstr ""
+
+#: ../../source/more/demo.rst:5
+msgid "基于现有的API和库，实现了一个简单的完整示例。"
+msgstr ""
+
+#: ../../source/more/demo.rst:49
+msgid "实现功能"
+msgstr ""
+
+#: ../../source/more/demo.rst:51
+msgid "通过micropython-mqtt和云端交互"
+msgstr ""
+
+#: ../../source/more/demo.rst:53
+msgid "订阅命令topic，用于接收云端下发的命令"
+msgstr ""
+
+#: ../../source/more/demo.rst:54
+msgid "推送数据topic，用于推送数据和命令执行结果"
+msgstr ""
+
+#: ../../source/more/demo.rst:56
+msgid "通过microdot实现本地HTTP服务"
+msgstr ""
+
+#: ../../source/more/demo.rst:58
+msgid "监听本地端口，提供HTTP服务"
+msgstr ""
+
+#: ../../source/more/demo.rst:59
+msgid "提供RESTful API，用于获取APP配置"
+msgstr ""
+
+#: ../../source/more/demo.rst:60
+msgid "提供静态页面，用于展示APP配置"
+msgstr ""
+
+#: ../../source/more/demo.rst:62
+msgid "通过Cassiablue API和BLE设备交互"
+msgstr ""
+
+#: ../../source/more/demo.rst:64
+msgid "实时扫描BLE设备广播包，将支持的设备广播解析"
+msgstr ""
+
+#: ../../source/more/demo.rst:65
+msgid "收到云端的设备命令后，通过API连接、读写设备、接收通知数据"
+msgstr ""
+
+#: ../../source/more/demo.rst:83
+msgid "Github"
+msgstr ""
+
+#: ../../source/more/demo.rst:85
+msgid "参考 `Cassia SDK Guide Micro APP <https://github.com/CassiaNetworks/CassiaSDKGuide>`_"
+msgstr ""

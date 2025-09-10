@@ -1,0 +1,29 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, CassiaNetworks
+# This file is distributed under the same license as the Micro APP package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Micro APP 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-10 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/index.rst:3
+msgid "Micro APP"
+msgstr ""
+
+#: ../../source/index.rst:4
+msgid "Cassia M2000 蓝牙网关现已支持边缘计算，能够显著缩短响应延迟、降低数据传输和云端服务成本，并提升系统整体可扩展性。"
+msgstr ""
+
+#: ../../source/index.rst:6
+msgid "用户可根据场景需求开发自定义应用程序，在网关上部署，应用将与网关共享 CPU、内存等计算资源，实现本地数据处理与智能控制。"
+msgstr ""

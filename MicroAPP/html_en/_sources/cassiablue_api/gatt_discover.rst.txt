@@ -1,0 +1,173 @@
+=====
+获取设备GATT服务列表
+=====
+
+用于获取指定连接设备的GATT服务列表。
+
+参考RESTful-API `Discover GATT Services and Characteristics <https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/RESTful-API#discover-gatt-services-and-characteristics>`_
+
+
+示例
+=====
+
+.. literalinclude:: ../../../../example/cassiablue/gatt_discover.py
+   :language: python
+   :linenos:
+
+
+API
+=====
+
+.. py:function::  cassiablue.gatt_discover(addr: str) -> tuple[ok: bool, result: str]
+   :async:
+
+   用于获取指定连接设备的GATT服务列表。结果返回JSON字符串。
+
+   :parameters:
+      - addr: 设备MAC地址
+
+   :returns: 
+      - ok: 是否执行成功
+      - result: 执行结果，JSON字符串，示例如下
+
+      .. code-block:: json
+
+         [
+            {
+               "uuid": "00001801-0000-1000-8000-00805f9b34fb",
+               "primary": true,
+               "handle": 1,
+               "characteristics": [
+                     {
+                        "handle": 3,
+                        "properties": 32,
+                        "uuid": "00002a05-0000-1000-8000-00805f9b34fb",
+                        "descriptors": [
+                           {
+                                 "handle": 3,
+                                 "uuid": "00002a05-0000-1000-8000-00805f9b34fb"
+                           },
+                           {
+                                 "handle": 4,
+                                 "uuid": "00002902-0000-1000-8000-00805f9b34fb"
+                           }
+                        ]
+                     },
+                     {
+                        "handle": 6,
+                        "properties": 10,
+                        "uuid": "00002b29-0000-1000-8000-00805f9b34fb",
+                        "descriptors": [
+                           {
+                                 "handle": 6,
+                                 "uuid": "00002b29-0000-1000-8000-00805f9b34fb"
+                           }
+                        ]
+                     },
+                     {
+                        "handle": 8,
+                        "properties": 2,
+                        "uuid": "00002b2a-0000-1000-8000-00805f9b34fb",
+                        "descriptors": [
+                           {
+                                 "handle": 8,
+                                 "uuid": "00002b2a-0000-1000-8000-00805f9b34fb"
+                           }
+                        ]
+                     },
+                     {
+                        "handle": 10,
+                        "properties": 2,
+                        "uuid": "00002b3a-0000-1000-8000-00805f9b34fb",
+                        "descriptors": [
+                           {
+                                 "handle": 10,
+                                 "uuid": "00002b3a-0000-1000-8000-00805f9b34fb"
+                           }
+                        ]
+                     }
+               ]
+            },
+            {
+               "uuid": "00001800-0000-1000-8000-00805f9b34fb",
+               "primary": true,
+               "handle": 20,
+               "characteristics": [
+                     {
+                        "handle": 22,
+                        "properties": 2,
+                        "uuid": "00002a00-0000-1000-8000-00805f9b34fb",
+                        "descriptors": [
+                           {
+                                 "handle": 22,
+                                 "uuid": "00002a00-0000-1000-8000-00805f9b34fb"
+                           }
+                        ]
+                     },
+                     {
+                        "handle": 24,
+                        "properties": 2,
+                        "uuid": "00002a01-0000-1000-8000-00805f9b34fb",
+                        "descriptors": [
+                           {
+                                 "handle": 24,
+                                 "uuid": "00002a01-0000-1000-8000-00805f9b34fb"
+                           }
+                        ]
+                     },
+                     {
+                        "handle": 26,
+                        "properties": 2,
+                        "uuid": "00002aa6-0000-1000-8000-00805f9b34fb",
+                        "descriptors": [
+                           {
+                                 "handle": 26,
+                                 "uuid": "00002aa6-0000-1000-8000-00805f9b34fb"
+                           }
+                        ]
+                     }
+               ]
+            },
+            {
+               "uuid": "6324be9e-236f-1edc-ac33-e2051caa4f2a",
+               "primary": true,
+               "handle": 40,
+               "characteristics": [
+                     {
+                        "handle": 42,
+                        "properties": 8,
+                        "uuid": "6324a123-236f-1edc-ac33-e2051caa4f2a",
+                        "descriptors": [
+                           {
+                                 "handle": 42,
+                                 "uuid": "6324a123-236f-1edc-ac33-e2051caa4f2a"
+                           }
+                        ]
+                     },
+                     {
+                        "handle": 44,
+                        "properties": 18,
+                        "uuid": "6324a321-236f-1edc-ac33-e2051caa4f2a",
+                        "descriptors": [
+                           {
+                                 "handle": 44,
+                                 "uuid": "6324a321-236f-1edc-ac33-e2051caa4f2a"
+                           },
+                           {
+                                 "handle": 45,
+                                 "uuid": "00002902-0000-1000-8000-00805f9b34fb"
+                           }
+                        ]
+                     }
+               ]
+            }
+         ]
+
+      .. csv-table:: 字段说明
+         :header: 字段,类型,说明,示例
+
+         uuid,str,UUID,00001801-...
+         handle,int,Handle用于读写操作,1
+         properties,int,属性,32
+
+   

@@ -1,0 +1,37 @@
+=====
+调用RESTful API
+=====
+
+用于调用网关提供的RESTful API。通过此接口可以调用网关内micropython模块未封装的接口。
+
+参考 `RESTful API <https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/RESTful-API>`_。
+
+
+示例
+=====
+
+.. literalinclude:: ../../../../example/cassiablue/send_cmd.py
+   :language: python
+   :linenos:
+
+
+API
+=====
+
+.. py:function::  cassiablue.send_cmd(path: str, method: Optional[str]="GET", query: Optional[str]=None, body: Optional[str]=None) -> tuple[ok: bool, result: str]
+   :async:
+
+   用于调用网关提供的RESTful API。
+
+   :parameters:
+      - path: API路径
+      - method: HTTP方法
+      - query: query参数
+      - body: body参数
+
+   :returns: 
+      - ok: 是否执行成功
+      - result: 执行结果
+
+
+   

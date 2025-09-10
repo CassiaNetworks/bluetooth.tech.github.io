@@ -1,0 +1,7 @@
+=====
+select
+=====
+
+.. literalinclude:: ../../../../../example/python_standard_libs/select_test.py
+   :language: python
+   :linenos:

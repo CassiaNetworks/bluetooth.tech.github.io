@@ -1,0 +1,61 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, CassiaNetworks
+# This file is distributed under the same license as the Micro APP package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Micro APP 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-10 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/more/coding.rst:3
+msgid "常见问题"
+msgstr ""
+
+#: ../../source/more/coding.rst:6
+msgid "编码问题"
+msgstr ""
+
+#: ../../source/more/coding.rst:8
+msgid "持续整理常见编码问题，方便用户了解与规避。"
+msgstr ""
+
+#: ../../source/more/coding.rst:10
+msgid "异步函数与同步函数混用"
+msgstr ""
+
+#: ../../source/more/coding.rst:11
+msgid "异步处理函数中使用同步耗时函数导致事件调度阻塞"
+msgstr ""
+
+#: ../../source/more/coding.rst:13
+msgid "异步函数调用遗漏 ``await``"
+msgstr ""
+
+#: ../../source/more/coding.rst:15
+msgid "大数据量触发性能问题"
+msgstr ""
+
+#: ../../source/more/coding.rst:16
+msgid "频繁打印日志"
+msgstr ""
+
+#: ../../source/more/coding.rst:17
+msgid "做复杂耗时处理"
+msgstr ""
+
+#: ../../source/more/coding.rst:19
+msgid "内存资源未限制，占用过多"
+msgstr ""
+
+#: ../../source/more/coding.rst:23
+msgid "其他问题"
+msgstr ""

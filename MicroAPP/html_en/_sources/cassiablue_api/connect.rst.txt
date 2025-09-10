@@ -1,0 +1,38 @@
+=====
+连接BLE设备
+=====
+
+用于连接BLE设备。
+
+参考 `Connect/Disconnect to a Target Device <https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/RESTful-API#connectdisconnect-to-a-target-device>`_
+
+
+示例
+=====
+
+.. literalinclude:: ../../../../example/cassiablue/connect.py
+   :language: python
+   :linenos:
+
+
+API
+=====
+
+.. py:function::  cassiablue.connect(addr: str, params: str | None = None) -> tuple[ok: bool, result: str]
+   :async:
+
+   通过MAC连接BLE设备
+
+   :parameters:
+      - addr: 设备MAC地址
+      - params: 连接参数，JSON字符串，常用字段：
+
+      .. csv-table:: 
+         :header: 字段,类型,说明,示例
+
+         type,str,设备M地址类型,public或random
+         timeout,int,超时时间，单位毫秒,10000
+
+   :returns: 
+      - ok: 是否执行成功
+      - result: 执行结果

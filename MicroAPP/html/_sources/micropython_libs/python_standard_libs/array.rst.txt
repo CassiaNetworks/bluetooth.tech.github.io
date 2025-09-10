@@ -1,0 +1,7 @@
+=====
+array
+=====
+
+.. literalinclude:: ../../../../../example/python_standard_libs/array_test.py
+   :language: python
+   :linenos:

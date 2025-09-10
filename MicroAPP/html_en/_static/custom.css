@@ -1,0 +1,42 @@
+.mermaid-big {
+    font-size: 18px !important;
+}
+
+.mermaid .node path {
+    fill: white !important;
+}
+
+.mermaid circle {
+    fill: #9bd2fc !important;
+    stroke: #9bd2fc !important;
+}
+
+.mermaid rect {
+    fill: white !important;
+    stroke: #9bd2fc !important;
+    border-radius: 5px !important;
+    rx: 8;
+    ry: 8;
+    filter: drop-shadow(7px 6px 0 rgba(33, 150, 243, 0.3));
+}
+
+.mermaid polygon {
+    fill: white !important;
+    stroke: #9bd2fc !important;
+    border-radius: 5px !important;
+    rx: 8;
+    ry: 8;
+    filter: drop-shadow(7px 6px 0 rgba(33, 150, 243, 0.3));
+}
+
+.mermaid .labelBkg,
+.mermaid .edgeLabel,
+.mermaid p {
+    fill: white !important;
+    background-color: white !important;
+}
+
+.mermaid path,
+.mermaid line {
+    stroke: #9bd2fc !important;
+}

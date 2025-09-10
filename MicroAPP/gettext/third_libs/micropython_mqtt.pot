@@ -1,0 +1,147 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, CassiaNetworks
+# This file is distributed under the same license as the Micro APP package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Micro APP 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-10 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/third_libs/micropython_mqtt.rst:3
+msgid "micropython-mqtt"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:5
+msgid "MQTT库目前使用的是micropython-mqtt开源库。对比参考 `micropython-mqtt <https://github.com/peterhinch/micropython-mqtt>`_。"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:8
+msgid "网关内默认没有集成此库，需要自己选择合并到脚本中使用。"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:9
+msgid "为了支持在网关内运行使用，示例移除了network sta相关处理。"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+#: ../../source/third_libs/micropython_mqtt.rst:12
+msgid "示例"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+#: ../../source/third_libs/micropython_mqtt.rst:16
+msgid "说明"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:18
+msgid "为了方便快速测试，示例使用 ``test.mosquitto.org`` 提供的测试服务。"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:20
+msgid "参数说明"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "参数"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "client_id"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "Client ID"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "CC:1B:E0:00:00:01"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "server"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "MQTT Broker地址"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "test.mosquitto.org"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "port"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "MQTT Broker端口"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "1884"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "user"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "用户名"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "rw"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "password"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "readwrite"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "3"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "upstream topic"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "发布Topic"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "/cassia/test/up"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "downstream topic"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "订阅Topic"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:1
+msgid "/cassia/test/down"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:31
+msgid "测试工具使用 ``mosquitto_sub/mosquitto_pub``，您也可以使用 ``MQTTX`` 或者测试脚本进行。"
+msgstr ""
+
+#: ../../source/third_libs/micropython_mqtt.rst:43
+msgid "代码"
+msgstr ""

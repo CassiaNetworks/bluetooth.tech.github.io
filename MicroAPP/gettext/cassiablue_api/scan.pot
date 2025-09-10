@@ -1,0 +1,194 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, CassiaNetworks
+# This file is distributed under the same license as the Micro APP package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Micro APP 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-10 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/cassiablue_api/scan.rst:3
+msgid "扫描BLE设备"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:5
+msgid "通过API扫描BLE设备，支持自定义扫描参数。"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+#: ../../source/cassiablue_api/scan.rst:8
+msgid "示例"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:15
+msgid "API"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:20
+msgid "开启扫描，用于扫描周围的BLE设备，目前支持支持同时开启1个"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:0
+msgid "parameters"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:23
+msgid "query: 扫描参数，参考 `Scan bluetooth devices <https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/RESTful-API#scan-bluetooth-devices>`_"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:0
+msgid "返回"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:25
+msgid "- ok: 是否执行成功 - result: 执行结果，扫描数据请参考 ``BLEScanResult``"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:26
+msgid "ok: 是否执行成功"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:27
+msgid "result: 执行结果，扫描数据请参考 ``BLEScanResult``"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:32
+msgid "获取扫描数据"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:34
+msgid "``class BLEScanResult``"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:38
+msgid "异步可迭代对象，用于流式接收 BLE 扫描数据。"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:43
+msgid "返回自身，使实例可直接用于 ``async for`` 循环。"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:48
+msgid "从全局 ``scan_sse_client.queue`` 中异步获取下一条扫描结果并返回。"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:50
+msgid "当队列为空时会一直等待，直到有新数据到达。"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:53
+msgid "数据字段说明"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "字段"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "类型"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "说明"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "bdaddr"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "str"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "设备MAC地址"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "20:00:00:00:00:02"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "bdaddrType"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "设备地址类型"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "random"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "rssi"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "int"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "RSSI"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "-65"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "evtType"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "Event Type"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "3"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "name"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "广播名称"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "M2000"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "adData"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "广播包"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "0201060D…"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "scanData"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "扫描响应包"
+msgstr ""
+
+#: ../../source/cassiablue_api/scan.rst:1
+msgid "11094D…"
+msgstr ""

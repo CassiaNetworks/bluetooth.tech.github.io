@@ -1,0 +1,68 @@
+=====
+获取连接列表
+=====
+
+用于获取当前已连接的设备列表。
+
+对应于RESTful-API `Get the Device List Connected <https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/RESTful-API#get-the-device-list-connected-to-a-router-ac-managed>`_
+
+
+示例
+=====
+
+.. literalinclude:: ../../../../example/cassiablue/get_connected_devices.py
+   :language: python
+   :linenos:
+
+API
+=====
+
+.. py:function::  cassiablue.get_connected_devices() -> tuple[bool, str]
+   :async:
+
+   用于获取当前已连接的设备列表。结果返回JSON字符串。
+
+   - 连接列表为空
+
+   .. code-block:: json
+
+      {
+         "nodes": {}
+      }
+
+   - 连接列表有设备
+
+   .. code-block:: json
+
+      {
+         "nodes": [
+            {
+                  "bdaddrs": {
+                     "bdaddr": "20:00:00:00:00:01",
+                     "bdaddrType": "random"
+                  },
+                  "handle": "",
+                  "id": "20:00:00:00:00:01",
+                  "connectionState": "connected",
+                  "name": "",
+                  "chipId": 0,
+                  "pairStatus": "none",
+                  "rssi": -21,
+                  "packetLossRate": 3,
+                  "tx_phy": "1M",
+                  "rx_phy": "1M"
+            }
+         ]
+      }
+
+   .. csv-table:: 字段说明
+         :header: 字段,类型,说明,示例
+
+         bdaddr,str,设备MAC地址,20:00:00:00:00:01
+         bdaddrType,str,设备地址类型,random
+         id,str,设备MAC地址,20:00:00:00:00:01
+         chipId,int,芯片,0
+         rssi,int,RSSI,-21
+         packetLossRate,int,丢包率,3
+         tx_phy,str,Tx Phy, 1M
+         rx_phy,str,Rx Phy, 1M

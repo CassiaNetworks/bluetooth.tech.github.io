@@ -1,0 +1,37 @@
+=====
+写入设备GATT特征值
+=====
+
+用于写入指定连接设备指定Handle的值。
+
+参考RESTful-API `Write the Value of a Specific Characteristic <https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/RESTful-API#readwrite-the-value-of-a-specific-characteristic>`_
+
+
+示例
+=====
+
+.. literalinclude:: ../../../../example/cassiablue/gatt_write.py
+   :language: python
+   :linenos:
+
+^^^^
+
+API
+=====
+
+.. py:function::  cassiablue.gatt_write(addr: str, handle: str, value: str) -> tuple[ok: bool, result: str]
+   :async:
+
+   用于写入指定连接设备指定Handle的值。
+
+   :parameters:
+      - addr: 设备MAC地址
+      - handle: 待写入Handle
+      - value: 待写入的值
+
+   :returns: 
+      - ok: 是否执行成功
+      - result: 执行结果
+
+
+   

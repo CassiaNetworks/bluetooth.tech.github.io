@@ -1,0 +1,77 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, CassiaNetworks
+# This file is distributed under the same license as the Micro APP package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Micro APP 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-10 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/cassiablue_api/send_cmd.rst:3
+msgid "调用RESTful API"
+msgstr ""
+
+#: ../../source/cassiablue_api/send_cmd.rst:5
+msgid "用于调用网关提供的RESTful API。通过此接口可以调用网关内micropython模块未封装的接口。"
+msgstr ""
+
+#: ../../source/cassiablue_api/send_cmd.rst:7
+msgid "参考 `RESTful API <https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/RESTful-API>`_。"
+msgstr ""
+
+#: ../../source/cassiablue_api/send_cmd.rst:11
+msgid "示例"
+msgstr ""
+
+#: ../../source/cassiablue_api/send_cmd.rst:19
+msgid "API"
+msgstr ""
+
+#: ../../source/cassiablue_api/send_cmd.rst:24
+msgid "用于调用网关提供的RESTful API。"
+msgstr ""
+
+#: ../../source/cassiablue_api/send_cmd.rst:0
+msgid "parameters"
+msgstr ""
+
+#: ../../source/cassiablue_api/send_cmd.rst:27
+msgid "path: API路径"
+msgstr ""
+
+#: ../../source/cassiablue_api/send_cmd.rst:28
+msgid "method: HTTP方法"
+msgstr ""
+
+#: ../../source/cassiablue_api/send_cmd.rst:29
+msgid "query: query参数"
+msgstr ""
+
+#: ../../source/cassiablue_api/send_cmd.rst:30
+msgid "body: body参数"
+msgstr ""
+
+#: ../../source/cassiablue_api/send_cmd.rst:0
+msgid "返回"
+msgstr ""
+
+#: ../../source/cassiablue_api/send_cmd.rst:32
+msgid "- ok: 是否执行成功 - result: 执行结果"
+msgstr ""
+
+#: ../../source/cassiablue_api/send_cmd.rst:33
+msgid "ok: 是否执行成功"
+msgstr ""
+
+#: ../../source/cassiablue_api/send_cmd.rst:34
+msgid "result: 执行结果"
+msgstr ""

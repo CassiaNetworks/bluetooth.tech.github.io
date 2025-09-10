@@ -1,0 +1,85 @@
+=====
+完整示例
+=====
+
+基于现有的API和库，实现了一个简单的完整示例。
+
+.. image::  demo_2.png
+
+..
+    .. mermaid::
+        
+        flowchart LR
+        %% User
+        User["User (Browser/UI)"]
+
+        %% Cloud
+        Server["Server (Business Logic/UI)"]
+        MQTT["MQTT Broker"]
+
+        %% Gateway
+        subgraph Gateway["Gateway (MicroPython APP)"]
+            MQTT_Client["micropython-mqtt"]
+            HTTP["microdot"]
+            BLE["Cassiablue API"]
+        end
+
+        %% BLE Devices
+        subgraph Devices["BLE Device Layer"]
+            BLE_Device1["BLE Device #1"]
+            BLE_Device2["BLE Device #2"]
+            BLE_DeviceN["BLE Device ..."]
+        end
+
+        %% Relationships
+        User -->|HTTP/REST API, Pages| HTTP
+        User --> Server
+        Server -->|Command Delivery| MQTT
+        MQTT -->|Command Delivery| MQTT_Client
+        MQTT_Client -->|Execute Commands| BLE
+        BLE --> BLE_Device1
+        BLE --> BLE_Device2
+        BLE --> BLE_DeviceN
+        BLE -->|Data/Events| MQTT_Client
+        MQTT_Client -->|Report Data| MQTT
+        MQTT --> Server
+        Server -->|Results/UI Feedback| User
+
+实现功能
+====
+
+- 通过micropython-mqtt和云端交互
+
+    - 订阅命令topic，用于接收云端下发的命令
+    - 推送数据topic，用于推送数据和命令执行结果
+
+- 通过microdot实现本地HTTP服务
+
+    - 监听本地端口，提供HTTP服务
+    - 提供RESTful API，用于获取APP配置
+    - 提供静态页面，用于展示APP配置
+
+- 通过Cassiablue API和BLE设备交互
+
+    - 实时扫描BLE设备广播包，将支持的设备广播解析
+    - 收到云端的设备命令后，通过API连接、读写设备、接收通知数据
+
+.. image::  demo_2.png
+
+..
+    .. mermaid::
+
+    sequenceDiagram
+            User ->> Server: UI action, request device historical data
+            Server -->> MQTT Broker: downlink command
+            MQTT Broker -->> APP: downlink command
+            APP -->> BLE Device: BLE connect / write
+            BLE Device -->> APP: uplink data / event
+            APP -->> MQTT Broker: uplink data / event
+            MQTT Broker -->> Server: uplink data / event
+            Server -->> User: uplink data / event
+
+Github
+====
+
+参考 `Cassia SDK Guide Micro APP <https://github.com/CassiaNetworks/CassiaSDKGuide>`_

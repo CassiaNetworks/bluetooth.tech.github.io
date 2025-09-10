@@ -1,0 +1,7 @@
+=====
+time
+=====
+
+.. literalinclude:: ../../../../../example/python_standard_libs/time_test.py
+   :language: python
+   :linenos:

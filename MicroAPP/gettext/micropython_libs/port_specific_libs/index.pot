@@ -1,0 +1,53 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, CassiaNetworks
+# This file is distributed under the same license as the Micro APP package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Micro APP 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-10 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/micropython_libs/port_specific_libs/index.rst:3
+msgid "Port-specific libraries"
+msgstr ""
+
+#: ../../source/micropython_libs/port_specific_libs/index.rst:4
+msgid "MicroPython特定开发板模块支持情况与示例， `Micropython官网链接 <https://docs.micropython.org/en/v1.24.0/library/index.html#micropython-specific-libraries>`_。"
+msgstr ""
+
+#: ../../source/micropython_libs/port_specific_libs/index.rst:1
+msgid "模块"
+msgstr ""
+
+#: ../../source/micropython_libs/port_specific_libs/index.rst:1
+msgid "是否支持"
+msgstr ""
+
+#: ../../source/micropython_libs/port_specific_libs/index.rst:1
+msgid "说明"
+msgstr ""
+
+#: ../../source/micropython_libs/port_specific_libs/index.rst:1
+msgid "esp"
+msgstr ""
+
+#: ../../source/micropython_libs/port_specific_libs/index.rst:1
+msgid "❌"
+msgstr ""
+
+#: ../../source/micropython_libs/port_specific_libs/index.rst:1
+msgid "functions related to the ESP8266 and ESP32"
+msgstr ""
+
+#: ../../source/micropython_libs/port_specific_libs/index.rst:1
+msgid "esp32"
+msgstr ""

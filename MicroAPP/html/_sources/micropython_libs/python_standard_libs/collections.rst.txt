@@ -1,0 +1,7 @@
+=====
+collections
+=====
+
+.. literalinclude:: ../../../../../example/python_standard_libs/collections_test.py
+   :language: python
+   :linenos:

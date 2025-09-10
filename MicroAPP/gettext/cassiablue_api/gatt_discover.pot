@@ -1,0 +1,126 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, CassiaNetworks
+# This file is distributed under the same license as the Micro APP package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Micro APP 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-10 11:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/cassiablue_api/gatt_discover.rst:3
+msgid "获取设备GATT服务列表"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:5
+msgid "用于获取指定连接设备的GATT服务列表。"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:7
+msgid "参考RESTful-API `Discover GATT Services and Characteristics <https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/RESTful-API#discover-gatt-services-and-characteristics>`_"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:1
+#: ../../source/cassiablue_api/gatt_discover.rst:11
+msgid "示例"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:19
+msgid "API"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:24
+msgid "用于获取指定连接设备的GATT服务列表。结果返回JSON字符串。"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:0
+msgid "parameters"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:27
+msgid "addr: 设备MAC地址"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:0
+msgid "返回"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:29
+msgid "- ok: 是否执行成功 - result: 执行结果，JSON字符串，示例如下  .. code-block:: json     [       {          \"uuid\": \"00001801-0000-1000-8000-00805f9b34fb\",          \"primary\": true,          \"handle\": 1,          \"characteristics\": [                {                   \"handle\": 3,                   \"properties\": 32,                   \"uuid\": \"00002a05-0000-1000-8000-00805f9b34fb\",                   \"descriptors\": [                      {                            \"handle\": 3,                            \"uuid\": \"00002a05-0000-1000-8000-00805f9b34fb\"                      },                      {                            \"handle\": 4,                            \"uuid\": \"00002902-0000-1000-8000-00805f9b34fb\"                      }                   ]                },                {                   \"handle\": 6,                   \"properties\": 10,                   \"uuid\": \"00002b29-0000-1000-8000-00805f9b34fb\",                   \"descriptors\": [                      {                            \"handle\": 6,                            \"uuid\": \"00002b29-0000-1000-8000-00805f9b34fb\"                      }                   ]                },                {                   \"handle\": 8,                   \"properties\": 2,                   \"uuid\": \"00002b2a-0000-1000-8000-00805f9b34fb\",                   \"descriptors\": [                      {                            \"handle\": 8,                            \"uuid\": \"00002b2a-0000-1000-8000-00805f9b34fb\"                      }                   ]                },                {                   \"handle\": 10,                   \"properties\": 2,                   \"uuid\": \"00002b3a-0000-1000-8000-00805f9b34fb\",                   \"descriptors\": [                      {                            \"handle\": 10,                            \"uuid\": \"00002b3a-0000-1000-8000-00805f9b34fb\"                      }                   ]                }          ]       },       {          \"uuid\": \"00001800-0000-1000-8000-00805f9b34fb\",          \"primary\": true,          \"handle\": 20,          \"characteristics\": [                {                   \"handle\": 22,                   \"properties\": 2,                   \"uuid\": \"00002a00-0000-1000-8000-00805f9b34fb\",                   \"descriptors\": [                      {                            \"handle\": 22,                            \"uuid\": \"00002a00-0000-1000-8000-00805f9b34fb\"                      }                   ]                },                {                   \"handle\": 24,                   \"properties\": 2,                   \"uuid\": \"00002a01-0000-1000-8000-00805f9b34fb\",                   \"descriptors\": [                      {                            \"handle\": 24,                            \"uuid\": \"00002a01-0000-1000-8000-00805f9b34fb\"                      }                   ]                },                {                   \"handle\": 26,                   \"properties\": 2,                   \"uuid\": \"00002aa6-0000-1000-8000-00805f9b34fb\",                   \"descriptors\": [                      {                            \"handle\": 26,                            \"uuid\": \"00002aa6-0000-1000-8000-00805f9b34fb\"                      }                   ]                }          ]       },       {          \"uuid\": \"6324be9e-236f-1edc-ac33-e2051caa4f2a\",          \"primary\": true,          \"handle\": 40,          \"characteristics\": [                {                   \"handle\": 42,                   \"properties\": 8,                   \"uuid\": \"6324a123-236f-1edc-ac33-e2051caa4f2a\",                   \"descriptors\": [                      {                            \"handle\": 42,                            \"uuid\": \"6324a123-236f-1edc-ac33-e2051caa4f2a\"                      }                   ]                },                {                   \"handle\": 44,                   \"properties\": 18,                   \"uuid\": \"6324a321-236f-1edc-ac33-e2051caa4f2a\",                   \"descriptors\": [                      {                            \"handle\": 44,                            \"uuid\": \"6324a321-236f-1edc-ac33-e2051caa4f2a\"                      },                      {                            \"handle\": 45,                            \"uuid\": \"00002902-0000-1000-8000-00805f9b34fb\"                      }                   ]                }          ]       }    ]  .. csv-table:: 字段说明    :header: 字段,类型,说明,示例     uuid,str,UUID,00001801-...    handle,int,Handle用于读写操作,1    properties,int,属性,32"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:30
+msgid "ok: 是否执行成功"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:31
+msgid "result: 执行结果，JSON字符串，示例如下"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:166
+msgid "字段说明"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:1
+msgid "字段"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:1
+msgid "类型"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:1
+msgid "说明"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:1
+msgid "uuid"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:1
+msgid "str"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:1
+msgid "UUID"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:1
+msgid "00001801-..."
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:1
+msgid "handle"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:1
+msgid "int"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:1
+msgid "Handle用于读写操作"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:1
+msgid "1"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:1
+msgid "properties"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:1
+msgid "属性"
+msgstr ""
+
+#: ../../source/cassiablue_api/gatt_discover.rst:1
+msgid "32"
+msgstr ""
