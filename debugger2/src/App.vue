@@ -96,7 +96,7 @@
                   <el-select v-model="store.devConf.filter_mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option clearable style="width: 100%">
                   </el-select>
                 </el-form-item>
-                <el-form-item :label="$t('message.phy')" v-if="cache.model !== 'X1000'">
+                <el-form-item :label="$t('message.phy')" v-if="!['X1000', 'S2000'].includes(cache.model)">
                   <el-select v-model="store.devConf.phy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option clearable style="width: 100%">
                     <el-option label="1M" value="1M" key="1M"></el-option>
                     <el-option label="2M" value="2M" key="2M"></el-option>
@@ -158,13 +158,13 @@
                 <el-form-item :label="$t('message.connTimeout')" prop="connTimeout">
                   <el-input v-model="store.devConf.connTimeout"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('message.phy')" v-show="store.devConf.autoSelectionOn === 'off' && cache.model !== 'X1000'">
+                <el-form-item :label="$t('message.phy')" v-show="store.devConf.autoSelectionOn === 'off' && !['X1000', 'S2000'].includes(cache.model)">
                   <el-select v-model="store.devConf.connPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                     <el-option label="1M" value="1M" key="1M"></el-option>
                     <el-option label="CODED" value="CODED" key="CODED"></el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item :label="$t('message.secondaryPhy')" v-show="store.devConf.autoSelectionOn === 'off' && cache.model !== 'X1000'">
+                <el-form-item :label="$t('message.secondaryPhy')" v-show="store.devConf.autoSelectionOn === 'off' && !['X1000', 'S2000'].includes(cache.model)">
                   <el-select v-model="store.devConf.secondaryPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                     <el-option label="1M" value="1M" key="1M"></el-option>
                     <el-option label="2M" value="2M" key="2M"></el-option>
@@ -275,10 +275,10 @@
                 <el-menu-item index="unpair">
                   <span slot="title">{{$t('message.unpair')}}</span>
                 </el-menu-item>
-                <el-menu-item index="readPhy" v-if="cache.model !== 'X1000'">
+                <el-menu-item index="readPhy" v-if="!['X1000', 'S2000'].includes(cache.model)">
                   <span slot="title">{{$t('message.readPhy')}}</span>
                 </el-menu-item>
-                <el-menu-item index="updatePhy" v-if="cache.model !== 'X1000'">
+                <el-menu-item index="updatePhy" v-if="!['X1000', 'S2000'].includes(cache.model)">
                   <span slot="title">{{$t('message.updatePhy')}}</span>
                 </el-menu-item>
                 
@@ -328,7 +328,7 @@
                         <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].filter_mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                         </el-select>
                       </el-form-item>
-                      <el-form-item :label="$t('message.phy')" v-if="cache.model !== 'X1000'">
+                      <el-form-item :label="$t('message.phy')" v-if="!['X1000', 'S2000'].includes(cache.model)">
                         <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].phy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                           <el-option label="1M" value="1M" key="1M"></el-option>
                           <el-option label="2M" value="2M" key="2M"></el-option>
@@ -392,13 +392,13 @@
                           <el-form-item :label="$t('message.connTimeout')" prop="connTimeout">
                             <el-input v-model="store.devConfDisplayVars.apiDebuggerParams['connect'].connTimeout"></el-input>
                           </el-form-item>
-                          <el-form-item :label="$t('message.phy')" v-if="cache.model !== 'X1000'">
+                          <el-form-item :label="$t('message.phy')" v-if="!['X1000', 'S2000'].includes(cache.model)">
                               <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['connect'].connPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                               <el-option label="1M" value="1M" key="1M"></el-option>
                               <el-option label="CODED" value="CODED" key="CODED"></el-option>
                               </el-select>
                           </el-form-item>
-                          <el-form-item :label="$t('message.secondaryPhy')" v-if="cache.model !== 'X1000'">
+                          <el-form-item :label="$t('message.secondaryPhy')" v-if="!['X1000', 'S2000'].includes(cache.model)">
                               <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['connect'].secondaryPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                               <el-option label="1M" value="1M" key="1M"></el-option>
                               <el-option label="2M" value="2M" key="2M"></el-option>
@@ -437,7 +437,7 @@
                     </el-form>
                   </el-tab-pane>
                 </el-tabs>
-                <el-tabs v-if="cache.model !== 'X1000'" v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'readPhy'" style="min-height: 380px;">
+                <el-tabs v-if="!['X1000', 'S2000'].includes(cache.model)" v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'readPhy'" style="min-height: 380px;">
                   <el-tab-pane>
                     <span slot="label"> {{$t('message.readPhy')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
@@ -454,7 +454,7 @@
                     </el-form>
                   </el-tab-pane>
                 </el-tabs>
-                <el-tabs v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'updatePhy' && cache.model !== 'X1000'" style="min-height: 380px;">
+                <el-tabs v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'updatePhy' && !['X1000', 'S2000'].includes(cache.model)" style="min-height: 380px;">
                   <el-tab-pane>
                     <span slot="label"> {{$t('message.updatePhy')}}</span>
                     <el-form label-width="150px" style="margin-top: 15px; width: 70%;" size="small">
@@ -843,7 +843,7 @@
                     </el-row>
                   </el-tab-pane>
                 </el-tabs>
-                <el-tabs v-if="cache.model !== 'X1000'" v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'readPhy'">
+                <el-tabs v-if="!['X1000', 'S2000'].includes(cache.model)" v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'readPhy'">
                   <el-tab-pane>
                     <span slot="label"> {{$t('message.apiDescription')}}</span>
                     <el-row class="apiHelp">
@@ -852,7 +852,7 @@
                     </el-row>
                   </el-tab-pane>
                 </el-tabs>
-                <el-tabs v-if="cache.model !== 'X1000'" v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'updatePhy'">
+                <el-tabs v-if="!['X1000', 'S2000'].includes(cache.model)" v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'updatePhy'">
                   <el-tab-pane>
                     <span slot="label"> {{$t('message.apiDescription')}}</span>
                     <el-row class="apiHelp">
@@ -1180,8 +1180,8 @@
                         <el-button plain type="primary" size="small" @click="showPairDialog(row.mac)">{{$t('message.pair')}}</el-button>
                         <el-button plain type="primary" size="small" @click="unpair(row.mac)">{{$t('message.unpair')}}</el-button>
                         <el-button plain type="primary" size="small" @click="exportDeviceServices(device.mac)">{{$t('message.export')}}</el-button>
-                        <el-button v-if="cache.model !== 'X1000'" plain type="primary" size="small" @click="readDevicePhy(row.mac)">{{$t('message.readPhy')}}</el-button>
-                        <el-button v-if="cache.model !== 'X1000'" plain type="primary" size="small" @click="showUpdateDevicePhyDialog(row.mac)">{{$t('message.updatePhy')}}</el-button>
+                        <el-button v-if="!['X1000', 'S2000'].includes(cache.model)" plain type="primary" size="small" @click="readDevicePhy(row.mac)">{{$t('message.readPhy')}}</el-button>
+                        <el-button v-if="!['X1000', 'S2000'].includes(cache.model)" plain type="primary" size="small" @click="showUpdateDevicePhyDialog(row.mac)">{{$t('message.updatePhy')}}</el-button>
                       </el-button-group>
                     </template>
                   </vxe-table-column>
@@ -1208,8 +1208,8 @@
                       <el-button size="small" @click="showPairDialog(device.mac)" style="color: #2897ff">{{$t('message.pair')}}</el-button>
                       <el-button size="small" @click="unpair(device.mac)" style="color: #2897ff">{{$t('message.unpair')}}</el-button>
                       <el-button size="small" @click="exportDeviceServices(device.mac)" style="color: #2897ff">{{$t('message.export')}}</el-button>
-                      <el-button size="small" v-if="cache.model !== 'X1000'" @click="readDevicePhy(device.mac)" style="color: #2897ff">{{$t('message.readPhy')}}</el-button>
-                      <el-button size="small" v-if="cache.model !== 'X1000'" @click="showUpdateDevicePhyDialog(device.mac)" style="color: #2897ff">{{$t('message.updatePhy')}}</el-button>
+                      <el-button size="small" v-if="!['X1000', 'S2000'].includes(cache.model)" @click="readDevicePhy(device.mac)" style="color: #2897ff">{{$t('message.readPhy')}}</el-button>
+                      <el-button size="small" v-if="!['X1000', 'S2000'].includes(cache.model)" @click="showUpdateDevicePhyDialog(device.mac)" style="color: #2897ff">{{$t('message.updatePhy')}}</el-button>
                     </el-button-group>
                   </el-col>
                 </el-row>
@@ -1532,7 +1532,7 @@
     </span>
   </el-dialog>
 
-  <el-dialog title="Update PHY" center :visible.sync="store.devConfDisplayVars.updatePhy.visible && cache.model !== 'X1000'">
+  <el-dialog title="Update PHY" center :visible.sync="store.devConfDisplayVars.updatePhy.visible && cache.model !== 'X1000' && cache.model !== 'S2000'">
     <el-form label-width="130px" size="small">
       <el-form-item label="Device Mac">
         <el-input v-model="store.devConfDisplayVars.updatePhy.deviceMac" disabled></el-input>

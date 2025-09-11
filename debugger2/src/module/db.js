@@ -469,7 +469,7 @@ function saveAcDevConf(_devConf) {
 }
 
 function checkAndClearPhyParams(model) {
-  if (model !== 'X1000') {
+  if (!['X1000', 'S2000'].includes(model)) {
     return;
   }
 
