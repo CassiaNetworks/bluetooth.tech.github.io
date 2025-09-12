@@ -4,6 +4,10 @@
 
 目前网关支持上传 ``python`` 脚本编译后的 ``mpy`` 文件。具体步骤如下
 
+.. note:: 
+    - 目前提供 `mpy-cross Web <http://bluetooth.tech/MicroAPP/mpy-cross/>`_ 版本，可以通过Web方式将 ``py`` 代码编译为 ``mpy``
+    - 此工具为 ``emsdk`` 编译的 ``mpy-cross`` 的 ``wasm+js`` 静态页面，不会存储上传 ``py`` 代码
+
 使用系统
 ====
 
