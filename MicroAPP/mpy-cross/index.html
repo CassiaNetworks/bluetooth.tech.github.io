@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>mpy-cross</title>
+</head>
+
+<body>
+    <h1>mpy-cross</h1>
+    <hr>
+    <div style="display: flex; align-items:center;gap:6px;">
+        <span style="background-color: coral;border-radius:3px;color:white;font-size:10px;padding:3px 6px;">v1.24.1</span>
+         Compile the user-uploaded `.py` code file into an `.mpy` file using mpy-cross.
+    </div>
+    <hr>
+    <div style="display: flex; flex-direction:column; gap: 12px;">
+        <input type="file" id="fileInput" accept=".py">
+        <button id="compileBtn" style="width: fit-content;" disabled>Compile</button>
+    </div>
+    <textarea id="log" rows="20"
+            style="outline:none; margin-top: 12px;padding: 4px 6px; height: 100px; width:100%; font-family:monospace; box-sizing:border-box"></textarea>
+    <script type="module" src="./index.js?v=202509121530">
+    </script>
+</body>
+
+</html>
