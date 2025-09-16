@@ -1,0 +1,57 @@
+=====
+接收设备GATT通知
+=====
+
+通过API接收设备通知(Notification)/指示(Indication)数据。
+
+参考 `Receive Notification and Indication <https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/RESTful-API#receive-notification-and-indication>`_。
+
+示例
+=====
+
+.. literalinclude:: ../../../../example/cassiablue/notify.py
+   :language: python
+   :linenos:
+
+API
+=====
+
+.. py:function::  cassiablue.start_recv_notify() -> tuple[ok: bool, result: str]
+   :async:
+
+   开启接收设备GATT通知数据，目前支持同时开启1个
+
+   :returns: 
+      - ok: 是否执行成功
+      - result: 执行结果，消息数据请参考 ``BLENotifyResult``
+
+.. py:function:: cassiablue.notify_result() -> BLENotifyResult
+   :async:
+
+   接收设备GATT通知数据
+
+   :returns: ``class BLENotifyResult``
+
+.. py:class:: BLENotifyResult
+
+   异步可迭代对象，用于流式接收 BLE 通知数据。
+
+   .. py:method:: __aiter__() -> BLENotifyResult
+      :async:
+
+      返回自身，使实例可直接用于 ``async for`` 循环。
+
+   .. py:method:: __anext__() -> dict
+      :async:
+
+      从全局 ``notify_sse_client.queue`` 中异步获取下一条消息并返回。
+
+      当队列为空时会一直等待，直到有新数据到达。
+
+
+      .. csv-table:: 数据字段说明
+         :header: 字段,类型,说明,示例
+
+         id,str,设备MAC地址,20:00:00:00:00:01
+         dataType,str,数据类型,``notification`` ``indication``
+         handle,int,Handle,44

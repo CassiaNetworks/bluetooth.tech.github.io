@@ -102,12 +102,20 @@ window.addEventListener("load", () => mermaid.run());
 <h2 id="_">_</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cassiablue_api/state.html#BLEConnectionResult.__aiter__">__aiter__() （BLEConnectionResult 方法）</a>
+</li>
+      <li><a href="cassiablue_api/notify.html#BLENotifyResult.__aiter__">__aiter__() （BLENotifyResult 方法）</a>
+</li>
       <li><a href="cassiablue_api/scan.html#BLEScanResult.__aiter__">__aiter__() （BLEScanResult 方法）</a>
 </li>
-      <li><a href="cassiablue_api/scan.html#BLEScanResult.__anext__">__anext__() （BLEScanResult 方法）</a>
+      <li><a href="cassiablue_api/state.html#BLEConnectionResult.__anext__">__anext__() （BLEConnectionResult 方法）</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cassiablue_api/notify.html#BLENotifyResult.__anext__">__anext__() （BLENotifyResult 方法）</a>
+</li>
+      <li><a href="cassiablue_api/scan.html#BLEScanResult.__anext__">__anext__() （BLEScanResult 方法）</a>
+</li>
       <li><a href="cassia_libs/cassia_common.html#AsyncQueue.__init__">__init__() （AsyncQueue 方法）</a>
 </li>
       <li><a href="cassia_libs/cassia_common.html#SimpleFuture.__init__">__init__() （SimpleFuture 方法）</a>
@@ -126,6 +134,10 @@ window.addEventListener("load", () => mermaid.run());
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cassiablue_api/state.html#BLEConnectionResult">BLEConnectionResult（内置类）</a>
+</li>
+      <li><a href="cassiablue_api/notify.html#BLENotifyResult">BLENotifyResult（内置类）</a>
+</li>
       <li><a href="cassiablue_api/scan.html#BLEScanResult">BLEScanResult（内置类）</a>
 </li>
       <li>
@@ -133,6 +145,8 @@ window.addEventListener("load", () => mermaid.run());
 
       <ul>
         <li><a href="cassiablue_api/connect.html#cassiablue.connect">cassiablue.connect()</a>
+</li>
+        <li><a href="cassiablue_api/state.html#cassiablue.connection_result">cassiablue.connection_result()</a>
 </li>
         <li><a href="cassiablue_api/gatt_discover.html#cassiablue.gatt_discover">cassiablue.gatt_discover()</a>
 </li>
@@ -142,9 +156,15 @@ window.addEventListener("load", () => mermaid.run());
 </li>
         <li><a href="cassiablue_api/get_connected_devices.html#cassiablue.get_connected_devices">cassiablue.get_connected_devices()</a>
 </li>
+        <li><a href="cassiablue_api/notify.html#cassiablue.notify_result">cassiablue.notify_result()</a>
+</li>
         <li><a href="cassiablue_api/scan.html#cassiablue.scan_result">cassiablue.scan_result()</a>
 </li>
         <li><a href="cassiablue_api/send_cmd.html#cassiablue.send_cmd">cassiablue.send_cmd()</a>
+</li>
+        <li><a href="cassiablue_api/state.html#cassiablue.start_recv_connection_state">cassiablue.start_recv_connection_state()</a>
+</li>
+        <li><a href="cassiablue_api/notify.html#cassiablue.start_recv_notify">cassiablue.start_recv_notify()</a>
 </li>
         <li><a href="cassiablue_api/scan.html#cassiablue.start_scan">cassiablue.start_scan()</a>
 </li>
@@ -169,6 +189,13 @@ window.addEventListener("load", () => mermaid.run());
 </li>
       </ul></li>
       <li>
+    cassiablue.connection_result()
+
+      <ul>
+        <li><a href="cassiablue_api/state.html#cassiablue.connection_result">built-in function</a>
+</li>
+      </ul></li>
+      <li>
     cassiablue.gatt_discover()
 
       <ul>
@@ -182,8 +209,6 @@ window.addEventListener("load", () => mermaid.run());
         <li><a href="cassiablue_api/gatt_read.html#cassiablue.gatt_read">built-in function</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     cassiablue.gatt_write()
 
@@ -191,11 +216,20 @@ window.addEventListener("load", () => mermaid.run());
         <li><a href="cassiablue_api/gatt_write.html#cassiablue.gatt_write">built-in function</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     cassiablue.get_connected_devices()
 
       <ul>
         <li><a href="cassiablue_api/get_connected_devices.html#cassiablue.get_connected_devices">built-in function</a>
+</li>
+      </ul></li>
+      <li>
+    cassiablue.notify_result()
+
+      <ul>
+        <li><a href="cassiablue_api/notify.html#cassiablue.notify_result">built-in function</a>
 </li>
       </ul></li>
       <li>
@@ -210,6 +244,20 @@ window.addEventListener("load", () => mermaid.run());
 
       <ul>
         <li><a href="cassiablue_api/send_cmd.html#cassiablue.send_cmd">built-in function</a>
+</li>
+      </ul></li>
+      <li>
+    cassiablue.start_recv_connection_state()
+
+      <ul>
+        <li><a href="cassiablue_api/state.html#cassiablue.start_recv_connection_state">built-in function</a>
+</li>
+      </ul></li>
+      <li>
+    cassiablue.start_recv_notify()
+
+      <ul>
+        <li><a href="cassiablue_api/notify.html#cassiablue.start_recv_notify">built-in function</a>
 </li>
       </ul></li>
       <li>

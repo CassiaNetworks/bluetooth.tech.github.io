@@ -17,7 +17,7 @@ API
 .. py:function::  cassiablue.start_scan(query: str | None = None) -> tuple[ok: bool, result: str]
    :async:
 
-   开启扫描，用于扫描周围的BLE设备，目前支持支持同时开启1个
+   开启扫描，用于扫描周围的BLE设备，目前支持同时开启1个
 
    :parameters: 
       - query: 扫描参数，参考 `Scan bluetooth devices <https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/RESTful-API#scan-bluetooth-devices>`_
