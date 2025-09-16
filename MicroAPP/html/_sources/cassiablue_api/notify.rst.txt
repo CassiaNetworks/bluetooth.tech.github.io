@@ -55,3 +55,4 @@ API
          id,str,设备MAC地址,20:00:00:00:00:01
          dataType,str,数据类型,``notification`` ``indication``
          handle,int,Handle,44
+         value,str,Value,A0EE00...
