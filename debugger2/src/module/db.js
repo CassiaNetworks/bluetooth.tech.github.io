@@ -24,7 +24,7 @@ let storage = {
     chip: 0, // 扫描使用的芯片
     scanParams: '', // 扫描接口其他参数
     connChip: 0, // 连接使用的芯片
-    discovergatt: 1, // 是否开启，默认开启，与API默认参数保持一致
+    discovergatt: '1', // 是否开启，默认开启，与API默认参数保持一致
     connTimeout: 15, // 连接超时时间，单位秒，默认为10秒
     connPhy: '',
     secondaryPhy: '',
@@ -132,7 +132,7 @@ let storage = {
         chip: 0, 
         deviceMac: 'C0:00:5B:D1:AA:BC', 
         addrType: libEnum.deviceAddrType.PUBLIC, 
-        discovergatt: 1, 
+        discovergatt: '1', 
         connTimeout: 15,
         connPhy: '', 
         secondaryPhy: '', 
@@ -523,7 +523,7 @@ function loadStorage() {
 
   // 新版本兼容老版本的本地存储
   if (!_.has(storage.devConf, 'connChip')) storage.devConf.connChip = 0;
-  if (!_.has(storage.devConf, 'discovergatt')) storage.devConf.discovergatt = 1;
+  if (!_.has(storage.devConf, 'discovergatt')) storage.devConf.discovergatt = '1';
   if (!_.has(storage.devConf, 'connTimeout')) storage.devConf.connTimeout = 15;
   if (!_.has(storage.devConf, 'connParams')) storage.devConf.connParams = '';
   if (!_.has(storage.devConf, 'scanParams')) storage.devConf.scanParams = '';

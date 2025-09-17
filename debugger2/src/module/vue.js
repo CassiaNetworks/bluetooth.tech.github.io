@@ -262,7 +262,7 @@ function createVueMethods(vue) {
       if (!this.cache.deviceScanDetail.updateTimer) {
         this.cache.deviceScanDetail.updateTimer = setInterval(() => {
           if (this.cache.deviceScanDetail.data.length >= MAX_TOTAL) {
-            this.cache.deviceScanDetail.data.splice(0, Math.floor(MAX_TOTAL * 0.1)); 
+            this.cache.deviceScanDetail.data.splice(0, Math.floor(MAX_TOTAL * 0.1));
           }
           const source = this.cache.deviceScanDetail.updateQueue;
           for (let i = 0; i < source.length; i++) {
@@ -275,7 +275,7 @@ function createVueMethods(vue) {
     showDeviceScanDataRealTimeNewTab() {
       let url = apiModule.getScanUrlByUserParams(this.store.devConf, this.store.devConf.chip, '', this.store.devConf.phy, '', '');
       const newWindow = window.open(url, '_blank');
-  
+
       if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
         window.location.href = url;
       }
@@ -283,7 +283,7 @@ function createVueMethods(vue) {
     showDeviceNotificationDataRealTimeNewTab() {
       let url = apiModule.getNotificationUrlByUserParams(this.store.devConf, this.cache.notifyDisplayTimestamp, this.cache.notifyDisplaySequence);
       const newWindow = window.open(url, '_blank');
-  
+
       if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
         window.location.href = url;
       }
@@ -558,6 +558,14 @@ function createVueMethods(vue) {
     startDebugApi() {
       const apiType = this.store.devConfDisplayVars.activeApiDebugMenuItem;
       const apiParams = this.store.devConfDisplayVars.apiDebuggerParams[apiType];
+
+      console.log('startDebugApi apiParams before filter xss:', this.store.devConf.mac, JSON.stringify(apiParams));
+      _.forEach(apiParams, (v, k) => {
+        if (_.isString(v)) apiParams[k] = filterXSS(v);
+      });
+      this.store.devConf.mac = filterXSS(this.store.devConf.mac);
+      console.log('startDebugApi apiParams after filter xss:', this.store.devConf.mac, JSON.stringify(apiParams));
+
       const apiResult = this.cache.apiDebuggerResult[apiType];
       if (apiType === libEnum.apiType.AUTH) {
         apiModule.getAccessToken(this.store.devConf.baseURI, this.store.devConf.acDevKey, this.store.devConf.acDevSecret).then((data) => {
@@ -588,7 +596,7 @@ function createVueMethods(vue) {
         notify(`${this.$i18n.t('message.debuggerScanAlert')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
       } else if (apiType === libEnum.apiType.CONNECT) {
         let params = {
-          discovergatt: _.get(apiParams, 'discovergatt') || 1,
+          discovergatt: _.get(apiParams, 'discovergatt') || '1',
           timeout: _.get(apiParams, 'connTimeout') || 10,
         };
 
@@ -638,7 +646,7 @@ function createVueMethods(vue) {
         if (bodyParam.tx.includes('CODED')) {
           bodyParam.coded_option = apiParams.codedOption;
         }
-        
+
         apiModule.updatePhyByDevConf(this.store.devConf, apiParams.deviceMac, bodyParam).then((body) => {
           notify(`${this.$i18n.t('message.updatePhyOK')}: ${apiParams.deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
           apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.updatePhyOK')}, ${JSON.stringify(bodyParam)}, ${JSON.stringify(body)}`);
@@ -1013,7 +1021,7 @@ function createVueMethods(vue) {
     connectDeviceByRow(row, deviceMac) { // notify通过连接状态SSE通知
       main.setObjProperty(this.cache.devicesConnectLoading, deviceMac, true);
       let params = {
-        discovergatt: _.get(this.store.devConf, 'discovergatt') || 1, // 优选和普通方式都支持
+        discovergatt: _.get(this.store.devConf, 'discovergatt') || '1', // 优选和普通方式都支持
         timeout: _.get(this.store.devConf, 'connTimeout') || 10, // 优选和普通方式都支持
         aps: _.get(this.store.devConf, 'aps') || '*', // 优选参数
         autoSelectionOn: _.get(this.store.devConf, 'autoSelectionOn') || 'off' // 辅助参数
