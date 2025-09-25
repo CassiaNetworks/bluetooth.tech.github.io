@@ -1,0 +1,12 @@
+=======
+aiohttp
+=======
+
+内部已集成了aiohttp库，可以直接使用。目前只支持HTTP client功能。参考 `aiohttp <https://github.com/micropython/micropython-lib/tree/v1.24.1/python-ecosys/aiohttp>`_。
+
+示例
+=====
+
+.. literalinclude:: ../../../../../../example/python_ecosys/aiohttp_test.py
+   :language: python
+   :linenos:

@@ -1,0 +1,239 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>生成mpy &mdash; Micro APP 0.1.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=3abfe436" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d786bb5c"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/translations.js?v=beaddf03"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="本地运行" href="local_run.html" />
+    <link rel="prev" title="更多参考" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Micro APP
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/index.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resource/index.html">版本&amp;资源</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cassiablue_api/index.html">Cassiablue API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cassiamqtt_api/index.html">Cassiamqtt API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cassia_libs/index.html">Cassia常用库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../third_libs/index.html">第三方常用库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../micropython_libs/index.html">MicroPython库</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">更多参考</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">生成mpy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">使用系统</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">下载源码</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">编译构建</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">查看帮助</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">准备脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">编译脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">上传运行</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="local_run.html">本地运行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo.html">完整示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coding.html">常见问题</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Micro APP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">更多参考</a></li>
+      <li class="breadcrumb-item active">生成mpy</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/more/mpy.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="mpy">
+<h1>生成mpy<a class="headerlink" href="#mpy" title="Link to this heading"></a></h1>
+<p>目前网关支持上传 <code class="docutils literal notranslate"><span class="pre">python</span></code> 脚本编译后的 <code class="docutils literal notranslate"><span class="pre">mpy</span></code> 文件。具体步骤如下</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<ul class="simple">
+<li><p>目前提供 <a class="reference external" href="http://bluetooth.tech/MicroAPP/mpy-cross/">mpy-cross Web</a> 版本，可以通过Web方式将 <code class="docutils literal notranslate"><span class="pre">py</span></code> 代码编译为 <code class="docutils literal notranslate"><span class="pre">mpy</span></code></p></li>
+<li><p>此工具为 <code class="docutils literal notranslate"><span class="pre">emsdk</span></code> 编译的 <code class="docutils literal notranslate"><span class="pre">mpy-cross</span></code> 的 <code class="docutils literal notranslate"><span class="pre">wasm+js</span></code> 静态页面，不会存储上传 <code class="docutils literal notranslate"><span class="pre">py</span></code> 代码</p></li>
+</ul>
+</div>
+<section id="id1">
+<h2>使用系统<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat<span class="w"> </span>/etc/issue
+Ubuntu<span class="w"> </span><span class="m">22</span>.04<span class="w"> </span>LTS<span class="w"> </span><span class="se">\n</span><span class="w"> </span><span class="se">\l</span>
+
+uname<span class="w"> </span>-a
+Linux<span class="w"> </span>VM-0-9-ubuntu<span class="w"> </span><span class="m">5</span>.15.0-106-generic
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h2>下载源码<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>--branch<span class="w"> </span>v1.24.1<span class="w"> </span>--depth<span class="w"> </span><span class="m">1</span><span class="w"> </span>https://github.com/micropython/micropython.git
+<span class="nb">cd</span><span class="w"> </span>micropython/mpy-cross/
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h2>编译构建<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>-j<span class="k">$(</span>nproc<span class="k">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h2>查看帮助<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./build/mpy-cross<span class="w"> </span>-h
+
+<span class="c1"># usage: ./build/mpy-cross [&lt;opts&gt;] [-X &lt;implopt&gt;] [--] &lt;input filename&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h2>准备脚本<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<p>准备hello.py，脚本内容如下</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;print(&quot;hello&quot;)&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>hello.py
+</pre></div>
+</div>
+</section>
+<section id="id6">
+<h2>编译脚本<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./build/mpy-cross<span class="w"> </span>-o<span class="w"> </span>hello.mpy<span class="w"> </span>hello.py
+ls<span class="w"> </span>-lh<span class="w"> </span>hello.mpy
+
+<span class="c1"># -rw-r--r-- 1 root root 39 Sep  9 18:35 hello.mpy</span>
+</pre></div>
+</div>
+</section>
+<section id="id7">
+<h2>上传运行<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<p>正常运行后可以看到打印内容</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>OK
+
+hello
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="index.html" class="btn btn-neutral float-left" title="更多参考" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="local_run.html" class="btn btn-neutral float-right" title="本地运行" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2025, CassiaNetworks。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Language</span>
+    zh-CN
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Languages</dt>
+      
+      
+      
+      <dd>
+        <a href="../../html/more/mpy.html">简体中文</a>
+      </dd>
+      
+      
+      
+      
+      <dd>
+        <a href="../../html_en/more/mpy.html">English</a>
+      </dd>
+      
+      
+    </dl>
+    <dl>
+      <dt>版本</dt>
+      
+      <dd>
+        <a href="../../../2.2.mp.2509081030/html_en/more/mpy.html">2.2.mp.2509081030</a>
+      </dd>
+      
+      <dd>
+        <a href="../../../2.2.mp.2509241710/html_en/more/mpy.html">2.2.mp.2509241710</a>
+      </dd>
+      
+    </dl>
+  </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

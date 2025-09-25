@@ -1,0 +1,39 @@
+=====
+示例
+=====
+
+
+测试工具
+=====
+使用 ``mosquitto_sub/mosquitto_pub``，您也可以使用 ``MQTTX`` 或者测试脚本进行。
+
+.. code-block:: bash
+    
+    # Subscribe test topic
+    mosquitto_sub -h test.mosquitto.org -p 1884 -u rw -P readwrite -t '/cassia/test/up' 
+
+    # Publish test message
+    mosquitto_pub -h test.mosquitto.org -p 1884 -u rw -P readwrite -t '/cassia/test/down' -m '{"hello":"world"}'
+
+
+发布
+=====
+
+.. literalinclude:: ../../../../example/cassiamqtt/pub_test.py
+   :language: python
+   :linenos:
+
+
+订阅
+=====
+
+.. literalinclude:: ../../../../example/cassiamqtt/sub_test.py
+   :language: python
+   :linenos:
+
+重连
+=====
+
+.. literalinclude:: ../../../../example/cassiamqtt/reconnect.py
+   :language: python
+   :linenos:

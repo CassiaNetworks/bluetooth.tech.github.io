@@ -1,0 +1,7 @@
+======
+socket
+======
+
+.. literalinclude:: ../../../../../../../example/python_standard_libs/socket_test.py
+   :language: python
+   :linenos:

@@ -1,0 +1,291 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>获取连接列表 &mdash; Micro APP 0.1.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=3abfe436" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d786bb5c"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/translations.js?v=beaddf03"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="获取设备GATT服务列表" href="gatt_discover.html" />
+    <link rel="prev" title="连接BLE设备" href="connect.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Micro APP
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/index.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resource/index.html">版本&amp;资源</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Cassiablue API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gateway_info.html">获取网关信息</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scan.html">扫描BLE设备</a></li>
+<li class="toctree-l2"><a class="reference internal" href="connect.html">连接BLE设备</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">获取连接列表</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">示例</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api">API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cassiablue.get_connected_devices"><code class="docutils literal notranslate"><span class="pre">cassiablue.get_connected_devices()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gatt_discover.html">获取设备GATT服务列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gatt_read.html">读取设备GATT特征值</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gatt_write.html">写入设备GATT特征值</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notify.html">接收设备GATT通知</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state.html">连接状态事件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="send_cmd.html">调用RESTful API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cassiamqtt_api/index.html">Cassiamqtt API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cassia_libs/index.html">Cassia常用库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../third_libs/index.html">第三方常用库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../micropython_libs/index.html">MicroPython库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../more/index.html">更多参考</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Micro APP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Cassiablue API</a></li>
+      <li class="breadcrumb-item active">获取连接列表</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/cassiablue_api/get_connected_devices.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>获取连接列表<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>用于获取当前已连接的设备列表。</p>
+<p>对应于RESTful-API <a class="reference external" href="https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/RESTful-API#get-the-device-list-connected-to-a-router-ac-managed">Get the Device List Connected</a></p>
+<section id="id2">
+<h2>示例<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">cassiablue</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="linenos"> 6</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;start get connected devices&quot;</span><span class="p">)</span>
+<span class="linenos"> 7</span>    <span class="n">ok</span><span class="p">,</span> <span class="n">ret</span> <span class="o">=</span> <span class="k">await</span> <span class="n">cassiablue</span><span class="o">.</span><span class="n">get_connected_devices</span><span class="p">()</span>
+<span class="linenos"> 8</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;get connected devices done:&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">ok</span><span class="p">),</span> <span class="n">ok</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">ret</span><span class="p">),</span> <span class="n">ret</span><span class="p">)</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="api">
+<h2>API<a class="headerlink" href="#api" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cassiablue.get_connected_devices">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cassiablue.</span></span><span class="sig-name descname"><span class="pre">get_connected_devices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#cassiablue.get_connected_devices" title="Link to this definition"></a></dt>
+<dd><p>用于获取当前已连接的设备列表。结果返回JSON字符串。</p>
+<ul class="simple">
+<li><p>连接列表为空</p></li>
+</ul>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;nodes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>连接列表有设备</p></li>
+</ul>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;nodes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;bdaddrs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;bdaddr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;20:00:00:00:00:01&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;bdaddrType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;random&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;handle&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;20:00:00:00:00:01&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;connectionState&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;connected&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;chipId&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;pairStatus&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;rssi&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">-21</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;packetLossRate&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;tx_phy&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1M&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;rx_phy&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1M&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">   </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">字段说明</span><a class="headerlink" href="#id3" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>字段</p></th>
+<th class="head"><p>类型</p></th>
+<th class="head"><p>说明</p></th>
+<th class="head"><p>示例</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>bdaddr</p></td>
+<td><p>str</p></td>
+<td><p>设备MAC地址</p></td>
+<td><p>20:00:00:00:00:01</p></td>
+</tr>
+<tr class="row-odd"><td><p>bdaddrType</p></td>
+<td><p>str</p></td>
+<td><p>设备地址类型</p></td>
+<td><p>random</p></td>
+</tr>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>str</p></td>
+<td><p>设备MAC地址</p></td>
+<td><p>20:00:00:00:00:01</p></td>
+</tr>
+<tr class="row-odd"><td><p>chipId</p></td>
+<td><p>int</p></td>
+<td><p>芯片</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>rssi</p></td>
+<td><p>int</p></td>
+<td><p>RSSI</p></td>
+<td><p>-21</p></td>
+</tr>
+<tr class="row-odd"><td><p>packetLossRate</p></td>
+<td><p>int</p></td>
+<td><p>丢包率</p></td>
+<td><p>3</p></td>
+</tr>
+<tr class="row-even"><td><p>tx_phy</p></td>
+<td><p>str</p></td>
+<td><p>Tx Phy</p></td>
+<td><p>1M</p></td>
+</tr>
+<tr class="row-odd"><td><p>rx_phy</p></td>
+<td><p>str</p></td>
+<td><p>Rx Phy</p></td>
+<td><p>1M</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="connect.html" class="btn btn-neutral float-left" title="连接BLE设备" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="gatt_discover.html" class="btn btn-neutral float-right" title="获取设备GATT服务列表" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2025, CassiaNetworks。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Language</span>
+    zh-CN
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Languages</dt>
+      
+      
+      
+      <dd>
+        <a href="../../html/cassiablue_api/get_connected_devices.html">简体中文</a>
+      </dd>
+      
+      
+      
+      
+      <dd>
+        <a href="../../html_en/cassiablue_api/get_connected_devices.html">English</a>
+      </dd>
+      
+      
+    </dl>
+    <dl>
+      <dt>版本</dt>
+      
+      <dd>
+        <a href="../../../2.2.mp.2509081030/html_en/cassiablue_api/get_connected_devices.html">2.2.mp.2509081030</a>
+      </dd>
+      
+      <dd>
+        <a href="../../../2.2.mp.2509241710/html_en/cassiablue_api/get_connected_devices.html">2.2.mp.2509241710</a>
+      </dd>
+      
+    </dl>
+  </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

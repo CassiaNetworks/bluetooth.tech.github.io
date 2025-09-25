@@ -1,0 +1,77 @@
+=======================
+生成mpy
+=======================
+
+目前网关支持上传 ``python`` 脚本编译后的 ``mpy`` 文件。具体步骤如下
+
+.. note:: 
+    - 目前提供 `mpy-cross Web <http://bluetooth.tech/MicroAPP/mpy-cross/>`_ 版本，可以通过Web方式将 ``py`` 代码编译为 ``mpy``
+    - 此工具为 ``emsdk`` 编译的 ``mpy-cross`` 的 ``wasm+js`` 静态页面，不会存储上传 ``py`` 代码
+
+使用系统
+=======================
+
+.. code-block:: bash
+
+    cat /etc/issue
+    Ubuntu 22.04 LTS \n \l
+
+    uname -a
+    Linux VM-0-9-ubuntu 5.15.0-106-generic
+
+下载源码
+=======================
+
+.. code-block:: bash
+
+    git clone --branch v1.24.1 --depth 1 https://github.com/micropython/micropython.git
+    cd micropython/mpy-cross/
+
+编译构建
+=======================
+
+.. code-block:: bash
+
+    make -j$(nproc)
+
+
+查看帮助
+=======================
+
+.. code-block:: bash
+
+    ./build/mpy-cross -h
+
+    # usage: ./build/mpy-cross [<opts>] [-X <implopt>] [--] <input filename>
+
+准备脚本
+=======================
+
+准备hello.py，脚本内容如下
+
+.. code-block:: bash
+
+    echo 'print("hello")' > hello.py
+
+
+编译脚本
+=======================
+
+.. code-block:: bash
+
+    ./build/mpy-cross -o hello.mpy hello.py
+    ls -lh hello.mpy
+
+    # -rw-r--r-- 1 root root 39 Sep  9 18:35 hello.mpy
+
+上传运行
+=======================
+正常运行后可以看到打印内容
+
+.. code-block:: bash
+
+    OK
+
+    hello
+
+

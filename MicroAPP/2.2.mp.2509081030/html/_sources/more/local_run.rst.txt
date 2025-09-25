@@ -1,0 +1,95 @@
+=======================
+本地运行
+=======================
+
+``micropython`` 支持多平台，可以在本地运行测试APP基础代码逻辑。
+
+使用系统
+=======================
+
+.. code-block:: bash
+
+    cat /etc/issue
+    Ubuntu 22.04 LTS \n \l
+
+    uname -a
+    Linux VM-0-9-ubuntu 5.15.0-106-generic
+
+
+下载源码
+=======================
+
+.. code-block:: bash
+
+    git clone --branch v1.24.1 --depth 1 https://github.com/micropython/micropython.git
+    git submodule update --init --recursive
+
+
+安装依赖
+=======================
+
+.. code-block:: bash
+
+    sudo apt update
+    sudo apt install -y build-essential git pkg-config \
+        libffi-dev libssl-dev libbz2-dev liblzma-dev \
+        libreadline-dev libsqlite3-dev libgdbm-dev \
+        libncurses5-dev zlib1g-dev libmpdec-dev \
+        libmbedtls-dev libdb5.3-dev uuid-dev
+
+编译构建
+=======================
+
+.. code-block:: bash
+
+    cd micropython/ports/unix
+    make clean
+    make -j$(nproc) MICROPY_PY_USER_CMODULE=0
+
+
+    # LINK build-standard/micropython
+    #   text	   data	    bss	    dec	    hex	filename
+    # 764607	  69328	   7088	 841023	  cd53f	build-standard/micropython
+
+查看版本
+=======================
+
+.. code-block:: bash
+
+    ./build-standard/micropython --version
+
+    # MicroPython v1.24.1 on 2025-09-09; linux [GCC 11.2.0] version
+
+准备脚本
+=======================
+
+准备hello.py，脚本内容如下
+
+.. code-block:: bash
+
+    echo 'print("hello")' > hello.py
+
+
+运行脚本
+=======================
+
+.. code-block:: bash
+
+    ./build-standard/micropython hello.py
+
+.. code-block:: bash
+
+    hello
+
+Cassiablue API Mock
+=======================
+需要调试Cassiablue API相关的代码，可以参考下面使用网关RESTful API Mock Cassiablue API实现，用于快速测试基本逻辑功能。
+
+.. note:: 
+    - 仅仅用于本地调试代码基本逻辑，勿用于压力测和稳定性测试
+    - 脚本实际运行结果，请以M2000网关内运行为准
+
+
+.. literalinclude:: ../../../../../../src/cassiablue.py
+   :language: python
+   :linenos:

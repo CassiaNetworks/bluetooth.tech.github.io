@@ -1,0 +1,327 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cassiacommon &mdash; Micro APP 0.1.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=3abfe436" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d786bb5c"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/translations.js?v=beaddf03"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="第三方常用库" href="../third_libs/index.html" />
+    <link rel="prev" title="Cassia常用库" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Micro APP
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/index.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resource/index.html">版本&amp;资源</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cassiablue_api/index.html">Cassiablue API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cassiamqtt_api/index.html">Cassiamqtt API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Cassia常用库</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">cassiacommon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#simplefuture">SimpleFuture</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">示例</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#asyncqueue">AsyncQueue</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">示例</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../third_libs/index.html">第三方常用库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../micropython_libs/index.html">MicroPython库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../more/index.html">更多参考</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Micro APP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Cassia常用库</a></li>
+      <li class="breadcrumb-item active">cassiacommon</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/cassia_libs/cassia_common.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cassiacommon">
+<h1>cassiacommon<a class="headerlink" href="#cassiacommon" title="Link to this heading"></a></h1>
+<p>提供了常用的工具类或函数。</p>
+<section id="simplefuture">
+<h2>SimpleFuture<a class="headerlink" href="#simplefuture" title="Link to this heading"></a></h2>
+<p>一个轻量级的异步结果容器，用于在异步代码中等待一个事件完成并获取其结果。</p>
+<section id="id1">
+<h3>示例<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">cassiacommon</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="linenos"> 6</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;start simple future&quot;</span><span class="p">)</span>
+<span class="linenos"> 7</span>    <span class="n">fut</span> <span class="o">=</span> <span class="n">cassiacommon</span><span class="o">.</span><span class="n">SimpleFuture</span><span class="p">()</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">producer</span><span class="p">():</span>
+<span class="linenos">10</span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;producer sleep 3 seconds...&quot;</span><span class="p">)</span>
+<span class="linenos">11</span>        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="linenos">12</span>        <span class="n">fut</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="s2">&quot;OK&quot;</span><span class="p">)</span>
+<span class="linenos">13</span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;producer ok&quot;</span><span class="p">)</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span>    <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">producer</span><span class="p">())</span>
+<span class="linenos">16</span>    <span class="n">code</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="k">await</span> <span class="n">fut</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+<span class="linenos">17</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;simple future done:&quot;</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="SimpleFuture">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SimpleFuture</span></span><a class="headerlink" href="#SimpleFuture" title="Link to this definition"></a></dt>
+<dd><p>轻量级一次性事件同步原语，基于 <cite>asyncio.ThreadSafeFlag</cite> 实现。</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="SimpleFuture.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#SimpleFuture" title="SimpleFuture"><span class="pre">SimpleFuture</span></a></span></span><a class="headerlink" href="#SimpleFuture.__init__" title="Link to this definition"></a></dt>
+<dd><p>初始化对象</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SimpleFuture.set_result">
+<span class="sig-name descname"><span class="pre">set_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#SimpleFuture.set_result" title="Link to this definition"></a></dt>
+<dd><p>设置结果并唤醒等待者。只能生效一次，重复调用会被忽略。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>code: 自定义状态码</p></li>
+<li><p>value: 需要传递的数据</p></li>
+</ul>
+</dd>
+<dt class="field-even">返回<span class="colon">:</span></dt>
+<dd class="field-even"><p>无</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SimpleFuture.wait">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">code</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">value</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#SimpleFuture.wait" title="Link to this definition"></a></dt>
+<dd><p>挂起直到结果就绪，然后返回打包好的数据。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p>无</p>
+</dd>
+<dt class="field-even">返回<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>code: 自定义状态码</p></li>
+<li><p>value: 传递的数据</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<hr class="docutils" />
+<section id="asyncqueue">
+<h2>AsyncQueue<a class="headerlink" href="#asyncqueue" title="Link to this heading"></a></h2>
+<p>一个轻量级的异步队列，用于在异步任务之间传递数据。</p>
+<section id="id2">
+<h3>示例<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">cassiacommon</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="linenos"> 6</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;start async queue&quot;</span><span class="p">)</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span>    <span class="n">q</span> <span class="o">=</span> <span class="n">cassiacommon</span><span class="o">.</span><span class="n">AsyncQueue</span><span class="p">(</span><span class="n">max_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="linenos"> 9</span>    <span class="n">q</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+<span class="linenos">10</span>    <span class="n">q</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+<span class="linenos">11</span>    <span class="nb">print</span><span class="p">(</span><span class="k">await</span> <span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+<span class="linenos">12</span>    <span class="nb">print</span><span class="p">(</span><span class="k">await</span> <span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;async queue done&quot;</span><span class="p">)</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h3>API<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="AsyncQueue">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AsyncQueue</span></span><a class="headerlink" href="#AsyncQueue" title="Link to this definition"></a></dt>
+<dd><p>轻量级一次性事件同步原语，基于 <cite>asyncio.ThreadSafeFlag</cite> 实现。</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="AsyncQueue.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#AsyncQueue" title="AsyncQueue"><span class="pre">AsyncQueue</span></a></span></span><a class="headerlink" href="#AsyncQueue.__init__" title="Link to this definition"></a></dt>
+<dd><p>初始化对象</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="AsyncQueue.put_nowait">
+<span class="sig-name descname"><span class="pre">put_nowait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#AsyncQueue.put_nowait" title="Link to this definition"></a></dt>
+<dd><p>非阻塞放入元素。如果队列已满，则直接丢弃，不抛出异常。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>item: 待放入的对象</p></li>
+</ul>
+</dd>
+<dt class="field-even">返回<span class="colon">:</span></dt>
+<dd class="field-even"><p>无</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="AsyncQueue.get">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#AsyncQueue.get" title="Link to this definition"></a></dt>
+<dd><p>取出队首元素。若队列为空，则挂起直到有数据。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p>无</p>
+</dd>
+<dt class="field-even">返回<span class="colon">:</span></dt>
+<dd class="field-even"><p>最早放入的元素</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="index.html" class="btn btn-neutral float-left" title="Cassia常用库" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="../third_libs/index.html" class="btn btn-neutral float-right" title="第三方常用库" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2025, CassiaNetworks。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Language</span>
+    zh-CN
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Languages</dt>
+      
+      
+      
+      <dd>
+        <a href="../../html/cassia_libs/cassia_common.html">简体中文</a>
+      </dd>
+      
+      
+      
+      
+      <dd>
+        <a href="../../html_en/cassia_libs/cassia_common.html">English</a>
+      </dd>
+      
+      
+    </dl>
+    <dl>
+      <dt>版本</dt>
+      
+      <dd>
+        <a href="../../../2.2.mp.2509081030/html_en/cassia_libs/cassia_common.html">2.2.mp.2509081030</a>
+      </dd>
+      
+      <dd>
+        <a href="../../../2.2.mp.2509241710/html_en/cassia_libs/cassia_common.html">2.2.mp.2509241710</a>
+      </dd>
+      
+    </dl>
+  </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
