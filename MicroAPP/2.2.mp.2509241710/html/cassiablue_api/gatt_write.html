@@ -130,7 +130,7 @@
 <h2>API<a class="headerlink" href="#api" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="cassiablue.gatt_write">
-<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cassiablue.</span></span><span class="sig-name descname"><span class="pre">gatt_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">addr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple[ok:</span> <span class="pre">bool,</span> <span class="pre">result:</span> <span class="pre">str]</span></span></span><a class="headerlink" href="#cassiablue.gatt_write" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cassiablue.</span></span><span class="sig-name descname"><span class="pre">gatt_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">addr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noresponse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple[ok:</span> <span class="pre">bool,</span> <span class="pre">result:</span> <span class="pre">str]</span></span></span><a class="headerlink" href="#cassiablue.gatt_write" title="Link to this definition"></a></dt>
 <dd><p>用于写入指定连接设备指定Handle的值。</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -138,6 +138,7 @@
 <li><p>addr: 设备MAC地址</p></li>
 <li><p>handle: 待写入Handle</p></li>
 <li><p>value: 待写入的值</p></li>
+<li><p>noresponse: 是否等待GATT命令响应，根据GATT属性确定</p></li>
 </ul>
 </dd>
 <dt class="field-even">返回<span class="colon">:</span></dt>

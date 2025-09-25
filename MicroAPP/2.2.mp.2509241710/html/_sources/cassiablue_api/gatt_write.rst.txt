@@ -19,7 +19,7 @@
 API
 =====
 
-.. py:function::  cassiablue.gatt_write(addr: str, handle: str, value: str) -> tuple[ok: bool, result: str]
+.. py:function::  cassiablue.gatt_write(addr: str, handle: str, value: str, noresponse=False) -> tuple[ok: bool, result: str]
    :async:
 
    用于写入指定连接设备指定Handle的值。
@@ -28,6 +28,7 @@ API
       - addr: 设备MAC地址
       - handle: 待写入Handle
       - value: 待写入的值
+      - noresponse: 是否等待GATT命令响应，根据GATT属性确定
 
    :returns: 
       - ok: 是否执行成功
