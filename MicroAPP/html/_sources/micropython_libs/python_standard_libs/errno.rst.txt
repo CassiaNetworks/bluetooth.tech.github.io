@@ -1,7 +1,0 @@
-=====
-errno
-=====
-
-.. literalinclude:: ../../../../../example/python_standard_libs/errno_test.py
-   :language: python
-   :linenos:

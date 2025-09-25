@@ -1,7 +1,0 @@
-=====
-struct
-=====
-
-.. literalinclude:: ../../../../../example/python_standard_libs/struct_test.py
-   :language: python
-   :linenos:

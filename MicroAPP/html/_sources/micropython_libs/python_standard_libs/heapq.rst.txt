@@ -1,7 +1,0 @@
-=====
-heapq
-=====
-
-.. literalinclude:: ../../../../../example/python_standard_libs/heapq_test.py
-   :language: python
-   :linenos:

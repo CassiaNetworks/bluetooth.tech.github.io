@@ -1,7 +1,0 @@
-=====
-micropython
-=====
-
-.. literalinclude:: ../../../../../example/micropython_libs/micropython_test.py
-   :language: python
-   :linenos:

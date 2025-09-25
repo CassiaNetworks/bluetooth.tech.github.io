@@ -1,7 +1,0 @@
-=====
-uctypes
-=====
-
-.. literalinclude:: ../../../../../example/micropython_libs/uctypes_test.py
-   :language: python
-   :linenos:

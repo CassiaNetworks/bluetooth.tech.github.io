@@ -1,7 +1,0 @@
-=====
-re
-=====
-
-.. literalinclude:: ../../../../../example/python_standard_libs/re_test.py
-   :language: python
-   :linenos:

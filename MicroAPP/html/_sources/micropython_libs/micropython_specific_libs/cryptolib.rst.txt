@@ -1,7 +1,0 @@
-=====
-cryptolib
-=====
-
-.. literalinclude:: ../../../../../example/micropython_libs/cryptolib_test.py
-   :language: python
-   :linenos:
