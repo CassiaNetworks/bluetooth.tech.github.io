@@ -86,10 +86,23 @@ Cassiablue API Mock
 需要调试Cassiablue API相关的代码，可以参考下面使用网关RESTful API Mock Cassiablue API实现，用于快速测试基本逻辑功能。
 
 .. note:: 
-    - 仅仅用于本地调试代码基本逻辑，勿用于压力测和稳定性测试
+    - 仅用于本地调试代码基本逻辑，勿用于压力测试和稳定性测试
     - 脚本实际运行结果，请以M2000网关内运行为准
 
 
 .. literalinclude:: ../../../../../../src/cassiablue.py
    :language: python
    :linenos:
+
+Cassiamqtt API Mock
+=======================
+需要调试 ``Cassiamqtt API`` 相关的代码，可以参考下面使用 ``mqtt_as`` 实现，用于快速测试基本逻辑功能。
+
+.. note:: 
+    - 仅用于本地调试代码基本逻辑，勿用于压力测试和稳定性测试
+    - 脚本实际运行结果，请以M2000网关内运行为准
+
+
+.. literalinclude:: ../../../../../../src/cassiamqtt.py
+   :language: python
+   :linenos:   

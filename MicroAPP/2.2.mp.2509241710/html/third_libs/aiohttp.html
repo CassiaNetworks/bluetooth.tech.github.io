@@ -93,7 +93,14 @@
              
   <section id="aiohttp">
 <h1>aiohttp<a class="headerlink" href="#aiohttp" title="Link to this heading"></a></h1>
-<p>内部已集成了aiohttp库，可以直接使用。目前只支持HTTP client功能。参考 <a class="reference external" href="https://github.com/micropython/micropython-lib/tree/v1.24.1/python-ecosys/aiohttp">aiohttp</a>。</p>
+<p>内部已集成了 <code class="docutils literal notranslate"><span class="pre">aiohttp</span></code> 库，可以直接使用。目前只支持HTTP client功能。参考 <a class="reference external" href="https://github.com/micropython/micropython-lib/tree/v1.24.1/python-ecosys/aiohttp">aiohttp</a>。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<ul class="simple">
+<li><p>Client缺省使用 <code class="docutils literal notranslate"><span class="pre">HTTP/1.0</span></code> 协议，遇到 <code class="docutils literal notranslate"><span class="pre">426</span></code> 响应状态码，尝试设置 <code class="docutils literal notranslate"><span class="pre">HTTP/1.1</span></code>，参考示例</p></li>
+<li><p>目前 <code class="docutils literal notranslate"><span class="pre">aiohttp</span></code> 支持 <code class="docutils literal notranslate"><span class="pre">HTTP/1.1</span></code> 不完整，需要根据实际情况测试使用</p></li>
+</ul>
+</div>
 <section id="id2">
 <h2>示例<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
@@ -124,16 +131,37 @@
 <span class="linenos">26</span>            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;body:&quot;</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
 <span class="linenos">27</span>
 <span class="linenos">28</span>
-<span class="linenos">29</span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-<span class="linenos">30</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;start aiohttp&quot;</span><span class="p">)</span>
-<span class="linenos">31</span>    <span class="k">await</span> <span class="n">get</span><span class="p">()</span>
-<span class="linenos">32</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;get ok&quot;</span><span class="p">)</span>
-<span class="linenos">33</span>    <span class="k">await</span> <span class="n">post</span><span class="p">()</span>
-<span class="linenos">34</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;post ok&quot;</span><span class="p">)</span>
-<span class="linenos">35</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;aiohttp done&quot;</span><span class="p">)</span>
-<span class="linenos">36</span>
-<span class="linenos">37</span>
-<span class="linenos">38</span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+<span class="linenos">29</span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">post_http11</span><span class="p">():</span>
+<span class="linenos">30</span>    <span class="k">async</span> <span class="k">with</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">aiohttp</span><span class="o">.</span><span class="n">HttpVersion11</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+<span class="linenos">31</span>        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://httpbin.org/post&quot;</span>
+<span class="linenos">32</span>        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+<span class="linenos">33</span>            <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+<span class="linenos">34</span>            <span class="s2">&quot;Accept-Encoding&quot;</span><span class="p">:</span> <span class="s2">&quot;identity&quot;</span><span class="p">,</span>
+<span class="linenos">35</span>            <span class="s2">&quot;Connection&quot;</span><span class="p">:</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span>
+<span class="linenos">36</span>            <span class="s2">&quot;TE&quot;</span><span class="p">:</span> <span class="s2">&quot;identity&quot;</span><span class="p">,</span>
+<span class="linenos">37</span>        <span class="p">}</span>
+<span class="linenos">38</span>        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;micropython&quot;</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.24.1&quot;</span><span class="p">}</span>
+<span class="linenos">39</span>        <span class="k">async</span> <span class="k">with</span> <span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+<span class="linenos">40</span>            <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">),</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span>
+<span class="linenos">41</span>        <span class="p">)</span> <span class="k">as</span> <span class="n">resp</span><span class="p">:</span>
+<span class="linenos">42</span>            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;status:&quot;</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+<span class="linenos">43</span>            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;headers:&quot;</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
+<span class="linenos">44</span>            <span class="n">body</span> <span class="o">=</span> <span class="k">await</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="linenos">45</span>            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;body:&quot;</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+<span class="linenos">46</span>
+<span class="linenos">47</span>
+<span class="linenos">48</span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="linenos">49</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;start aiohttp&quot;</span><span class="p">)</span>
+<span class="linenos">50</span>    <span class="k">await</span> <span class="n">get</span><span class="p">()</span>
+<span class="linenos">51</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;get ok&quot;</span><span class="p">)</span>
+<span class="linenos">52</span>    <span class="k">await</span> <span class="n">post</span><span class="p">()</span>
+<span class="linenos">53</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;post ok&quot;</span><span class="p">)</span>
+<span class="linenos">54</span>    <span class="k">await</span> <span class="n">post_http11</span><span class="p">()</span>
+<span class="linenos">55</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;post http11 ok&quot;</span><span class="p">)</span>
+<span class="linenos">56</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;aiohttp done&quot;</span><span class="p">)</span>
+<span class="linenos">57</span>
+<span class="linenos">58</span>
+<span class="linenos">59</span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </pre></div>
 </div>
 </section>

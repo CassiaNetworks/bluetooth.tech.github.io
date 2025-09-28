@@ -82,4 +82,4 @@
 Github
 =======================
 
-参考 `Cassia SDK Guide Micro APP <https://github.com/CassiaNetworks/CassiaSDKGuide>`_
+参考 `Cassia SDK Guide Micro APP <https://github.com/CassiaNetworks/CassiaSDKGuide/tree/2.2.mp.2509241710>`_
