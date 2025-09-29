@@ -1,0 +1,324 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API &mdash; Micro APP 0.1.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=3abfe436" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d786bb5c"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/translations.js?v=beaddf03"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="示例" href="example.html" />
+    <link rel="prev" title="Cassiamqtt API" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Micro APP
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/index.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resource/index.html">版本&amp;资源</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cassiasys_api/index.html">Cassiasys API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cassiablue_api/index.html">Cassiablue API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Cassiamqtt API</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cassiamqtt.CassiaMQTTClient"><code class="docutils literal notranslate"><span class="pre">CassiaMQTTClient</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cassiamqtt.CassiaMQTTClient.__init__"><code class="docutils literal notranslate"><span class="pre">CassiaMQTTClient.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cassiamqtt.CassiaMQTTClient.__aenter__"><code class="docutils literal notranslate"><span class="pre">CassiaMQTTClient.__aenter__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cassiamqtt.CassiaMQTTClient.__aexit__"><code class="docutils literal notranslate"><span class="pre">CassiaMQTTClient.__aexit__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cassiamqtt.CassiaMQTTClient.__aiter__"><code class="docutils literal notranslate"><span class="pre">CassiaMQTTClient.__aiter__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cassiamqtt.CassiaMQTTClient.__anext__"><code class="docutils literal notranslate"><span class="pre">CassiaMQTTClient.__anext__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cassiamqtt.CassiaMQTTClient.publish"><code class="docutils literal notranslate"><span class="pre">CassiaMQTTClient.publish()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cassiamqtt.CassiaMQTTClient.subscribe"><code class="docutils literal notranslate"><span class="pre">CassiaMQTTClient.subscribe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cassiamqtt.CassiaMQTTClient.unsubscribe"><code class="docutils literal notranslate"><span class="pre">CassiaMQTTClient.unsubscribe()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example.html">示例</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cassia_libs/index.html">Cassia常用库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../third_libs/index.html">第三方常用库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../micropython_libs/index.html">MicroPython库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../more/index.html">更多参考</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Micro APP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Cassiamqtt API</a></li>
+      <li class="breadcrumb-item active">API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/cassiamqtt_api/api.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api">
+<h1>API<a class="headerlink" href="#api" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="cassiamqtt.CassiaMQTTClient">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cassiamqtt.</span></span><span class="sig-name descname"><span class="pre">CassiaMQTTClient</span></span><a class="headerlink" href="#cassiamqtt.CassiaMQTTClient" title="Link to this definition"></a></dt>
+<dd><p>与MQTT Broker建立连接，发布与订阅消息，目前最多只支持2个实例。</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cassiamqtt.CassiaMQTTClient.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ca</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cert</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_pass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cert_common_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cassiamqtt.CassiaMQTTClient" title="cassiamqtt.CassiaMQTTClient"><span class="pre">CassiaMQTTClient</span></a></span></span><a class="headerlink" href="#cassiamqtt.CassiaMQTTClient.__init__" title="Link to this definition"></a></dt>
+<dd><p>返回自身，初始化参数</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>uri: MQTT Broker URI</p></li>
+<li><p>username: 用户名</p></li>
+<li><p>password: 密码</p></li>
+<li><p>ca: CA</p></li>
+<li><p>cert: Cert</p></li>
+<li><p>key: Key</p></li>
+<li><p>key_pass: Key password</p></li>
+<li><p>cert_common_name: Cert common name</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cassiamqtt.CassiaMQTTClient.__aenter__">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__aenter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cassiamqtt.CassiaMQTTClient.__aenter__" title="Link to this definition"></a></dt>
+<dd><p>建立连接，分配资源</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cassiamqtt.CassiaMQTTClient.__aexit__">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__aexit__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cassiamqtt.CassiaMQTTClient.__aexit__" title="Link to this definition"></a></dt>
+<dd><p>断开连接，释放资源</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cassiamqtt.CassiaMQTTClient.__aiter__">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../cassiablue_api/scan.html#BLEScanResult" title="BLEScanResult"><span class="pre">BLEScanResult</span></a></span></span><a class="headerlink" href="#cassiamqtt.CassiaMQTTClient.__aiter__" title="Link to this definition"></a></dt>
+<dd><p>返回自身，使实例可直接用于 <code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">for</span></code> 循环。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cassiamqtt.CassiaMQTTClient.__anext__">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__anext__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#cassiamqtt.CassiaMQTTClient.__anext__" title="Link to this definition"></a></dt>
+<dd><p>返回订阅消息</p>
+<p>当队列为空时会一直等待，直到有新数据到达，连接断开时退出迭代。</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">数据字段说明</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>字段</p></th>
+<th class="head"><p>类型</p></th>
+<th class="head"><p>说明</p></th>
+<th class="head"><p>示例</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>topic</p></td>
+<td><p>str</p></td>
+<td><p>Topic</p></td>
+<td><p>/dev/down/CC:1B:E0:E4:C8:94/api</p></td>
+</tr>
+<tr class="row-odd"><td><p>qos</p></td>
+<td><p>int</p></td>
+<td><p>QoS</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>payload</p></td>
+<td><p>str</p></td>
+<td><p>消息内容</p></td>
+<td><p>{&quot;id&quot;:&quot;1758...</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cassiamqtt.CassiaMQTTClient.publish">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payload</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple[ok:</span> <span class="pre">bool,</span> <span class="pre">result:</span> <span class="pre">str]</span></span></span><a class="headerlink" href="#cassiamqtt.CassiaMQTTClient.publish" title="Link to this definition"></a></dt>
+<dd><p>向指定Topic发布消息</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>topic: Topic</p></li>
+<li><p>payload: 消息内容</p></li>
+<li><p>qos: QoS</p></li>
+<li><p>retain: 是否保留消息</p></li>
+</ul>
+</dd>
+<dt class="field-even">返回<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>ok: 是否执行成功</p></li>
+<li><p>result: 执行结果</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cassiamqtt.CassiaMQTTClient.subscribe">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">subscribe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple[ok:</span> <span class="pre">bool,</span> <span class="pre">result:</span> <span class="pre">str]</span></span></span><a class="headerlink" href="#cassiamqtt.CassiaMQTTClient.subscribe" title="Link to this definition"></a></dt>
+<dd><p>订阅指定Topic消息</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>topic: Topic</p></li>
+<li><p>qos: QoS</p></li>
+</ul>
+</dd>
+<dt class="field-even">返回<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>ok: 是否执行成功</p></li>
+<li><p>result: 执行结果</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cassiamqtt.CassiaMQTTClient.unsubscribe">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unsubscribe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple[ok:</span> <span class="pre">bool,</span> <span class="pre">result:</span> <span class="pre">str]</span></span></span><a class="headerlink" href="#cassiamqtt.CassiaMQTTClient.unsubscribe" title="Link to this definition"></a></dt>
+<dd><p>取消订阅指定Topic消息</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>topic: Topic</p></li>
+</ul>
+</dd>
+<dt class="field-even">返回<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>ok: 是否执行成功</p></li>
+<li><p>result: 执行结果</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="index.html" class="btn btn-neutral float-left" title="Cassiamqtt API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="example.html" class="btn btn-neutral float-right" title="示例" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2025, CassiaNetworks。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Language</span>
+    zh-CN
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Languages</dt>
+      
+      
+      
+      <dd>
+        <a href="../../html/cassiamqtt_api/api.html">简体中文</a>
+      </dd>
+      
+      
+      
+      
+      <dd>
+        <a href="../../html_en/cassiamqtt_api/api.html">English</a>
+      </dd>
+      
+      
+    </dl>
+    <dl>
+      <dt>版本</dt>
+      
+      <dd>
+        <a href="../../../2.2.mp.2509291554/html_en/cassiamqtt_api/api.html">2.2.mp.2509291554</a>
+      </dd>
+      
+      <dd>
+        <a href="../../../2.2.mp.2509241710/html_en/cassiamqtt_api/api.html">2.2.mp.2509241710</a>
+      </dd>
+      
+      <dd>
+        <a href="../../../2.2.mp.2509081030/html_en/cassiamqtt_api/api.html">2.2.mp.2509081030</a>
+      </dd>
+      
+    </dl>
+  </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

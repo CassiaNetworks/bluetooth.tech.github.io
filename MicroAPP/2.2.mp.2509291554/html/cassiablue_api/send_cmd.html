@@ -1,0 +1,234 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>调用RESTful API &mdash; Micro APP 0.1.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=3abfe436" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d786bb5c"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/translations.js?v=beaddf03"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="Cassiamqtt API" href="../cassiamqtt_api/index.html" />
+    <link rel="prev" title="连接状态事件" href="state.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Micro APP
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/index.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resource/index.html">版本&amp;资源</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cassiasys_api/index.html">Cassiasys API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Cassiablue API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="scan.html">扫描BLE设备</a></li>
+<li class="toctree-l2"><a class="reference internal" href="connect.html">连接BLE设备</a></li>
+<li class="toctree-l2"><a class="reference internal" href="get_connected_devices.html">获取连接列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gatt_discover.html">获取设备GATT服务列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gatt_read.html">读取设备GATT特征值</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gatt_write.html">写入设备GATT特征值</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notify.html">接收设备GATT通知</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state.html">连接状态事件</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">调用RESTful API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">示例</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api">API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cassiablue.send_cmd"><code class="docutils literal notranslate"><span class="pre">cassiablue.send_cmd()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cassiamqtt_api/index.html">Cassiamqtt API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cassia_libs/index.html">Cassia常用库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../third_libs/index.html">第三方常用库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../micropython_libs/index.html">MicroPython库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../more/index.html">更多参考</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Micro APP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Cassiablue API</a></li>
+      <li class="breadcrumb-item active">调用RESTful API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/cassiablue_api/send_cmd.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="restful-api">
+<h1>调用RESTful API<a class="headerlink" href="#restful-api" title="Link to this heading"></a></h1>
+<p>用于调用网关提供的RESTful API。通过此接口可以调用网关内micropython模块未封装的接口。</p>
+<p>参考 <a class="reference external" href="https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/RESTful-API">RESTful API</a>。</p>
+<section id="id2">
+<h2>示例<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">cassiablue</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">cassia_info</span><span class="p">():</span>
+<span class="linenos"> 6</span>    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;/cassia/info&quot;</span>
+<span class="linenos"> 7</span>    <span class="n">ok</span><span class="p">,</span> <span class="n">ret</span> <span class="o">=</span> <span class="k">await</span> <span class="n">cassiablue</span><span class="o">.</span><span class="n">send_cmd</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="linenos"> 8</span>    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">ok</span><span class="p">),</span> <span class="n">ok</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">ret</span><span class="p">),</span> <span class="n">ret</span><span class="p">)</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="linenos">12</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;start send cmd&quot;</span><span class="p">)</span>
+<span class="linenos">13</span>    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;/cassia/info&quot;</span>
+<span class="linenos">14</span>    <span class="n">ok</span><span class="p">,</span> <span class="n">ret</span> <span class="o">=</span> <span class="k">await</span> <span class="n">cassiablue</span><span class="o">.</span><span class="n">send_cmd</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="linenos">15</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;send cmd done:&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">ok</span><span class="p">),</span> <span class="n">ok</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">ret</span><span class="p">),</span> <span class="n">ret</span><span class="p">)</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="api">
+<h2>API<a class="headerlink" href="#api" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cassiablue.send_cmd">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cassiablue.</span></span><span class="sig-name descname"><span class="pre">send_cmd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'GET'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple[ok:</span> <span class="pre">bool,</span> <span class="pre">result:</span> <span class="pre">str]</span></span></span><a class="headerlink" href="#cassiablue.send_cmd" title="Link to this definition"></a></dt>
+<dd><p>用于调用网关提供的RESTful API。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>path: API路径</p></li>
+<li><p>method: HTTP方法</p></li>
+<li><p>query: query参数</p></li>
+<li><p>body: body参数</p></li>
+</ul>
+</dd>
+<dt class="field-even">返回<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>ok: 是否执行成功</p></li>
+<li><p>result: 执行结果</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="state.html" class="btn btn-neutral float-left" title="连接状态事件" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="../cassiamqtt_api/index.html" class="btn btn-neutral float-right" title="Cassiamqtt API" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2025, CassiaNetworks。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Language</span>
+    zh-CN
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Languages</dt>
+      
+      
+      
+      <dd>
+        <a href="../../html/cassiablue_api/send_cmd.html">简体中文</a>
+      </dd>
+      
+      
+      
+      
+      <dd>
+        <a href="../../html_en/cassiablue_api/send_cmd.html">English</a>
+      </dd>
+      
+      
+    </dl>
+    <dl>
+      <dt>版本</dt>
+      
+      <dd>
+        <a href="../../../2.2.mp.2509291554/html_en/cassiablue_api/send_cmd.html">2.2.mp.2509291554</a>
+      </dd>
+      
+      <dd>
+        <a href="../../../2.2.mp.2509241710/html_en/cassiablue_api/send_cmd.html">2.2.mp.2509241710</a>
+      </dd>
+      
+      <dd>
+        <a href="../../../2.2.mp.2509081030/html_en/cassiablue_api/send_cmd.html">2.2.mp.2509081030</a>
+      </dd>
+      
+    </dl>
+  </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

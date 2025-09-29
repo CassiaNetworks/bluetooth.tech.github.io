@@ -1,0 +1,11 @@
+==============
+Cassiasys API
+==============
+网关内部提供了Cassiasys API，用于获取网关信息和APP配置。
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
+    gateway_info
+    user_config
