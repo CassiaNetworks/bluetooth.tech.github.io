@@ -9,7 +9,7 @@ import{j as e}from"./jsx-runtime-u17CrQMm.js";const i={title:"MCP Server",order:
 `,e.jsxs(n.ul,{children:[`
 `,e.jsx(n.li,{children:"配置MCP"}),`
 `]}),`
-`,e.jsx("img",{src:"/cursor-1.png",alt:"Example",width:"100%",style:{borderRadius:"8px"},className:"border"}),`
+`,e.jsx("img",{src:"/cassia-cli/cursor-1.png",alt:"Example",width:"100%",style:{borderRadius:"8px"},className:"border"}),`
 `,e.jsxs(n.ul,{children:[`
 `,e.jsx(n.li,{children:"填写内容"}),`
 `]}),`
@@ -25,20 +25,20 @@ import{j as e}from"./jsx-runtime-u17CrQMm.js";const i={title:"MCP Server",order:
 `,e.jsx(n.li,{children:"手动开启"}),`
 `]}),`
 `,e.jsx(n.p,{children:"启动后，正常可以看到这里显示有61个tools"}),`
-`,e.jsx("img",{src:"/cursor-2.png",alt:"Example",width:"100%",style:{borderRadius:"8px"},className:"border"}),`
+`,e.jsx("img",{src:"/cassia-cli/cursor-2.png",alt:"Example",width:"100%",style:{borderRadius:"8px"},className:"border"}),`
 `,e.jsxs(n.ul,{children:[`
 `,e.jsx(n.li,{children:"测试消息"}),`
 `]}),`
-`,e.jsx("img",{src:"/cursor-3.png",alt:"Example",width:"100%",style:{borderRadius:"8px"},className:"border"}),`
+`,e.jsx("img",{src:"/cassia-cli/cursor-3.png",alt:"Example",width:"100%",style:{borderRadius:"8px"},className:"border"}),`
 `,e.jsx(n.h2,{id:"vscode使用",children:e.jsx(n.a,{href:"#vscode使用",children:"VSCode使用"})}),`
 `,e.jsx(r,{children:e.jsx(n.p,{children:"初步测试可能需要权限，可以尝试使用自己的账号尝试，方式如下"})}),`
-`,e.jsx("img",{src:"/vscode-1.png",alt:"Example",width:"100%",style:{borderRadius:"8px"},className:"border"}),`
+`,e.jsx("img",{src:"/cassia-cli/vscode-1.png",alt:"Example",width:"100%",style:{borderRadius:"8px"},className:"border"}),`
 `,e.jsx("br",{}),`
-`,e.jsx("img",{src:"/vscode-2.png",alt:"Example",width:"100%",style:{borderRadius:"8px"},className:"border"}),`
+`,e.jsx("img",{src:"/cassia-cli/vscode-2.png",alt:"Example",width:"100%",style:{borderRadius:"8px"},className:"border"}),`
 `,e.jsx("br",{}),`
-`,e.jsx("img",{src:"/vscode-3.png",alt:"Example",width:"100%",style:{borderRadius:"8px"},className:"border"}),`
+`,e.jsx("img",{src:"/cassia-cli/vscode-3.png",alt:"Example",width:"100%",style:{borderRadius:"8px"},className:"border"}),`
 `,e.jsx("br",{}),`
-`,e.jsx("img",{src:"/vscode-4.png",alt:"Example",width:"100%",style:{borderRadius:"8px"},className:"border"}),`
+`,e.jsx("img",{src:"/cassia-cli/vscode-4.png",alt:"Example",width:"100%",style:{borderRadius:"8px"},className:"border"}),`
 `,e.jsx(n.h2,{id:"其他说明",children:e.jsx(n.a,{href:"#其他说明",children:"其他说明"})}),`
 `,e.jsx(n.p,{children:"支持配置单独子MCP服务，可以配置子路径方式使用部分工具调用"}),`
 `,e.jsx(n.figure,{"data-rehype-pretty-code-figure":"",children:e.jsx(n.pre,{tabIndex:"0","data-language":"bash","data-theme":"github-light",children:e.jsxs(n.code,{"data-language":"bash","data-theme":"github-light",style:{display:"grid"},children:[e.jsx(n.span,{"data-line":"",children:e.jsx(n.span,{style:{color:"#6A737D"},children:"# ble操作"})}),`
