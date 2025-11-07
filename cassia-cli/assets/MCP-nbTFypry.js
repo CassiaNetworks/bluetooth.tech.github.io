@@ -1,5 +1,5 @@
 import{j as e}from"./jsx-runtime-u17CrQMm.js";const i={title:"MCP Server",order:2};function a(s){const n={a:"a",code:"code",figure:"figure",h1:"h1",h2:"h2",li:"li",p:"p",pre:"pre",span:"span",strong:"strong",ul:"ul",...s.components},{Info:r}=n;return r||l("Info"),e.jsxs(e.Fragment,{children:[e.jsx(n.h1,{id:"mcp-server",children:e.jsx(n.a,{href:"#mcp-server",children:"MCP Server"})}),`
-`,e.jsx(n.p,{children:"增加MCP协议Server支持(HTTP方式)，可以使用其他LLM Agent直接通过自然语言操作网关。"}),`
+`,e.jsx(n.p,{children:"增加MCP协议Server支持(HTTP方式)，可以使用其他LLM客户端直接通过自然语言操作网关。"}),`
 `,e.jsx(n.h2,{id:"启动命令",children:e.jsx(n.a,{href:"#启动命令",children:"启动命令"})}),`
 `,e.jsxs(n.p,{children:["这里以",e.jsx(n.span,{"data-rehype-pretty-code-figure":"",children:e.jsx(n.code,{"data-language":"text","data-theme":"github-light",children:e.jsx(n.span,{"data-line":"",children:e.jsx(n.span,{children:"网关容器"})})})}),"内作为示例说明使用方式。"]}),`
 `,e.jsx(r,{children:e.jsxs(n.p,{children:[e.jsx(n.strong,{children:"下载命令"}),"、",e.jsx(n.strong,{children:"本地PC运行"})," 访问操作其他网关请根据",e.jsx(n.span,{"data-rehype-pretty-code-figure":"",children:e.jsx(n.code,{"data-language":"text","data-theme":"github-light",children:e.jsx(n.span,{"data-line":"",children:e.jsx(n.span,{children:"快速开始"})})})}),"配置环境变量即可"]})}),`
