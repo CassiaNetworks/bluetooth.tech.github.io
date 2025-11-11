@@ -1,17 +1,18 @@
-import{j as e}from"./jsx-runtime-u17CrQMm.js";const x={title:"快速开始",order:1};function c(a){const n={a:"a",code:"code",figure:"figure",h1:"h1",h2:"h2",li:"li",p:"p",pre:"pre",span:"span",ul:"ul",...a.components},{AccordionGroup:d,AccordionPanel:l,CassiaCliDownload:t,CassiaCliEnvSet:r,Info:i}=n;return d||s("AccordionGroup"),l||s("AccordionPanel"),t||s("CassiaCliDownload"),r||s("CassiaCliEnvSet"),i||s("Info"),e.jsxs(e.Fragment,{children:[e.jsx(n.h1,{id:"快速开始",children:e.jsx(n.a,{href:"#快速开始",children:"快速开始"})}),`
+import{j as e}from"./jsx-runtime-u17CrQMm.js";const x={title:"快速开始",order:1};function c(a){const n={a:"a",code:"code",figure:"figure",h1:"h1",h2:"h2",li:"li",p:"p",pre:"pre",span:"span",ul:"ul",...a.components},{AccordionGroup:d,AccordionPanel:l,CassiaCliDownload:t,CassiaCliEnvSet:r,Info:i}=n;return d||s("AccordionGroup"),l||s("AccordionPanel"),t||s("CassiaCliDownload"),r||s("CassiaCliEnvSet"),i||s("Info"),e.jsxs(e.Fragment,{children:[e.jsxs(n.h1,{id:"快速开始",children:["快速开始",e.jsx(n.a,{"aria-hidden":"true",tabIndex:"-1",href:"#快速开始",children:e.jsx(n.span,{className:"icon icon-link"})})]}),`
 `,e.jsx(n.p,{children:"集成了网关常用API和基础功能，用于无需编码快速使用。"}),`
-`,e.jsx(n.h2,{id:"下载工具",children:e.jsx(n.a,{href:"#下载工具",children:"下载工具"})}),`
+`,e.jsxs(n.h2,{id:"下载工具",children:["下载工具",e.jsx(n.a,{"aria-hidden":"true",tabIndex:"-1",href:"#下载工具",children:e.jsx(n.span,{className:"icon icon-link"})})]}),`
 `,e.jsx(t,{}),`
-`,e.jsx(n.h2,{id:"配置环境",children:e.jsx(n.a,{href:"#配置环境",children:"配置环境"})}),`
-`,e.jsx(i,{children:e.jsxs(n.p,{children:[e.jsx(n.span,{"data-rehype-pretty-code-figure":"",children:e.jsx(n.code,{"data-language":"text","data-theme":"github-light",children:e.jsx(n.span,{"data-line":"",children:e.jsx(n.span,{children:"GATEWAY_USERNAME"})})})}),"和",e.jsx(n.span,{"data-rehype-pretty-code-figure":"",children:e.jsx(n.code,{"data-language":"text","data-theme":"github-light",children:e.jsx(n.span,{"data-line":"",children:e.jsx(n.span,{children:"GATEWAY_PASSWORD"})})})}),"只有",e.jsx(n.span,{"data-rehype-pretty-code-figure":"",children:e.jsx(n.code,{"data-language":"text","data-theme":"github-light",children:e.jsx(n.span,{"data-line":"",children:e.jsx(n.span,{children:"system"})})})}),"子命令会用到，其他命令不需要设置"]})}),`
+`,e.jsxs(n.h2,{id:"配置环境",children:["配置环境",e.jsx(n.a,{"aria-hidden":"true",tabIndex:"-1",href:"#配置环境",children:e.jsx(n.span,{className:"icon icon-link"})})]}),`
+`,e.jsx(i,{children:e.jsxs(n.p,{children:[e.jsx(n.span,{"data-rehype-pretty-code-figure":"",children:e.jsx(n.code,{"data-language":"text","data-theme":"github-light",children:e.jsx(n.span,{"data-line":"",children:e.jsx(n.span,{children:"GATEWAY_USERNAME"})})})}),"和",e.jsx(n.span,{"data-rehype-pretty-code-figure":"",children:e.jsx(n.code,{"data-language":"text","data-theme":"github-light",children:e.jsx(n.span,{"data-line":"",children:e.jsx(n.span,{children:"GATEWAY_PASSWORD"})})})}),"只有",e.jsx(n.span,{"data-rehype-pretty-code-figure":"",children:e.jsx(n.code,{"data-language":"text","data-theme":"github-light",children:e.jsx(n.span,{"data-line":"",children:e.jsx(n.span,{children:"system"})})})}),`子命令会用到，其他命令不需要设置
+`,e.jsx(n.span,{"data-rehype-pretty-code-figure":"",children:e.jsx(n.code,{"data-language":"text","data-theme":"github-light",children:e.jsx(n.span,{"data-line":"",children:e.jsx(n.span,{children:"Container"})})})}),"内无需设置任何环境变量"]})}),`
 `,e.jsx(r,{}),`
-`,e.jsx(n.h2,{id:"查看帮助",children:e.jsx(n.a,{href:"#查看帮助",children:"查看帮助"})}),`
+`,e.jsxs(n.h2,{id:"查看帮助",children:["查看帮助",e.jsx(n.a,{"aria-hidden":"true",tabIndex:"-1",href:"#查看帮助",children:e.jsx(n.span,{className:"icon icon-link"})})]}),`
 `,e.jsx(n.figure,{"data-rehype-pretty-code-figure":"",children:e.jsx(n.pre,{tabIndex:"0","data-language":"bash","data-theme":"github-light",children:e.jsxs(n.code,{"data-language":"bash","data-theme":"github-light",style:{display:"grid"},children:[e.jsx(n.span,{"data-line":"",children:e.jsx(n.span,{style:{color:"#6A737D"},children:"# container/linux/macos"})}),`
 `,e.jsxs(n.span,{"data-line":"",children:[e.jsx(n.span,{style:{color:"#6F42C1"},children:"./cassia"}),e.jsx(n.span,{style:{color:"#005CC5"},children:" -h"})]}),`
 `,e.jsx(n.span,{"data-line":"",children:" "}),`
 `,e.jsx(n.span,{"data-line":"",children:e.jsx(n.span,{style:{color:"#6A737D"},children:"# windows powershell"})}),`
 `,e.jsxs(n.span,{"data-line":"",children:[e.jsx(n.span,{style:{color:"#6F42C1"},children:"cassia.exe"}),e.jsx(n.span,{style:{color:"#005CC5"},children:" -h"})]})]})})}),`
-`,e.jsx(n.h2,{id:"扫描设备",children:e.jsx(n.a,{href:"#扫描设备",children:"扫描设备"})}),`
+`,e.jsxs(n.h2,{id:"扫描设备",children:["扫描设备",e.jsx(n.a,{"aria-hidden":"true",tabIndex:"-1",href:"#扫描设备",children:e.jsx(n.span,{className:"icon icon-link"})})]}),`
 `,e.jsx(n.figure,{"data-rehype-pretty-code-figure":"",children:e.jsx(n.pre,{tabIndex:"0","data-language":"bash","data-theme":"github-light",children:e.jsxs(n.code,{"data-language":"bash","data-theme":"github-light",style:{display:"grid"},children:[e.jsx(n.span,{"data-line":"",children:e.jsx(n.span,{style:{color:"#6A737D"},children:"# 持续扫描周围所有设备"})}),`
 `,e.jsxs(n.span,{"data-line":"",children:[e.jsx(n.span,{style:{color:"#6F42C1"},children:"./cassia"}),e.jsx(n.span,{style:{color:"#032F62"},children:" gateway"}),e.jsx(n.span,{style:{color:"#032F62"},children:" ble"}),e.jsx(n.span,{style:{color:"#032F62"},children:" scan"})]}),`
 `,e.jsx(n.span,{"data-line":"",children:" "}),`
@@ -20,14 +21,14 @@ import{j as e}from"./jsx-runtime-u17CrQMm.js";const x={title:"快速开始",orde
 `,e.jsx(n.span,{"data-line":"",children:" "}),`
 `,e.jsx(n.span,{"data-line":"",children:e.jsx(n.span,{style:{color:"#6A737D"},children:"# 广播名称过滤"})}),`
 `,e.jsxs(n.span,{"data-line":"",children:[e.jsx(n.span,{style:{color:"#6F42C1"},children:"cassia"}),e.jsx(n.span,{style:{color:"#032F62"},children:" gateway"}),e.jsx(n.span,{style:{color:"#032F62"},children:" ble"}),e.jsx(n.span,{style:{color:"#032F62"},children:" scan"}),e.jsx(n.span,{style:{color:"#005CC5"},children:" --active"}),e.jsx(n.span,{style:{color:"#005CC5"},children:" --filter_name"}),e.jsx(n.span,{style:{color:"#032F62"},children:' "cassia*"'})]})]})})}),`
-`,e.jsx(n.h2,{id:"命令补全",children:e.jsx(n.a,{href:"#命令补全",children:"命令补全"})}),`
+`,e.jsxs(n.h2,{id:"命令补全",children:["命令补全",e.jsx(n.a,{"aria-hidden":"true",tabIndex:"-1",href:"#命令补全",children:e.jsx(n.span,{className:"icon icon-link"})})]}),`
 `,e.jsxs(n.p,{children:["支持使用completion子命令生成补全脚本，执行补全脚本后，可以使用",e.jsx(n.span,{"data-rehype-pretty-code-figure":"",children:e.jsx(n.code,{"data-language":"text","data-theme":"github-light",children:e.jsx(n.span,{"data-line":"",children:e.jsx(n.span,{children:"Tab"})})})}),"按键提示命令参数。"]}),`
 `,e.jsx(n.figure,{"data-rehype-pretty-code-figure":"",children:e.jsx(n.pre,{tabIndex:"0","data-language":"bash","data-theme":"github-light",children:e.jsxs(n.code,{"data-language":"bash","data-theme":"github-light",style:{display:"grid"},children:[e.jsx(n.span,{"data-line":"",children:e.jsx(n.span,{style:{color:"#6A737D"},children:"# container内"})}),`
 `,e.jsxs(n.span,{"data-line":"",children:[e.jsx(n.span,{style:{color:"#24292E"},children:"SHELL"}),e.jsx(n.span,{style:{color:"#D73A49"},children:"="}),e.jsx(n.span,{style:{color:"#032F62"},children:"bash"}),e.jsx(n.span,{style:{color:"#6F42C1"},children:" ./cassia"}),e.jsx(n.span,{style:{color:"#032F62"},children:" completion"})]}),`
 `,e.jsx(n.span,{"data-line":"",children:" "}),`
 `,e.jsx(n.span,{"data-line":"",children:e.jsx(n.span,{style:{color:"#6A737D"},children:"# 其他系统shell"})}),`
 `,e.jsxs(n.span,{"data-line":"",children:[e.jsx(n.span,{style:{color:"#6F42C1"},children:"./cassia"}),e.jsx(n.span,{style:{color:"#032F62"},children:" completion"})]})]})})}),`
-`,e.jsx(n.h2,{id:"常用命令",children:e.jsx(n.a,{href:"#常用命令",children:"常用命令"})}),`
+`,e.jsxs(n.h2,{id:"常用命令",children:["常用命令",e.jsx(n.a,{"aria-hidden":"true",tabIndex:"-1",href:"#常用命令",children:e.jsx(n.span,{className:"icon icon-link"})})]}),`
 `,e.jsx(i,{children:e.jsx(n.p,{children:"具体子命令参数可以查看help或者询问AI"})}),`
 `,e.jsxs(d,{children:[e.jsxs(l,{title:"Gateway",children:[e.jsx(n.p,{children:"网关常用操作、设置"}),e.jsxs(n.ul,{children:[`
 `,e.jsxs(n.li,{children:[e.jsx(n.span,{"data-rehype-pretty-code-figure":"",children:e.jsx(n.code,{"data-language":"text","data-theme":"github-light",children:e.jsx(n.span,{"data-line":"",children:e.jsx(n.span,{children:"ble"})})})}),": BLE设备操作"]}),`

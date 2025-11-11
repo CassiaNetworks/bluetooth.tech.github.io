@@ -1,0 +1,1 @@
+import{j as n}from"./jsx-runtime-u17CrQMm.js";const s=void 0;function r(t){return n.jsx(n.Fragment,{})}function a(t={}){const{wrapper:e}=t.components||{};return e?n.jsx(e,{...t,children:n.jsx(r,{...t})}):r()}export{a as default,s as frontmatter};
