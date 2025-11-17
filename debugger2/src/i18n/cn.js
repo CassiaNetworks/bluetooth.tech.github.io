@@ -1,6 +1,6 @@
 const cn = {
   // header
-  title: 'Cassia 蓝牙调试工具 v2(Beta)',
+  title: 'Cassia 蓝牙调试工具 v2',
   
   // left
   configConnectParams: '接入配置',

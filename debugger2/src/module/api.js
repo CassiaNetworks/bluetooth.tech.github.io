@@ -595,7 +595,7 @@ function startScanByDevConf(devConf, messageHandler, errorHandler) {
   query.event = 1;
   let scanParams = getUrlVars(devConf.scanParams);
   query = _.merge(query, scanParams)
-  let url = `${devConf.baseURI}/gap/nodes/?${obj2QueryStr(query)}`;
+  let url = `${devConf.baseURI}/gap/nodes?${obj2QueryStr(query)}&access_token=`;
   addApiLogItem(main.getGlobalVue().$i18n.t('message.apiScan'), 'GET/SSE', url, query);
   return startScan(url, messageHandler, errorHandler);
 }
