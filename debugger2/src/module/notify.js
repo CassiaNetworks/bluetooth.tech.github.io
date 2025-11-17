@@ -7,13 +7,14 @@ import vueModule from './vue.js';
 const logger = libLogger.genModuleLogger('notify');
 
 let sse = null;
+let globalSeq = 0;
 
 // 更新notify结果
 function notifySseMessageHandler(message) {
   const data = JSON.parse(message.data);
   logger.info('notify sse message:', message);
   const cache = dbModule.getCache();
-  cache.notifyResultList.push({time: Date.now(), mac: data.id, handle: data.handle, value: data.value});
+  cache.notifyResultList.push({seqNum: data.seqNum || ++globalSeq, time: data.timestamp || Date.now(), mac: data.id, handle: data.handle, value: data.value});
 }
 
 function notifySseErrorHandler(error) {
@@ -21,12 +22,15 @@ function notifySseErrorHandler(error) {
   vueModule.notify(`关闭设备通知SSE，SSE异常: ${error.message || JSON.stringify(error)}`, '服务异常', libEnum.messageType.ERROR);
   sse.close();
   sse = null;
+  globalSeq = 0;
 }
 
 // 保存配置 -> 启动扫描
-function openNotifySse() {
+function openNotifySse(timestamp='', sequence='') {
   if (sse) return sse;
-  const devConf = dbModule.getDevConf();
+  const devConf = _.cloneDeep(dbModule.getDevConf());
+  devConf.timestamp = timestamp;
+  devConf.sequence = sequence;
   sse = api.startNotifyByDevConf(devConf, notifySseMessageHandler, notifySseErrorHandler);
 }
 
@@ -35,6 +39,7 @@ function closeNotifySse() {
     sse.close();
     sse = null;
   }
+  globalSeq = 0;
 }
 
 function reopenNotifySse() {

@@ -62,7 +62,14 @@ function scanSseErrorHandler(error) {
     cancelButtonText: cancel,
     type: 'warning'
   }).then(() => {
-    window.open(devConf.baseURI);
+    if (devConf.controlStyle === 'AP') {
+      window.open(devConf.baseURI);
+    } else {
+      // AC跳转到settings页面，非AC版本存在跨域cookie无法携带，需要重新登录
+      // http://10.100.144.168:8882/setting?view#develop
+      let url = `${devConf.acServerURI}/setting?view#develop`;
+      window.open(url);
+    }
   }).catch(() => {
     // cancel      
   });

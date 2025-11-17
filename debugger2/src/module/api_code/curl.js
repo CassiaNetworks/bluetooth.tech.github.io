@@ -28,6 +28,20 @@ const read = `
 curl --location --request GET '<%= url %>'
 `;
 
+const readPhy = `
+curl --location --request GET '<%= url %>'
+`;
+
+const updatePhy = `
+curl --location --request POST '<%= url %>' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "tx": "<%= apiParams.tx %>",
+  "rx": "<%= apiParams.rx %>",
+  "coded_option": "<%= apiParams.codedOption %>"
+}'
+`;
+
 const write = `
 curl --location --request GET '<%= url %>'
 `;
@@ -94,6 +108,8 @@ export default {
   scan,
   connect,
   read,
+  readPhy,
+  updatePhy,
   write,
   disconnect,
   connectList,

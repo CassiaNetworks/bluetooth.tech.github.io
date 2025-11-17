@@ -37,13 +37,13 @@
         <el-aside :style="{'width': store.devConfDisplayVars.leftConfWidth}" style="border-right: 1px solid #f2f2f2; background-color: #F2F4F8; height: 100%; ">
           <el-container :style="{'height': store.devConfDisplayVars.leftConfHeight}" style="width: 100%;">
             <el-main style="margin-bottom: 85px;">
-              <el-form :label-width="store.devConfDisplayVars.leftConfLabelWidth" size="small" :model="store.devConf" :rules="cache.devConfRules">
+              <el-form ref="refConfig" :label-width="store.devConfDisplayVars.leftConfLabelWidth" size="small" :model="store.devConf" :rules="cache.devConfRules">
                 <el-row style="font-size: 16px; border-bottom: 1px solid #ddd; margin-top: 10px;">
                   <span>{{ $t('message.configConnectParams') }}</span>
                 </el-row>
                 <el-form-item :label="$t('message.connectStyle')" style="margin-top: 15px;">
                   <el-radio-group v-model="store.devConf.controlStyle" @change="controlStyleChange">
-                    <el-radio-button label="AP">Router</el-radio-button>
+                    <el-radio-button label="AP">Gateway</el-radio-button>
                     <el-radio-button label="AC"></el-radio-button>
                   </el-radio-group>
                 </el-form-item>
@@ -51,7 +51,7 @@
                   <el-input v-model="store.devConf.apServerURI" class="server-ip" clearable placeholder="http://192.168.0.100"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('message.serviceURI')" prop="acServerURI" v-show="store.devConf.controlStyle === 'AC'" style="margin-top: 15px;">
-                  <el-input v-model="store.devConf.acServerURI" class="server-ip" clearable placeholder="http://192.168.0.100"></el-input>
+                  <el-input v-model="store.devConf.acServerURI" class="server-ip" @blur="acServerURIBlur" clearable placeholder="http://192.168.0.100"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('message.devKey')" prop="acDevKey" v-show="store.devConf.controlStyle === 'AC'" style="margin-top: 15px;">
                   <el-input v-model="store.devConf.acDevKey" class="ac-dev-key" clearable></el-input>
@@ -61,10 +61,19 @@
                 </el-form-item>
                 <el-form-item :label="$t('message.apMac')" prop="mac" v-show="store.devConf.controlStyle === 'AC'" style="margin-top: 15px;">
                   <el-select @focus="getAcRouterList" :remote-method="getAcRouterList" :loading="cache.isGettingAcRouterList" v-model="store.devConf.mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" filterable remote style="width: 100%" @change="routerChange">
-                    <el-option v-for="item in cache.acRouterList" :key="item.mac" :label="item.label" :value="item.mac">
-                      <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
-                      <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
-                    </el-option>
+                    <el-option-group key="Online" label="Online">
+                      <el-option v-for="item in cache.acRouterList.filter(x => x.status === 'online')" :key="item.mac" :label="item.label" :value="item.mac">
+                        <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+                      </el-option>
+                    </el-option-group>
+
+                    <el-option-group key="Offline" label="Offline">
+                      <el-option v-for="item in cache.acRouterList.filter(x => x.status && x.status !== 'online')" :key="item.mac" :label="item.label" :value="item.mac">
+                        <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+                      </el-option>
+                    </el-option-group>
                   </el-select>
                 </el-form-item>
                 <el-row style="font-size: 16px; border-bottom: 1px solid #ddd; margin-top: 30px;">
@@ -78,11 +87,18 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('message.filterName')">
-                  <el-select v-model="store.devConf.filter_name" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                  <el-select v-model="store.devConf.filter_name" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option clearable style="width: 100%">
                   </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('message.filterMac')">
-                  <el-select v-model="store.devConf.filter_mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                  <el-select v-model="store.devConf.filter_mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option clearable style="width: 100%">
+                  </el-select>
+                </el-form-item>
+                <el-form-item :label="$t('message.phy')" v-if="!['X1000', 'S2000'].includes(cache.model)">
+                  <el-select v-model="store.devConf.phy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option clearable style="width: 100%">
+                    <el-option label="1M" value="1M" key="1M"></el-option>
+                    <el-option label="2M" value="2M" key="2M"></el-option>
+                    <el-option label="CODED" value="CODED" key="CODED"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('message.fitlerRSSI')">
@@ -102,11 +118,27 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('message.aps')" prop="mac" v-show="store.devConf.controlStyle === 'AC' && store.devConf.autoSelectionOn === 'on'" style="margin-top: 15px;">
-                  <el-select @focus="getAcRouterListWillAll" :remote-method="getAcRouterListWillAll" :loading="cache.isGettingAcRouterList" v-model="store.devConf.aps" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" placeholder="" multiple filterable remote style="width: 100%" @change="autoSelectionRouterChanged">
-                    <el-option v-for="item in cache.acRouterList" :key="item.mac" :label="item.label" :value="item.mac">
-                      <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
-                      <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
-                    </el-option>
+                  <el-select @focus="getAcRouterListWillAll" :remote-method="getAcRouterListWillAll" :loading="cache.isGettingAcRouterList" v-model="store.devConf.aps" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" placeholder="" multiple filterable clearable remote style="width: 100%" @change="autoSelectionRouterChanged">
+                    <el-option-group key="All" label="All">
+                      <el-option v-for="item in cache.acRouterList.filter(x => x.mac === '*')" :key="item.mac" :label="item.label" :value="item.mac">
+                        <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+                      </el-option>
+                    </el-option-group>
+
+                    <el-option-group key="Online" label="Online">
+                      <el-option v-for="item in cache.acRouterList.filter(x => x.status === 'online')" :key="item.mac" :label="item.label" :value="item.mac">
+                        <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+                      </el-option>
+                    </el-option-group>
+
+                    <el-option-group key="Offline" label="Offline">
+                      <el-option v-for="item in cache.acRouterList.filter(x => x.status && x.status !== 'online')" :key="item.mac" :label="item.label" :value="item.mac">
+                        <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+                      </el-option>
+                    </el-option-group>
                   </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('message.useChip')" v-show="store.devConf.autoSelectionOn === 'off'" style="margin-top: 15px;">
@@ -124,6 +156,19 @@
                 <el-form-item :label="$t('message.connTimeout')" prop="connTimeout">
                   <el-input v-model="store.devConf.connTimeout"></el-input>
                 </el-form-item>
+                <el-form-item :label="$t('message.phy')" v-show="store.devConf.autoSelectionOn === 'off' && !['X1000', 'S2000'].includes(cache.model)">
+                  <el-select v-model="store.devConf.connPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
+                    <el-option label="1M" value="1M" key="1M"></el-option>
+                    <el-option label="CODED" value="CODED" key="CODED"></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item :label="$t('message.secondaryPhy')" v-show="store.devConf.autoSelectionOn === 'off' && !['X1000', 'S2000'].includes(cache.model)">
+                  <el-select v-model="store.devConf.secondaryPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
+                    <el-option label="1M" value="1M" key="1M"></el-option>
+                    <el-option label="2M" value="2M" key="2M"></el-option>
+                    <el-option label="CODED" value="CODED" key="CODED"></el-option>
+                  </el-select>
+                </el-form-item>
                 <el-form-item :label="$t('message.others')">
                   <el-input v-model="store.devConf.connParams" placeholder="key1=value1&key2=value2"></el-input>
                 </el-form-item>
@@ -140,8 +185,8 @@
       <el-main :style="{'background-color': '#fff', 'padding': 0, 'margin-left': store.devConfDisplayVars.isConfigMenuItemOpen ? store.devConfDisplayVars.leftConfWidth : '0px', 'margin-top': '50px'}">
         <el-container style="height: 100%; background-color: #fff;">
           <!-- 菜单栏 -->
-          <el-aside width="150px" style="height: 100%; background-color: #F8FAFF; box-shadow:-1px 0px 6px 0px rgba(195,212,227,0.28); position: fixed; z-index: 999;">
-            <el-menu :collapse="false" @select="menuSelect" background-color="#f8faff" text-color="#505050" active-text-color="#232635" default-active="scanListMenuItem" style="width: 150px; " class="el-menu-vertical-demo">
+          <el-aside width="180px" style="height: 100%; background-color: #F8FAFF; box-shadow:-1px 0px 6px 0px rgba(195,212,227,0.28); position: fixed; z-index: 999; ">
+            <el-menu :collapse="false" @select="menuSelect" background-color="#f8faff" text-color="#505050" active-text-color="#232635" default-active="scanListMenuItem" style="width: 180px; " class="el-menu-vertical-demo">
               <el-menu-item index="configMenuItem" class="configMenuItem" :style="{'color': store.devConfDisplayVars.activeMenuItem === 'configMenuItem' ? '#0089ff' : '#232635'}">
                 <i :class="this.store.devConfDisplayVars.isConfigMenuItemOpen ? 'icon-fold' : 'icon-unfold'" :style="{'font-size': '16px', 'color': store.devConfDisplayVars.activeMenuItem === 'scanListMenuItem' ? '#232635' : '#232635', 'margin-right': '10px'}"></i>
                 <span slot="title">{{$t('message.configParams')}}</span>
@@ -179,14 +224,14 @@
                 <span slot="title">{{$t('message.resources')}}</span>
               </el-menu-item>
               <el-menu-item style="position: absolute; bottom: 50px; padding: 0; width: 152px; text-align: center; border-top: 0px solid #e8eaed;">
-                <span>v2.0.7</span>
+                <span>v2.0.8</span>
               </el-menu-item>
             </el-menu>
           </el-aside>
 
           <!-- API调试主题内容 -->
-          <el-row style="margin: 0 0 0 150px; height: 100%; width: 100%;" v-show="store.devConfDisplayVars.activeMenuItem === 'apiDebuggerMenuItem'">
-            <el-aside class="apiDebuggerMenu" :width="store.devConfDisplayVars.language === 'cn' ? '110px' : '150px'" style="height: 100%; background-color: #FFF; box-shadow:-1px 0px 6px 0px rgba(195,212,227,0.28); position: fixed; z-index: 999; border-right: 1px solid #ebedf2">
+          <el-row style="margin: 0 0 0 180px; height: 100%; width: 100%;" v-show="store.devConfDisplayVars.activeMenuItem === 'apiDebuggerMenuItem'">
+            <el-aside class="apiDebuggerMenu" :width="store.devConfDisplayVars.language === 'cn' ? '180px' : '180px'" style="height: 100%; background-color: #FFF; box-shadow:-1px 0px 6px 0px rgba(195,212,227,0.28); position: fixed; z-index: 999; border-right: 1px solid #ebedf2">
               <!-- API调试菜单 -->
               <el-menu :collapse="false" @select="apiDebuggerMenuSelect" background-color="#fff" text-color="#505050" active-text-color="#0089ff" :default-active="store.devConfDisplayVars.activeApiDebugMenuItem" ref="refApiDebuggerMenu" class="el-menu-api-debugger">
                 <el-menu-item index="auth" v-show="store.devConf.controlStyle === 'AC'">
@@ -228,9 +273,16 @@
                 <el-menu-item index="unpair">
                   <span slot="title">{{$t('message.unpair')}}</span>
                 </el-menu-item>
+                <el-menu-item index="readPhy" v-if="!['X1000', 'S2000'].includes(cache.model)">
+                  <span slot="title">{{$t('message.readPhy')}}</span>
+                </el-menu-item>
+                <el-menu-item index="updatePhy" v-if="!['X1000', 'S2000'].includes(cache.model)">
+                  <span slot="title">{{$t('message.updatePhy')}}</span>
+                </el-menu-item>
+                
               </el-menu>
             </el-aside>
-            <el-main :style="{'height': '100%', 'margin': store.devConfDisplayVars.language === 'cn' ? '0 0 0 110px' : '0 0 0 150px', 'padding-top': '0'}">
+            <el-main :style="{'height': '100%', 'margin': store.devConfDisplayVars.language === 'cn' ? '0 0 0 180px' : '0 0 0 180px', 'padding-top': '0'}">
               <el-col :span="18" style="height: 100%; border-right: 1px solid #ebedf2; padding-top: 10px;">
                 <el-tabs v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'auth' && store.devConf.controlStyle === 'AC'" style="min-height: 380px;">
                   <el-tab-pane>
@@ -267,16 +319,29 @@
                         </el-radio-group>
                       </el-form-item>
                       <el-form-item :label="$t('message.filterName')">
-                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].filter_name" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].filter_name" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                         </el-select>
                       </el-form-item>
                       <el-form-item :label="$t('message.filterMac')">
-                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].filter_mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].filter_mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item :label="$t('message.phy')" v-if="!['X1000', 'S2000'].includes(cache.model)">
+                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].phy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
+                          <el-option label="1M" value="1M" key="1M"></el-option>
+                          <el-option label="2M" value="2M" key="2M"></el-option>
+                          <el-option label="CODED" value="CODED" key="CODED"></el-option>
                         </el-select>
                       </el-form-item>
                       <el-form-item :label="$t('message.fitlerRSSI')">
                         <el-slider v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].filter_rssi" show-input :min="-85" :max="0">
                         </el-slider>
+                      </el-form-item>
+                      <el-form-item :label="$t('message.timestamp')">
+                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].timestamp" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" default-first-option style="width: 100%">
+                          <el-option label="ON" value="1" key="ON"></el-option>
+                          <el-option label="OFF" value="0" key="OFF"></el-option>
+                        </el-select>
                       </el-form-item>
                       <el-form-item :label="$t('message.others')">
                         <el-input v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].scanParams" placeholder="key1=value1&key2=value2"></el-input>
@@ -292,7 +357,7 @@
                 <el-tabs v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'connect'" style="min-height: 380px;">
                   <el-tab-pane>
                     <span slot="label"> {{$t('message.connectDevice')}}</span>
-                    <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
+                    <el-form label-width="150px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
                         <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
                       </el-form-item>
@@ -311,7 +376,39 @@
                       <el-form-item :label="$t('message.deviceAddr')">
                         <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['connect'].deviceMac"></el-input>
                       </el-form-item>
-                      <el-form-item align="right">
+                      <el-collapse>
+                        <el-collapse-item>
+                          <template slot="title">
+                            <div style="font-weight: normal; text-align: center; width: 100%;">{{$t('message.moreArgs')}}</div>
+                          </template>
+                          <el-form-item :label="$t('message.discovergatt')" style="margin-top: 15px;">
+                            <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['connect'].discovergatt" style="width: 100%">
+                              <el-option :label="$t('message.open')" value="1"></el-option>
+                              <el-option :label="$t('message.close')" value="0"></el-option>
+                            </el-select>
+                          </el-form-item>
+                          <el-form-item :label="$t('message.connTimeout')" prop="connTimeout">
+                            <el-input v-model="store.devConfDisplayVars.apiDebuggerParams['connect'].connTimeout"></el-input>
+                          </el-form-item>
+                          <el-form-item :label="$t('message.phy')" v-if="!['X1000', 'S2000'].includes(cache.model)">
+                              <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['connect'].connPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
+                              <el-option label="1M" value="1M" key="1M"></el-option>
+                              <el-option label="CODED" value="CODED" key="CODED"></el-option>
+                              </el-select>
+                          </el-form-item>
+                          <el-form-item :label="$t('message.secondaryPhy')" v-if="!['X1000', 'S2000'].includes(cache.model)">
+                              <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['connect'].secondaryPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
+                              <el-option label="1M" value="1M" key="1M"></el-option>
+                              <el-option label="2M" value="2M" key="2M"></el-option>
+                              <el-option label="CODED" value="CODED" key="CODED"></el-option>
+                              </el-select>
+                          </el-form-item>
+                          <el-form-item :label="$t('message.others')">
+                              <el-input v-model="store.devConfDisplayVars.apiDebuggerParams['connect'].connParams" placeholder="key1=value1&key2=value2"></el-input>
+                          </el-form-item>   
+                        </el-collapse-item>
+                      </el-collapse>
+                      <el-form-item align="right" style="margin-top: 12px">
                         <el-button size="small" @click="genCode">{{$t('message.genCode')}}</el-button>
                         <el-button type="primary" size="small" @click="startDebugApi">{{$t('message.startDebug')}}</el-button>
                       </el-form-item>
@@ -330,6 +427,61 @@
                       </el-form-item>
                       <el-form-item :label="$t('message.deviceAddr')">
                         <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['read'].deviceMac"></el-input>
+                      </el-form-item>
+                      <el-form-item align="right">
+                        <el-button size="small" @click="genCode">{{$t('message.genCode')}}</el-button>
+                        <el-button type="primary" size="small" @click="startDebugApi">{{$t('message.startDebug')}}</el-button>
+                      </el-form-item>
+                    </el-form>
+                  </el-tab-pane>
+                </el-tabs>
+                <el-tabs v-if="!['X1000', 'S2000'].includes(cache.model)" v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'readPhy'" style="min-height: 380px;">
+                  <el-tab-pane>
+                    <span slot="label"> {{$t('message.readPhy')}}</span>
+                    <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
+                      <el-form-item :label="$t('message.router')">
+                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
+                      </el-form-item>
+                      <el-form-item :label="$t('message.deviceAddr')">
+                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['readPhy'].deviceMac"></el-input>
+                      </el-form-item>
+                      <el-form-item align="right">
+                        <el-button size="small" @click="genCode">{{$t('message.genCode')}}</el-button>
+                        <el-button type="primary" size="small" @click="startDebugApi">{{$t('message.startDebug')}}</el-button>
+                      </el-form-item>
+                    </el-form>
+                  </el-tab-pane>
+                </el-tabs>
+                <el-tabs v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'updatePhy' && !['X1000', 'S2000'].includes(cache.model)" style="min-height: 380px;">
+                  <el-tab-pane>
+                    <span slot="label"> {{$t('message.updatePhy')}}</span>
+                    <el-form label-width="150px" style="margin-top: 15px; width: 70%;" size="small">
+                      <el-form-item :label="$t('message.router')">
+                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
+                      </el-form-item>
+                      <el-form-item :label="$t('message.deviceAddr')">
+                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['updatePhy'].deviceMac"></el-input>
+                      </el-form-item>
+                      <el-form-item label="TX PHY">
+                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['updatePhy'].tx" clearable multiple filterable style="width: 100%">
+                          <el-option label="1M" value="1M" key="1M"></el-option>
+                          <el-option label="2M" value="2M" key="2M"></el-option>
+                          <el-option label="CODED" value="CODED" key="CODED"></el-option>
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="RX PHY">
+                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['updatePhy'].rx" clearable multiple filterable style="width: 100%">
+                          <el-option label="1M" value="1M" key="1M"></el-option>
+                          <el-option label="2M" value="2M" key="2M"></el-option>
+                          <el-option label="CODED" value="CODED" key="CODED"></el-option>
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="TX CODED Option" v-show="store.devConfDisplayVars.apiDebuggerParams['updatePhy'].tx.includes('CODED')">
+                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['updatePhy'].codedOption" style="width: 100%">
+                          <el-option label="Auto Negotiation" value="0" key="1M"></el-option>
+                          <el-option label="S2" value="1" key="S2"></el-option>
+                          <el-option label="S8" value="2" key="S8"></el-option>
+                        </el-select>
                       </el-form-item>
                       <el-form-item align="right">
                         <el-button size="small" @click="genCode">{{$t('message.genCode')}}</el-button>
@@ -422,10 +574,29 @@
                       <el-form-item :label="$t('message.router')">
                         <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
                       </el-form-item>
+
+                      <el-form-item :label="$t('message.timestamp')">
+                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['notify'].timestamp" :placeholder="$t('message.timestamp')" size="small" style="width: 100%;">
+                          <el-option label="OFF" value="0"></el-option>
+                          <el-option label="Local Time" value="1"></el-option>
+                          <el-option label="ISO 8601" value="2"></el-option>
+                          <el-option label="Timestamp" value="3"></el-option>
+                        </el-select>
+                      </el-form-item>
+
+                      <el-form-item :label="$t('message.notificationSequence')">
+                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['notify'].sequence" :placeholder="$t('message.notificationSequence')" size="small" style="width: 100%;">
+                          <el-option label="OFF" value="0"></el-option>
+                          <el-option label="Global" value="1"></el-option>
+                          <el-option label="Device" value="2"></el-option>
+                        </el-select>
+                      </el-form-item>
+
                       <el-form-item align="right">
                         <el-button size="small" @click="genCode">{{$t('message.genCode')}}</el-button>
                         <el-button type="primary" size="small" @click="startDebugApi">{{$t('message.startDebug')}}</el-button>
                       </el-form-item>
+                      
                     </el-form>
                   </el-tab-pane>
                 </el-tabs>
@@ -670,12 +841,30 @@
                     </el-row>
                   </el-tab-pane>
                 </el-tabs>
+                <el-tabs v-if="!['X1000', 'S2000'].includes(cache.model)" v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'readPhy'">
+                  <el-tab-pane>
+                    <span slot="label"> {{$t('message.apiDescription')}}</span>
+                    <el-row class="apiHelp">
+                      {{$t('message.apiReadPhyInfo')}}
+                      <p><a href="https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/BLE-5-Interface-Specification-For-X2000#11-update-phy-for-ble-connection" target="_blank">{{$t('message.more')}}</a></p>
+                    </el-row>
+                  </el-tab-pane>
+                </el-tabs>
+                <el-tabs v-if="!['X1000', 'S2000'].includes(cache.model)" v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'updatePhy'">
+                  <el-tab-pane>
+                    <span slot="label"> {{$t('message.apiDescription')}}</span>
+                    <el-row class="apiHelp">
+                      {{$t('message.apiUpdatePhyInfo')}}
+                      <p><a href="https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/BLE-5-Interface-Specification-For-X2000#11-update-phy-for-ble-connection" target="_blank">{{$t('message.more')}}</a></p>
+                    </el-row>
+                  </el-tab-pane>
+                </el-tabs>
               </el-col>
             </el-main>
           </el-row>
 
           <!-- API Demo 主题内容 -->
-          <el-row style="margin: 0 0 0 150px; height: 100%; width: 100%; " v-show="store.devConfDisplayVars.activeMenuItem === 'apiDemoMenuItem'">
+          <el-row style="margin: 0 0 0 180px; height: 100%; width: 100%; " v-show="store.devConfDisplayVars.activeMenuItem === 'apiDemoMenuItem'">
             <el-aside class="apiDebuggerMenu" width="110px" style="height: 100%; background-color: #FFF; box-shadow:-1px 0px 6px 0px rgba(195,212,227,0.28); position: fixed; z-index: 999; border-right: 1px solid #ebedf2">
               <!-- API Demo 菜单 -->
               <el-menu :collapse="false" @select="apiDebuggerDemoMenuSelect" background-color="#fff" text-color="#505050" active-text-color="#0089ff" default-active="demo1" ref="apiDebuggerDemoMenu" class="el-menu-api-demo">
@@ -780,11 +969,15 @@
                           </el-radio-group>
                         </el-form-item>
                         <el-form-item :label="$t('message.filterName')">
-                          <el-select v-model="store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan.filter_name" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                          <el-select v-model="store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan.filter_name" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                           </el-select>
                         </el-form-item>
                         <el-form-item :label="$t('message.filterMac')">
-                          <el-select v-model="store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan.filter_mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option style="width: 100%">
+                          <el-select v-model="store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan.filter_mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
+                          </el-select>
+                        </el-form-item>
+                        <el-form-item :label="$t('message.phy')">
+                          <el-select v-model="store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan.phy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                           </el-select>
                         </el-form-item>
                         <el-form-item :label="$t('message.fitlerRSSI')">
@@ -857,7 +1050,7 @@
           </el-row>
 
           <!-- 其他主题内容 -->
-          <el-main style="height: 100%; margin-left: 160px; " v-show="store.devConfDisplayVars.activeMenuItem !== 'apiDebuggerMenuItem' && store.devConfDisplayVars.activeMenuItem !== 'apiDemoMenuItem'">
+          <el-main style="height: 100%; margin-left: 190px; " v-show="store.devConfDisplayVars.activeMenuItem !== 'apiDebuggerMenuItem' && store.devConfDisplayVars.activeMenuItem !== 'apiDemoMenuItem'">
             <el-tabs style="background-color: #fff" v-model="store.devConfDisplayVars.scanTabsActiveTab" @tab-click="scanTabsClick" v-show="store.devConfDisplayVars.activeMenuItem === 'scanListMenuItem'">
               <el-tab-pane name="scanResult" style="height: 100%; background-color: #fff; ">
                 <span slot="label"> {{$t('message.scanResult')}}</span>
@@ -872,12 +1065,12 @@
                 <!-- 注意设置为固定高度，否则页面在过多的数据时候会造成卡顿，TODO: 是否考虑使用分页优化? -->
                 <vxe-grid border="none" show-overflow stripe highlight-hover-row :header-row-style="{'background-color': '#f4f5f6'}" :height="cache.vxeGridHeight + 'px'" ref="refScanDisplayResultGrid" :sort-config="{trigger: 'cell'}" :data="getComputedScanDisplayResultList">
                   <vxe-table-column field="name" :title="$t('message.name')" type="html" width="25%" sortable></vxe-table-column>
-                  <vxe-table-column field="mac" :title="$t('message.addr')" type="html" width="25%" show-overflow></vxe-table-column>
+                  <vxe-table-column field="mac" :title="$t('message.addr')" type="html" width="15%" show-overflow></vxe-table-column>
                   <vxe-table-column field="bdaddrType" :title="$t('message.type')" width="15%" sortable></vxe-table-column>
                   <vxe-table-column field="rssi" :title="$t('message.signal')" width="15%" sortable></vxe-table-column>
                   <!-- 暂时不显示广播包了，没有找到合适位置，上面的字段自定义slot，数据量大的话会卡顿 -->
                   <!-- <vxe-table-column field="adData" title="广播包" :width="store.devConfDisplayVars.adDataWidth" show-overflow></vxe-table-column> -->
-                  <vxe-table-column :title="$t('message.operation')" width="20%">
+                  <vxe-table-column :title="$t('message.operation')" width="30%">
                     <template v-slot="{ row }">
                       <vxe-button status="primary" size="small" @click="connectDeviceByRow(row, row.mac)" :loading="cache.devicesConnectLoading[row.mac]">{{$t('message.connect')}}</vxe-button>
                       <vxe-button size="small" v-show="!(cache.scanDevicesRssiHistory[row.mac] && cache.scanDevicesRssiHistory[row.mac].length !== 0)" @click="add2RssiChart(row, row.mac)">{{$t('message.add2RssiChart')}}</vxe-button>
@@ -921,6 +1114,43 @@
                 </el-row>
                 <v-chart :options="chartOptions" ref="rssiChart" :autoresize="true" :style="{width: '100%', height: cache.vxeGridHeight + 'px'}"></v-chart>
               </el-tab-pane>
+              <el-tab-pane name="deviceScanData" style="width: 100%;">
+                <span slot="label"> {{$t('message.deviceScanData')}}</span>
+                <el-row>
+                  <el-form inline size="small">
+                    <el-form-item :label="$t('message.timestamp')">
+                      <el-select v-model="store.devConfDisplayVars.deviceScanDataTimestamp" :placeholder="$t('message.timestamp')" @change="deviceScanDataFilterChange" style="width: 100px;">
+                        <el-option label="OFF" value="0"></el-option>
+                        <el-option label="ON" value="1"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.filterDuplicate')">
+                      <el-select v-model="store.devConfDisplayVars.deviceScanDataFilterDuplicate" :placeholder="$t('message.deviceScanDataFilterDuplicate')" @change="deviceScanDataFilterChange" style="width: 100px;">
+                        <el-option label="OFF" value=""></el-option>
+                        <el-option :label="$t('message.seconds1')" value="1000"></el-option>
+                        <el-option :label="$t('message.seconds2')" value="2000"></el-option>
+                        <el-option :label="$t('message.seconds5')" value="5000"></el-option>
+                        <el-option :label="$t('message.seconds10')" value="10000"></el-option>
+                        <el-option :label="$t('message.seconds30')" value="30000"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-tooltip class="item" effect="light" :content="$t('message.scanDetailInfo')">
+                        <el-button v-show="!store.devConfDisplayVars.deviceScanDataSwitch" size="small" @click="openDeviceScanData" type="primary">{{$t('message.open')}}<i class="el-icon-info el-icon--right"></i></el-button>
+                      </el-tooltip>
+                      <el-tooltip class="item" effect="light" :content="$t('message.scanDetailInfo')">
+                        <el-button v-show="store.devConfDisplayVars.deviceScanDataSwitch" size="small" @click="closeDeviceScanDetail">{{$t('message.close')}}<i class="el-icon-info el-icon--right"></i></el-button>
+                      </el-tooltip>
+                      <el-button type="primary" @click="showDeviceScanDataRealTimeNewTab" size="small">{{$t('message.deviceScanDataRealTime')}}</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-row>
+                <el-row style="padding: 15px 3px 15px 15px; height: calc(100vh - 200px); background-color: #f0f0f0; width: 100%; ">
+                  <div class="code scanDataDetail" lang="javascript" style="color: #505050; font-size: 12px; height: 100%; background-color: #f0f0f0; word-break: break-all; overflow-y: auto;" v-if="cache.deviceScanDetail.data">
+                    <p v-for="item in (cache.deviceScanDetail.data)">{{item}}</p>
+                  </div>
+                </el-row>
+              </el-tab-pane>
             </el-tabs>
             <el-tabs @tab-click="connectTabsClick" v-model="cache.currentConnectedTab" @tab-remove="connectedListTabRemove" v-show="store.devConfDisplayVars.activeMenuItem === 'connectListMenuItem'">
               <el-tab-pane name="connectTab0" :closable="false">
@@ -937,10 +1167,10 @@
                 <!-- 注意设置为固定高度，否则页面在过多的数据时候会造成卡顿，TODO: 是否考虑使用分页优化? -->
                 <vxe-grid border="none" show-overflow stripe highlight-hover-row :height="cache.vxeGridHeight + 'px'" :header-row-style="{'background-color': '#f4f5f6'}" ref="refConnectDisplayResultGrid" :sort-config="{trigger: 'cell'}" :data="getComputedConnectDisplayResultList()">
                   <vxe-table-column field="name" :title="$t('message.name')" type="html" width="15%" sortable></vxe-table-column>
-                  <vxe-table-column field="mac" :title="$t('message.addr')" type="html" width="20%" show-overflow></vxe-table-column>
-                  <vxe-table-column field="chip" :title="$t('message.chip')" type="html" width="15%" sortable></vxe-table-column>
+                  <vxe-table-column field="mac" :title="$t('message.addr')" type="html" width="15%" show-overflow></vxe-table-column>
+                  <vxe-table-column field="chip" :title="$t('message.chip')" type="html" width="10%" sortable></vxe-table-column>
                   <vxe-table-column field="bdaddrType" :title="$t('message.type')" width="10%" sortable></vxe-table-column>
-                  <vxe-table-column :title="$t('message.operation')" width="40%">
+                  <vxe-table-column :title="$t('message.operation')" width="50%">
                     <template v-slot="{ row }">
                       <el-button-group>
                         <el-button plain type="primary" size="small" @click="getDeviceServices(row.mac)">{{$t('message.services')}}</el-button>
@@ -948,6 +1178,8 @@
                         <el-button plain type="primary" size="small" @click="showPairDialog(row.mac)">{{$t('message.pair')}}</el-button>
                         <el-button plain type="primary" size="small" @click="unpair(row.mac)">{{$t('message.unpair')}}</el-button>
                         <el-button plain type="primary" size="small" @click="exportDeviceServices(device.mac)">{{$t('message.export')}}</el-button>
+                        <el-button v-if="!['X1000', 'S2000'].includes(cache.model)" plain type="primary" size="small" @click="readDevicePhy(row.mac)">{{$t('message.readPhy')}}</el-button>
+                        <el-button v-if="!['X1000', 'S2000'].includes(cache.model)" plain type="primary" size="small" @click="showUpdateDevicePhyDialog(row.mac)">{{$t('message.updatePhy')}}</el-button>
                       </el-button-group>
                     </template>
                   </vxe-table-column>
@@ -966,7 +1198,7 @@
                     <el-row style="font-style:normal">{{ device.mac }}</el-row>
                   </el-col>
                   <el-col :span="3">{{ device.bdaddrType }}</el-col>
-                  <el-col :span="3">chip{{ device.chip }}</el-col>
+                  <el-col :span="1">chip{{ device.chip }}</el-col>
                   <el-col :span="12">
                     <el-button-group style="float: right; ">
                       <el-button size="small" @click="getDeviceServices(device.mac)" style="color: #2897ff">{{$t('message.services')}}</el-button>
@@ -974,11 +1206,13 @@
                       <el-button size="small" @click="showPairDialog(device.mac)" style="color: #2897ff">{{$t('message.pair')}}</el-button>
                       <el-button size="small" @click="unpair(device.mac)" style="color: #2897ff">{{$t('message.unpair')}}</el-button>
                       <el-button size="small" @click="exportDeviceServices(device.mac)" style="color: #2897ff">{{$t('message.export')}}</el-button>
+                      <el-button size="small" v-if="!['X1000', 'S2000'].includes(cache.model)" @click="readDevicePhy(device.mac)" style="color: #2897ff">{{$t('message.readPhy')}}</el-button>
+                      <el-button size="small" v-if="!['X1000', 'S2000'].includes(cache.model)" @click="showUpdateDevicePhyDialog(device.mac)" style="color: #2897ff">{{$t('message.updatePhy')}}</el-button>
                     </el-button-group>
                   </el-col>
                 </el-row>
                 <el-row style="padding-left: 0px; margin-top: 15px; ">
-                  <el-collapse>
+                  <el-collapse class="gatt">
                     <el-collapse-item v-for="(service, index) in cache.devicesServiceList[device.mac]" :key="service.uuid">
                       <template slot="title">
                         <el-col style="padding-left: 5px; font-size: 14px; font-weight: normal;">{{ service.uuid }}</el-col>
@@ -1054,16 +1288,42 @@
                     <template v-slot:buttons>
                       <span>{{$t('message.receivedNotifys')}}: <span style="font-weight: bold; color: #409eff; margin-right: 20px;">{{ getComputedNotifyDisplayResultList.length }} </span></span>
                       <vxe-input v-model="cache.notifyDisplayFilterContent" type="search" :placeholder="$t('message.searchMac')" size="small" style="margin-right: 20px;"></vxe-input>
-                      <vxe-button @click="openNotify" status="primary" size="small" v-show="!store.devConfDisplayVars.isNotifyOn">{{$t('message.open')}}</vxe-button>
-                      <vxe-button @click="closeNotify" size="small" v-show="store.devConfDisplayVars.isNotifyOn">{{$t('message.close')}}</vxe-button>
+                      
+                      <el-tooltip class="item" effect="light" :content="$t('message.timestampInfo')">
+                        <span style="margin-right: 8px;">{{$t('message.timestamp')}}<i class="el-icon-info el-icon--right"></i></span>
+                      </el-tooltip>
+                      <el-select v-model="cache.notifyDisplayTimestamp" :placeholder="$t('message.timestamp')" size="small" @change="deviceNotificationDataFilterChange" style="width: 110px; margin-right: 20px;">
+                        <el-option label="OFF" value="0"></el-option>
+                        <el-option label="Local Time" value="1"></el-option>
+                        <el-option label="ISO 8601" value="2"></el-option>
+                        <el-option label="Timestamp" value="3"></el-option>
+                      </el-select>
+
+                      <el-tooltip class="item" effect="light" :content="$t('message.timestampInfo')">
+                        <span style="margin-right: 8px;">{{$t('message.notificationSequence')}}<i class="el-icon-info el-icon--right"></i></span>
+                      </el-tooltip>
+                      <el-select v-model="cache.notifyDisplaySequence" :placeholder="$t('message.notificationSequence')" size="small" @change="deviceNotificationDataFilterChange" style="width: 90px; margin-right: 20px;">
+                        <el-option label="OFF" value="0"></el-option>
+                        <el-option label="Global" value="1"></el-option>
+                        <el-option label="Device" value="2"></el-option>
+                      </el-select>
+
+                      <el-tooltip class="item" effect="light" :content="$t('message.notificationDetailInfo')">
+                        <vxe-button @click="openNotify" status="primary" size="small" v-show="!store.devConfDisplayVars.isNotifyOn">{{$t('message.open')}}<i class="el-icon-info el-icon--right"></i></vxe-button>
+                      </el-tooltip>
+                      <el-tooltip class="item" effect="light" :content="$t('message.notificationDetailInfo')">
+                        <vxe-button @click="closeNotify" size="small" v-show="store.devConfDisplayVars.isNotifyOn">{{$t('message.close')}}<i class="el-icon-info el-icon--right"></i></vxe-button>
+                      </el-tooltip>
                       <vxe-button @click="notifyDisplayResultExport" status="primary" size="small">{{$t('message.export')}}</vxe-button>
-                      <vxe-button @click="notifyDisplayResultClear" size="small">{{$t('message.clear')}}</vxe-button>
+                      <vxe-button @click="notifyDisplayResultClear" size="small" style="margin-right: 10px">{{$t('message.clear')}}</vxe-button>
+                      <vxe-button type="primary" @click="showDeviceNotificationDataRealTimeNewTab" size="small">{{$t('message.deviceScanDataRealTime')}}</vxe-button>
                     </template>
                   </vxe-toolbar>
                   <!-- 注意设置为固定高度，否则页面在过多的数据时候会造成卡顿，TODO: 是否考虑使用分页优化? -->
                   <vxe-grid border="none" show-overflow stripe :height="cache.vxeGridHeight + 'px'" highlight-hover-row :header-row-style="{'background-color': '#f4f5f6'}" ref="refNotifyDisplayResultGrid" :sort-config="{trigger: 'cell'}" :data="getComputedNotifyDisplayResultList">
+                    <vxe-table-column field="seqNum" :title="$t('message.notificationSequence')" type="html" width="10%" sortable></vxe-table-column>
                     <vxe-table-column field="time" :title="$t('message.timestamp')" type="html" width="20%" sortable></vxe-table-column>
-                    <vxe-table-column field="mac" :title="$t('message.addr')" type="html" width="30%" show-overflow></vxe-table-column>
+                    <vxe-table-column field="mac" :title="$t('message.addr')" type="html" width="15%" show-overflow></vxe-table-column>
                     <vxe-table-column field="handle" title="HANDLE" width="10%"></vxe-table-column>
                     <vxe-table-column field="value" title="VALUE" width="40%" show-overflow></vxe-table-column>
                     <template v-slot:empty>
@@ -1185,6 +1445,7 @@
                 <ul>
                   <li><a target="_blank" href="https://www.cassianetworks.com/knowledge-base/general-documents/">Cassia User Manual</a></li>
                   <li><a target="_blank" href="https://github.com/CassiaNetworks/CassiaSDKGuide/wiki">Cassia SDK & RESTful API</a></li>
+                  <li><a target="_blank" href="https://github.com/CassiaNetworks/CassiaSDKGuide">Cassia RESTful API Sample Code</a></li>
                   <li><a target="_blank" href="https://www.cassianetworks.com/support/">Contact Cassia Support</a></li>
                 </ul>
               </el-tab-pane>
@@ -1266,6 +1527,39 @@
     <span slot="footer" class="dialog-footer">
       <el-button @click="store.devConfDisplayVars.pair.visible = false" size="small">{{$t('message.cancel')}}</el-button>
       <el-button type="primary" @click="pair" size="small">{{$t('message.ok')}}</el-button>
+    </span>
+  </el-dialog>
+
+  <el-dialog title="Update PHY" center :visible.sync="store.devConfDisplayVars.updatePhy.visible && cache.model !== 'X1000' && cache.model !== 'S2000'">
+    <el-form label-width="130px" size="small">
+      <el-form-item label="Device Mac">
+        <el-input v-model="store.devConfDisplayVars.updatePhy.deviceMac" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="TX PHY">
+        <el-select v-model="store.devConfDisplayVars.updatePhy.tx" clearable multiple filterable style="width: 100%">
+          <el-option label="1M" value="1M" key="1M"></el-option>
+          <el-option label="2M" value="2M" key="2M"></el-option>
+          <el-option label="CODED" value="CODED" key="CODED"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="RX PHY">
+        <el-select v-model="store.devConfDisplayVars.updatePhy.rx" clearable multiple filterable style="width: 100%">
+          <el-option label="1M" value="1M" key="1M"></el-option>
+          <el-option label="2M" value="2M" key="2M"></el-option>
+          <el-option label="CODED" value="CODED" key="CODED"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="TX CODED Option" v-show="store.devConfDisplayVars.updatePhy.tx.includes('CODED')">
+        <el-select v-model="store.devConfDisplayVars.updatePhy.codedOption" style="width: 100%">
+          <el-option label="Auto Negotiation" value="0" key="1M"></el-option>
+          <el-option label="S2" value="1" key="S2"></el-option>
+          <el-option label="S8" value="2" key="S8"></el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="store.devConfDisplayVars.updatePhy.visible = false" size="small">{{$t('message.cancel')}}</el-button>
+      <el-button type="primary" @click="updatePhy" size="small">{{$t('message.ok')}}</el-button>
     </span>
   </el-dialog>
 </div>
@@ -1394,6 +1688,10 @@ div::-webkit-scrollbar {
   width: 0;
 }
 
+.scanDataDetail::-webkit-scrollbar {
+  width: 6px;
+}
+
 pre::-webkit-scrollbar {
   width: 0;
 }
@@ -1462,11 +1760,23 @@ code {
   /* 强制换行 */
   font-family: "Monaco", "Courier New", "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif !important;
   white-space: pre-wrap;
+  word-break: break-all;
   /* CSS 2.1 */
 }
 
-.el-collapse-item * {
+.gatt .el-collapse-item * {
   font-family: "Courier New", "Monaco", "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif !important;
+}
+
+.el-collapse-item [class^="el-icon-"],
+.el-collapse-item .el-select__caret,
+.el-collapse-item .el-input__icon,
+.el-collapse-item .el-cascader__caret,
+.el-collapse-item .el-date-editor .el-icon-date,
+.el-collapse-item [class*=" el-icon-"],
+.el-collapse-item [class^="el-icon-"]::before,
+.el-collapse-item [class*=" el-icon-"]::before {
+  font-family: 'element-icons' !important;
 }
 
 .el-notification__content {

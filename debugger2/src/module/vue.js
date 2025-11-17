@@ -14,7 +14,7 @@ import main from '../main.js';
 const logger = libLogger.genModuleLogger('vue');
 
 function createVueData(vue) {
-  return function() {
+  return function () {
     return {
       chartOptions: createRssiChart(),
       store: dbModule.getStorage(),
@@ -29,12 +29,12 @@ function initHighlightingRefresh() {
   });
 }
 
-function message(message, type=libEnum.messageType.INFO) {
-  main.getGlobalVue().$message({message, type, showClose: true});
+function message(message, type = libEnum.messageType.INFO) {
+  main.getGlobalVue().$message({ message, type, showClose: true });
 }
 
-function notify(message, title='', type=libEnum.messageType.INFO, autoclose=true) {
-  const data = {title, message, type};
+function notify(message, title = '', type = libEnum.messageType.INFO, autoclose = true) {
+  const data = { title, message, type };
   if (!autoclose) data.duration = 0;
   main.getGlobalVue().$notify(data);
 }
@@ -43,7 +43,7 @@ function rssiChartXaxisData() {
   let data = [];
   const devConfDisplayVars = dbModule.getDevConfDisplayVars();
   devConfDisplayVars.rssiChartDataCount = devConfDisplayVars.rssiChartPeriod * 1000 / devConfDisplayVars.rssiChartDataSpan;
-  for (let index = 0; index < devConfDisplayVars.rssiChartDataCount; index ++) {
+  for (let index = 0; index < devConfDisplayVars.rssiChartDataCount; index++) {
     data.push((index * devConfDisplayVars.rssiChartDataSpan).toString());
   }
   return data;
@@ -56,7 +56,7 @@ function createRssiChart() {
       show: false
     },
     autoresize: true,
-    grid: { 
+    grid: {
       // right: '20%' 
     },
     legend: {
@@ -72,33 +72,33 @@ function createRssiChart() {
     //   }
     // },
     xAxis: {
-        type: 'category',
-        name: 'Time Span',
-        nameLocation: 'middle',
-        data: xAxisData,
-        // showSymbol: true,
-        // axisPointer: {
-        //   show: true,
-        //   snap: true,
-        // },
-        axisLabel: {
-          show: true,
-          rotate: 45,
-          interval:0,//使x轴横坐标全部显示
-          formatter: function (value, index) {
-            return '';
-          },
-          // interval: xAxisData.length > 20 ? 9 : xAxisData.length
-        }
+      type: 'category',
+      name: 'Time Span',
+      nameLocation: 'middle',
+      data: xAxisData,
+      // showSymbol: true,
+      // axisPointer: {
+      //   show: true,
+      //   snap: true,
+      // },
+      axisLabel: {
+        show: true,
+        rotate: 45,
+        interval: 0,//使x轴横坐标全部显示
+        formatter: function (value, index) {
+          return '';
+        },
+        // interval: xAxisData.length > 20 ? 9 : xAxisData.length
+      }
     },
     yAxis: {
-        type: 'value',
-        name: 'RSSI',
-        nameLocation: 'start',
-        min: -100,
-        max: -10,
-        splitNumber: 10, // 每10dbm1个间隔
-        inverse: true
+      type: 'value',
+      name: 'RSSI',
+      nameLocation: 'start',
+      min: -100,
+      max: -10,
+      splitNumber: 10, // 每10dbm1个间隔
+      inverse: true
     },
     series: []
   };
@@ -118,42 +118,48 @@ function createVueMethods(vue) {
       this.cache.isGettingAcRouterList = true;
       this.cache.acRouterList = [];
       apiModule.getAccessToken(this.store.devConf.acServerURI + '/api', this.store.devConf.acDevKey, this.store.devConf.acDevSecret)
-      .then(data => {
-        return apiModule.getAcRouterList(data.access_token);
-      }).then(data => {
-        if (_.isEmpty(keyword) || !_.isString(keyword)) this.cache.acRouterList = data;
-        else {
-          keyword = keyword.toLowerCase();
-          this.cache.acRouterList = _.filter(data, item => {
-            return item.name.toLowerCase().includes(keyword) || item.mac.toLowerCase().includes(keyword);
-          });
-        }
-        this.cache.acRouterList.splice(0, 0, {id: '*', mac: '*', name: 'All Routers'});
-      }).catch(ex => {
-        notify(`${this.$i18n.t('message.getAcRouterListFail')} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-      }).finally(() => {
-        this.cache.isGettingAcRouterList = false;
-      });
+        .then(data => {
+          return apiModule.getAcRouterList(data.access_token);
+        }).then(data => {
+          if (_.isEmpty(keyword) || !_.isString(keyword)) this.cache.acRouterList = data;
+          else {
+            keyword = keyword.toLowerCase();
+            this.cache.acRouterList = _.filter(data, item => {
+              return item.name.toLowerCase().includes(keyword) || item.mac.toLowerCase().includes(keyword);
+            });
+          }
+          this.cache.acRouterList.splice(0, 0, { id: '*', mac: '*', name: 'All Gateways' });
+        }).catch(ex => {
+          notify(`${this.$i18n.t('message.getAcRouterListFail')} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+        }).finally(() => {
+          this.cache.isGettingAcRouterList = false;
+        });
     },
     getAcRouterList(keyword) {
       this.cache.isGettingAcRouterList = true;
       this.cache.acRouterList = [];
       apiModule.getAccessToken(this.store.devConf.acServerURI + '/api', this.store.devConf.acDevKey, this.store.devConf.acDevSecret)
-      .then(data => {
-        return apiModule.getAcRouterList(data.access_token);
-      }).then(data => {
-        if (_.isEmpty(keyword) || !_.isString(keyword)) this.cache.acRouterList = data;
-        else {
-          keyword = keyword.toLowerCase();
-          this.cache.acRouterList = _.filter(data, item => {
-            return item.name.toLowerCase().includes(keyword) || item.mac.toLowerCase().includes(keyword);
-          });
-        }
-      }).catch(ex => {
-        notify(`${this.$i18n.t('message.getAcRouterListFail')} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-      }).finally(() => {
-        this.cache.isGettingAcRouterList = false;
-      });
+        .then(data => {
+          return apiModule.getAcRouterList(data.access_token);
+        }).then(data => {
+          const gatewayList = data || [];
+          const gateway = gatewayList.find(x => x.mac === this.store.mac);
+          this.cache.model = _.get(gateway, 'model') || '';
+          console.log('cache update model by get gateway list:', this.cache.model);
+          dbModule.checkAndClearPhyParams(this.cache.model);
+
+          if (_.isEmpty(keyword) || !_.isString(keyword)) this.cache.acRouterList = data;
+          else {
+            keyword = keyword.toLowerCase();
+            this.cache.acRouterList = _.filter(data, item => {
+              return item.name.toLowerCase().includes(keyword) || item.mac.toLowerCase().includes(keyword);
+            });
+          }
+        }).catch(ex => {
+          notify(`${this.$i18n.t('message.getAcRouterListFail')} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+        }).finally(() => {
+          this.cache.isGettingAcRouterList = false;
+        });
     },
     replayApi(row) {
       apiModule.replayApi(row.apiContent).then((data) => {
@@ -167,7 +173,7 @@ function createVueMethods(vue) {
         this.$alert(this.$i18n.t('message.configAutoSelection'), this.$i18n.t('message.alert'), {
           dangerouslyUseHTMLString: true,
           confirmButtonText: this.$i18n.t('message.ok'),
-          callback: action => {}
+          callback: action => { }
         });
       }
     },
@@ -175,10 +181,10 @@ function createVueMethods(vue) {
       this.$i18n.locale = this.store.devConfDisplayVars.language;
       let noramlWidthLns = ['cn'];
       if (noramlWidthLns.includes(this.store.devConfDisplayVars.language)) {
-        this.store.devConfDisplayVars.leftConfWidth = '326px';
-        this.store.devConfDisplayVars.leftConfLabelWidth = '85px';
+        this.store.devConfDisplayVars.leftConfWidth = '430px';
+        this.store.devConfDisplayVars.leftConfLabelWidth = '125px';
       } else {
-        this.store.devConfDisplayVars.leftConfWidth = '426px';
+        this.store.devConfDisplayVars.leftConfWidth = '430px';
         this.store.devConfDisplayVars.leftConfLabelWidth = '125px';
       }
     },
@@ -244,6 +250,91 @@ function createVueMethods(vue) {
       this.store.devConfDisplayVars.pair.deviceMac = deviceMac;
       this.store.devConfDisplayVars.pair.visible = true;
     },
+    showUpdateDevicePhyDialog(deviceMac) {
+      this.store.devConfDisplayVars.updatePhy.deviceMac = deviceMac;
+      this.store.devConfDisplayVars.updatePhy.visible = true;
+    },
+    scanDataPushToQueue(msg) {
+      const MAX_TOTAL = 2000; // 内存中最大保留条数
+
+      this.cache.deviceScanDetail.updateQueue.push(msg);
+
+      if (!this.cache.deviceScanDetail.updateTimer) {
+        this.cache.deviceScanDetail.updateTimer = setInterval(() => {
+          if (this.cache.deviceScanDetail.data.length >= MAX_TOTAL) {
+            this.cache.deviceScanDetail.data.splice(0, Math.floor(MAX_TOTAL * 0.1));
+          }
+          const source = this.cache.deviceScanDetail.updateQueue;
+          for (let i = 0; i < source.length; i++) {
+            this.cache.deviceScanDetail.data.push(source[i]);
+          }
+          this.cache.deviceScanDetail.updateQueue = [];
+        }, 10);
+      }
+    },
+    showDeviceScanDataRealTimeNewTab() {
+      let url = apiModule.getScanUrlByUserParams(this.store.devConf, this.store.devConf.chip, '', this.store.devConf.phy, '', '');
+      const newWindow = window.open(url, '_blank');
+
+      if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+        window.location.href = url;
+      }
+    },
+    showDeviceNotificationDataRealTimeNewTab() {
+      let url = apiModule.getNotificationUrlByUserParams(this.store.devConf, this.cache.notifyDisplayTimestamp, this.cache.notifyDisplaySequence);
+      const newWindow = window.open(url, '_blank');
+
+      if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+        window.location.href = url;
+      }
+    },
+    openDeviceScanData() {
+      this.closeDeviceScanDetail();
+      this.store.devConfDisplayVars.deviceScanDataSwitch = true;
+      this.cache.deviceScanDetail.data = [];
+
+      // 开启此设备的扫描
+      const scanParamsQs = `filter_duplicates=${this.store.devConfDisplayVars.deviceScanDataFilterDuplicate}&timestamp=${this.store.devConfDisplayVars.deviceScanDataTimestamp}`;
+      this.cache.deviceScanDetail.sse = apiModule.startScanByUserParams(this.store.devConf, this.store.devConf.chip, this.store.devConf.filter_mac, this.store.devConf.phy, this.store.devConf.filter_name, this.store.devConf.filter_rssi, scanParamsQs, (msg) => {
+        // notify(`${this.$i18n.t('message.testScanOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+        let jsonMsg = msg.data;
+        this.scanDataPushToQueue(jsonMsg);
+      }, (error) => {
+        notify(`${this.$i18n.t('message.testScanFail')}: ${error}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+      });
+    },
+    closeDeviceScanDetail() {
+      this.store.devConfDisplayVars.deviceScanDataSwitch = false;
+      if (this.cache.deviceScanDetail.sse) {
+        this.cache.deviceScanDetail.sse.close();
+        this.cache.deviceScanDetail.sse = null;
+      }
+      if (this.cache.deviceScanDetail.updateTimer) {
+        clearInterval(this.cache.deviceScanDetail.updateTimer);
+        this.cache.deviceScanDetail.updateTimer = null;
+      }
+
+      this.cache.deviceScanDetail.updateQueue = [];
+    },
+    updatePhy() {
+      let deviceMac = this.store.devConfDisplayVars.updatePhy.deviceMac;
+      let bodyParam = {
+        tx: this.store.devConfDisplayVars.updatePhy.tx.join(','),
+        rx: this.store.devConfDisplayVars.updatePhy.rx.join(','),
+      };
+
+      if (bodyParam.tx.includes('CODED')) {
+        bodyParam.coded_option = this.store.devConfDisplayVars.updatePhy.codedOption;
+      }
+
+      apiModule.updatePhyByDevConf(this.store.devConf, deviceMac, bodyParam).then((rawBody) => {
+        notify(rawBody, `${this.$i18n.t('message.updatePhyOK')}`, libEnum.messageType.SUCCESS);
+      }).catch(function (ex) {
+        notify(`${this.$i18n.t('message.updatePhyFail')}: ${deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+      }).finally(() => {
+        this.store.devConfDisplayVars.updatePhy.visible = false;
+      });
+    },
     pair() {
       let deviceMac = this.store.devConfDisplayVars.pair.deviceMac;
       let bodyParam = {
@@ -255,10 +346,10 @@ function createVueMethods(vue) {
       apiModule.pairByDevConf(this.store.devConf, deviceMac, bodyParam).then((x) => {
         if (x.pairingStatusCode === libEnum.pairingStatusCode.SUCCESS) {
           return notify(`${this.$i18n.t('message.pairOk')} ${deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
-        } 
+        }
         if (x.pairingStatusCode === libEnum.pairingStatusCode.FAILED) {
           return notify(`${this.$i18n.t('message.pairFail')} ${deviceMac}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-        } 
+        }
         if (x.pairingStatusCode === libEnum.pairingStatusCode.ABORTED) {
           return notify(`${this.$i18n.t('message.pairAbort')} ${deviceMac}`, this.$i18n.t('message.operationFail'), libEnum.messageType.WARNING);
         }
@@ -304,11 +395,12 @@ function createVueMethods(vue) {
       apiDemoScan.chip = apiContent.data.query.chip;
       if (apiContent.data.query.filter_name) apiDemoScan.filter_name = apiContent.data.query.filter_name;
       if (apiContent.data.query.filter_mac) apiDemoScan.filter_mac = apiContent.data.query.filter_mac;
+      if (apiContent.data.query.phy) apiDemoScan.phy = apiContent.data.query.phy;
       apiDemoScan.filter_rssi = apiContent.data.query.filter_rssi;
     },
     apiDemoScanTest() {
       const scanParams = this.store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan;
-      let sse = apiModule.startScanByUserParams(this.store.devConf, scanParams.chip, scanParams.filter_mac, scanParams.filter_name, scanParams.filter_rssi, '', () => {
+      let sse = apiModule.startScanByUserParams(this.store.devConf, scanParams.chip, scanParams.filter_mac, scanParams.phy, scanParams.filter_name, scanParams.filter_rssi, '', () => {
         notify(`${this.$i18n.t('message.testScanOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
         sse.close();
       }, (error) => {
@@ -318,13 +410,13 @@ function createVueMethods(vue) {
     apiDemo2GenCode() {
       const scanParams = this.store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan;
       const writeParams = this.store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.write;
-      const code = codeModule.genDemoCode('demo2', 'nodejs', {scanParams, writeParams});
+      const code = codeModule.genDemoCode('demo2', 'nodejs', { scanParams, writeParams });
       this.store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.code = code;
     },
     apiDemo1GenCode() {
       const writeParams = this.store.devConfDisplayVars.apiDemoParams.connectWriteNotify.write;
       const connectParams = this.store.devConfDisplayVars.apiDemoParams.connectWriteNotify.connect;
-      const code = codeModule.genDemoCode('demo1', 'nodejs', {connectParams, writeParams});
+      const code = codeModule.genDemoCode('demo1', 'nodejs', { connectParams, writeParams });
       this.store.devConfDisplayVars.apiDemoParams.connectWriteNotify.code = code;
     },
     apiDemoWriteChanged(apiContentJson) {
@@ -361,7 +453,7 @@ function createVueMethods(vue) {
     getApiLogListByFilter(filter) {
       return _.filter(this.cache.apiLogResultList, filter);
     },
-    getComputedApiLogDisplayResultList () { // 全局搜索扫描列表
+    getComputedApiLogDisplayResultList() { // 全局搜索扫描列表
       const filterName = XEUtils.toString(this.cache.apiLogDisplayFilterContent).trim().toLowerCase();
       if (filterName) {
         const filterRE = new RegExp(filterName, 'gi');
@@ -381,7 +473,7 @@ function createVueMethods(vue) {
       }
       return this.cache.apiLogResultList;
     },
-    getComputedConnectDisplayResultList () { // 全局搜索扫描列表
+    getComputedConnectDisplayResultList() { // 全局搜索扫描列表
       const filterName = XEUtils.toString(this.cache.connectDisplayFilterContent).trim().toLowerCase();
       if (filterName) {
         const filterRE = new RegExp(filterName, 'gi');
@@ -416,16 +508,16 @@ function createVueMethods(vue) {
     apiLogDisplayResultClear() {
       this.cache.apiLogResultList.splice(0);
     },
-    scanDisplayResultExport () {
+    scanDisplayResultExport() {
       this.$refs.refScanDisplayResultGrid.exportData({ filename: 'scan', type: 'csv' })
     },
-    connectDisplayResultExport () {
+    connectDisplayResultExport() {
       this.$refs.refConnectDisplayResultGrid.exportData({ filename: 'connect', type: 'csv' })
     },
-    notifyDisplayResultExport () {
+    notifyDisplayResultExport() {
       this.$refs.refNotifyDisplayResultGrid.exportData({ filename: 'notify', type: 'csv' })
     },
-    apiLogDisplayResultExport () {
+    apiLogDisplayResultExport() {
       this.$refs.refApiLogDisplayResultGrid.exportData({ filename: 'api_log', type: 'csv' })
     },
     loadNotifyResult() {
@@ -438,7 +530,7 @@ function createVueMethods(vue) {
         this.cache.notifyDisplayResultList.splice(index, pageJsonList.length, ...pageJsonList);
         this.cache.isNotifyLoading = false;
       } else {
-        setTimeout(function(that) {
+        setTimeout(function (that) {
           that.cache.isNotifyLoading = false;
           that.loadNotifyResult();
         }, 500, this);
@@ -456,7 +548,7 @@ function createVueMethods(vue) {
           this.cache.apiDebuggerResult[libEnum.apiType.SCAN].displayResultList.splice(index, pageJsonList.length, ...pageJsonList);
           this.cache.isApiDebuggerLoading = false;
         } else {
-          setTimeout(function(that) {
+          setTimeout(function (that) {
             that.cache.isApiDebuggerLoading = false;
             that.loadApiDebuggerResult();
           }, 500, this);
@@ -466,6 +558,14 @@ function createVueMethods(vue) {
     startDebugApi() {
       const apiType = this.store.devConfDisplayVars.activeApiDebugMenuItem;
       const apiParams = this.store.devConfDisplayVars.apiDebuggerParams[apiType];
+
+      console.log('startDebugApi apiParams before filter xss:', this.store.devConf.mac, JSON.stringify(apiParams));
+      _.forEach(apiParams, (v, k) => {
+        if (_.isString(v)) apiParams[k] = filterXSS(v);
+      });
+      this.store.devConf.mac = filterXSS(this.store.devConf.mac);
+      console.log('startDebugApi apiParams after filter xss:', this.store.devConf.mac, JSON.stringify(apiParams));
+
       const apiResult = this.cache.apiDebuggerResult[apiType];
       if (apiType === libEnum.apiType.AUTH) {
         apiModule.getAccessToken(this.store.devConf.baseURI, this.store.devConf.acDevKey, this.store.devConf.acDevSecret).then((data) => {
@@ -473,10 +573,16 @@ function createVueMethods(vue) {
           notify(`${this.$i18n.t('message.getAccessTokenOk')}: ${data.access_token}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
         }).catch(ex => {
           notify(`${this.$i18n.t('message.getAccessTokenFail')}: ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.getAccessTokenFail')}, ${JSON.stringify({apiParams, ex})}`);
+          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.getAccessTokenFail')}, ${JSON.stringify({ apiParams, ex })}`);
         });
       } else if (apiType === libEnum.apiType.SCAN) {
-        apiResult.sse = apiModule.startScanByUserParams(this.store.devConf, apiParams.chip, apiParams.filter_mac, apiParams.filter_name, apiParams.filter_rssi, apiParams.scanParams, (message) => {
+        let scanParamQs = `timestamp=${apiParams.timestamp}`;
+        if (apiParams.scanParams && apiParams.scanParams.startsWith('&')) {
+          scanParamQs += apiParams.scanParams;
+        } else {
+          scanParamQs = scanParamQs + '&' + apiParams.scanParams;
+        }
+        apiResult.sse = apiModule.startScanByUserParams(this.store.devConf, apiParams.chip, apiParams.filter_mac, apiParams.phy, apiParams.filter_name, apiParams.filter_rssi, scanParamQs, (message) => {
           apiResult.resultList.push(`${new Date().toISOString()}: ${message.data}`);
           if (apiResult.resultList.length < 5) return;
           apiResult.resultList = apiResult.resultList.splice(0);
@@ -489,20 +595,64 @@ function createVueMethods(vue) {
         this.store.devConfDisplayVars.isApiScanning = true;
         notify(`${this.$i18n.t('message.debuggerScanAlert')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
       } else if (apiType === libEnum.apiType.CONNECT) {
-        apiModule.connectByDevConf(this.store.devConf, apiParams.deviceMac, apiParams.addrType, apiParams.chip).then(() => {
+        let params = {
+          discovergatt: _.get(apiParams, 'discovergatt') || '1',
+          timeout: _.get(apiParams, 'connTimeout') || 10,
+        };
+
+        if (!_.isEmpty(_.get(apiParams, 'connPhy'))) {
+          params.phy = _.get(apiParams, 'connPhy').join(',');
+        }
+
+        if (!_.isEmpty(_.get(apiParams, 'secondaryPhy'))) {
+          params.secondary_phy = _.get(apiParams, 'secondaryPhy').join(',');
+        }
+
+        if (params.timeout < 0.2 || params.timeout > 20) params.timeout = 15; // timeout范围处理
+        params.timeout = params.timeout * 1000;
+
+        let otherParams = this.getUrlVars(_.get(apiParams, 'connParams')); // 自定义输入，用户自己保证支持
+        params = _.merge(params, otherParams);
+
+        apiModule.connectByDevConf(this.store.devConf, apiParams.deviceMac, apiParams.addrType, apiParams.chip, params).then(() => {
           // notify(`连接设备 ${deviceMac} 成功`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
           apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.connectDeviceOk')}, ${JSON.stringify(apiParams)}`);
         }).catch(ex => {
           notify(`${this.$i18n.t('message.connectDeviceFail')}: ${apiParams.deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.connectDeviceFail')}, ${JSON.stringify({apiParams, ex})}`);
+          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.connectDeviceFail')}, ${JSON.stringify({ apiParams, ex })}`);
         });
       } else if (apiType === libEnum.apiType.READ) {
-        apiModule.readByHandleByDevConf(this.store.devConf, apiParams.deviceMac, apiParams.handle).then(() => {
+        apiModule.readByHandleByDevConf(this.store.devConf, apiParams.deviceMac, apiParams.handle).then((body) => {
           notify(`${this.$i18n.t('message.readDataOk')}: ${apiParams.deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.readDataOk')}, ${JSON.stringify(apiParams)}`);
+          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.readDataOk')}, ${JSON.stringify(body)}`);
         }).catch(ex => {
           notify(`${this.$i18n.t('message.readDataFail')}: ${apiParams.deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.readDataFail')}, ${JSON.stringify({apiParams, ex})}`);
+          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.readDataFail')}, ${JSON.stringify({ apiParams, ex })}`);
+        });
+      } else if (apiType === libEnum.apiType.READ_PHY) {
+        apiModule.readPhyByDevConf(this.store.devConf, apiParams.deviceMac).then((body) => {
+          notify(`${this.$i18n.t('message.readPhyOK')}: ${apiParams.deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.readPhyOK')}, ${JSON.stringify(body)}`);
+        }).catch(ex => {
+          notify(`${this.$i18n.t('message.readPhyFail')}: ${apiParams.deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.readPhyFail')}, ${JSON.stringify({ apiParams, ex })}`);
+        });
+      } else if (apiType === libEnum.apiType.UPDATE_PHY) {
+        let bodyParam = {
+          tx: apiParams.tx.join(','),
+          rx: apiParams.rx.join(','),
+        };
+
+        if (bodyParam.tx.includes('CODED')) {
+          bodyParam.coded_option = apiParams.codedOption;
+        }
+
+        apiModule.updatePhyByDevConf(this.store.devConf, apiParams.deviceMac, bodyParam).then((body) => {
+          notify(`${this.$i18n.t('message.updatePhyOK')}: ${apiParams.deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.updatePhyOK')}, ${JSON.stringify(bodyParam)}, ${JSON.stringify(body)}`);
+        }).catch(ex => {
+          notify(`${this.$i18n.t('message.updatePhyFail')}: ${apiParams.deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.updatePhyFail')}, ${JSON.stringify(bodyParam)}, ${JSON.stringify({ ex })}`);
         });
       } else if (apiType === libEnum.apiType.WRITE) {
         apiModule.writeByHandleByDevConf(this.store.devConf, apiParams.deviceMac, apiParams.handle, apiParams.value, apiParams.noresponse).then(() => {
@@ -510,7 +660,7 @@ function createVueMethods(vue) {
           apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.writeDataOk')}, ${JSON.stringify(apiParams)}`);
         }).catch(ex => {
           notify(`${this.$i18n.t('message.writeDataFail')}: ${apiParams.deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.writeDataFail')}, ${JSON.stringify({apiParams, ex})}`);
+          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.writeDataFail')}, ${JSON.stringify({ apiParams, ex })}`);
         });
       } else if (apiType === libEnum.apiType.DISCONNECT) {
         apiModule.disconnectByDevConf(this.store.devConf, apiParams.deviceMac).then(() => {
@@ -518,7 +668,7 @@ function createVueMethods(vue) {
           apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.disconnectDeviceOk')}, ${JSON.stringify(apiParams)}`);
         }).catch(ex => {
           notify(`${this.$i18n.t('message.disconnectDeviceFail')}: ${apiParams.deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.disconnectDeviceFail')}, ${JSON.stringify({apiParams, ex})}`);
+          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.disconnectDeviceFail')}, ${JSON.stringify({ apiParams, ex })}`);
         });
       } else if (apiType === libEnum.apiType.CONNECT_LIST) {
         apiModule.getConnectedListByDevConf(this.store.devConf).then((data) => {
@@ -526,7 +676,7 @@ function createVueMethods(vue) {
           apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.getConnectListOk')}, ${JSON.stringify(data)}`);
         }).catch(ex => {
           notify(`${this.$i18n.t('message.getConnectListFail')}: ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.getConnectListFail')}, ${JSON.stringify({ex})}`);
+          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.getConnectListFail')}, ${JSON.stringify({ ex })}`);
         });
       } else if (apiType === libEnum.apiType.DISCOVER) {
         apiModule.getDeviceServiceListByDevConf(this.store.devConf, apiParams.deviceMac).then((data) => {
@@ -534,10 +684,13 @@ function createVueMethods(vue) {
           apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.getDeviceServiceListOk')}, ${JSON.stringify(data)}`);
         }).catch(ex => {
           notify(`${this.$i18n.t('message.getDeviceServiceListFail')}: ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.getDeviceServiceListFail')}, ${JSON.stringify({ex})}`);
+          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.getDeviceServiceListFail')}, ${JSON.stringify({ ex })}`);
         });
       } else if (apiType === libEnum.apiType.NOTIFY) {
-        apiResult.sse = apiModule.startNotifyByDevConf(this.store.devConf, (message) => {
+        const devConf = _.cloneDeep(this.store.devConf);
+        devConf.timestamp = apiParams.timestamp;
+        devConf.sequence = apiParams.sequence;
+        apiResult.sse = apiModule.startNotifyByDevConf(devConf, (message) => {
           this.cache.apiDebuggerResult[libEnum.apiType.NOTIFY].resultList.push(`${new Date().toISOString()}: ${message.data}`);
           if (!apiResult.sse) return;
           if (apiResult.resultList.length < 5) return;
@@ -564,16 +717,16 @@ function createVueMethods(vue) {
           apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairOk')}, ${JSON.stringify(data)}`);
         }).catch(ex => {
           notify(`${this.$i18n.t('message.pairFail')}: ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairFail')}, ${JSON.stringify({ex})}`);
+          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairFail')}, ${JSON.stringify({ ex })}`);
         });
       } else if (apiType === libEnum.apiType.PAIR_INPUT) {
-        if (apiParams.inputType === 'Passkey') { 
+        if (apiParams.inputType === 'Passkey') {
           apiModule.pairByPasskeyByDevConf(this.store.devConf, apiParams.deviceMac, apiParams.passkey).then((data) => {
             notify(`${this.$i18n.t('message.pairOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
             apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairOk')}, ${JSON.stringify(data)}`);
           }).catch(ex => {
             notify(`${this.$i18n.t('message.pairFail')}: ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-            apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairFail')}, ${JSON.stringify({ex})}`);
+            apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairFail')}, ${JSON.stringify({ ex })}`);
           });
         } else if (apiParams.inputType === 'LegacyOOB') {
           apiModule.pairByLegacyOOBByDevConf(this.store.devConf, apiParams.deviceMac, tk).then((data) => {
@@ -581,7 +734,7 @@ function createVueMethods(vue) {
             apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairOk')}, ${JSON.stringify(data)}`);
           }).catch(ex => {
             notify(`${this.$i18n.t('message.pairFail')}: ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-            apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairFail')}, ${JSON.stringify({ex})}`);
+            apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairFail')}, ${JSON.stringify({ ex })}`);
           });
         } else if (apiParams.inputType === 'LegacyOOB') {
           apiModule.pairByLegacyOOBByDevConf(this.store.devConf, apiParams.deviceMac, tk).then((data) => {
@@ -589,7 +742,7 @@ function createVueMethods(vue) {
             apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairOk')}, ${JSON.stringify(data)}`);
           }).catch(ex => {
             notify(`${this.$i18n.t('message.pairFail')}: ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-            apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairFail')}, ${JSON.stringify({ex})}`);
+            apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairFail')}, ${JSON.stringify({ ex })}`);
           });
         }
       } else if (apiType === libEnum.apiType.UNPAIR) {
@@ -598,7 +751,7 @@ function createVueMethods(vue) {
           apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.unpairOk')}, ${JSON.stringify(data)}`);
         }).catch(ex => {
           notify(`${this.$i18n.t('message.unpairFail')}: ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.unpairFail')}, ${JSON.stringify({ex})}`);
+          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.unpairFail')}, ${JSON.stringify({ ex })}`);
         });
       }
       this.store.devConfDisplayVars.activeApiDebugOutputMenuItem = 'output'; // 切换到调试结果页面
@@ -620,8 +773,17 @@ function createVueMethods(vue) {
       this.cache.notifyDisplayResultList.splice(0);
       notify(`${this.$i18n.t('message.clearNotifyOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
     },
+    deviceNotificationDataFilterChange() {
+      if (this.store.devConfDisplayVars.isNotifyOn) {
+        this.closeNotify();
+        this.clearNotify();
+        this.openNotify();
+      }
+    },
     openNotify() {
-      notifyModule.openNotifySse();
+      const timestamp = this.cache.notifyDisplayTimestamp;
+      const sequence = this.cache.notifyDisplaySequence;
+      notifyModule.openNotifySse(timestamp, sequence);
       this.store.devConfDisplayVars.isNotifyOn = true;
       notify(`${this.$i18n.t('message.openNotifyOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
     },
@@ -648,7 +810,7 @@ function createVueMethods(vue) {
       if (!this.store.devConfDisplayVars.isScanning) {
         this.startScan();
         this.destoryRssiChart();
-        setTimeout(function(that) {
+        setTimeout(function (that) {
           that.chartOptions = createRssiChart();
           that.startRssiChart();
           notify(`${that.$i18n.t('message.openRssiChartOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
@@ -656,7 +818,7 @@ function createVueMethods(vue) {
         this.store.devConfDisplayVars.rssiChartSwitch = true;
       } else {
         this.destoryRssiChart();
-        setTimeout(function(that) {
+        setTimeout(function (that) {
           that.chartOptions = createRssiChart();
           that.startRssiChart();
           notify(`${that.$i18n.t('message.openRssiChartOk')}`, that.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
@@ -666,7 +828,7 @@ function createVueMethods(vue) {
     },
     add2RssiChart(row, deviceMac) {
       if (!this.cache.scanDevicesRssiHistory[deviceMac]) {
-        this.cache.scanDevicesRssiHistory[deviceMac] = [{time: Date.now(), rssi: row.rssi}];
+        this.cache.scanDevicesRssiHistory[deviceMac] = [{ time: Date.now(), rssi: row.rssi }];
       }
     },
     removeFromRssiChart(row, deviceMac) {
@@ -682,6 +844,11 @@ function createVueMethods(vue) {
     rssiChartDataSpanChange() { // 统计间隔变化，重建图表
       if (this.store.devConfDisplayVars.rssiChartSwitch) {
         this.destoryAndCreateRssiChart();
+      }
+    },
+    deviceScanDataFilterChange() {
+      if (this.store.devConfDisplayVars.deviceScanDataSwitch) {
+        this.openDeviceScanData();
       }
     },
     genCode() {
@@ -767,6 +934,18 @@ function createVueMethods(vue) {
     routerChange(router) { // 当选择网关时，优选自动选择此网关
       this.store.devConf.aps.splice(0, this.store.devConf.aps.length);
       this.store.devConf.aps.push(router);
+
+      let gateway = this.cache.acRouterList.find(x => x.mac === router);
+      this.cache.model = _.get(gateway, 'model') || '';
+      console.log('cache update model:', this.cache.model);
+      dbModule.checkAndClearPhyParams(this.cache.model);
+    },
+    readDevicePhy(deviceMac) {
+      apiModule.readPhyByDevConf(this.store.devConf, deviceMac).then((rawBody) => {
+        notify(rawBody, `${this.$i18n.t('message.readPhyOK')}`, libEnum.messageType.SUCCESS);
+      }).catch(function (ex) {
+        notify(`${this.$i18n.t('message.readPhyFail')}: ${deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+      });
     },
     getDeviceServices(deviceMac) {
       serviceModule.getDeviceServiceList(deviceMac).then(() => {
@@ -778,7 +957,7 @@ function createVueMethods(vue) {
     exportDeviceServices(deviceMac) {
       serviceModule.getDeviceServiceList(deviceMac).then((data) => {
         data = JSON.stringify(data, null, 2);
-        const blob = new Blob([data], {type: 'text/json'});
+        const blob = new Blob([data], { type: 'text/json' });
         const event = document.createEvent('MouseEvents');
         const link = document.createElement('a');
         link.download = `${deviceMac.replace(/:/g, '_')}_service.json`;
@@ -789,12 +968,15 @@ function createVueMethods(vue) {
       });
     },
     startScan() {
-      scanModule.startScan(this.store.devConf);
-      this.store.devConfDisplayVars.isScanning = true;
-      this.cache.scanResultList.splice(0); // 清空扫描缓存数据
-      this.cache.scanDisplayResultList.splice(0); // 清空扫描展示数据
-      this.store.devConfDisplayVars.activeMenuItem = 'scanListMenuItem'; // 跳转扫描结果tab页面
-      // notify(`${this.$i18n.t('message.openScanOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+      this.$refs.refConfig.validate((isOK, failed) => {
+        if (!isOK) return console.log('config form check failed:', isOK, failed);
+        scanModule.startScan(this.store.devConf);
+        this.store.devConfDisplayVars.isScanning = true;
+        this.cache.scanResultList.splice(0); // 清空扫描缓存数据
+        this.cache.scanDisplayResultList.splice(0); // 清空扫描展示数据
+        this.store.devConfDisplayVars.activeMenuItem = 'scanListMenuItem'; // 跳转扫描结果tab页面
+        // notify(`${this.$i18n.t('message.openScanOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+      });
     },
     controlStyleChange() {
       console.log('control style changed, stop scan');
@@ -831,19 +1013,31 @@ function createVueMethods(vue) {
       var paramObj = {};
       var arr = [];
       for (var i = 0; i < len; i++) {
-          arr = paramArray[i].split("=");
-          if (arr[0] && arr[1]) paramObj[arr[0]] = arr[1];
+        arr = paramArray[i].split("=");
+        if (arr[0] && arr[1]) paramObj[arr[0]] = arr[1];
       }
       return paramObj;
     },
     connectDeviceByRow(row, deviceMac) { // notify通过连接状态SSE通知
       main.setObjProperty(this.cache.devicesConnectLoading, deviceMac, true);
       let params = {
-        discovergatt: _.get(this.store.devConf, 'discovergatt') || 1, // 优选和普通方式都支持
+        discovergatt: _.get(this.store.devConf, 'discovergatt') || '1', // 优选和普通方式都支持
         timeout: _.get(this.store.devConf, 'connTimeout') || 10, // 优选和普通方式都支持
         aps: _.get(this.store.devConf, 'aps') || '*', // 优选参数
         autoSelectionOn: _.get(this.store.devConf, 'autoSelectionOn') || 'off' // 辅助参数
       };
+
+      // AC Auto Connect不支持BLE5
+      if (this.store.devConf.autoSelectionOn === 'off') {
+        if (!_.isEmpty(_.get(this.store.devConf, 'connPhy'))) {
+          params.phy = _.get(this.store.devConf, 'connPhy').join(',');
+        }
+
+        if (!_.isEmpty(_.get(this.store.devConf, 'secondaryPhy'))) {
+          params.secondary_phy = _.get(this.store.devConf, 'secondaryPhy').join(',');
+        }
+      }
+
       if (params.timeout < 0.2 || params.timeout > 20) params.timeout = 15; // timeout范围处理
       params.timeout = params.timeout * 1000;
 
@@ -851,14 +1045,14 @@ function createVueMethods(vue) {
       params = _.merge(params, otherParams);
       apiModule.connectByDevConf(this.store.devConf, deviceMac, null, this.store.devConf.connChip || this.store.devConf.chip, params).then(() => {
         // notify(`连接设备 ${deviceMac} 成功`, '设备连接成功', libEnum.messageType.SUCCESS);
-        _.remove(this.cache.scanResultList, {mac: deviceMac});
-        let removedList = _.remove(this.cache.scanDisplayResultList, {mac: deviceMac}); // 连接成功从扫描列表中移除
+        _.remove(this.cache.scanResultList, { mac: deviceMac });
+        let removedList = _.remove(this.cache.scanDisplayResultList, { mac: deviceMac }); // 连接成功从扫描列表中移除
         this.$refs.refScanDisplayResultGrid.remove([row]);
         this.$refs.refScanDisplayResultGrid.refreshData();
         this.$refs.refScanDisplayResultGrid.recalculate();
         this.$refs.refScanDisplayResultGrid.refreshScroll();
         if (removedList.length > 0) {
-          dbModule.listAddOrUpdate(this.cache.connectedList, {mac: removedList[0].mac}, { // 连接成功移到连接列表
+          dbModule.listAddOrUpdate(this.cache.connectedList, { mac: removedList[0].mac }, { // 连接成功移到连接列表
             mac: removedList[0].mac,
             name: removedList[0].name,
             bdaddrType: removedList[0].bdaddrType,
@@ -872,16 +1066,16 @@ function createVueMethods(vue) {
     },
     disconnectDevice(deviceMac) {
       apiModule.disconnectByDevConf(this.store.devConf, deviceMac).then(() => {
-        let index = _.findIndex(this.cache.connectedList, {mac: deviceMac});
-        if (index === -1) return; 
+        let index = _.findIndex(this.cache.connectedList, { mac: deviceMac });
+        if (index === -1) return;
         this.cache.connectedList.splice(index, 1); // 删除此设备
-        let activeItem = this.cache.connectedList[index] || this.cache.connectedList[index-1];
+        let activeItem = this.cache.connectedList[index] || this.cache.connectedList[index - 1];
         let activeItemName = activeItem ? activeItem.mac : 'connectTab0';
         this.cache.currentConnectedTab = activeItemName;
         this.connectVuxTableForceResize();
         // CAUTION: 目前通过连接状态SSE发送通知，暂时不考虑SSE失败的情况
         // notify(`设备 ${deviceMac} 断开连接`, `操作成功`, libEnum.messageType.SUCCESS);
-      }).catch(function(ex) {
+      }).catch(function (ex) {
         notify(`${this.$i18n.t('message.disconnectFail')}: ${deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       });
     },
@@ -923,6 +1117,25 @@ function createVueMethods(vue) {
       this.store.devConfDisplayVars.apiScanFilterMacsInputValue = '';
     },
 
+    apiScanPhyHandleClose(tag) {
+      const filterName = this.store.devConfDisplayVars.apiDebuggerParams[libEnum.apiType.SCAN].phy;
+      filterName.splice(filterName.indexOf(tag), 1);
+    },
+    apiScanPhyShowInput() {
+      this.store.devConfDisplayVars.apiScanPhyInputVisible = true;
+      this.$nextTick(_ => {
+        this.$refs.apiScanPhySaveTagInput.$refs.input.focus();
+      });
+    },
+    apiScanPhyHandleInputConfirm() {
+      let scanPhyInputValue = this.store.devConfDisplayVars.apiScanPhyInputValue;
+      if (scanPhyInputValue) {
+        this.store.devConfDisplayVars.apiDebuggerParams[libEnum.apiType.SCAN].phy.push(scanPhyInputValue);
+      }
+      this.store.devConfDisplayVars.apiScanPhyInputVisible = false;
+      this.store.devConfDisplayVars.apiScanPhyInputValue = '';
+    },
+
     scanFilterNamesHandleClose(tag) {
       this.store.devConf.filter_name.splice(this.store.devConf.filter_name.indexOf(tag), 1);
     },
@@ -957,6 +1170,33 @@ function createVueMethods(vue) {
       this.store.devConfDisplayVars.scanFilterMacsInputVisible = false;
       this.store.devConfDisplayVars.scanFilterMacsInputValue = '';
     },
+    scanPhyHandleClose(tag) {
+      this.store.devConf.phy.splice(this.store.devConf.phy.indexOf(tag), 1);
+    },
+    scanPhyShowInput() {
+      this.store.devConfDisplayVars.scanPhyInputVisible = true;
+      this.$nextTick(_ => {
+        this.$refs.scanPhySaveTagInput.$refs.input.focus();
+      });
+    },
+    scanPhyHandleInputConfirm() {
+      let scanPhyInputValue = this.store.devConfDisplayVars.scanPhyInputValue;
+      if (scanPhyInputValue) {
+        this.store.devConf.phy.push(scanPhyInputValue);
+      }
+      this.store.devConfDisplayVars.scanPhyInputVisible = false;
+      this.store.devConfDisplayVars.scanPhyInputValue = '';
+    },
+    acServerURIBlur() {
+      let curUrl = `${window.location.protocol}//${window.location.host}`;
+      if (curUrl !== this.store.devConf.acServerURI) {
+        this.$alert(this.$i18n.t('message.configOrigin'), this.$i18n.t('message.alert'), {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: this.$i18n.t('message.ok'),
+          callback: action => { }
+        });
+      }
+    }
   };
 }
 
@@ -992,7 +1232,7 @@ function scanDataList2RssiChartData(periodStartTime, periodEndTime, vue) {
 // 每5秒更新一次rssi chart, 移除不在本周期内的点，
 function createRssiChartUpdateInterval(vue) {
   const devConfDisplayVars = dbModule.getDevConfDisplayVars();
-  return setInterval(function(vue) {
+  return setInterval(function (vue) {
     // if (!main.getGlobalVue().rssiChart) return logger.warn('no rssi chart');
     logger.info('update rssi chart by interval');
     let periodEndTime = Date.now();
@@ -1005,23 +1245,23 @@ function createRssiChartUpdateInterval(vue) {
 
 function createWatch() {
   return {
-    'store.devConfDisplayVars.isConfigMenuItemOpen': function(val, oldVal) {
+    'store.devConfDisplayVars.isConfigMenuItemOpen': function (val, oldVal) {
       this.scanVuxTableForceResize();
       this.notifyVuxTableForceResize();
       this.connectVuxTableForceResize();
       this.apiLogVuxTableForceResize();
     },
-    'cache.apiDebuggerResult.scanCodeCurl': function(val, oldVal) {
+    'cache.apiDebuggerResult.scanCodeCurl': function (val, oldVal) {
       initHighlightingRefresh();
     },
     'store.devConf': { // 配置变化，重新加载初始化操作，停止扫描
-      handler: function(val, oldVal) {
+      handler: function (val, oldVal) {
         dbModule.saveDevConf(val);
       },
       deep: true
     },
     'store.devConfDisplayVars.toolsBinaryConversion.type': {
-      handler: function(val, oldVal) {
+      handler: function (val, oldVal) {
         if (this.store.devConfDisplayVars.toolsBinaryConversion.value) {
           let value = parseInt(this.store.devConfDisplayVars.toolsBinaryConversion.value, oldVal);
           this.store.devConfDisplayVars.toolsBinaryConversion.value = value.toString(val);
@@ -1029,31 +1269,21 @@ function createWatch() {
       }
     },
     'store.devConfDisplayVars.toolsHexTextConversion.type': {
-      handler: function(val, oldVal) {
+      handler: function (val, oldVal) {
         let value = this.store.devConfDisplayVars.toolsHexTextConversion.value;
-        if (oldVal === 'hex') {
-          this.store.devConfDisplayVars.toolsHexTextConversion.value = Buffer.from(value, 'hex').toString();
-          console.log('hex to text:', this.store.devConfDisplayVars.toolsHexTextConversion.value);
-        } else {
-          this.store.devConfDisplayVars.toolsHexTextConversion.value = Buffer.from(value).toString('hex');
-          console.log('text to hex:', this.store.devConfDisplayVars.toolsHexTextConversion.value);
-        }
+        if (oldVal === 'hex') this.store.devConfDisplayVars.toolsHexTextConversion.value = Buffer.from(value, 'hex').toString();
+        else this.store.devConfDisplayVars.toolsHexTextConversion.value = Buffer.from(value).toString('hex');
       }
     },
     'store.devConfDisplayVars.toolsBase64.type': {
-      handler: function(val, oldVal) {
+      handler: function (val, oldVal) {
         let value = this.store.devConfDisplayVars.toolsBase64.value;
-        if (oldVal === 'base64') {
-          this.store.devConfDisplayVars.toolsBase64.value = Buffer.from(value, 'base64').toString();
-          console.log('base64 to text', this.store.devConfDisplayVars.toolsBase64.value);
-        } else {
-          this.store.devConfDisplayVars.toolsBase64.value = Buffer.from(value).toString('base64');
-          console.log('text to base64', this.store.devConfDisplayVars.toolsBase64.value);
-        }
+        if (oldVal === 'base64') this.store.devConfDisplayVars.toolsBase64.value = Buffer.from(value, 'base64').toString();
+        else this.store.devConfDisplayVars.toolsBase64.value = Buffer.from(value).toString('base64');
       }
     },
     'store.devConfDisplayVars.toolsJsonConversion.inline': {
-      handler: function(val, oldVal) {
+      handler: function (val, oldVal) {
         if (!val || val.length === 0) {
           this.store.devConfDisplayVars.toolsJsonConversion.format = '';
           return;
@@ -1069,8 +1299,8 @@ function createWatch() {
 }
 
 function createComputed() {
-  return {    
-    getComputedNotifyDisplayResultList () { // 全局搜索扫描列表
+  return {
+    getComputedNotifyDisplayResultList() { // 全局搜索扫描列表
       const filterName = XEUtils.toString(this.cache.notifyDisplayFilterContent).trim().toLowerCase();
       if (filterName) {
         const filterRE = new RegExp(filterName, 'gi');
@@ -1084,9 +1314,9 @@ function createComputed() {
           return item;
         })
       }
-      return this.cache.notifyDisplayResultList
+      return this.cache.notifyDisplayResultList;
     },
-    getComputedScanDisplayResultList () { // 全局搜索扫描列表
+    getComputedScanDisplayResultList() { // 全局搜索扫描列表
       const filterName = XEUtils.toString(this.cache.scanDisplayFilterContent).trim().toLowerCase();
       if (filterName) {
         const filterRE = new RegExp(filterName, 'gi');
@@ -1111,12 +1341,12 @@ function createComputed() {
 
 // 定时从扫描结果池中取出指定数量结果更新到界面上
 function createScanResultConsumerTimer() {
-  setInterval(function() {
+  setInterval(function () {
     const pageCount = 20;
     let pageList = dbModule.getCache().scanResultList.splice(0, pageCount);
     if (!pageList || pageList.length <= 0) return;
     _.forEach(pageList, item => {
-      let result = _.find(dbModule.getCache().scanDisplayResultList, {mac: item.mac});
+      let result = _.find(dbModule.getCache().scanDisplayResultList, { mac: item.mac });
       if (!result) {
         dbModule.getCache().scanDisplayResultList.push(item);
       } else {
@@ -1131,7 +1361,7 @@ function createScanResultConsumerTimer() {
 
 // 定时从设备通知列表池中取出指定数量结果更新到界面上
 function createNotifyResultConsumerTimer() {
-  setInterval(function() {
+  setInterval(function () {
     const pageCount = 20;
     let pageList = dbModule.getCache().notifyResultList.splice(0, pageCount);
     if (!pageList || pageList.length <= 0) return;
@@ -1151,7 +1381,7 @@ function createVue() {
     beforeCreate() {
       dbModule.loadStorage();
     },
-    mounted: function() {
+    mounted: function () {
       this.store.devConfDisplayVars.language = this.$i18n.locale;
       this.cache.clientHeight = document.documentElement.clientHeight;
       this.cache.vxeGridHeight = this.cache.clientHeight - 240;

@@ -1,4 +1,5 @@
 // https://www.bluetooth.com/specifications/gatt/characteristics/
+import { Buffer } from 'buffer';
 import libLogger from './logger.js';
 
 const logger = libLogger.genModuleLogger('characteristic-parser');

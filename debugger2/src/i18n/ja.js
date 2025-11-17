@@ -18,10 +18,10 @@ const ja = {
   startScan: 'スキャン開始',
   stopScan: 'スキャン停止',
 
-  configConnParams: 'Connect Settings',
+  configConnParams: 'Connect Setting',
   discovergatt: 'GATT',
   connTimeout: 'Timeout(s)',
-  others: 'Others',
+  others: 'Other',
 
   // menu
   configParams: '設定',
@@ -261,7 +261,7 @@ const ja = {
   add2RssiChart: 'チャートの追加',
   removeFromRssiChart: 'チャートの削除',
 
-  apConfigInfo: '<span style="color: red; font-weight: bold;">Router URI, Allow Origin</span> <a target="_blank" style="color: #2897ff; " href="./Debugger2-Troubleshooting.pdf">Debugger2-Troubleshooting</a> の設定を確認してくださいルーター構成ページへ飛びますか?',
+  apConfigInfo: '<span style="color: red; font-weight: bold;">Gateway URI, Allow Origin, Local API Switch</span> <a target="_blank" style="color: #2897ff; " href="./Debugger2-Troubleshooting.pdf">Debugger2-Troubleshooting</a> の設定を確認してくださいルーター構成ページへ飛びますか?',
   acConfigInfo: '<span style="color: red; font-weight: bold;">AC URIの設定を確認してください, デヴェロッパーアカウント, 許可する</span> 構成<br>AC構成ページへ飛びますか?',
 
   configOrigin: 'v2.0.3リリースが開始, CORSはACとルータのデフォルトで表示されます。When using this Bluetoothデバッグツールを使用するとき、コンソールの設定で‘Access Control Allow Origin’を設定してください。 Please refer to <a target="_blank" style="color: #2897ff; text-decoration: none;" href="./Debugger2-Troubleshooting.pdf">Debugger2-Troubleshooting</a> for detailed instruction. If using <span style="color: #ff0000; font-weight: bold;">Chrome version>=94</span>, please copy this link and open it in Chrome<span style="color: #2897ff;"> chrome://flags/#block-insecure-private-network-requests</span> is set to Disabled.',
@@ -269,8 +269,36 @@ const ja = {
   autoSelectionOn: 'Auto-Selection',
   on: 'ON',
   off: 'OFF',
-  aps: 'Routers',
+  aps: 'Gateway',
   configAutoSelection: 'Please make sure that the AC configuration page has opened the Auto-Selection, by default its closed.',
+
+  oldVersion: 'Old Version',
+  auth: 'Auth Token',
+
+  phy: 'PHY',
+  secondaryPhy: 'セカンダリPHY',
+  readPhy: 'PHYを読み取る',
+  updatePhy: 'PHYを更新',
+  moreArgs: '詳細パラメータ',
+  readPhyFail: 'PHYの読み取りに失敗',
+  readPhyOK: 'PHYの読み取り成功',
+  updatePhyFail: 'PHYの更新に失敗',
+  updatePhyOK: 'PHYの更新成功',
+  apiReadPhy: 'PHY読み取り',
+  apiUpdatePhy: 'PHY更新',
+
+  deviceScanData: 'スキャンデータ',
+  filterDuplicate: 'Filter Duplicates',
+  deviceScanDataRealTime: 'リアルタイム',
+  scanDetailInfo: 'ページの遅延を防ぐため、10ミリ秒ごとにデータを更新し、最大2000件まで対応します。リアルタイムデータを取得するには【リアルタイムデータ】をご覧ください。',
+
+  apiReadPhyInfo: 'このインターフェースはGETリクエストです。呼び出すと、Bluetoothゲートウェイが指定されたMACアドレスのPHY情報を取得します（主にBLE5のシナリオ向け）。',
+  apiUpdatePhyInfo: 'このインターフェースはPOSTリクエストです。呼び出すと、Bluetoothゲートウェイが指定されたMACアドレスのPHY情報を更新します（主にBLE5のシナリオ向け）。',
+  notificationDetailInfo: 'ページの遅延を防ぐため、500ミリ秒ごとにデータを更新します。リアルタイムデータを取得するには【リアルタイムデータ】をご覧ください。',
+  timestampInfo: 'タイムスタンプを有効にすると、データ内の時間が使用され、無効の場合はページがデータを受信した時間が使用されます。',
+
+  notificationSequence: 'Seq Num',
+  notificationSequenceInfo: '有効にすると、データ内の seqNum が使用され、無効の場合はページ側のカウンターが使用されます。',
 };
 
 export default {
