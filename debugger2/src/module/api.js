@@ -1,4 +1,5 @@
 const _ = require('lodash');
+import { Buffer } from 'buffer';
 import libLogger from '../lib/logger.js';
 import libEnum from '../lib/enum.js';
 import config from '../config/config.js';
@@ -91,6 +92,14 @@ function getReadUrl(baseURI, deviceMac, handle, params) {
   return `${baseURI}/gatt/nodes/${deviceMac}/handle/${handle}/value?${obj2QueryStr(params)}`;
 }
 
+function getReadPhyUrl(baseURI, deviceMac, params) {
+  return `${baseURI}/gap/nodes/${deviceMac}/phy?${obj2QueryStr(params)}`;
+}
+
+function getUpdatePhyUrl(baseURI, deviceMac, params) {
+  return `${baseURI}/gap/nodes/${deviceMac}/phy?${obj2QueryStr(params)}`;
+}
+
 function getWriteUrl(baseURI, deviceMac, handle, value, params) {
   return `${baseURI}/gatt/nodes/${deviceMac}/handle/${handle}/value/${value}?${obj2QueryStr(params)}`;
 }
@@ -119,7 +128,7 @@ function getConnectStatusUrl(baseURI, params) {
   return `${baseURI}/management/nodes/connection-state?${obj2QueryStr(params)}`;
 }
 
-// params -> {chip: 0, filter_mac: '1,2', filter_name: '2,3', filter_rssi: -75, mac: 'aa', access_token: 'bac'}
+// params -> {chip: 0, filter_mac: '1,2', phy: '1M,2M,CODED', filter_name: '2,3', filter_rssi: -75, mac: 'aa', access_token: 'bac'}
 function startScan(url, messageHandler, errorHandler) {
   let sse = new EventSource(url);
   sse.onmessage = messageHandler || scanSseMessageHandler;
@@ -152,7 +161,7 @@ function notifySseErrorHandler(error) {
   logger.error('notify sse error:', error);
 }
 
-// query -> {chip: 0, filter_mac: '1,2', filter_name: '2,3', filter_rssi: -75, mac: 'aa', access_token: 'bac'}
+// query -> {chip: 0, filter_mac: '1,2', phy: '1M,2M,CODED', filter_name: '2,3', filter_rssi: -75, mac: 'aa', access_token: 'bac'}
 function openNotifySse(baseURI, query, messageHandler, errorHandler) {
   const url = `${baseURI}/gatt/nodes?${obj2QueryStr(query)}`;
   addApiLogItem(main.getGlobalVue().$i18n.t('message.apiOpenNotify'), 'GET/SSE', url, query);
@@ -223,6 +232,21 @@ function pair(baseURI, query, deviceMac, body={}) {
     }).catch(function(error) {
       let info = error.response ? error.response.data : error;
       logger.error('pair device error:', info);
+      reject(info);
+    });
+  });
+}
+
+function updatePhy(baseURI, query, deviceMac, body={}) {
+  const url = `${baseURI}/gap/nodes/${deviceMac}/phy?${obj2QueryStr(query)}`;
+  addApiLogItem(main.getGlobalVue().$i18n.t('message.apiUpdatePhy'), 'POST', url, query, body);
+  return new Promise((resolve, reject) => {
+    axios.post(url, body).then(function(response) {
+      logger.info('update phy success:', response);
+      resolve(response.data);
+    }).catch(function(error) {
+      let info = error.response ? error.response.data : error;
+      logger.error('update phy error:', info);
       reject(info);
     });
   });
@@ -415,6 +439,18 @@ function getReadUrlByDevConf(devConf, deviceMac, handle) {
   return getReadUrl(devConf.baseURI, deviceMac, handle, params);
 }
 
+function getReadPhyUrlByDevConf(devConf, deviceMac) {
+  const fields = [];
+  const params = getFields(devConf, fields);
+  return getReadPhyUrl(devConf.baseURI, deviceMac, params);
+}
+
+function getUpdatePhyUrlByDevConf(devConf, deviceMac) {
+  const fields = [];
+  const params = getFields(devConf, fields);
+  return getUpdatePhyUrl(devConf.baseURI, deviceMac, params);
+}
+
 function getDisconnectUrlByDevConf(devConf, deviceMac, withToken=true) {
   const fields = [];
   const params = getFields(devConf, fields, withToken);
@@ -472,24 +508,35 @@ function getAsyncConnectUrlByDevConf(devConf, withToken=true) {
 }
 
 function getScanUrlByDevConf(devConf) {
-  const fields = ['chip', 'filter_mac', 'filter_name', 'filter_rssi'];
+  const fields = ['chip', 'filter_mac', 'phy', 'filter_name', 'filter_rssi', 'timestamp'];
   const params = getFields(devConf, fields);
   params.active = 1;
   params.event = 1;
   return getScanUrl(devConf.baseURI, params);
 }
 
-function getScanUrlByUserParams(devConf, chip, filter_mac, filter_name, filter_rssi, withToken=true) {
+function getScanUrlByUserParams(devConf, chip, filter_mac, phy, filter_name, filter_rssi, withToken=true) {
   const _devConf = _.cloneDeep(devConf);
   _devConf.chip = chip;
   _devConf.filter_mac = filter_mac;
+  _devConf.phy = phy;
   _devConf.filter_name = filter_name;
   _devConf.filter_rssi = filter_rssi;
-  const fields = ['chip', 'filter_mac', 'filter_name', 'filter_rssi'];
+  const fields = ['chip', 'filter_mac', 'phy', 'filter_name', 'filter_rssi'];
   const params = getFields(_devConf, fields, withToken);
   params.active = 1;
   params.event = 1;
   return getScanUrl(devConf.baseURI, params);
+}
+
+function getNotificationUrlByUserParams(devConf, timestamp, sequence, withToken=true) {
+  const _devConf = _.cloneDeep(devConf);
+  _devConf.timestamp = timestamp;
+  _devConf.sequence = sequence;
+  const fields = ['timestamp', 'sequence'];
+  const params = getFields(_devConf, fields, withToken);
+  params.event = 1;
+  return getNotifyUrl(devConf.baseURI, params);
 }
 
 function getOauth2UrlByDevConf(devConf) {
@@ -498,7 +545,7 @@ function getOauth2UrlByDevConf(devConf) {
 }
 
 function getNotifyUrlByDevConf(devConf, withToken=true) {
-  const fields = [];
+  const fields = ['timestamp', 'sequence'];
   const params = getFields(devConf, fields, withToken);
   params.event = 1;
   return getNotifyUrl(devConf.baseURI, params);
@@ -542,7 +589,7 @@ function getUrlVars(queryStr) {
 }
 
 function startScanByDevConf(devConf, messageHandler, errorHandler) {
-  const fields = ['chip', 'filter_mac', 'filter_name', 'filter_rssi'];
+  const fields = ['chip', 'filter_mac', 'phy', 'filter_name', 'filter_rssi'];
   let query = getFields(devConf, fields);
   query.active = 1;
   query.event = 1;
@@ -553,10 +600,11 @@ function startScanByDevConf(devConf, messageHandler, errorHandler) {
   return startScan(url, messageHandler, errorHandler);
 }
 
-function startScanByUserParams(devConf, chip, filter_mac, filter_name, filter_rssi, scanParams, messageHandler, errorHandler) {
+function startScanByUserParams(devConf, chip, filter_mac, phy, filter_name, filter_rssi, scanParams, messageHandler, errorHandler) {
   const _devConf = _.cloneDeep(devConf);
   _devConf.chip = chip;
   _devConf.filter_mac = filter_mac;
+  _devConf.phy = phy;
   _devConf.filter_name = filter_name;
   _devConf.filter_rssi = filter_rssi;
   _devConf.scanParams = scanParams;
@@ -570,7 +618,7 @@ function openConnectStatusSseByDevConf(devConf, messageHandler, errorHandler) {
 }
 
 function startNotifyByDevConf(devConf, messageHandler, errorHandler) {
-  const fields = [];
+  const fields = ['timestamp', 'sequence'];
   const params = getFields(devConf, fields);
   params.event = 1;
   return openNotifySse(devConf.baseURI, params, messageHandler, errorHandler);
@@ -619,6 +667,31 @@ function connectByDevConf(devConf, deviceMac, addrType, chip=0, bodyParams) {
     delete bodyParams['aps'];
     return connectByDevConfNormal(devConf, deviceMac, addrType, chip, bodyParams);
   }
+}
+
+function readPhy(baseURI, query, deviceMac) {
+  const url = `${baseURI}/gap/nodes/${deviceMac}/phy?${obj2QueryStr(query)}`;
+  addApiLogItem(main.getGlobalVue().$i18n.t('message.apiReadPhy'), 'GET', url, query, {}, {deviceMac});
+  return new Promise((resolve, reject) => {
+    axios.get(url).then(function(response) {
+      logger.info('device read phy success:', response);
+      resolve(response.data);
+    }).catch(function(error) {
+      let info = error.response ? error.response.data : error;
+      logger.error('device read phy error:', info);
+      reject(info);
+    });
+  });
+}
+
+function readPhyByDevConf(devConf, deviceMac) {
+  const params = getFields(devConf, []);
+  return readPhy(devConf.baseURI, params, deviceMac);
+}
+
+function updatePhyByDevConf(devConf, deviceMac, bodyParam) {
+  const params = getFields(devConf, []);
+  return updatePhy(devConf.baseURI, params, deviceMac, bodyParam);
 }
 
 function pairByDevConf(devConf, deviceMac, bodyParam) {
@@ -721,11 +794,25 @@ function getAcRouterList(token) {
   const url = `${dbModule.getDevConf().acServerURI}/api/ac/ap?access_token=${token}`;
   return new Promise((resolve, reject) => {
     axios.get(url).then(function(response) {
-      logger.info('get ac router list success:', response);
+      logger.info('get ac gateway list success:', response);
       resolve(response.data);
     }).catch(function(error) {
       let info = error.response ? error.response.data : error;
-      logger.error('get ac router list error:', info);
+      logger.error('get ac gateway list error:', info);
+      reject(info);
+    });
+  });
+}
+
+function getAcGateway(token, mac) {
+  const url = `${dbModule.getDevConf().baseURI}/ac/ap/${mac}?access_token=${token}`;
+  return new Promise((resolve, reject) => {
+    axios.get(url).then(function(response) {
+      logger.info('get ac gateway success:', response);
+      resolve(response.data);
+    }).catch(function(error) {
+      let info = error.response ? error.response.data : error;
+      logger.error('get ac gateway error:', info);
       reject(info);
     });
   });
@@ -745,12 +832,15 @@ export default {
   openConnectStatusSseByDevConf,
   getConnectUrlByDevConf,
   getReadUrlByDevConf,
+  getReadPhyUrlByDevConf,
+  getUpdatePhyUrlByDevConf,
   getWriteUrlByDevConf,
   getDisconnectUrlByDevConf,
   startScanByUserParams,
   getNotifyUrlByDevConf,
   getOauth2UrlByDevConf,
   getScanUrlByUserParams,
+  getNotificationUrlByUserParams,
   getAsyncConnectUrlByDevConf,
   getConnectStatusUrlByDevConf,
   pairByDevConf,
@@ -768,4 +858,7 @@ export default {
   getUnpairUrlByDevConf,
   replayApi,
   getAcRouterList,
+  getAcGateway,
+  readPhyByDevConf,
+  updatePhyByDevConf,
 }

@@ -278,8 +278,8 @@ const cn = {
   add2RssiChart: '加入图表',
   removeFromRssiChart: '图表移除',
 
-  apConfigInfo: '请检查 <span style="color: red; font-weight: bold;">网关地址、Allow Origin</span> 配置！<br><a target="_blank" style="color: #2897ff; " href="./Debugger2-Troubleshooting.pdf">Debugger2-Troubleshooting</a><br>是否跳转至网关配置页面？',
-  acConfigInfo: '请检查 <span style="color: red; font-weight: bold;">AC地址、开发者账号配置、Allow Origin</span> 配置！<br>是否跳转至AC配置页面？',
+  apConfigInfo: '请检查 <span style="color: red; font-weight: bold;">网关地址、Allow Origin、API开关</span> 配置！<br><a target="_blank" style="color: #2897ff; " href="./Debugger2-Troubleshooting.pdf">Debugger2-Troubleshooting</a><br>是否跳转至网关配置页面？',
+  acConfigInfo: '请检查 <span style="color: red; font-weight: bold;">AC地址、开发者账号配置、Allow Origin、网关状态</span> 配置！<br>是否跳转至AC配置页面？',
 
   configOrigin: '从v2.0.3版本开始，默认情况下，AC和路由器上的CORS被禁用。使用此蓝牙调试工具时，请在控制台设置中设置“Access Control Allow Origin”。请参考<a target="_blank" style="color: #2897ff; text-decoration: none;" href="./Debugger2-Troubleshooting.pdf"> Debugger2-Troubleshooting </a>了解详细说明。如果使用 <span style="color: #ff0000; font-weight: bold;">Chrome版本>=94</span>，请复制此链接并在Chrome打开 <span style="color: #2897ff;">chrome://flags/#block-insecure-private-network-requests</span> 设置为Disabled。',
 
@@ -288,6 +288,33 @@ const cn = {
   off: '关闭',
   aps: '网关列表',
   configAutoSelection: '请确保AC配置页面已打开优选功能，默认优选功能关闭',
+
+  oldVersion: '老版本',
+
+  phy: 'PHY',
+  secondaryPhy: 'Secondary PHY',
+  readPhy: '获取PHY',
+  updatePhy: '更新PHY',
+  moreArgs: '更多参数',
+  readPhyFail: '读取PHY失败',
+  readPhyOK: '读取PHY成功',
+  updatePhyFail: '更新PHY失败',
+  updatePhyOK: '更新PHY成功',
+  apiReadPhy: 'Read PHY',
+  apiUpdatePhy: 'Update PHY',
+  
+  deviceScanData: '扫描数据',
+  filterDuplicate: 'Filter Duplicates',
+  deviceScanDataRealTime: '实时数据',
+  scanDetailInfo: '为了防止页面卡顿，周期10毫秒更新数据，最多支持2000条数据。获取实时数据，请【实时数据】',
+
+  apiReadPhyInfo: '此接口是GET请求，调用接口，蓝牙网关会获取指定MAC的PHY信息，主要用于BLE5场景',
+  apiUpdatePhyInfo: '此接口是POST请求，调用接口，蓝牙网关会更新指定MAC的PHY信息，主要用于BLE5场景',
+  notificationDetailInfo: '为了防止页面卡顿，周期500毫秒更新数据。获取实时数据，请【实时数据】',
+  timestampInfo: '开启时使用数据中的时间信息，未开启使用页面收到数据时间',
+  
+  notificationSequence: '包序号',
+  notificationSequenceInfo: '开启时使用数据中的seqNum，未开启使用页面计数',
 };
 
 export default {

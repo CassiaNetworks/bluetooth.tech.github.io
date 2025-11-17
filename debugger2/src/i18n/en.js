@@ -3,39 +3,39 @@ const en = {
   title: 'Cassia Bluetooth Debug Tool v2 (Beta)',
   
   // left
-  configConnectParams: 'Control Settings',
+  configConnectParams: 'Control Setting',
   connectStyle: 'Control',
   serviceURI: 'Server',
   devKey: 'Key',
   devSecret: 'Secret',
-  apMac: 'Router',
-  configScanParams: 'Scan Settings',
+  apMac: 'Gateway',
+  configScanParams: 'Scan Setting',
   useChip: 'Chip',
   filterName: 'Name Filter',
   filterMac: 'MAC Filter',
   fitlerRSSI: 'RSSI Filter',
-  restartAP: 'Reboot Router',
+  restartAP: 'Reboot Gateway',
   startScan: 'Start Scan',
   stopScan: 'Stop Scan',
   
-  configConnParams: 'Connect Settings',
+  configConnParams: 'Connect Setting',
   discovergatt: 'GATT',
   connTimeout: 'Timeout(s)',
-  others: 'Others',
+  others: 'Other',
 
   // menu
-  configParams: 'Settings',
-  scanList: 'Scan Devices',
+  configParams: 'Setting',
+  scanList: 'Scan Device',
   connectList: 'Connection',
   notifyList: 'Notification',
   apiLogList: 'API Log',
   apiDebugger: 'API Debugger',
   apiDemo: 'API Demo',
-  tools: 'Tools',
-  resources: 'Resources',
+  tools: 'Tool',
+  resources: 'Resource',
 
   // scan result tab
-  scanResult: 'Scan Results',
+  scanResult: 'Scan Result',
   devicesCount: 'Devices Count',
   searchMacOrName: 'Search MAC or Name',
   export: 'Export',
@@ -65,10 +65,10 @@ const en = {
   close: 'Close',
 
   // connect list tab
-  connectedDevices: 'Connected Devices',
+  connectedDevices: 'Connected Device',
   disconnectAll: 'Disconnect All',
   chip: 'Chip',
-  services: 'Services',
+  services: 'Service',
   disconnect: 'Disconnect',
   pair: 'Pair',
   unpair: 'Unpair',
@@ -89,8 +89,8 @@ const en = {
   reqContent: 'Request',
 
   // api debugger
-  scanDevices: 'Scan Devices',
-  scanDevicesInfo: 'This API is a long connection by SSE. After calling the API, the Bluetooth router will scan the surrounding devices and set the MAC address (bdaddr), address type (bdaddrType), broadcast data (adData / scanData), and device name (name) of the Bluetooth device, Signal strength (rssi) and other information are returned in the form of http response.',
+  scanDevices: 'Scan Device',
+  scanDevicesInfo: 'This API is a long connection by SSE. After calling the API, the Bluetooth gateway will scan the surrounding devices and set the MAC address (bdaddr), address type (bdaddrType), broadcast data (adData / scanData), and device name (name) of the Bluetooth device, Signal strength (rssi) and other information are returned in the form of http response.',
   more: 'More',
   chip0: 'Chip0',
   chip1: 'Chip1',
@@ -99,7 +99,7 @@ const en = {
   genCode: 'Code',
   
   connectDevice: 'Connect Device',
-  connectDeviceInfo: 'This API is a synchronous connection interface. After calling the API, the Bluetooth router will establish a connection with the specified device and return the connection result.',
+  connectDeviceInfo: 'This API is a synchronous connection interface. After calling the API, the Bluetooth gateway will establish a connection with the specified device and return the connection result.',
   addrType: 'Address Type',
   deviceAddr: 'Device MAC',
 
@@ -113,18 +113,18 @@ const en = {
   noWait: 'No Wait',
 
   disConnect: 'Disconnect',
-  disConnectInfo: 'This API is a DELETE request. After calling the interface, the Bluetooth router will disconnect from the Bluetooth device with the specified MAC address.',
+  disConnectInfo: 'This API is a DELETE request. After calling the interface, the Bluetooth gateway will disconnect from the Bluetooth device with the specified MAC address.',
   
-  connectListInfo: 'This API is a GET request. After calling the interface, the Bluetooth router will return a list of currently connected devices.',
+  connectListInfo: 'This API is a GET request. After calling the interface, the Bluetooth gateway will return a list of currently connected devices.',
 
-  deviceServices: 'Device Services',
-  deivceServicesInfo: 'This API is a GET request. After calling the interface, the Bluetooth router will request a tree list of its services from the specified Bluetooth device. The main purpose of calling the sub-interface is to obtain the characteristic correspondence of the Bluetooth device when reading and writing to the Bluetooth device. ValueHandle or handle.',
+  deviceServices: 'Device Service',
+  deivceServicesInfo: 'This API is a GET request. After calling the interface, the Bluetooth gateway will request a tree list of its services from the specified Bluetooth device. The main purpose of calling the sub-interface is to obtain the characteristic correspondence of the Bluetooth device when reading and writing to the Bluetooth device. ValueHandle or handle.',
 
   openNotify: 'Open Notification',
-  openNotifyInfo: `This API is a SSE long connection. When the Bluetooth device's notification / indication is turned on, the Bluetooth device will report a notification message to the Bluetooth router.`,
+  openNotifyInfo: `This API is a SSE long connection. When the Bluetooth device's notification / indication is turned on, the Bluetooth device will report a notification message to the Bluetooth gateway.`,
 
   connectStatus: 'Connection Status',
-  connectStatusInfo: 'This API is a SSE long connection. When the connection status of the Bluetooth device on the Bluetooth router changes (successful connection or disconnection occurs), the PC will be notified of the message through this interface.',
+  connectStatusInfo: 'This API is a SSE long connection. When the connection status of the Bluetooth device on the Bluetooth gateway changes (successful connection or disconnection occurs), the PC will be notified of the message through this interface.',
 
   pairInfo: 'Through this interface, you can establish pairing with Bluetooth devices.',
   ioCap: 'IO Capability',
@@ -133,22 +133,22 @@ const en = {
   pairInputInfo: 'Through this API, you can complete the pairing input operation with the Bluetooth device.',
   inputType: 'Input Type',
 
-  unpairInfo: 'This API is a DELETE request. After calling the API, the Bluetooth router will unpair with the Bluetooth device with the specified MAC address.',
+  unpairInfo: 'This API is a DELETE request. After calling the API, the Bluetooth gateway will unpair with the Bluetooth device with the specified MAC address.',
 
-  debugResult: 'Debug Results',
-  connectWriteNotify: '[Single Device] Connect->Write->Receive notifications',
+  debugResult: 'Debug Result',
+  connectWriteNotify: '[Single Device] Connect->Write->Receive notification',
   test: 'Test',
   historyApi: 'History API',
 
   writeCmd: 'Write Cmd',
 
-  receiveNotify: 'Receive Notifications',
+  receiveNotify: 'Receive Notification',
   receiveDataBySSE: 'Receive Data by SSE',
 
   clearData: 'Clear Data',
 
   scanConnectWriteNotify: '[Multiple Devices] Scan->Connect->Write',
-  connectScannedDevices: 'Connect Scanned Devices',
+  connectScannedDevices: 'Connect Scanned Device',
 
   binaryConversion: 'Base Conversion',
   jsonFormatter: 'JSON Formatter',
@@ -156,7 +156,7 @@ const en = {
   cancel: 'Cancel',
   ok: 'OK',
 
-  router: 'Router',
+  router: 'Gateway',
   noData: 'No Data',
   pleaseSelect: 'Please Select',
   pleaseInput: 'Please Input',
@@ -233,8 +233,8 @@ const en = {
   apiPairInput: 'Pair Input',
   apiConnect: 'Connect',
   apiDisconnect: 'Disconnect',
-  apiConnectList: 'Connections',
-  apiServiceList: 'Services',
+  apiConnectList: 'Connection',
+  apiServiceList: 'Service',
   apiRead: 'Read',
   apiWrite: 'Write',
   apiScan: 'Scan',
@@ -248,7 +248,7 @@ const en = {
 
   apiDescription: 'API Info',
   apiDemoDescription: 'Demo Info',
-  demo1Info: 'This example is an example of an operation guide device for connecting a device, writing instructions, and receiving a device Notify',
+  demo1Info: 'This is example of connecting a device, writing instructions, and receiving a device Notify',
   demo2Info: 'This example is to operate multiple devices. Whenever a device with suitable conditions is scanned, connect the device and write instructions',
 
   demo1: 'Demo 1',
@@ -261,16 +261,45 @@ const en = {
   add2RssiChart: 'Add Chart',
   removeFromRssiChart: 'Chart Remove',
 
-  apConfigInfo: 'Please check the <span style="color: red; font-weight: bold;">Router URI, Allow Origin</span> configuration. <a target="_blank" style="color: #2897ff; " href="./Debugger2-Troubleshooting.pdf">Debugger2-Troubleshooting</a><br>Do you want to jump to the Router configuration page?',
-  acConfigInfo: 'Please check the <span style="color: red; font-weight: bold;">AC URI, developer account, Allow Origin</span> configuration<br>Do you want to jump to the AC configuration page?',
+  apConfigInfo: 'Please check the <span style="color: red; font-weight: bold;">Router URI, Allow Origin, Local API Switch</span> configuration. <a target="_blank" style="color: #2897ff; " href="./Debugger2-Troubleshooting.pdf">Debugger2-Troubleshooting</a><br>Do you want to jump to the Router configuration page?',
+  acConfigInfo: 'Please check the <span style="color: red; font-weight: bold;">AC URI, developer account, Allow Origin, Gateway Status</span> configuration<br>Do you want to jump to the AC configuration page?',
 
-  configOrigin: 'Starting v2.0.3 release, CORS is disabled by default on AC and Router. When using this Bluetooth Debug Tool, please set ‘Access Control Allow Origin’ in the console setting. Please refer to <a target="_blank" style="color: #2897ff; text-decoration: none;" href="./Debugger2-Troubleshooting.pdf">Debugger2-Troubleshooting</a> for detailed instruction. If using <span style="color: #ff0000; font-weight: bold;">Chrome version>=94</span>, please copy this link and open it in Chrome<span style="color: #2897ff;"> chrome://flags/#block-insecure-private-network-requests</span> is set to Disabled.',
+  configOrigin: 'Starting v2.0.3 release, CORS is disabled by default on AC and Gateway. When using this Bluetooth Debug Tool, please set ‘Access Control Allow Origin’ in the console setting. Please refer to <a target="_blank" style="color: #2897ff; text-decoration: none;" href="./Debugger2-Troubleshooting.pdf">Debugger2-Troubleshooting</a> for detailed instruction. If using <span style="color: #ff0000; font-weight: bold;">Chrome version>=94</span>, please copy this link and open it in Chrome<span style="color: #2897ff;"> chrome://flags/#block-insecure-private-network-requests</span> is set to Disabled.',
 
   autoSelectionOn: 'Auto-Selection',
   on: 'ON',
   off: 'OFF',
-  aps: 'Routers',
+  aps: 'Gateway',
   configAutoSelection: 'Please make sure that the AC configuration page has opened the Auto-Selection, by default its closed.',
+
+  oldVersion: 'Old Version',
+  auth: 'Auth Token',
+
+  phy: 'PHY',
+  secondaryPhy: 'Secondary PHY',
+  readPhy: 'Read PHY',
+  updatePhy: 'Update PHY',
+  moreArgs: 'More Parameters',
+  scanDetailInfo: 'To prevent page lag, data updates every 10ms with a maximum of 2000 entries. For real-time monitoring data, [Open New Tab]',
+  readPhyFail: 'Read PHY failed',
+  readPhyOK: 'Read PHY successfully',
+  updatePhyFail: 'Update PHY failed',
+  updatePhyOK: 'Update PHY successfully',
+  apiReadPhy: 'Read PHY',
+  apiUpdatePhy: 'Update PHY',
+
+  deviceScanData: 'Scan Data',
+  filterDuplicate: 'Filter Duplicates',
+  deviceScanDataRealTime: 'Realtime Data',
+  scanDetailInfo: 'Data updates every 10ms with up to 2000 entries to avoid lag. See [Realtime Data] for live monitoring.',
+
+  apiReadPhyInfo: 'This is a GET request. When called, the Bluetooth gateway retrieves the PHY information of the specified MAC address, primarily for BLE 5 scenarios.',
+  apiUpdatePhyInfo: 'This is a POST request. When called, the Bluetooth gateway updates the PHY information of the specified MAC address, primarily for BLE 5 scenarios.',
+  notificationDetailInfo: 'Data updates every 500ms to avoid lag. See [Realtime Data] for live monitoring.',
+  timestampInfo: 'When the timestamp is enabled, the time in the data is used. When disabled, the time the page receives the data is used.',
+
+  notificationSequence: 'Seq Num',
+  notificationSequenceInfo: 'When enabled, the seqNum in the data is used; when disabled, a page-side counter is used.',
 };
 
 export default {

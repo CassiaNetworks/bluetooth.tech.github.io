@@ -47,7 +47,9 @@ const apiType = {
   CONNECT_STATUS: 'connectStatus',
   PAIR: 'pair',
   PAIR_INPUT: 'pairInput',
-  UNPAIR: 'unpair'
+  UNPAIR: 'unpair',
+  READ_PHY: 'readPhy',
+  UPDATE_PHY: 'updatePhy',
 }
 
 const codeType = {

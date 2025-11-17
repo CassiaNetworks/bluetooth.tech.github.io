@@ -19,22 +19,33 @@ let storage = {
     mac: '', // 路由器MAC
     filter_name: [], // 扫描name过滤
     filter_mac: [], // 扫描mac过滤
+    phy: [], // 扫描phy
     filter_rssi: -75,
     chip: 0, // 扫描使用的芯片
     scanParams: '', // 扫描接口其他参数
     connChip: 0, // 连接使用的芯片
-    discovergatt: 1, // 是否开启，默认开启，与API默认参数保持一致
+    discovergatt: '1', // 是否开启，默认开启，与API默认参数保持一致
     connTimeout: 15, // 连接超时时间，单位秒，默认为10秒
+    connPhy: '',
+    secondaryPhy: '',
     connParams: '', // 连接接口其他参数
     autoSelectionOn: 'off', // 是否开启优选，默认不开启
     aps: [], // 优选选择的网关列表
   },
   devConfDisplayVars: {
-    leftConfWidth: '326px', // 左侧配置栏宽度
-    leftConfLabelWidth: '85px', // 左侧label宽度
+    oldVersionUrl: '#', // 老版本debugger链接
+    leftConfWidth: '430px', // 左侧配置栏宽度
+    leftConfLabelWidth: '125px', // 左侧label宽度
     leftConfHeight: '100%', // 左侧配置栏高度
     scanTabsActiveTab: 'scanResult', // 当前激活的扫描tab页
     apiDemoTabsActiveTab: 'singleDevice', // API demo激活的tab页
+    updatePhy: {
+      visible: false,
+      deviceMac: '',
+      tx: '',
+      rx: '',
+      codedOption: '',
+    },
     pair: { // pair
       visible: false,
       timeout: 5, // 单位秒 
@@ -101,15 +112,47 @@ let storage = {
     rssiChartPeriod: 60, // 单位秒，统计周期
     rssiChartDataSpan: 2000, // 单位毫秒, 统计间隔, 此毫秒长度认为1个广播点
     rssiChartDataCount:  (60 * 1000 / 2000), // rssiChartPeriod * 1000 / rssiChartDataSpan;
+
+    deviceScanDataStopped: false,
+    deviceScanDataSwitch: false, // 是否开启了数据
+    deviceScanDataFilterDuplicate: '1000',
+    deviceScanDataTimestamp: '0',
+
     apiDebuggerParams: { // 调试工具参数
       [libEnum.apiType.AUTH]: {},
-      [libEnum.apiType.SCAN]: {chip: 0, filter_name: [], filter_mac: [], filter_rssi: -65},
-      [libEnum.apiType.CONNECT]: {chip: 0, deviceMac: 'C0:00:5B:D1:AA:BC', addrType: libEnum.deviceAddrType.PUBLIC},
+      [libEnum.apiType.SCAN]: {
+        chip: 0, 
+        filter_name: [], 
+        filter_mac: [], 
+        phy: [], 
+        filter_rssi: -65,
+        timestamp: '0',
+      },
+      [libEnum.apiType.CONNECT]: {
+        chip: 0, 
+        deviceMac: 'C0:00:5B:D1:AA:BC', 
+        addrType: libEnum.deviceAddrType.PUBLIC, 
+        discovergatt: '1', 
+        connTimeout: 15,
+        connPhy: '', 
+        secondaryPhy: '', 
+        connParams: ''
+      },
       [libEnum.apiType.READ]: {deviceMac: 'C0:00:5B:D1:AA:BC', handle: '39'},
+      [libEnum.apiType.READ_PHY]: {deviceMac: 'C0:00:5B:D1:AA:BC'},
+      [libEnum.apiType.UPDATE_PHY]: {
+        deviceMac: 'C0:00:5B:D1:AA:BC',
+        tx: '',
+        rx: '',
+        codedOption: '',
+      },
       [libEnum.apiType.WRITE]: {deviceMac: 'C0:00:5B:D1:AA:BC', handle: '39', value: '21ff310302ff31', noresponse: false},
       [libEnum.apiType.DISCONNECT]: {deviceMac: 'C0:00:5B:D1:AA:BC'},
       [libEnum.apiType.DISCOVER]: {deviceMac: 'C0:00:5B:D1:AA:BC'},
-      [libEnum.apiType.NOTIFY]: {},
+      [libEnum.apiType.NOTIFY]: {
+        timestamp: '0',
+        sequence: '0',
+      },
       [libEnum.apiType.CONNECT_STATUS]: {},
       [libEnum.apiType.PAIR]: {iocapability: 'KeyboardDisplay', deviceMac: 'C0:00:5B:D1:AA:BC'},
       [libEnum.apiType.PAIR_INPUT]: {inputType: 'Passkey', deviceMac: 'C0:00:5B:D1:AA:BC', passkey: '', tk: '', rand: '', confirm: ''},
@@ -137,6 +180,7 @@ let storage = {
           chip: 0,
           filter_name: [],
           filter_mac: [],
+          phy: [],
           filter_rssi: -75
         },
         write: {
@@ -159,20 +203,34 @@ let cache = {
         else callback();
       }, trigger: 'change' }
     ],
-    'acServerURI': [
+    'acServerURI': [ // AC模式才检查
       { validator: function(rule, value, callback) {
-        if(!/(http|https):\/\/.*[^/^api]$/.test(value)) callback('Eg: http://192.168.5.100');
+        if (storage.devConf.controlStyle !== 'AC') return callback();
+        if (!/(http|https):\/\/.*[^/^api]$/.test(value)) callback('Eg: http://192.168.5.100');
         else callback();
       }, trigger: 'change' }
     ],
-    'acDevKey': [
-      { required: true, message: 'require', trigger: 'blur' },
+    'acDevKey': [ // AC模式才检查
+      { validator: function(rule, value, callback) {
+        if (storage.devConf.controlStyle !== 'AC') return callback();
+        if(!value) callback('require');
+        else callback();
+      }, trigger: 'blur' }
     ],
-    'acDevSecret': [
-      { required: true, message: 'require', trigger: 'blur' },
+    'acDevSecret': [ // AC模式才检查
+      { validator: function(rule, value, callback) {
+        if (storage.devConf.controlStyle !== 'AC') return callback();
+        if(!value) callback('require');
+        else callback();
+      }, trigger: 'blur' }
     ],
-    'mac': [
-      { required: true, message: 'require', trigger: 'blur' },
+    'mac': [ // AC模式才检查
+      { validator: function(rule, value, callback) {
+        console.log('mac check', storage.devConf.controlStyle, value);
+        if (storage.devConf.controlStyle !== 'AC') return callback();
+        if(!value) callback('require');
+        else callback();
+      }, trigger: 'change' }
     ],
     'connTimeout': [
       { validator: function(rule, value, callback) {
@@ -180,18 +238,23 @@ let cache = {
         if(!(value >= 0.2 && value <= 20)) callback('Eg: value >= 0.2 && value <= 20');
         else callback();
       }, trigger: 'change' }
-    ]
+    ],
   }, // devConf检查规则
 
   isGettingAcRouterList: false, // AC动态获取router列表
   acRouterList: [], // AC动态获取router列表
+  model: '', // 当前选择的网关对应model
 
   clientHeight: 0, // dom高度, 响应动态变化
   vxeGridHeight: 0, // vxe表格高度, 响应动态变化
   currentConnectedTab: 'connectTab0',
   scanDisplayFilterContent: '',
   connectDisplayFilterContent: '',
+  
   notifyDisplayFilterContent: '',
+  notifyDisplayTimestamp: '0',
+  notifyDisplaySequence: '0',
+
   apiLogDisplayFilterContent: '',
   isApiDebuggerLoading: false,
   isNotifyLoading: false,
@@ -225,6 +288,20 @@ let cache = {
       }
     },
     [libEnum.apiType.READ]: {
+      resultList: [],
+      code: {
+        [libEnum.codeType.CURL]: '',
+        [libEnum.codeType.NODEJS]: ''
+      }
+    },
+    [libEnum.apiType.READ_PHY]: {
+      resultList: [],
+      code: {
+        [libEnum.codeType.CURL]: '',
+        [libEnum.codeType.NODEJS]: ''
+      }
+    },
+    [libEnum.apiType.UPDATE_PHY]: {
       resultList: [],
       code: {
         [libEnum.codeType.CURL]: '',
@@ -299,6 +376,12 @@ let cache = {
     // {name: 'UNKNOWN', mac: 'CC:1B:E0:E0:DD:70', bdaddrType: 'public', rssi: -75, adData: '0201061BFF5701006BFCA25D5ED51C0B3E60820178B901BE01D40B59A1259C'},
     // {name: 'MI BAND 3', mac: 'CC:1B:E0:E0:DD:71', bdaddrType: 'random', rssi: -75, adData: '0201061BFF5701006BFCA25D5ED51C0B3E60820178B901BE01D40B59A1259C'},
   ],
+  deviceScanDetail: { // 设备扫描数据详情，点击detail -> 打开dialog -> 开启SSE -> 记录数据 -> 关闭dialog -> 关闭SSE -> 释放数据
+    sse: null,
+    updateQueue: [], // 防抖
+    updateTimer: null, // 防抖
+    data: [],
+  },
   notifyDisplayResultList: [
 
   ],
@@ -366,17 +449,37 @@ function saveApDevConf(_devConf) {
 // 更新接口地址
 function saveAcDevConf(_devConf) {
   _devConf.baseURI = getBaseURI(_devConf);
+
+  // XSS过滤
+  _.forEach(_devConf, (v, k) => {
+    if (_.isString(v)) _devConf[k] = filterXSS(v);
+  });
+  storage.devConf = _devConf;
+  
   // TODO: 优化定时获取token
-  storage.devConf = _devConf;  
   return new Promise(function(resolve, reject) {
     apiModule.getAccessToken(_devConf.baseURI, _devConf.acDevKey, _devConf.acDevSecret).then(function(data) {
       storage.accessToken = data.access_token;
       save(storageKey, JSON.stringify(storage.devConf)); // 只保存配置，其他缓存不保存
-      resolve();
+      resolve(data.access_token);
     }).catch(function(error) {
       reject(error);
     });
   });
+}
+
+function checkAndClearPhyParams(model) {
+  if (!['X1000', 'S2000'].includes(model)) {
+    return;
+  }
+
+  storage.devConf.phy = '';
+  storage.devConf.connPhy = '';
+  storage.devConf.secondaryPhy = '';
+
+  storage.devConfDisplayVars.apiDebuggerParams[libEnum.apiType.SCAN].phy = '';
+  storage.devConfDisplayVars.apiDebuggerParams[libEnum.apiType.CONNECT].connPhy = '';
+  storage.devConfDisplayVars.apiDebuggerParams[libEnum.apiType.CONNECT].secondaryPhy = '';
 }
 
 function saveDevConf(_devConf) {
@@ -384,7 +487,16 @@ function saveDevConf(_devConf) {
   storage.devConfSaveTimer = setTimeout(function() {
     logger.info('save dev conf:', _devConf);
     if (_devConf.controlStyle === libEnum.controlStyle.AC) {
-      return saveAcDevConf(_devConf);
+      return saveAcDevConf(_devConf).then((token) => {
+        console.log('try get model by mac:', _devConf.mac);
+        if (_devConf.mac) {
+          apiModule.getAcGateway(token, _devConf.mac).then(data => {
+            cache.model = _.get(data, 'model') || '';
+            checkAndClearPhyParams(cache.model);
+            console.log('cache update model by get gateway:', cache.model);
+          });
+        }
+      });
     }
     return saveApDevConf(_devConf);
   }, 1000); // 1秒防止抖动
@@ -411,7 +523,7 @@ function loadStorage() {
 
   // 新版本兼容老版本的本地存储
   if (!_.has(storage.devConf, 'connChip')) storage.devConf.connChip = 0;
-  if (!_.has(storage.devConf, 'discovergatt')) storage.devConf.discovergatt = 1;
+  if (!_.has(storage.devConf, 'discovergatt')) storage.devConf.discovergatt = '1';
   if (!_.has(storage.devConf, 'connTimeout')) storage.devConf.connTimeout = 15;
   if (!_.has(storage.devConf, 'connParams')) storage.devConf.connParams = '';
   if (!_.has(storage.devConf, 'scanParams')) storage.devConf.scanParams = '';
@@ -453,5 +565,6 @@ export default {
   getCache,
   getStorage,
   getDevConfDisplayVars,
-  listAddOrUpdate
+  listAddOrUpdate,
+  checkAndClearPhyParams,
 }

@@ -70,6 +70,37 @@ request(options, function (error, response) {
 });
 `;
 
+const readPhy = `
+var request = require('request');
+var options = {
+  'method': 'GET',
+  'url': '<%= url %>',
+  'headers': {
+  }
+};
+request(options, function (error, response) { 
+  if (error) console.error(error);
+  else console.log(response.body);
+});
+`;
+
+const updatePhy = `
+var request = require('request');
+var options = {
+  'method': 'POST',
+  'url': '<%= url %>',
+  'headers': {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({"tx":"<%= apiParams.tx %>","rx":"<%= apiParams.rx %>","coded_option":"<%= apiParams.codedOption %>"})
+
+};
+request(options, function (error, response) { 
+  if (error) console.error(error);
+  else console.log(response.body);
+});
+`;
+
 const write = `
 var request = require('request');
 var options = {
@@ -241,6 +272,8 @@ export default {
   scan,
   connect,
   read,
+  readPhy,
+  updatePhy,
   write,
   disconnect,
   connectList,

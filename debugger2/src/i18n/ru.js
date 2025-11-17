@@ -264,13 +264,41 @@ const ru = {
   apConfigInfo: 'Пожалуйста, проверьте <span style="color: red; font-weight: bold;">URI маршрутизатора, Разрешить источник</span> configuration. <a target="_blank" style="color: #2897ff; " href="./Debugger2-Troubleshooting.pdf">Debugger2-Troubleshooting</a><br>Вы хотите перейти на страницу конфигурации маршрутизатора?',
   acConfigInfo: 'Пожалуйста, проверьте <span style="color: red; font-weight: bold;">AC URI, аккаунт разработчика, Разрешить источник</span> configuration<br>Вы хотите перейти на страницу конфигурации AC?',
 
-  configOrigin: 'Начиная с выпуска v2.0.3, CORS по умолчанию отключен для AC и Router. При использовании этого Bluetooth Debug Tool установите «Access Control Allow Origin» в настройках консоли. См. <a target="_blank" style="color: #2897ff; text-decoration: none;" href="https://www.cassianetworks.com/download/docs/Cassia_User_Manual.pdf">Руководство пользователя Cassia </a> для получения подробных инструкций. ',
+  configOrigin: 'Начиная с выпуска v2.0.3, CORS по умолчанию отключен для AC и Gateway. При использовании этого Bluetooth Debug Tool установите «Access Control Allow Origin» в настройках консоли. См. <a target="_blank" style="color: #2897ff; text-decoration: none;" href="https://www.cassianetworks.com/download/docs/Cassia_User_Manual.pdf">Руководство пользователя Cassia </a> для получения подробных инструкций. ',
 
   autoSelectionOn: 'Auto-Selection',
   on: 'ON',
   off: 'OFF',
-  aps: 'Routers',
+  aps: 'Gateways',
   configAutoSelection: 'Please make sure that the AC configuration page has opened the Auto-Selection, by default its closed.',
+
+  oldVersion: 'Old Version',
+  auth: 'Auth Token',
+
+  phy: 'PHY',
+  secondaryPhy: 'Secondary PHY',
+  readPhy: 'Read PHY',
+  updatePhy: 'Update PHY',
+  moreArgs: 'More Parameters',
+  readPhyFail: 'Read PHY failed',
+  readPhyOK: 'Read PHY successfully',
+  updatePhyFail: 'Update PHY failed',
+  updatePhyOK: 'Update PHY successfully',
+  apiReadPhy: 'Read PHY',
+  apiUpdatePhy: 'Update PHY',
+
+  deviceScanData: 'Scan Data',
+  filterDuplicate: 'Filter Duplicates',
+  deviceScanDataRealTime: 'Realtime Data',
+  scanDetailInfo: 'Data updates every 10ms with up to 2000 entries to avoid lag. See [Realtime Data] for live monitoring.',
+
+  apiReadPhyInfo: 'This is a GET request. When called, the Bluetooth gateway retrieves the PHY information of the specified MAC address, primarily for BLE 5 scenarios.',
+  apiUpdatePhyInfo: 'This is a POST request. When called, the Bluetooth gateway updates the PHY information of the specified MAC address, primarily for BLE 5 scenarios.',
+  notificationDetailInfo: 'Data updates every 500ms to avoid lag. See [Realtime Data] for live monitoring.',
+  timestampInfo: 'When the timestamp is enabled, the time in the data is used. When disabled, the time the page receives the data is used.',
+
+  notificationSequence: 'Seq Num',
+  notificationSequenceInfo: 'When enabled, the seqNum in the data is used; when disabled, a page-side counter is used.',
 };
 
 export default {
