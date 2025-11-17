@@ -69,7 +69,7 @@ function scanSseErrorHandler(error) {
 }
 
 function getScanUrl(baseURI, params) {
-  return `${baseURI}/gap/nodes?${obj2QueryStr(params)}`;
+  return `${baseURI}/gap/nodes/?${obj2QueryStr(params)}`;
 }
 
 function getNotifyUrl(baseURI, params) {
@@ -595,7 +595,7 @@ function startScanByDevConf(devConf, messageHandler, errorHandler) {
   query.event = 1;
   let scanParams = getUrlVars(devConf.scanParams);
   query = _.merge(query, scanParams)
-  let url = `${devConf.baseURI}/gap/nodes?${obj2QueryStr(query)}`;
+  let url = `${devConf.baseURI}/gap/nodes/?${obj2QueryStr(query)}`;
   addApiLogItem(main.getGlobalVue().$i18n.t('message.apiScan'), 'GET/SSE', url, query);
   return startScan(url, messageHandler, errorHandler);
 }
