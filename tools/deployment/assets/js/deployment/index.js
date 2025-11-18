@@ -14,14 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     var timer = null,
         connTimer = null;
 
-    // const query = window.location.search;
-    // const urlParams = new URLSearchParams(query);
-
-    // const model = urlParams.get('model')
-
-    // if(model && (model.includes('M') || model.includes('S'))){
-    //     $('#chip_field').hide();
-    // }
 
     $('#clear').on('click', () => {
         location.reload();
@@ -139,11 +131,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $('#startScan').on('click', function () {
         xssFilter();
-        localStorage.setItem('hubIP', $('#hubIP').val().trim());
         $('#scan_tab > tbody').html('');
         scan_table_mapping = {};
         device = {};
         hubIP = $('#hubIP').val().trim();
+        localStorage.setItem('hubIP', hubIP);
         timeout = parseInt($('#scanTimeout').val().trim()) || 60;
         if (timeout <= 0) {
             alert('scan timeout must be > 0');
@@ -226,14 +218,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     $('#startConn').on('click', () => {
-        xssFilter();
-        localStorage.setItem('hubIP', $('#hubIP').val().trim());
+        xssFilter(); 
         $('#conn_tab > tbody').html('');
         let connTimeout = parseInt($('#connTimeout').val().trim()) || 10;
         conn_table_mapping = {};
         connDevice = {};
         scannedDev.length = 0;
         hubIP = $('#hubIP').val().trim();
+		localStorage.setItem('hubIP', hubIP);
         connTimes = parseInt($('#connTimes').val().trim()) || 1;
         if (connTimes <= 0) {
             alert('connecting times must be > 0');
@@ -545,76 +537,149 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td></td>
                 <td></td>
                 <td></td>
-                ${type === 'scan' ? '' : '<td></td>'}
+                ${type === 'scan' ? '': '<td></td>'}
                 <td><button class="detail-btn" onclick="showAll(${num}, '${type}')">view</button></td></tr>`;
 
-		const tbody = document.getElementById(id).getElementsByTagName('tbody')[0];
+        const tbody = document.getElementById(id).getElementsByTagName('tbody')[0];
 
-		if (mapping[deviceMac]) {
-			const row = tbody.children[mapping[deviceMac] - 1];
-			const newRow = document.createElement('tr');
-			newRow.innerHTML = rawHtml;
-			row.replaceWith(newRow);
-		} else {
-			const frag = document.createDocumentFragment();
-			const tempElem = document.createElement('tbody');
-			tempElem.innerHTML = rawHtml;
-			while (tempElem.firstChild) {
-				frag.appendChild(tempElem.firstChild);
-			}
-			tbody.appendChild(frag);
-			mapping[deviceMac] = num + 1;
-		}
-	};
+        if (mapping[deviceMac]) {
+            const row = tbody.children[mapping[deviceMac] - 1];
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = rawHtml;
+            row.replaceWith(newRow);
+        } else {
+            const frag = document.createDocumentFragment();
+            const tempElem = document.createElement('tbody');
+            tempElem.innerHTML = rawHtml;
+            while (tempElem.firstChild) {
+                frag.appendChild(tempElem.firstChild);
+            }
+            tbody.appendChild(frag);
+            mapping[deviceMac] = num + 1;
+        }
+    };
 });
 
 function unique(arr, toUpperCase) {
-	if (!Array.isArray(arr)) {
-		console.log('type error!');
-		return;
-	}
+    if (!Array.isArray(arr)) {
+        console.log('type error!');
+        return;
+    }
 
-	const array = [];
+    const array = [];
 
-	arr.forEach((item) => {
-		if (item === '*') return;
+    arr.forEach((item) => {
+        if (item === '*') return;
 
-		const processedItem = toUpperCase ? item.toUpperCase() : item;
+        const processedItem = toUpperCase ? item.toUpperCase() : item;
 
-		if (!array.includes(processedItem)) {
-			array.push(processedItem);
-		}
-	});
+        if (!array.includes(processedItem)) {
+            array.push(processedItem);
+        }
+    });
 
-	return array;
+    return array;
 }
 
 function showAll(row, type) {
-	let cells;
-	switch (type) {
-		case 'scan':
-			cells = $(`#scan_tab tbody`)[0].rows[row].cells;
-			for (let i = 0; i < cells.length - 1; i++) {
-				if (i == 0) {
-					cells[i].style.display =
-						cells[i].style.display == 'none' ? '' : 'none';
-				} else {
-					cells[i].style.display =
-						cells[i].style.display == 'none' ? '' : 'none';
-				}
-			}
-			break;
-		case 'conn':
-			cells = $(`#conn_tab tbody`)[0].rows[row].cells;
-			for (let i = 0; i < cells.length - 1; i++) {
-				if (i == 0) {
-					cells[i].style.display =
-						cells[i].style.display == 'none' ? '' : 'none';
-				} else {
-					cells[i].style.display =
-						cells[i].style.display == 'none' ? '' : 'none';
-				}
-			}
-			break;
-	}
+    let cells;
+    switch (type) {
+        case 'scan':
+            cells = $(`#scan_tab tbody`)[0].rows[row].cells;
+            for (let i = 0; i < cells.length - 1; i++) {
+                if (i == 0) {
+                    cells[i].style.display =
+                        cells[i].style.display == 'none' ? '' : 'none';
+                } else {
+                    cells[i].style.display =
+                        cells[i].style.display == 'none' ? '' : 'none';
+                }
+            }
+            break;
+        case 'conn':
+            cells = $(`#conn_tab tbody`)[0].rows[row].cells;
+            for (let i = 0; i < cells.length - 1; i++) {
+                if (i == 0) {
+                    cells[i].style.display =
+                        cells[i].style.display == 'none' ? '' : 'none';
+                } else {
+                    cells[i].style.display =
+                        cells[i].style.display == 'none' ? '' : 'none';
+                }
+            }
+            break;
+    }
+}
+
+const loader = document.getElementById('loader');
+const progress = loader.querySelector('.progress');
+const loaderLabel = document.getElementById('loader-label');
+const btAnim = document.getElementById('bt-anim');
+
+let loaderInterval;
+
+function startScanProgress(durationMs) {
+  stopLoader();
+  loader.className = 'scan-mode';
+  loader.style.display = 'block';
+  loaderLabel.style.display = 'block';
+  loaderLabel.textContent = 'Scanning…';
+  progress.style.width = '0%';
+  btAnim.style.display = 'block';   // show bluetooth ripple
+
+  let start = Date.now();
+  loaderInterval = setInterval(() => {
+    const elapsed = Date.now() - start;
+    const percent = Math.min((elapsed / durationMs) * 100, 100);
+    progress.style.width = percent + '%';
+    if (percent >= 100) {btAnim.style.display = 'none';   // show bluetooth ripple
+    stopLoader();}
+
+  }, 100);
+}
+
+function startConnProgress(durationMs) {
+  stopLoader();
+  loader.classList.add('conn-mode');
+  loaderLabel.style.display = 'block';
+  loaderLabel.textContent = 'Connecting…';
+  loader.style.display = 'block';
+  btAnim.style.display = 'block';   // show bluetooth ripple
+  progress.style.width = '';
+
+  // setTimeout(() => {
+  //   showConnSuccess();
+  //   // const success = Math.random() > 0.5;
+  //   // if (success) {
+  //   //   showConnSuccess();
+  //   // } else {
+  //   //   showConnFail();
+  //   // }
+  // }, durationMs);
+}
+
+function showConnSuccess() {
+  loader.classList.remove('conn-mode');
+  loader.classList.add('conn-success');
+  // loaderLabel.textContent = 'Connected!';
+  loaderLabel.textContent = 'Completed!';
+  btAnim.style.display = 'none';   // hide when done
+  setTimeout(stopLoader, 1500);
+}
+
+function showConnFail() {
+  loader.classList.remove('conn-mode');
+  loader.classList.add('conn-fail');
+  loaderLabel.textContent = 'Connection Failed!';
+  btAnim.style.display = 'none';   // hide when failed
+  setTimeout(stopLoader, 2000);
+}
+
+function stopLoader() {
+  clearInterval(loaderInterval);
+  loader.style.display = 'none';
+  loader.className = ''; // 清空所有状态
+  progress.style.width = '0%';
+  loaderLabel.style.display = 'none';
+  loaderLabel.textContent = '';
 }
