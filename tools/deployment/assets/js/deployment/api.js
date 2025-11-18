@@ -100,7 +100,7 @@
     }
 
     api.scan = function(opt) {
-        var url = `${api.server}/api2/gap/nodes/?active=1&event=1&mac=${api.hub}&access_token=${api.access_token}&${opt}&phy=1M,CODED`;
+        var url = `${api.server}/gap/nodes/?active=1&event=1&mac=${api.hub}&access_token=${api.access_token}&${opt}&phy=1M,CODED`;
         __es(api.scan, url,    
             function(event) {
                 api.trigger('scan', [api.hub, event.data])
@@ -121,7 +121,7 @@
         can use jquery  $.param(json)
     */
     api.scanFilter = function(filter){
-        __es(api.scan, api.server + '/api2/gap/nodes/?active=1&event=1&mac=' + api.hub + '&access_token=' + api.access_token + '&' + filter,
+        __es(api.scan, api.server + '/gap/nodes/?active=1&event=1&mac=' + api.hub + '&access_token=' + api.access_token + '&' + filter,
             function(event) {
                 api.trigger('scan', [api.hub, event.data])
             });
@@ -135,7 +135,7 @@
         o = o || {}
         $.ajax({
             type: 'post',
-            url: api.server + '/api2/gap/nodes/' + o.node + '/connection?mac=' + (o.hub || api.hub) + '&chip=' + o.chip,
+            url: api.server + '/gap/nodes/' + o.node + '/connection?mac=' + (o.hub || api.hub) + '&chip=' + o.chip,
             /*headers: api.local ? {
                 "Content-Type" : "application/json"
             } : {
@@ -168,7 +168,7 @@
         o = o || {}
         $.ajax({
             type: 'delete',
-            url: api.server + '/api2/gap/nodes/' + o.node + '/connection?mac=' + (o.hub || api.hub),
+            url: api.server + '/gap/nodes/' + o.node + '/connection?mac=' + (o.hub || api.hub),
             headers: api.local ? '' : {
                 'Authorization': api.authorization
             },
@@ -188,7 +188,7 @@
         o = o || {}
         $.ajax({
             type: 'delete',
-            url: api.server + '/api2/gap/nodes/' + o.node + '/connection?mac=' + (o.hub || api.hub),
+            url: api.server + '/gap/nodes/' + o.node + '/connection?mac=' + (o.hub || api.hub),
             headers: api.local ? '' : {
                 'Authorization': api.authorization
             },
@@ -267,7 +267,7 @@
     api.notify = function(toggle) {
         if (toggle) {
             api.sse.notify=true
-            __es(api.notify, api.server + '/api2/gatt/nodes/?event=1&mac=' + api.hub + '&access_token=' + api.access_token,
+            __es(api.notify, api.server + '/gatt/nodes/?event=1&mac=' + api.hub + '&access_token=' + api.access_token,
                 function(event) {
                     // console.log(event)
                     api.trigger('notify', [api.hub, event.data])
