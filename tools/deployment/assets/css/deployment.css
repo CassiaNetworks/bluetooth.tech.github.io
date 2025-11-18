@@ -1,0 +1,473 @@
+/* ================= Spinner ================ */
+@keyframes spinner {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* ===== Center Bluetooth Ripple Animation ===== */
+#bt-anim {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	display: none;
+	z-index: 1500;
+}
+
+.bt-ripple {
+	position: relative;
+	width: 60px;
+	height: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.bt-ripple::before,
+.bt-ripple::after {
+	content: '';
+	position: absolute;
+	border: 2px solid #0089ff;
+	border-radius: 50%;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	animation: rippleAnim 2s infinite;
+}
+
+.bt-ripple::after {
+	animation-delay: 1s;
+}
+
+@keyframes rippleAnim {
+	0% {
+		transform: scale(0.7);
+		opacity: 0.6;
+	}
+	70% {
+		transform: scale(2);
+		opacity: 0.1;
+	}
+	100% {
+		transform: scale(2.5);
+		opacity: 0;
+	}
+}
+
+/* Bluetooth Icon */
+.bt-icon {
+	font-size: 32px;
+	color: #0089ff;
+	z-index: 2;
+}
+
+/* ===== Top progress bar base ===== */
+#loader {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 4px;
+	background: #e0e0e0;
+	z-index: 2000;
+	display: none;
+}
+
+/* For scan: smooth fill */
+#loader.scan-mode .progress {
+	height: 100%;
+	width: 0;
+	background: #0089ff;
+	transition: width 0.2s linear;
+}
+
+/* 默认连接中 - 黄色/蓝绿色动态条 */
+#loader.conn-mode .progress {
+	height: 100%;
+	width: 100%;
+	background: repeating-linear-gradient(
+		-45deg,
+		#0089ff,
+		#0089ff 10px,
+		#b3d8ff 10px,
+		#b3d8ff 20px
+	);
+	background-size: 40px 40px;
+	animation: progress-stripes 1s linear infinite;
+}
+
+/* 成功 - 绿色 */
+#loader.conn-success .progress {
+	height: 100%;
+	width: 100%;
+	background: #08cd5a;
+	animation: none;
+}
+
+/* 失败 - 红色 */
+#loader.conn-fail .progress {
+	height: 100%;
+	width: 100%;
+	background: #e53935;
+	animation: none;
+}
+
+@keyframes progress-stripes {
+	from {
+		background-position: 0 0;
+	}
+	to {
+		background-position: 40px 0;
+	}
+}
+
+/* ===== Loader text label ===== */
+#loader-label {
+	position: absolute;
+	top: 8px; /* slightly below the progress bar */
+	left: 50%;
+	transform: translateX(-50%);
+	font-size: 14px;
+	font-weight: bold;
+	color: #333;
+	background: rgba(255, 255, 255, 0.8);
+	padding: 2px 6px;
+	border-radius: 4px;
+	z-index: 2001;
+	display: none; /* hidden by default */
+}
+
+.spinner:before {
+	content: '';
+	box-sizing: border-box;
+	position: absolute;
+	z-index: 1;
+	top: 50%;
+	left: 50%;
+	width: 42px;
+	height: 42px;
+	margin-top: -10px;
+	margin-left: -10px;
+	border-radius: 50%;
+	border: 3px solid #ccc;
+	border-top-color: #000;
+	animation: spinner 0.6s linear infinite;
+}
+
+#loader .progress {
+	height: 100%;
+	width: 0;
+	background: #0089ff;
+	transition: width 0.2s linear;
+}
+
+/* ================= Layout ================ */
+.main {
+	margin-top: 3em;
+	background-color: #f1f1f1;
+	width: 100%;
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	padding: 1em;
+}
+
+.box {
+	border: 1px solid #e4e8ee;
+	border-radius: 10px;
+	background: #fff;
+	position: relative;
+	height: 96.6%;
+}
+
+.left-panel {
+	width: 38%;
+	float: left;
+}
+
+.right-panel {
+	width: 61%;
+	float: right;
+	background: white;
+}
+
+.configure {
+	border-bottom: 1px solid #e4e8ee;
+	position: relative;
+	width: 100%;
+	height: calc(100% - 50px);
+	float: left;
+}
+
+.bottom {
+	background: white;
+	text-align: center;
+	width: 100%;
+	height: 50px;
+	position: absolute;
+	bottom: 0;
+	border-radius: 0 0 10px 10px;
+}
+
+.center {
+	position: absolute;
+	width: 100%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+h4 {
+	margin-left: 1.5em;
+}
+
+/* ================= Buttons ================ */
+.btn {
+	font-weight: bold;
+	color: white;
+	cursor: pointer;
+	border: none;
+	height: 2em;
+	border-radius: 4px;
+	padding: 0 16px;
+}
+
+.btn:hover {
+	background-image: linear-gradient(
+		rgba(255, 255, 255, 0.2) 0%,
+		rgba(255, 255, 255, 0.2) 100%
+	);
+	transform: translateY(-1px);
+	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.btn:focus {
+	outline: 0;
+}
+
+button[disabled] {
+	background-color: #e2e2e2;
+	cursor: not-allowed;
+}
+
+.scan {
+	background: #0089ff;
+	margin-right: 25px;
+}
+
+.conn {
+	background: #08cd5a;
+}
+
+.export {
+	background: #0089ff;
+	margin-right: 25px;
+}
+
+.clear {
+	margin-right: 16px;
+	color: black;
+	background: white;
+	border: 1px solid #c8c8c8;
+}
+
+/* ============ Forms ============ */
+.form {
+	position: relative;
+	margin: 1.5rem;
+	display: flex;
+	flex-direction: column;
+}
+
+.form-group {
+	display: flex;
+	align-items: center;
+	margin-bottom: 15px;
+	position: relative;
+}
+
+.form-group label {
+	flex: 0 0 180px;
+	text-align: right;
+	margin-right: 10px;
+	font-size: 14px;
+	color: #333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+	flex: 1;
+	border: 1px solid #dfe6ee;
+	padding: 8px 10px;
+	font-size: 14px;
+	border-radius: 4px;
+	box-sizing: border-box;
+	outline: none;
+}
+
+.form-group textarea {
+	min-height: 70px;
+	resize: vertical;
+}
+
+.input-wrapper {
+	display: flex;
+	align-items: center;
+	flex: 1;
+}
+
+.input-wrapper input {
+	flex: 1;
+	border-right: none;
+	border-radius: 4px 0 0 4px;
+}
+
+.input-wrapper .unit {
+	padding: 8px 12px;
+	background: #f9f9f9;
+	border: 1px solid #dfe6ee;
+	border-left: none;
+	border-radius: 0 4px 4px 0;
+	font-size: 14px;
+	color: #444;
+}
+
+.tip {
+	right: -170px;
+}
+
+.tip.error {
+	display: none;
+}
+
+.tip.error.active {
+	display: inline-block;
+}
+
+/* Responsive - small screens */
+@media (max-width: 768px) {
+	.form-group {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	.form-group label {
+		margin-bottom: 5px;
+		text-align: left;
+	}
+	.input-wrapper input,
+	.form-group input,
+	.form-group select,
+	.form-group textarea {
+		width: 100%;
+	}
+}
+
+/* ============ Statistics ============ */
+.statistics {
+	position: relative;
+	width: 100%;
+	height: 92%;
+	background: #fff;
+	float: right;
+}
+
+.statistics-table {
+	position: relative;
+	width: 100%;
+	height: 50%;
+}
+
+.statistics-content {
+	padding-top: 5px;
+	height: 43%;
+}
+
+.statistics-content table {
+	margin-left: 1.5rem;
+}
+
+.table-container {
+	height: 88%;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding-left: 20px;
+}
+
+.right-buttons {
+	width: 100%;
+	position: absolute;
+	bottom: 19px;
+}
+
+.right-buttons button {
+	width: unset;
+}
+
+.fr {
+	float: right;
+}
+
+.fl {
+	float: left;
+}
+
+.detail-btn {
+	color: #0089ff;
+	background: none;
+	border: none;
+}
+
+.detail-btn:hover {
+	cursor: pointer;
+}
+
+/* ============ Scrollbar ============ */
+form::-webkit-scrollbar,
+div::-webkit-scrollbar,
+table::-webkit-scrollbar,
+textarea::-webkit-scrollbar {
+	width: 2px;
+	height: 2px;
+	background-color: #000;
+}
+
+form::-webkit-scrollbar-thumb,
+div::-webkit-scrollbar-thumb,
+table::-webkit-scrollbar-thumb,
+textarea::-webkit-scrollbar-thumb {
+	background-color: #000;
+}
+
+::-webkit-scrollbar-corner,
+::-webkit-scrollbar-track {
+	background-color: #fff;
+}
+
+/* ============ Tables ============ */
+th {
+	background: #f9f9f9;
+}
+
+table th,
+table td {
+	font-size: 0.95em;
+	text-align: center;
+	border: 1px solid #dfe6ee;
+}
+
+table {
+	width: 100%;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+table tbody {
+	display: row;
+	width: calc(100% + 1px);
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+}
