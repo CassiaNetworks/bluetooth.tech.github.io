@@ -1,338 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Cassia Deployment Tool</title>
-    <script type="text/javascript">
-        var is_mobile = navigator.userAgent.toLowerCase().match(/(ipod|ipad|iphone|android|coolpad|mmp|smartphone|midp|wap|xoom|symbian|j2me|blackberry|wince)/i) != null;
-        if (is_mobile) {
-            window.location.href = "/deployment/mobile.html";
-        }
-    </script>
-    <link rel="stylesheet" type="text/css" href="assets/css/main.css">
-    <style type="text/css">
-
-        @keyframes spinner {
-          to {transform: rotate(360deg);}
-        }
-         
-        .spinner:before {
-          content: '';
-          box-sizing: border-box;
-          position: absolute;
-          z-index: 1;
-          top: 50%;
-          left: 50%;
-          width: 42px;
-          height: 42px;
-          margin-top: -10px;
-          margin-left: -10px;
-          border-radius: 50%;
-          border: 3px solid #ccc;
-          border-top-color: #000;
-          animation: spinner .6s linear infinite;
-        }
-        .main{
-            margin-top: 3em;
-            background-color: #f1f1f1;
-            width: 100%;
-            overflow: hidden;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            height: auto;
-            left: 0;
-            padding: 1em;
-        }
-        .box{
-            border: 1px solid #E4E8EE;
-            border-radius: 10px;
-        }
-        .configure{
-            border-bottom: 1px solid #E4E8EE;
-            position: relative;
-            width: 100%;
-            height: 92%;
-            float: left;
-        }
-
-        .statistics{
-            position: relative;
-            width: 100%;
-            height: 92%;
-            background: #fff;
-            float: right;
-        }
-        .bottom{
-            background: white;
-            text-align: center;
-            width: 100%;
-            height: 8%;
-            position: absolute;
-            bottom: 0px;
-            border-radius: 10px;
-        }
-        .center{
-            position: absolute;
-            width: 100%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        .right-buttons{
-            width: 100%;
-            position: absolute;
-            bottom: 19px;
-        }
-        .right-buttons button{
-            width: unset;
-        }
-        h4{
-            margin-left: 1.5em;
-        }
-        .fr{
-            float: right;
-        }
-        .fl{
-            float: left;
-        }
-        .detail-btn{
-            color: #0089ff;
-            background: none;
-            border: none;
-        }
-
-        .detail-btn:hover{
-            cursor: pointer;
-        }
-        .btn{
-            /*padding: 0 10px 0 10px;*/
-            font-weight: bold;
-            color: white;
-            cursor: pointer;
-            border: none;
-            /*width: 138px;*/
-            height: 2em;
-            border-radius: 4px;
-        }
-        .btn:hover {
-            background-image: linear-gradient(rgba(255,255,255,.2) 0%,rgba(255,255,255,.2) 100%);
-            transform: translateY(-1px);
-            box-shadow: 0 1px 1px 0 rgba(0,0,0,.2);
-        }
-        .btn:focus {
-            outline: 0;
-        }
-        button[disabled]{
-            background-color: #E2E2E2;
-            cursor: not-allowed;
-        }
-        .scan{
-            background: #0089FF;
-        }
-        .conn{
-            background: #08CD5A;
-        }
-        .statistics-content{
-            padding-top: 5px;
-            height: 43%;
-        }
-        .statistics-content table{
-            margin-left: 1.5rem;
-        }
-        .statistics-table{
-            position: relative;
-            width: 100%;
-            height: 50%;
-        }
-        .form {
-            position: absolute;
-            margin-left: 1.5rem;
-        }
-        .form input{
-            margin-left: 10px;
-            padding: 10px;
-            height: 24px;
-            width: 295px;
-            border: 1px solid #DFE6EE;
-        }
-        .form-group {
-            text-align: right;
-            margin-bottom: 15px;
-        }
-        .tip{
-            position: fixed;
-            z-index: 1;
-        }
-        .tip.error{
-            display: none;
-        }
-
-        form::-webkit-scrollbar, div::-webkit-scrollbar, table::-webkit-scrollbar, textarea::-webkit-scrollbar{
-            width: 2px;
-            height: 2px;
-            background-color: #000;
-        }
-
-        form::-webkit-scrollbar, div::-webkit-scrollbar-thumb, table::-webkit-scrollbar-thumb, textarea::-webkit-scrollbar-thumb{
-            width: 2px;
-            height: 0;
-            background-color: #000;
-        }
-
-        ::-webkit-scrollbar-corner, ::-webkit-scrollbar-track{
-            background-color: #fff;
-        }
-
-        th{
-            background: #F9F9F9;
-        }
-        table th, table td{
-            /*padding: 10px;*/
-            font-size: 0.95em;
-            text-align: center;
-            border: 1px solid #DFE6EE;
-        }
-        table {
-            width: 100%;
-            border-spacing: 0px;
-            border-collapse: collapse;
-        }
-/*        table thead tr th{
-            border: none;
-        }*/
-        table tbody {
-            display: row;
-            width: calc(100% + 1px);
-            /*height: 300px;*/
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Cassia Deployment Tool</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    const isMobile = /(ipod|ipad|iphone|android|coolpad|mmp|smartphone|midp|wap|xoom|symbian|j2me|blackberry|wince)/i
+      .test(navigator.userAgent.toLowerCase());
+    if (isMobile) {
+      window.location.href = "/deployment/mobile.html";
+    }
+  </script>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/deployment.css"> <!-- 把优化后的样式统一写在这里 -->
 </head>
 <body>
-    <div id="container content">
-        <div id="loader" class=""></div>
-        <div class="main">
-            <div class="box" style="position: relative; height: 96.6%; width:38%; background: #fff; float: left;">
-                <div class="configure">
-                    <h4 i18n="deployment.configure">Configure</h4>
-                    <div class="form">                        
-                        <div class="form-group">
-                            <lable i18n="deployment.gateway">Gateway IP</lable>
-                            <input id="hubIP" type="" name="hubIP" placeholder="192.168.0.11" value="192.168.0.100">                   
-                        </div>
-                        <div class="form-group">
-                            <lable style="vertical-align: top;" i18n="deployment.deviceMac">Devices MAC</lable>
-                            <!-- <span class="tip"><i i18n="ap.multi-lines-mac">Please use separate line for each MAC address.</i></span> -->
-                            <textarea id="deviceMacArr" name="deviceMacArr" placeholder="Please use a separate line for each MAC address. support *. e.g. CC:1B:E0*" style="padding-left: 10px;margin-bottom: -6px;margin-left: 10px;min-height: 70px;width: 295px;resize:vertical;border: 1px solid #DFE6EE;"></textarea>
-                            <span class="tip error"><i>This field is required</i></span>
-                        </div>
-                        <div class="form-group">
-                            <lable style="vertical-align: top;" i18n="deployment.deviceName">Devices Name</lable>
-                            <!-- <span class="tip"><i i18n="ap.multi-lines-mac">Please use separate line for each MAC address.</i></span> -->
-                            <textarea id="deviceName" name="deviceName" placeholder="Please use a separate line for each device name. support *. e.g. NAME*" style="padding-left: 10px;margin-bottom: -6px;margin-left: 10px;min-height: 70px;width: 295px;resize:vertical;border: 1px solid #DFE6EE;"></textarea>
-                            <!-- <span class="tip error1"><i>This field is required</i></span> -->
-                        </div>
-                        <div class="form-group">
-                            <lable i18n="deployment.scanDuration">Scan Duration</lable>
-                            <input id="scanTimeout" type="tel" name="scanTimeout" placeholder="scan timeout" min="1" value="60" style="width: 238px;"><input type="" name="" value="s" style="width: 57px; margin-left:unset; text-align: center; " disabled disabled i18n="deployment.s">
-                        </div>
-                        <div class="form-group">
-                            <lable i18n="deployment.connTimeout">Connection Timeout</lable>
-                            <input id="connTimeout" type="tel" name="connTimeout" placeholder="connection timeout" min="10" value="10" style="width: 238px;"><input type="" name="" value="s" style="width: 57px; margin-left:unset; text-align: center; " disabled i18n="deployment.s">
-                        </div>
-                        <div class="form-group">
-                            <lable i18n="deployment.connAttempts">Connection Attempts</lable> <input id="connTimes" type="tel" name="" placeholder="connection times" value="1" min="1" style="width: 238px;"><input type="" name="" value="times" style="width: 57px; margin-left:unset; text-align: center; " disabled i18n="deployment.times">
-                        </div>
-                    </div>
-                </div>
-                <div class="bottom buttons">
-                    <div class="center">
-                        <button id="startScan" class="btn scan" style="margin-right: 25px;" i18n="deployment.startScan">Scan Testing</button>
-                        <button id="startConn" class="btn conn" i18n="deployment.startConn">Connection Testing</button>                       
-                    </div>
-                </div>
-            </div>
-            <div class="box" style="position: relative; background: white; height: 96.6%; width: 61%; float: right;">
-                <div class="configure">
-                    <div class="statistics-table">
-                        <h4 i18n="deployment.scanStatistics">Scan Statistics</h4>
-                        <div style="height:88%;overflow-y:scroll;overflow-x:hidden; padding-left: 20px">
-                            <table id="scan_tab">
-                                <thead>
-                                    <tr>
-                                        <th rowspan="2">#</th>
-                                        <th rowspan="2" i18n='deployment.scanDuration'>Scan Duration</th>
-                                        <th rowspan="2" i18n='deployment.deviceMac'>Devices MAC</th>
-                                        <th rowspan="2" i18n='deployment.deviceName'>Devices Name</th>
-                                        <th colspan="3">RSSI</th>
-                                        <th rowspan="2" i18n='deployment.pkgNum'>Packet Number</th>
-                                        <th rowspan="2" i18n='deployment.scanDetail'>Details</th>
-                                    </tr>
-                                    <tr>
-                                        <th i18n='deployment.min'>Min</th>
-                                        <th i18n='deployment.max'>Max</th>
-                                        <th i18n='deployment.avg'>Avg</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <!-- <hr style="border: 1px #E4E8EE; margin-left: 24px; margin-right: 24px"> -->
-                    <div class="statistics-table">
-                        <h4 i18n="deployment.connStatistics">Connection Statistics</h4>
-                        <div style="height:75%;overflow-y:scroll;overflow-x:hidden; padding-left: 20px">
-                            <table id="conn_tab" style="margin-bottom:32px;">
-                                <thead>
-                                    <tr>
-                                        <th rowspan="2">#</th>
-                                        <th rowspan="2" i18n="deployment.times">Attempts</th>
-                                        <th rowspan="2" i18n="deployment.deviceMac">Devices MAC</th>
-                                        <th colspan="3" i18n="deployment.connTime">Time (Seconds)</th>
-                                        <th rowspan="2" i18n="deployment.success">Success</th>
-                                        <th rowspan="2" i18n="deployment.fail">Fail</th>
-                                        <th rowspan="2" i18n="deployment.successRate">Success Rate</th>
-                                        <th rowspan="2" i18n="deployment.connDetail">Details</th>
-                                    </tr>
-                                    <tr>
-                                        <th i18n='deployment.min'>Min</th>
-                                        <th i18n='deployment.max'>Max</th>
-                                        <th i18n='deployment.avg'>Avg</th>
-                                    </tr> 
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="bottom">
-                    <div class="center">
-                        <button id="export" class="btn fr" style="background: #0089FF; margin-right: 25px;" i18n="deployment.export">Export</button>
-                        <button id="clear" class="btn fr" style="margin-right: 16px; color: black; background: white; border: 1px solid #C8C8C8;" i18n="deployment.clear">Clear</button>                        
-                    </div>
-                </div> 
-            </div> 
-        </div>
-
-        <div class="pure-topnav">
-            <h1>
-                <i class="icomoon icon-icon-logo" style="font-weight: normal;font-size: 160%;vertical-align: middle"></i> 
-                <span i18n="deployment.title">Cassia Deployment Tool</span>
-                <small></small>
-            </h1> 
-        </div>
+  <div id="container-content">
+    <header class="pure-topnav">
+      <h1>
+        <i class="icomoon icon-icon-logo" style="font-weight:normal;font-size:160%;vertical-align:middle"></i> 
+        <span i18n="deployment.title">Cassia Deployment Tool</span>
+      </h1>
+    </header>
+    <!-- <div id="loader" class=""></div> -->
+    <!-- Loader Progress Bar -->
+    <div id="loader">
+        <div class="progress"></div>
     </div>
-    <script src="assets/js/deployment/api.js?v=2103232023"></script>
-    <script src="assets/js/i18n.js?v=191219"></script>
-    <script src="assets/js/zepto/1.2.0/zepto.min.js"></script>
-    <script src="assets/js/deployment/xss.js?v=2103232035"></script>
-    <script src="assets/js/deployment/index.js?v=2103232035"></script>
-    <script src="./assets/js/deployment/numberToWords.min.js"></script>
-    <script type="text/javascript">
-        i18n.render();
-    </script>
+    <!-- Bluetooth Ripple Animation -->
+    <div id="bt-anim">
+      <div class="bt-ripple">
+      <!-- Use a Bluetooth Unicode icon 🔵 or an <i> with your icon font -->
+      <!-- <span class="bt-icon">🔵</span> -->
+      <span class="icomoon icon-bluetooth bt-icon"></span>
+      </div>
+    </div>
+
+    <!-- Loader Text Label -->
+    <div id="loader-label"></div>
+    <main class="main">
+      <!-- Left Panel -->
+      <section class="box left-panel">
+        <div class="configure">
+          <h4 i18n="deployment.configure">Configure</h4>
+          <form class="form">
+            <div class="form-group">
+              <label for="hubMac" i18n="deployment.gateway">Gateway MAC</label>
+              <input id="hubMac" name="hubMac" readonly placeholder="CC:1B:E0:E0:0B:00">
+            </div>
+            <div class="form-group">
+              <label for="deviceMacArr" i18n="deployment.deviceMac">Devices MAC</label>
+              <textarea id="deviceMacArr" name="deviceMacArr" placeholder="One per line. Supports *. e.g. CC:1B:E0*"></textarea>
+              <span class="tip error"><i>This field is required</i></span>
+            </div>
+            <div class="form-group">
+              <label for="deviceName" i18n="deployment.deviceName">Devices Name</label>
+              <textarea id="deviceName" name="deviceName" placeholder="One per line. Supports *. e.g. NAME*"></textarea>
+            </div>
+            <div class="form-group" id="chip_field">
+              <label for="chip" i18n="deployment.chip">Bluetooth Chip</label>
+              <select id="chip" name="chip">
+                <option value="0">0</option>
+                <option value="1">1</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="scanTimeout" i18n="deployment.scanDuration">Scan Duration</label>
+              <div class="input-wrapper">
+                <input id="scanTimeout" type="number" name="scanTimeout" value="60" min="1">
+                <span class="unit" i18n="deployment.s">s</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="connTimeout" i18n="deployment.connTimeout">Connection Timeout</label>
+              <div class="input-wrapper">
+                <input id="connTimeout" type="number" name="connTimeout" value="10" min="1">
+                <span class="unit" i18n="deployment.s">s</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="connTimes" i18n="deployment.connAttempts">Connection Attempts</label>
+              <div class="input-wrapper">
+                <input id="connTimes" type="number" name="connTimes" value="1" min="1">
+                <span class="unit" i18n="deployment.times">times</span>
+              </div>
+            </div>
+          </form>
+        </div>
+        <footer class="bottom buttons">
+          <div class="center">
+            <button id="startScan" class="btn scan" i18n="deployment.startScan">Scan Testing</button>
+            <button id="startConn" class="btn conn" i18n="deployment.startConn">Connection Testing</button>
+          </div>
+        </footer>
+      </section>
+
+      <!-- Right Panel -->
+      <section class="box right-panel">
+        <div class="configure">
+          <div class="statistics-table">
+            <h4 i18n="deployment.scanStatistics">Scan Statistics</h4>
+            <div class="table-container">
+              <table id="scan_tab">
+                <thead>
+                  <tr>
+                    <th rowspan="2">#</th>
+                    <th rowspan="2" i18n='deployment.scanDuration'>Scan Duration</th>
+                    <th rowspan="2" i18n='deployment.deviceMac'>Devices MAC</th>
+                    <th rowspan="2" i18n='deployment.deviceName'>Devices Name</th>
+                    <th colspan="3">RSSI</th>
+                    <th rowspan="2" i18n='deployment.pkgNum'>Packet Number</th>
+                    <th rowspan="2" i18n='deployment.scanDetail'>Details</th>
+                  </tr>
+                  <tr>
+                    <th i18n='deployment.min'>Min</th>
+                    <th i18n='deployment.max'>Max</th>
+                    <th i18n='deployment.avg'>Avg</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="statistics-table">
+            <h4 i18n="deployment.connStatistics">Connection Statistics</h4>
+            <div class="table-container">
+              <table id="conn_tab">
+                <thead>
+                  <tr>
+                    <th rowspan="2">#</th>
+                    <th rowspan="2" i18n="deployment.times">Attempts</th>
+                    <th rowspan="2" i18n="deployment.deviceMac">Devices MAC</th>
+                    <th colspan="3" i18n="deployment.connTime">Time (Seconds)</th>
+                    <th rowspan="2" i18n="deployment.success">Success</th>
+                    <th rowspan="2" i18n="deployment.fail">Fail</th>
+                    <th rowspan="2" i18n="deployment.successRate">Success Rate</th>
+                    <th rowspan="2" i18n="deployment.connDetail">Details</th>
+                  </tr>
+                  <tr>
+                    <th i18n='deployment.min'>Min</th>
+                    <th i18n='deployment.max'>Max</th>
+                    <th i18n='deployment.avg'>Avg</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <footer class="bottom">
+          <div class="center">
+            <button id="export" class="btn fr export" i18n="deployment.export">Export</button>
+            <button id="clear" class="btn fr clear" i18n="deployment.clear">Clear</button>                        
+          </div>
+        </footer>
+      </section>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../assets/js/deployment/api.js?v=2509151551"></script>
+  <script src="../assets/js/i18n.js?v=191219"></script>
+  <script src="../assets/js/zepto/1.2.0/zepto.min.js"></script>
+  <script src="../assets/js/deployment/xss.js?v=2103232035"></script>
+  <script src="../assets/js/deployment/index.js?v=2509161420"></script>
+  <script src="../assets/js/deployment/numberToWords.min.js"></script>
+  <script>i18n.render();</script>
 </body>
 </html>
