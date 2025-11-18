@@ -14,14 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
     var timer = null,
         connTimer = null;
 
-    const query = window.location.search;
-    const urlParams = new URLSearchParams(query);
+    // const query = window.location.search;
+    // const urlParams = new URLSearchParams(query);
 
-    const model = urlParams.get('model')
+    // const model = urlParams.get('model')
 
-    if(model.includes('M') || model.includes('S')){
-        $('#chip_field').hide();
-    }
+    // if(model && (model.includes('M') || model.includes('S'))){
+    //     $('#chip_field').hide();
+    // }
 
     $('#clear').on('click', () => {
         location.reload();
