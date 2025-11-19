@@ -5,7 +5,7 @@ module.exports = {
   pages: {
     index: {
       entry: 'src/main.js',
-      title: 'Cassia Bluetooth Debug Tool v2 (Beta)'
+      title: 'Cassia Bluetooth Debug Tool v2'
     }
   },
   configureWebpack: {

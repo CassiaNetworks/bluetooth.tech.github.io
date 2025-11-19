@@ -1,6 +1,6 @@
 const ja = {
   // header
-  title: 'Cassia Bluetooth Debug Tool v2 (Beta)',
+  title: 'Cassia Bluetooth Debug Tool v2',
   
   // left
   configConnectParams: '操作設定',
