@@ -1,0 +1,7 @@
+======
+random
+======
+
+.. literalinclude:: ../../../../../../../example/python_standard_libs/random_test.py
+   :language: python
+   :linenos:

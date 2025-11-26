@@ -1,0 +1,28 @@
+====================
+用户配置操作
+====================
+用于设置和获取用户自定义配置。
+
+示例
+=====
+
+.. literalinclude:: ../../../../../../example/cassiasys/user_config.py
+   :language: python
+   :linenos:
+
+API
+=====
+
+.. function:: cassiasys.save_user_config(config: str)
+   
+   保存用户配置，重启后也有效。保存失败抛出异常，比如超过16K大小。
+
+   :parameters:
+      - config: 配置内容
+
+.. function:: cassiasys.read_user_config() -> str
+
+   读取用户配置。读取失败抛出异常。
+
+   :returns: 
+      - config: 配置内容

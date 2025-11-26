@@ -1,0 +1,183 @@
+============
+cassiacommon
+============
+
+提供了常用的工具类或函数。
+
+SimpleFuture
+============
+
+一个轻量级的异步结果容器，用于在异步代码中等待一个事件完成并获取其结果。
+
+-----
+示例
+-----
+
+.. literalinclude:: ../../../../../../example/cassiacommon/simple_future.py
+   :language: python
+   :linenos:
+
+-----
+API
+-----
+
+.. py:class:: SimpleFuture
+
+   轻量级一次性事件同步原语，基于 `asyncio.ThreadSafeFlag` 实现。
+
+   .. py:method:: __init__() -> SimpleFuture
+
+      初始化对象
+
+   .. py:method:: set_result(code, value)
+
+      设置结果并唤醒等待者。只能生效一次，重复调用会被忽略。
+
+      :parameters:
+         - code: 自定义状态码
+         - value: 需要传递的数据
+      :returns: 无
+
+   .. py:method:: wait() -> Tuple[code, value]
+      :async:
+
+      挂起直到结果就绪，然后返回打包好的数据。
+
+      :parameters: 无
+      :returns: 
+         - code: 自定义状态码
+         - value: 传递的数据
+
+^^^^
+
+AsyncQueue
+==========
+
+一个轻量级的异步队列，用于在异步任务之间传递数据。
+
+-----
+示例
+-----
+
+.. literalinclude:: ../../../../../../example/cassiacommon/async_queue.py
+   :language: python
+   :linenos:
+
+-----
+API
+-----
+
+.. py:class:: AsyncQueue
+
+   轻量级一次性事件同步原语，基于 `asyncio.ThreadSafeFlag` 实现。
+
+   .. py:method:: __init__(max_size=16) -> AsyncQueue
+
+      初始化对象
+
+   .. py:method:: put_nowait(item)
+
+      非阻塞放入元素。如果队列已满，则直接丢弃，不抛出异常。
+
+      :parameters:
+         - item: 待放入的对象
+      :returns: 无
+
+   .. py:method:: get() -> Any
+      :async:
+
+      取出队首元素。若队列为空，则挂起直到有数据。
+
+      :parameters: 无
+      :returns: 最早放入的元素
+
+^^^^
+
+DataCache
+==========
+
+一个带大小限制的数据缓存，支持自定义设置 ``max_bytes`` 和 ``hashtable_size``。
+
+.. csv-table:: 
+        :header: 类型,说明,缺省
+        
+        max_bytes, 总大小限制, ``256K``
+        hashtable_size, 哈希大小, ``53``
+
+-----
+示例
+-----
+
+.. literalinclude:: ../../../../../../example/cassiacommon/data_cache.py
+   :language: python
+   :linenos:
+
+-----
+API
+-----
+
+.. py:class:: DataCache
+
+   一个带大小限制的数据缓存，支持自定义设置 ``max_bytes`` 和 ``hashtable_size``。
+
+   .. py:data:: _DATA_CACHE_MAX_MEM
+
+      默认最大内存使用量，值为 256 KB (262,144 字节)
+
+   .. py:data:: _DATA_CACHE_HASHTABLE_SIZE
+
+      哈希表默认大小，值为 53
+
+   .. py:data:: _DATA_CACHE_GET_MAX_CNT
+
+      默认最大获取数量，值为 10
+
+   .. py:method:: __init__(self, max_bytes=_DATA_CACHE_MAX_MEM, hashtable_size=_DATA_CACHE_HASHTABLE_SIZE) -> DataCache
+
+      初始化对象
+
+   .. py:method:: info()
+
+      获取缓存信息
+
+      :parameters: 无
+      :returns: 
+         - current_size: 已使用空间
+         - max_size: 总空间大小
+
+   .. py:method:: put(key, data)
+      :async:
+
+      异步存储数据到缓存
+
+      :param key: 数据键
+      :type key: str
+      :param data: 要存储的数据
+      :type data: any
+      :return: 无返回值
+
+   .. py:method:: get_next(cnt=_DATA_CACHE_GET_MAX_CNT, flag=False)
+
+         异步获取下一批数据
+
+         :param cnt: 获取的数据数量，默认为 _DATA_CACHE_GET_MAX_CNT
+         :type cnt: int
+         :param flag: 排序标志，True 表示按键顺序，False 表示按时间或队列顺序
+         :type flag: bool
+         :return: 数据列表
+         :rtype: list
+
+         如果缓存未初始化或没有数据，返回空列表。
+
+   .. py:method:: get(key, cnt=_DATA_CACHE_GET_MAX_CNT)
+
+      异步根据键获取数据
+
+      :param key: 数据键
+      :type key: str
+      :param cnt: 获取的数据数量，默认为 _DATA_CACHE_GET_MAX_CNT
+      :type cnt: int
+      :return: 数据列表
+      :rtype: list
+
+      如果缓存未初始化或没有对应键的数据，返回空列表。      

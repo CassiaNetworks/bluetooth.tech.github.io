@@ -1,0 +1,21 @@
+=========
+Micro APP
+=========
+Cassia M2000 蓝牙网关现已支持边缘计算，能够显著缩短响应延迟、降低数据传输和云端服务成本，并提升系统整体可扩展性。
+
+用户可根据场景需求开发自定义应用程序，在网关上部署，应用将与网关共享 CPU、内存等计算资源，实现本地数据处理与智能控制。
+
+
+.. toctree::
+    :hidden:
+
+    quickstart/index
+    meta/index
+    resource/index
+    cassiasys_api/index
+    cassiablue_api/index
+    cassiamqtt_api/index
+    cassia_libs/index
+    third_libs/index
+    micropython_libs/index
+    more/index

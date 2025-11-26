@@ -1,0 +1,111 @@
+=======================
+Meta配置
+=======================
+
+APP支持 ``meta.json`` 配置文件，可以根据需求选择使用。
+
+APP.tar.gz包中如果包含了自定义配置文件，网关Web UI根据包里面 ``meta.json`` 文件定义的字段渲染UI。
+
+用户可以通过网关Web Console修改、保存配置，APP内代码通过API函数获取到配置内容。
+
+.. note:: 
+    - 暂时不支持配置变更通知，需要脚本内定时读取配置对比检测变更
+
+准备代码
+=======================
+
+编写一个文件，名称为 ``hello.py`` ，文件内容如下
+
+.. code-block:: python
+
+    print("hello")
+
+meta.json
+=======================
+
+编写一个文件，名称为 ``meta.json`` ，文件内容如下
+
+.. code-block:: json
+
+    {
+        "name": "hello",
+        "version": "1.0.0",
+        "config_items": [
+            {
+                "name": "config1",
+                "type": "text"
+            },
+            {
+                "name": "config2",
+                "type": "text"
+            }
+        ]
+    }
+
+打包APP
+=======================
+
+代码文件需要打包为Cassia APP包后，可以上传运行，打包脚本示例如下
+
+执行成功后，在 ``build`` 目录下会看到 ``hello.1.0.tar.gz``
+
+.. code-block:: bash
+
+    #!/bin/bash
+
+    #!/bin/bash
+
+    NAME_VER=hello.1.0
+    TAR_GZ=${NAME_VER}.tar.gz
+
+    rm -rf build/"$NAME_VER"
+    rm -rf "$TAR_GZ"
+
+    mkdir -p build/"$NAME_VER"
+    cp hello.py build/"$NAME_VER"
+    cp meta.json build/"$NAME_VER"
+
+    cd build || exit
+    gtar -zcvf "$TAR_GZ" "$NAME_VER" || tar -zcvf "$TAR_GZ" "$NAME_VER"
+
+    ls -lh "$NAME_VER".*
+
+    cd - || exit
+
+
+上传APP
+=======================
+
+1. 首先进入 ``Other`` 页面，移动到 ``Micro APP`` 部分
+2. 点击 ``Select file`` 按钮，选择 ``hello.1.0.tar.gz`` 文件
+3. 点击 ``Upload`` 按钮，上传APP文件
+4. 等待提示上传成功
+
+.. image::  image.png
+
+
+修改配置
+=======================
+1. 修改 ``config1`` 配置内容为 ``value1``
+2. 修改 ``config2`` 配置内容为 ``value2``
+3. 点击 ``Apply`` 按钮
+
+.. image::  image-4.png
+
+
+运行APP
+=======================
+1. 点击 ``Start`` 按钮，运行APP
+
+.. image::  image-2.png
+
+
+
+查看结果
+=======================
+1. 点击 ``View Log`` ，正常输出运行结果如下
+
+.. code-block:: text
+
+    hello
+    read user config ok: {"config1":"value1","config2":"value2"}

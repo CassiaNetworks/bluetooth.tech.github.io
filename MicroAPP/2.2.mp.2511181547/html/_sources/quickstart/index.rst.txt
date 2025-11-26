@@ -1,0 +1,119 @@
+=======================
+快速开始
+=======================
+
+准备代码
+=======================
+
+编写一个文件，名称为 ``hello.py`` ，文件内容如下
+
+.. code-block:: python
+
+    print("hello")
+
+打包APP
+=======================
+
+代码文件需要打包为Cassia APP包后，可以上传运行，打包脚本示例如下
+
+执行成功后，在 ``build`` 目录下会看到 ``hello.1.0.tar.gz``
+
+.. code-block:: bash
+
+    #!/bin/bash
+
+    NAME_VER=hello.1.0
+    TAR_GZ=${NAME_VER}.tar.gz
+
+    rm -rf build/"$NAME_VER"
+    rm -rf "$TAR_GZ"
+
+    mkdir -p build/"$NAME_VER"
+    cp hello.py build/"$NAME_VER"
+
+    cd build || exit
+    gtar -zcvf "$TAR_GZ" "$NAME_VER" || tar -zcvf "$TAR_GZ" "$NAME_VER"
+
+    ls -lh "$NAME_VER".*
+
+    cd - || exit
+
+上传APP
+=======================
+
+1. 首先进入 ``Other`` 页面，移动到 ``Micro APP`` 部分
+2. 点击 ``Select file`` 按钮，选择 ``hello.1.0.tar.gz`` 文件
+3. 点击 ``Upload`` 按钮，上传APP文件
+4. 等待提示上传成功
+
+.. image::  image.png
+
+
+运行APP
+=======================
+1. 点击 ``Start`` 按钮，运行APP
+
+.. image::  image-2.png
+
+
+
+查看结果
+=======================
+1. 点击 ``View Log`` ，正常输出运行结果 ``hello``
+
+.. image::  image-3.png
+
+
+
+停止APP
+=======================
+1. 点击 ``Stop`` 按钮，停止APP
+
+.. image::  image-4.png
+
+
+
+开机运行
+=======================
+1. 选择 ``Run at Startup`` 为 ``Yes``
+2. 点击 ``Apply`` 按钮，保存配置
+3. 等待网关启动完成，查看结果
+
+.. caution:: 
+    - 配置更改网关会自动重启生效
+    - 网关重启30秒后自动运行APP
+    - 请在APP完成稳定性测试后再开启
+
+.. image::  image-5.png
+
+
+调用API
+=======================
+以下示例是使用网关扫描周围的BLE设备，更多示例和说明，请参考API部分
+
+.. code-block:: python
+
+    import asyncio
+    import cassiablue
+
+
+    async def main():
+        print("start scan")
+
+        ok, _ = await cassiablue.start_scan("active=1&filter_duplicates=1000")
+        print(type(ok), ok)
+        
+        if not ok:
+            return
+
+        async for dev in cassiablue.scan_result():
+            print(type(dev), dev)
+            await asyncio.sleep_ms(5)
+
+
+    asyncio.run(main())
+
+
+.. toctree::
+    :maxdepth: 2
+    :glob:

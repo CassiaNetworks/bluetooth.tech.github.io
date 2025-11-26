@@ -1,0 +1,48 @@
+================
+micropython-mqtt
+================
+
+micropython-mqtt开源库。对比参考 `micropython-mqtt <https://github.com/peterhinch/micropython-mqtt>`_。
+
+.. note:: 
+    - 网关已提供了Cassiamqtt API，推荐优先使用。
+    - 网关内默认没有集成此库，需要自己选择合并到脚本中使用。
+    - 为了支持在网关内运行使用，示例移除了network sta相关处理。
+
+示例
+=====
+
+-----
+说明
+-----
+
+为了方便快速测试，示例使用 ``test.mosquitto.org`` 提供的测试服务。
+
+.. csv-table:: 参数说明
+         :header: 参数,说明,示例
+
+         client_id,Client ID,CC:1B:E0:00:00:01
+         server,MQTT Broker地址,test.mosquitto.org
+         port,MQTT Broker端口,1884
+         user,用户名,rw
+         password,密码,readwrite
+         upstream topic,发布Topic,/cassia/test/up
+         downstream topic,订阅Topic,/cassia/test/down
+
+测试工具使用 ``mosquitto_sub/mosquitto_pub``，您也可以使用 ``MQTTX`` 或者测试脚本进行。
+
+.. code-block:: bash
+    
+    # Subscribe test topic
+    mosquitto_sub -h test.mosquitto.org -p 1884 -u rw -P readwrite -t '/cassia/test/up' 
+
+    # Publish test message
+    mosquitto_pub -h test.mosquitto.org -p 1884 -u rw -P readwrite -t '/cassia/test/down' -m '{"hello":"world"}'
+
+-----
+代码
+-----
+
+.. literalinclude:: ../../../../../../example/python_ecosys/mqtt_test.py
+   :language: python
+   :linenos:

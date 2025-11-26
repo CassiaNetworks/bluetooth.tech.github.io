@@ -1,0 +1,47 @@
+=======================
+读取设备GATT特征值
+=======================
+
+用于读取指定连接设备指定Handle的值。
+
+参考RESTful-API `Read the Value of a Specific Characteristic <https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/RESTful-API#readwrite-the-value-of-a-specific-characteristic>`_
+
+
+示例
+=====
+
+.. literalinclude:: ../../../../../../example/cassiablue/gatt_read.py
+   :language: python
+   :linenos:
+
+API
+=====
+
+.. py:function::  cassiablue.gatt_read(addr: str, handle: str) -> tuple[ok: bool, result: str]
+   :async:
+
+   用于读取指定连接设备指定Handle的值。结果返回JSON字符串。
+
+   :parameters:
+      - addr: 设备MAC地址
+      - handle: 待读取Handle
+
+   :returns: 
+      - ok: 是否执行成功
+      - result: 执行结果，JSON字符串，示例如下
+
+      .. code-block:: json
+
+         {
+            "handle": "44",
+            "value": "A00100"
+         }
+
+      .. csv-table:: 字段说明
+            :header: 字段,类型,说明,示例
+
+            handle,str,Handle,44
+            value,str,Value,A00100
+
+
+   
