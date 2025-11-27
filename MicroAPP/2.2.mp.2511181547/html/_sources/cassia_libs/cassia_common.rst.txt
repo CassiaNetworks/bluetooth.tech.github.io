@@ -157,19 +157,21 @@ API
       :return: 无返回值
 
    .. py:method:: get_next(cnt=_DATA_CACHE_GET_MAX_CNT, flag=False)
+      :async:
 
-         异步获取下一批数据
+      异步获取下一批数据
 
-         :param cnt: 获取的数据数量，默认为 _DATA_CACHE_GET_MAX_CNT
-         :type cnt: int
-         :param flag: 排序标志，True 表示按键顺序，False 表示按时间或队列顺序
-         :type flag: bool
-         :return: 数据列表
-         :rtype: list
+      :param cnt: 获取的数据数量，默认为 _DATA_CACHE_GET_MAX_CNT
+      :type cnt: int
+      :param flag: 排序标志，True 表示按键顺序，False 表示按时间或队列顺序
+      :type flag: bool
+      :return: 数据列表
+      :rtype: list
 
-         如果缓存未初始化或没有数据，返回空列表。
+      如果缓存未初始化或没有数据，返回空列表。
 
    .. py:method:: get(key, cnt=_DATA_CACHE_GET_MAX_CNT)
+      :async:
 
       异步根据键获取数据
 
