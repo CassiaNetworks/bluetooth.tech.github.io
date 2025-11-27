@@ -18,7 +18,22 @@ APP.tar.gz包中如果包含了自定义配置文件，网关Web UI根据包里�
 
 .. code-block:: python
 
-    print("hello")
+    import cassiasys
+
+
+    def main():
+        print("hello")
+
+        try:
+            # read user config ok: {"config1":"value1","config2":"value2"}
+            config = cassiasys.read_user_config()
+            print(f"read user config ok: {config}")
+        except Exception as e:
+            print(f"read user config failed: {e}")
+
+
+    main()
+
 
 meta.json
 =======================

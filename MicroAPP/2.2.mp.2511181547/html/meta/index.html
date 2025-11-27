@@ -107,7 +107,21 @@
 <section id="id1">
 <h2>准备代码<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <p>编写一个文件，名称为 <code class="docutils literal notranslate"><span class="pre">hello.py</span></code> ，文件内容如下</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cassiasys</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># read user config ok: {&quot;config1&quot;:&quot;value1&quot;,&quot;config2&quot;:&quot;value2&quot;}</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">cassiasys</span><span class="o">.</span><span class="n">read_user_config</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;read user config ok: </span><span class="si">{</span><span class="n">config</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;read user config failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
