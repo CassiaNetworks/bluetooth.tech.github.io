@@ -13,6 +13,9 @@
         es.onmessage = function(event) {
             fn && fn(event)
         }
+        es.onerror = function(event) {
+            api.trigger('scanErr', [event])
+        }
     }
     __es.close = function(target) {
         let es = target.es;
@@ -100,7 +103,7 @@
     }
 
     api.scan = function(opt) {
-        var url = `${api.server}/gap/nodes/?active=1&event=1&mac=${api.hub}&access_token=${api.access_token}&${opt}&phy=1M,CODED`;
+        var url = `${api.server}/gap/nodes/?active=1&event=1&mac=${api.hub}&access_token=${api.access_token}&${opt}`;
         __es(api.scan, url,    
             function(event) {
                 api.trigger('scan', [api.hub, event.data])

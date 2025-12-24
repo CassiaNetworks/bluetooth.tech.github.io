@@ -129,6 +129,11 @@ document.addEventListener('DOMContentLoaded', () => {
         chipVal = $(this).val();
     });
 
+    let phyVal = 'default';
+    $('#phy').on('change', function() {
+        phyVal = $(this).val();
+    });
+
     $('#startScan').on('click', function () {
         xssFilter();
         $('#scan_tab > tbody').html('');
@@ -163,7 +168,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .join('&');
-        params += `&chip=${chipVal}` 
+        params += `&chip=${chipVal}`
+        if (phyVal !== 'default') {
+            params += `&phy=${phyVal}`;
+        }
 
         // if(!validateOfScan(deviceMacArr))return;
         for (let i = 0, len = deviceMacArr.length; i < len; i++) {
@@ -210,7 +218,22 @@ document.addEventListener('DOMContentLoaded', () => {
 				server: `${hubIP}`,
 			})
             .scan(params)
-            .on('scan', scan2conn);
+            .on('scan', scan2conn)
+            .on('scanErr', (event) => {
+                // Check if we've already shown the alert recently to avoid spamming
+                if (!window.corsAlertShown && api.scan) {
+                     // EventSource error with readyState=2 (CLOSED) typically indicates connection failure/CORS
+                     if(event && event.target && event.target.readyState === 2) {
+                        window.corsAlertShown = true;
+                        alert('Possible cross-origin (CORS) error or connection failure.\nPlease check your Gateway settings to ensure cross-origin requests are allowed.');
+                        api.scan.close();
+                        $('#startScan').removeAttr('disabled');
+                        $('#startConn').removeAttr('disabled');
+                        stopLoader();
+                        setTimeout(() => { window.corsAlertShown = false; }, 5000);
+                     }
+                }
+            });
         $('#startScan').attr('disabled', true);
         $('#startConn').attr('disabled', true);
         // $('#loader').addClass('spinner');
@@ -265,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 node: k,
                                 type: connDevice[k].type,
                                 chip: chipVal,
-                                phy: connDevice[k].phy
+                                phy: phyVal === 'default' ? connDevice[k].phy : { phy: phyVal }
                             },
                             connTimeout * 1000,
                         )

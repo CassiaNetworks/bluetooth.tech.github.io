@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Cassia Deployment Tool</title>
@@ -14,25 +15,26 @@
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="stylesheet" href="assets/css/deployment.css"> <!-- 把优化后的样式统一写在这里 -->
 </head>
+
 <body>
   <div id="container-content">
     <header class="pure-topnav">
       <h1>
-        <i class="icomoon icon-icon-logo" style="font-weight:normal;font-size:160%;vertical-align:middle"></i> 
+        <i class="icomoon icon-icon-logo" style="font-weight:normal;font-size:160%;vertical-align:middle"></i>
         <span i18n="deployment.title">Cassia Deployment Tool</span>
       </h1>
     </header>
     <!-- <div id="loader" class=""></div> -->
     <!-- Loader Progress Bar -->
     <div id="loader">
-        <div class="progress"></div>
+      <div class="progress"></div>
     </div>
     <!-- Bluetooth Ripple Animation -->
     <div id="bt-anim">
       <div class="bt-ripple">
-      <!-- Use a Bluetooth Unicode icon 🔵 or an <i> with your icon font -->
-      <!-- <span class="bt-icon">🔵</span> -->
-      <span class="icomoon icon-bluetooth bt-icon"></span>
+        <!-- Use a Bluetooth Unicode icon 🔵 or an <i> with your icon font -->
+        <!-- <span class="bt-icon">🔵</span> -->
+        <span class="icomoon icon-bluetooth bt-icon"></span>
       </div>
     </div>
 
@@ -46,11 +48,12 @@
           <form class="form">
             <div class="form-group">
               <label i18n="deployment.gateway">Gateway IP</label>
-              <input id="hubIP" type="" name="hubIP" placeholder="192.168.0.11" value="192.168.0.100">                   
+              <input id="hubIP" type="" name="hubIP" placeholder="192.168.0.11" value="192.168.0.100">
             </div>
             <div class="form-group">
               <label for="deviceMacArr" i18n="deployment.deviceMac">Devices MAC</label>
-              <textarea id="deviceMacArr" name="deviceMacArr" placeholder="One per line. Supports *. e.g. CC:1B:E0*"></textarea>
+              <textarea id="deviceMacArr" name="deviceMacArr"
+                placeholder="One per line. Supports *. e.g. CC:1B:E0*"></textarea>
               <span class="tip error"><i>This field is required</i></span>
             </div>
             <div class="form-group">
@@ -62,6 +65,15 @@
               <select id="chip" name="chip">
                 <option value="0">0</option>
                 <option value="1">1</option>
+              </select>
+            </div>
+            <div class="form-group" id="phy_field">
+              <label for="phy" i18n="deployment.phy">PHY</label>
+              <select id="phy" name="phy">
+                <option value="default">Default</option>
+                <option value="1M">1M</option>
+                <option value="CODED">CODED</option>
+                <option value="1M,CODED">Both</option>
               </select>
             </div>
             <div class="form-group">
@@ -152,7 +164,7 @@
         <footer class="bottom">
           <div class="center">
             <button id="export" class="btn fr export" i18n="deployment.export">Export</button>
-            <button id="clear" class="btn fr clear" i18n="deployment.clear">Clear</button>                        
+            <button id="clear" class="btn fr clear" i18n="deployment.clear">Clear</button>
           </div>
         </footer>
       </section>
@@ -168,4 +180,5 @@
   <script src="assets/js/deployment/numberToWords.min.js"></script>
   <script>i18n.render();</script>
 </body>
+
 </html>
