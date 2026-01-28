@@ -2,7 +2,7 @@ const _ = require('lodash');
 import libEnum from '../lib/enum.js';
 import serviceLib from '../lib/service.js';
 import charLib from '../lib/characteristics.js';
-import apiModule from './api.js';
+import transportModule from './transport.js';
 import vueModule from './vue.js';
 import dbModule from './db.js';
 import main from '../main.js'
@@ -46,15 +46,17 @@ function procDeviceServiceList(data) {
 }
 
 function getDeviceServiceList(deviceMac) {
-  const devConf = dbModule.getDevConf();
   const cache = dbModule.getCache();
-  return new Promise((resovle, reject) => {
-    apiModule.getDeviceServiceListByDevConf(devConf, deviceMac).then(data => {
+  return new Promise(function(resolve, reject) {
+    // 使用 transport 适配器，自动选择 HTTP 或 MQTT
+    transportModule.getDeviceServiceList(deviceMac).then(function(data) {
       const _data = _.cloneDeep(data);
       // 对象实例的动态添加属性，直接赋值不会动态变化，必须使用$set方法动态设置
       main.setObjProperty(cache.devicesServiceList, deviceMac, procDeviceServiceList(data));
-      resovle(_data);
-    }).catch(ex => reject(ex));
+      resolve(_data);
+    }).catch(function(ex) {
+      reject(ex);
+    });
   });
 }
 

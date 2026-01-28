@@ -4,11 +4,20 @@ import libLogger from '../lib/logger.js';
 import api from './api.js';
 import dbModule from './db.js';
 import vueModule from './vue.js';
+import mqttModule from './mqtt.js';
 import main from '../main.js'
 
 const logger = libLogger.genModuleLogger('scan');
 
 let sse = null;
+
+/**
+ * 判断当前是否使用 MQTT 模式
+ */
+function isMqttMode() {
+  const devConf = dbModule.getDevConf();
+  return devConf.transportType === libEnum.transportType.MQTT;
+}
 
 // 更新扫描结果
 function scanSseMessageHandler(message) {
@@ -90,7 +99,79 @@ function stopScan() {
   vueModule.notify(`${main.getGlobalVue().$i18n.t('message.stopScanOk')}`, `${main.getGlobalVue().$i18n.t('message.operationOk')}`, libEnum.messageType.SUCCESS);
 }
 
+/**
+ * MQTT 扫描数据处理函数（通用格式）
+ */
+function mqttScanDataHandler(data) {
+  const cache = dbModule.getCache();
+  const store = dbModule.getStorage();
+  
+  // MQTT 数据格式和 HTTP SSE 类似
+  const deviceMac = data.bdaddr || (data.bdaddrs && data.bdaddrs[0] && data.bdaddrs[0].bdaddr);
+  const deviceAddrType = data.bdaddrType || (data.bdaddrs && data.bdaddrs[0] && data.bdaddrs[0].bdaddrType);
+  
+  if (!deviceMac) {
+    logger.warn('Invalid MQTT scan data, no MAC address:', data);
+    return;
+  }
+  
+  // 更新扫描结果
+  let result = _.find(cache.scanResultList, {mac: deviceMac});
+  if (!result) {
+    cache.scanResultList.push({
+      mac: deviceMac, 
+      name: data.name || '(unknown)',
+      adData: data.adData,
+      bdaddrType: deviceAddrType,
+      rssi: data.rssi,
+    });
+  } else {
+    if (data.name && data.name !== '(unknown)') result.name = data.name;
+    result.rssi = data.rssi;
+  }
+  
+  // 记录历史rssi
+  if (!store.devConfDisplayVars.rssiChartSwitch) return;
+  if (cache.scanDevicesRssiHistory[deviceMac]) {
+    cache.scanDevicesRssiHistory[deviceMac].push({time: Date.now(), rssi: data.rssi});
+  }
+}
+
+/**
+ * MQTT 模式：开始接收扫描数据
+ */
+function startReceivingMqttScanData() {
+  const cache = dbModule.getCache();
+  if (cache.isReceivingMqttScanData) {
+    logger.warn('Already receiving MQTT scan data');
+    return;
+  }
+  
+  cache.isReceivingMqttScanData = true;
+  mqttModule.onScanData(mqttScanDataHandler);
+}
+
+/**
+ * MQTT 模式：停止接收扫描数据
+ */
+function stopReceivingMqttScanData() {
+  const cache = dbModule.getCache();
+  cache.isReceivingMqttScanData = false;
+  mqttModule.offScanData(mqttScanDataHandler);
+}
+
+/**
+ * 检查是否正在接收 MQTT 扫描数据
+ */
+function isReceivingMqttScanData() {
+  return dbModule.getCache().isReceivingMqttScanData;
+}
+
 export default {
   startScan,
   stopScan,
+  isMqttMode,
+  startReceivingMqttScanData,
+  stopReceivingMqttScanData,
+  isReceivingMqttScanData
 }

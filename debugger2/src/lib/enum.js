@@ -54,7 +54,9 @@ const apiType = {
 
 const codeType = {
   CURL: 'curl',
-  NODEJS: 'nodejs'
+  NODEJS: 'nodejs',
+  MQTT: 'mqtt',  // MQTT Node.js 代码
+  MOSQUITTO: 'mosquitto'  // mosquitto_pub/sub 命令
 };
 
 const deviceAddrType = {
@@ -82,6 +84,21 @@ const language = {
   MO: 'mo', // 罗马尼亚语(摩尔多瓦)
 };
 
+// 通信模式
+const transportType = {
+  HTTP: 'HTTP',
+  MQTT: 'MQTT'
+};
+
+// MQTT连接状态
+const mqttStatus = {
+  DISCONNECTED: 'disconnected',   // 未连接 - 灰色
+  CONNECTING: 'connecting',       // 连接中 - 黄色
+  CONNECTED: 'connected',         // 已连接 - 绿色
+  RECONNECTING: 'reconnecting',   // 重连中 - 橙色
+  ERROR: 'error'                  // 错误 - 红色
+};
+
 export default {
   operation,
   controlStyle,
@@ -92,5 +109,7 @@ export default {
   codeType,
   deviceAddrType,
   pairingStatusCode,
-  language
+  language,
+  transportType,
+  mqttStatus
 }

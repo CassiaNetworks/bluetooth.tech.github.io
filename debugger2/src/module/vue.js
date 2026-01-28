@@ -9,6 +9,8 @@ import libLogger from '../lib/logger.js';
 import libEnum from '../lib/enum.js';
 import notifyModule from './notify.js';
 import connectModule from './connect.js';
+import mqttModule from './mqtt.js';
+import transportModule from './transport.js';
 import main from '../main.js';
 
 const logger = libLogger.genModuleLogger('vue');
@@ -37,6 +39,82 @@ function notify(message, title = '', type = libEnum.messageType.INFO, autoclose 
   const data = { title, message, type };
   if (!autoclose) data.duration = 0;
   main.getGlobalVue().$notify(data);
+}
+
+/**
+ * 从错误对象中提取错误消息
+ * 支持: Error对象、MQTT返回的{code, message}对象、HTTP返回的{error: "..."}对象、字符串、其他对象
+ */
+function getErrorMessage(ex) {
+  if (!ex) return 'Unknown error';
+  if (typeof ex === 'string') return ex;
+  if (ex.message) return ex.message;  // Error对象、MQTT {code, message}、axios错误
+  if (ex.error) return ex.error;      // HTTP {error: "..."} 格式
+  if (typeof ex === 'object') return JSON.stringify(ex);
+  return String(ex);
+}
+
+/**
+ * 生成唯一请求 ID（8位十六进制字符串）
+ */
+function generateMqttId() {
+  return Math.random().toString(16).substring(2, 10);
+}
+
+// 当前调试请求的 ID，用于关联请求和响应日志
+let currentDebugRequestId = null;
+
+/**
+ * 构建 MQTT 模式下的请求日志
+ * @param {string} gateway - 网关 MAC
+ * @param {string} url - API URL
+ * @param {string} method - HTTP 方法
+ * @param {object} body - 请求体
+ * @returns {string} 格式化的日志字符串
+ */
+function buildMqttRequestLog(gateway, url, method, body) {
+  // 生成新的请求 ID 并保存，用于后续响应日志
+  currentDebugRequestId = generateMqttId();
+  const topic = 'down/' + gateway + '/api';
+  const message = {
+    id: currentDebugRequestId,
+    action: 'api',
+    timestamp: Date.now(),
+    gateway: gateway,
+    data: {
+      url: url,
+      method: method,
+      body: body || {}
+    }
+  };
+  return `${topic} ${JSON.stringify(message, null, 2)}`;
+}
+
+/**
+ * 构建 MQTT 模式下的响应日志（收到对端响应）
+ * @param {string} gateway - 网关 MAC
+ * @param {object} data - 响应数据
+ * @returns {string} 格式化的日志字符串
+ */
+function buildMqttResponseLog(gateway, data) {
+  const topic = 'up/' + gateway + '/api_reply';
+  const message = {
+    id: currentDebugRequestId || generateMqttId(),
+    action: 'api_reply',
+    timestamp: Date.now(),
+    gateway: gateway,
+    data: data
+  };
+  return `${topic} ${JSON.stringify(message, null, 2)}`;
+}
+
+/**
+ * 构建 MQTT 模式下的本地错误日志（本地超时/连接错误等，非对端响应）
+ * @param {string} errorMessage - 错误消息
+ * @returns {string} 格式化的日志字符串
+ */
+function buildMqttLocalErrorLog(errorMessage) {
+  return `[Local Error] ${errorMessage}`;
 }
 
 function rssiChartXaxisData() {
@@ -115,6 +193,10 @@ function createVueMethods(vue) {
       }
     },
     getAcRouterListWillAll(keyword) {
+      // MQTT 模式下不需要获取 AC 路由列表
+      if (this.store.devConf.transportType === libEnum.transportType.MQTT) {
+        return;
+      }
       this.cache.isGettingAcRouterList = true;
       this.cache.acRouterList = [];
       apiModule.getAccessToken(this.store.devConf.acServerURI + '/api', this.store.devConf.acDevKey, this.store.devConf.acDevSecret)
@@ -130,12 +212,16 @@ function createVueMethods(vue) {
           }
           this.cache.acRouterList.splice(0, 0, { id: '*', mac: '*', name: 'All Gateways' });
         }).catch(ex => {
-          notify(`${this.$i18n.t('message.getAcRouterListFail')} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+          notify(`${this.$i18n.t('message.getAcRouterListFail')} ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
         }).finally(() => {
           this.cache.isGettingAcRouterList = false;
         });
     },
     getAcRouterList(keyword) {
+      // MQTT 模式下不需要获取 AC 路由列表
+      if (this.store.devConf.transportType === libEnum.transportType.MQTT) {
+        return;
+      }
       this.cache.isGettingAcRouterList = true;
       this.cache.acRouterList = [];
       apiModule.getAccessToken(this.store.devConf.acServerURI + '/api', this.store.devConf.acDevKey, this.store.devConf.acDevSecret)
@@ -156,16 +242,23 @@ function createVueMethods(vue) {
             });
           }
         }).catch(ex => {
-          notify(`${this.$i18n.t('message.getAcRouterListFail')} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+          notify(`${this.$i18n.t('message.getAcRouterListFail')} ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
         }).finally(() => {
           this.cache.isGettingAcRouterList = false;
         });
     },
     replayApi(row) {
-      apiModule.replayApi(row.apiContent).then((data) => {
+      const isMqtt = row.apiContent.transportType === 'mqtt' || 
+                     (row.apiContent.method && row.apiContent.method.startsWith('MQTT/'));
+      
+      const replayPromise = isMqtt 
+        ? mqttModule.replayMqttApi(row.apiContent)
+        : apiModule.replayApi(row.apiContent);
+      
+      replayPromise.then((data) => {
         notify(`${this.$i18n.t('message.replayApiOk')}: ${JSON.stringify(data)}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
       }).catch(ex => {
-        notify(`${this.$i18n.t('message.replayApiFail')} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+        notify(`${this.$i18n.t('message.replayApiFail')} ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       });
     },
     autoSelectionChanged(value) {
@@ -192,58 +285,58 @@ function createVueMethods(vue) {
       if (this.store.devConf.controlStyle === libEnum.controlStyle.AP) {
         return notify(this.$i18n.t('message.noSupportByAp'), this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       }
-      apiModule.infoByDevConf(this.store.devConf).then(() => {
+      transportModule.info().then(() => {
         notify(this.$i18n.t('message.getApInfoOk'), this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
       }).catch(ex => {
-        notify(`${this.$i18n.t('message.getApInfoFail')} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+        notify(`${this.$i18n.t('message.getApInfoFail')} ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       });
     },
     reboot() {
       if (this.store.devConf.controlStyle === libEnum.controlStyle.AP) {
         return notify(this.$i18n.t('message.noSupportByAp'), this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       }
-      apiModule.rebootByDevConf(this.store.devConf).then(() => {
+      transportModule.reboot().then(() => {
         notify(this.$i18n.t('message.rebootApOk'), this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
       }).catch(ex => {
-        notify(`${this.$i18n.t('message.rebootApFail')} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+        notify(`${this.$i18n.t('message.rebootApFail')} ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       });
     },
     unpair(deviceMac) {
-      apiModule.unpairByDevConf(this.store.devConf, deviceMac).then(() => {
+      transportModule.unpair(deviceMac).then(() => {
         notify(`${this.$i18n.t('message.unpairOk')} ${deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
       }).catch(ex => {
-        notify(`${this.$i18n.t('message.unpairFail')} ${deviceMac} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+        notify(`${this.$i18n.t('message.unpairFail')} ${deviceMac} ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       });
     },
     pairByLegacyOOB() {
       const deviceMac = this.store.devConfDisplayVars.pairByLegacyOOB.deviceMac;
       const tk = this.store.devConfDisplayVars.pairByLegacyOOB.tk;
-      apiModule.pairByLegacyOOBByDevConf(this.store.devConf, deviceMac, tk).then(() => {
+      transportModule.pairByLegacyOOB(deviceMac, tk).then(() => {
         notify(`${this.$i18n.t('message.pairOk')} ${deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
         this.store.devConfDisplayVars.pairByPasskey.visible = false;
       }).catch(ex => {
-        notify(`${this.$i18n.t('message.pairFail')} ${deviceMac} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+        notify(`${this.$i18n.t('message.pairFail')} ${deviceMac} ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       });
     },
     pairBySecurityOOB() {
       const deviceMac = this.store.devConfDisplayVars.pairBySecurityOOB.deviceMac;
       const rand = this.store.devConfDisplayVars.pairBySecurityOOB.rand;
       const confirm = this.store.devConfDisplayVars.pairBySecurityOOB.confirm;
-      apiModule.pairBySecurityOOBByDevConf(this.store.devConf, deviceMac, rand, confirm).then(() => {
+      transportModule.pairBySecurityOOB(deviceMac, rand, confirm).then(() => {
         notify(`${this.$i18n.t('message.pairOk')} ${deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
         this.store.devConfDisplayVars.pairByPasskey.visible = false;
       }).catch(ex => {
-        notify(`${this.$i18n.t('message.pairFail')} ${deviceMac} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+        notify(`${this.$i18n.t('message.pairFail')} ${deviceMac} ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       });
     },
     pairByPasskey() {
       const deviceMac = this.store.devConfDisplayVars.pairByPasskey.deviceMac;
       const passkey = this.store.devConfDisplayVars.pairByPasskey.passkey;
-      apiModule.pairByPasskeyByDevConf(this.store.devConf, deviceMac, passkey).then(() => {
+      transportModule.pairByPasskey(deviceMac, passkey).then(() => {
         notify(`${this.$i18n.t('message.pairOk')} ${deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
         this.store.devConfDisplayVars.pairByPasskey.visible = false;
       }).catch(ex => {
-        notify(`${this.$i18n.t('message.pairFail')} ${deviceMac} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+        notify(`${this.$i18n.t('message.pairFail')} ${deviceMac} ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       });
     },
     showPairDialog(deviceMac) {
@@ -327,10 +420,11 @@ function createVueMethods(vue) {
         bodyParam.coded_option = this.store.devConfDisplayVars.updatePhy.codedOption;
       }
 
-      apiModule.updatePhyByDevConf(this.store.devConf, deviceMac, bodyParam).then((rawBody) => {
+      transportModule.updatePhy(deviceMac, bodyParam).then((rawBody) => {
         notify(rawBody, `${this.$i18n.t('message.updatePhyOK')}`, libEnum.messageType.SUCCESS);
-      }).catch(function (ex) {
-        notify(`${this.$i18n.t('message.updatePhyFail')}: ${deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+      }).catch((ex) => {
+        notify(`${this.$i18n.t('message.updatePhyFail')}: ${deviceMac}, ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+        connectModule.removeDeviceIfNotFound(deviceMac, ex);
       }).finally(() => {
         this.store.devConfDisplayVars.updatePhy.visible = false;
       });
@@ -343,7 +437,7 @@ function createVueMethods(vue) {
         timeout: +(this.store.devConfDisplayVars.pair.timeout || 5) * 1000,
         bond: +(this.store.devConfDisplayVars.pair.bond || 1)
       };
-      apiModule.pairByDevConf(this.store.devConf, deviceMac, bodyParam).then((x) => {
+      transportModule.pair(deviceMac, bodyParam).then((x) => {
         if (x.pairingStatusCode === libEnum.pairingStatusCode.SUCCESS) {
           return notify(`${this.$i18n.t('message.pairOk')} ${deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
         }
@@ -369,10 +463,10 @@ function createVueMethods(vue) {
           return;
         }
         if (x.pairingStatusCode === libEnum.pairingStatusCode.NUM_CMP_EXPECTED) {
-          apiModule.pairByNumbericComparisonByDevConf(this.store.devConf, deviceMac, x.display).then(() => {
+          transportModule.pairByNumericComparison(deviceMac, x.display).then(() => {
             notify(`${this.$i18n.t('message.pairOk')} ${deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
           }).catch(ex => {
-            notify(`${this.$i18n.t('message.pairFail')} ${deviceMac} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+            notify(`${this.$i18n.t('message.pairFail')} ${deviceMac} ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
           });
         }
       }).finally(() => {
@@ -380,12 +474,14 @@ function createVueMethods(vue) {
       });
     },
     disconnectAll() { // 断连所有
-      let all = _.map(this.cache.connectedList, item => {
-        apiModule.disconnectByDevConf(this.store.devConf, item.mac).catch(ex => {
-          notify(`${this.$i18n.t('message.disconnectFail')} ${item.mac} ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+      const self = this;
+      const all = _.map(this.cache.connectedList, function(item) {
+        // 使用 transport 适配器
+        return transportModule.disconnect(item.mac).catch(function(ex) {
+          notify(self.$i18n.t('message.disconnectFail') + ' ' + item.mac + ' ' + ex, self.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
         });
       });
-      Promise.all(all).catch(ex => {
+      Promise.all(all).catch(function(ex) {
         logger.warn('disconnect all error:', ex);
       });
     },
@@ -399,13 +495,31 @@ function createVueMethods(vue) {
       apiDemoScan.filter_rssi = apiContent.data.query.filter_rssi;
     },
     apiDemoScanTest() {
+      const self = this;
+      const devConf = this.store.devConf;
       const scanParams = this.store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan;
-      let sse = apiModule.startScanByUserParams(this.store.devConf, scanParams.chip, scanParams.filter_mac, scanParams.phy, scanParams.filter_name, scanParams.filter_rssi, '', () => {
-        notify(`${this.$i18n.t('message.testScanOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
-        sse.close();
-      }, (error) => {
-        notify(`${this.$i18n.t('message.testScanFail')}: ${error}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-      });
+      
+      // MQTT 模式下使用 mqtt 模块
+      if (devConf.transportType === libEnum.transportType.MQTT) {
+        // MQTT 模式：临时订阅扫描数据，收到一条后提示成功
+        const scanCallback = function(data) {
+          notify(self.$i18n.t('message.testScanOk'), self.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+          mqttModule.offScanData(scanCallback);
+        };
+        mqttModule.onScanData(scanCallback);
+        // 5秒超时
+        setTimeout(function() {
+          mqttModule.offScanData(scanCallback);
+        }, 5000);
+      } else {
+        // HTTP 模式：使用 SSE
+        const sse = apiModule.startScanByUserParams(devConf, scanParams.chip, scanParams.filter_mac, scanParams.phy, scanParams.filter_name, scanParams.filter_rssi, '', function() {
+          notify(self.$i18n.t('message.testScanOk'), self.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+          sse.close();
+        }, function(error) {
+          notify(self.$i18n.t('message.testScanFail') + ': ' + error, self.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+        });
+      }
     },
     apiDemo2GenCode() {
       const scanParams = this.store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan;
@@ -427,20 +541,25 @@ function createVueMethods(vue) {
       apiDemoWrite.noresponse = (_.get(apiContent, 'data.query.noresponse') === 1 || false);
     },
     apiDemoWriteTest() {
+      const self = this;
       const writeParams = this.store.devConfDisplayVars.apiDemoParams.connectWriteNotify.write;
       const connectParams = this.store.devConfDisplayVars.apiDemoParams.connectWriteNotify.connect;
-      apiModule.writeByHandleByDevConf(this.store.devConf, connectParams.deviceMac, writeParams.handle, writeParams.value, writeParams.noresponse).then(() => {
-        notify(`${this.$i18n.t('message.testWriteOk')}: ${connectParams.deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
-      }).catch(ex => {
-        notify(`${this.$i18n.t('message.testWriteFail')}: ${connectParams.deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+      // 使用 transport 适配器支持 HTTP/MQTT
+      transportModule.writeByHandle(connectParams.deviceMac, writeParams.handle, writeParams.value, writeParams.noresponse).then(function() {
+        notify(self.$i18n.t('message.testWriteOk') + ': ' + connectParams.deviceMac, self.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+      }).catch(function(ex) {
+        notify(self.$i18n.t('message.testWriteFail') + ': ' + connectParams.deviceMac + ', ' + getErrorMessage(ex), self.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       });
     },
     apiDemoConnectTest() {
+      const self = this;
       const connectParams = this.store.devConfDisplayVars.apiDemoParams.connectWriteNotify.connect;
-      apiModule.connectByDevConf(this.store.devConf, connectParams.deviceMac, connectParams.addrType, connectParams.chip).then(() => {
-        notify(`${main.getGlobalVue().$i18n.t('message.connectDeviceOk')}`, `${main.getGlobalVue().$i18n.t('message.operationOk')}`, libEnum.messageType.SUCCESS);
-      }).catch(ex => {
-        notify(`${this.$i18n.t('message.testConnectFail')}: ${connectParams.deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+      const params = { chip: connectParams.chip };
+      // 使用 transport 适配器支持 HTTP/MQTT
+      transportModule.connect(connectParams.deviceMac, connectParams.addrType, params).then(function() {
+        notify(main.getGlobalVue().$i18n.t('message.connectDeviceOk'), main.getGlobalVue().$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+      }).catch(function(ex) {
+        notify(self.$i18n.t('message.testConnectFail') + ': ' + connectParams.deviceMac + ', ' + getErrorMessage(ex), self.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       });
     },
     apiDemoConnectChanged(apiContentJson) { // URL改变 -> 找到对应的日志 -> 设置对应的参数
@@ -454,11 +573,22 @@ function createVueMethods(vue) {
       return _.filter(this.cache.apiLogResultList, filter);
     },
     getComputedApiLogDisplayResultList() { // 全局搜索扫描列表
+      // 根据当前模式过滤日志（HTTP/MQTT分开显示）
+      const currentMode = this.store.devConf.transportType;
+      const isMqttMode = currentMode === 'MQTT';
+      let filteredList = this.cache.apiLogResultList.filter(item => {
+        const isItemMqtt = item.apiContent && (
+          item.apiContent.transportType === 'mqtt' || 
+          (item.apiContent.method && item.apiContent.method.startsWith('MQTT/'))
+        );
+        return isMqttMode ? isItemMqtt : !isItemMqtt;
+      });
+      
       const filterName = XEUtils.toString(this.cache.apiLogDisplayFilterContent).trim().toLowerCase();
       if (filterName) {
         const filterRE = new RegExp(filterName, 'gi');
         const searchProps = ['apiName', 'method', 'url', 'data'];
-        const rest = this.cache.apiLogResultList.filter(item => {
+        const rest = filteredList.filter(item => {
           return searchProps.some(key => {
             return XEUtils.toString(item[key]).toLowerCase().indexOf(filterName) > -1;
           });
@@ -471,7 +601,7 @@ function createVueMethods(vue) {
           return item;
         });
       }
-      return this.cache.apiLogResultList;
+      return filteredList;
     },
     getComputedConnectDisplayResultList() { // 全局搜索扫描列表
       const filterName = XEUtils.toString(this.cache.connectDisplayFilterContent).trim().toLowerCase();
@@ -558,6 +688,11 @@ function createVueMethods(vue) {
     startDebugApi() {
       const apiType = this.store.devConfDisplayVars.activeApiDebugMenuItem;
       const apiParams = this.store.devConfDisplayVars.apiDebuggerParams[apiType];
+      
+      // 使用共享的 Device MAC（所有需要 deviceMac 的 API 共用同一个）
+      if (apiParams && apiParams.hasOwnProperty('deviceMac')) {
+        apiParams.deviceMac = this.store.devConfDisplayVars.apiDebuggerDeviceMac;
+      }
 
       console.log('startDebugApi apiParams before filter xss:', this.store.devConf.mac, JSON.stringify(apiParams));
       _.forEach(apiParams, (v, k) => {
@@ -572,7 +707,7 @@ function createVueMethods(vue) {
           apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.getAccessTokenOk')}, ${JSON.stringify(apiParams)}, ${JSON.stringify(data)}`);
           notify(`${this.$i18n.t('message.getAccessTokenOk')}: ${data.access_token}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
         }).catch(ex => {
-          notify(`${this.$i18n.t('message.getAccessTokenFail')}: ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+          notify(`${this.$i18n.t('message.getAccessTokenFail')}: ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
           apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.getAccessTokenFail')}, ${JSON.stringify({ apiParams, ex })}`);
         });
       } else if (apiType === libEnum.apiType.SCAN) {
@@ -614,28 +749,89 @@ function createVueMethods(vue) {
         let otherParams = this.getUrlVars(_.get(apiParams, 'connParams')); // 自定义输入，用户自己保证支持
         params = _.merge(params, otherParams);
 
-        apiModule.connectByDevConf(this.store.devConf, apiParams.deviceMac, apiParams.addrType, apiParams.chip, params).then(() => {
-          // notify(`连接设备 ${deviceMac} 成功`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.connectDeviceOk')}, ${JSON.stringify(apiParams)}`);
+        // MQTT 模式显示 topic 和真实 payload
+        if (this.store.devConf.transportType === 'MQTT') {
+          const gateway = this.store.devConf.mqtt.gateway;
+          const url = '/gap/nodes/' + apiParams.deviceMac + '/connection';
+          const body = { type: apiParams.addrType, chip: apiParams.chip, ...params };
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${buildMqttRequestLog(gateway, url, 'POST', body)}`);
+        } else {
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${JSON.stringify(apiParams)}`);
+        }
+        transportModule.connect(apiParams.deviceMac, apiParams.addrType, { chip: apiParams.chip, ...params }).then((data) => {
+          if (this.store.devConf.transportType === 'MQTT') {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, { code: 200, body: data || {} })}`);
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.connectDeviceOk')}, ${JSON.stringify(data || {})}`);
+          }
         }).catch(ex => {
-          notify(`${this.$i18n.t('message.connectDeviceFail')}: ${apiParams.deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.connectDeviceFail')}, ${JSON.stringify({ apiParams, ex })}`);
+          notify(`${this.$i18n.t('message.connectDeviceFail')}: ${apiParams.deviceMac}, ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+          if (this.store.devConf.transportType === 'MQTT') {
+            // 判断是对端响应错误还是本地错误（超时/连接失败等）
+            if (ex && typeof ex === 'object' && ex.code !== undefined) {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, ex)}`);
+            } else {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttLocalErrorLog(getErrorMessage(ex))}`);
+            }
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.connectDeviceFail')}, ${getErrorMessage(ex)}`);
+          }
         });
       } else if (apiType === libEnum.apiType.READ) {
-        apiModule.readByHandleByDevConf(this.store.devConf, apiParams.deviceMac, apiParams.handle).then((body) => {
+        // MQTT 模式显示 topic 和真实 payload
+        if (this.store.devConf.transportType === 'MQTT') {
+          const gateway = this.store.devConf.mqtt.gateway;
+          const url = '/gatt/nodes/' + apiParams.deviceMac + '/handle/' + apiParams.handle + '/value';
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${buildMqttRequestLog(gateway, url, 'GET', {})}`);
+        } else {
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${JSON.stringify(apiParams)}`);
+        }
+        transportModule.readByHandle(apiParams.deviceMac, apiParams.handle).then((body) => {
           notify(`${this.$i18n.t('message.readDataOk')}: ${apiParams.deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.readDataOk')}, ${JSON.stringify(body)}`);
+          if (this.store.devConf.transportType === 'MQTT') {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, { code: 200, body: body })}`);
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.readDataOk')}, ${JSON.stringify(body)}`);
+          }
         }).catch(ex => {
-          notify(`${this.$i18n.t('message.readDataFail')}: ${apiParams.deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.readDataFail')}, ${JSON.stringify({ apiParams, ex })}`);
+          notify(`${this.$i18n.t('message.readDataFail')}: ${apiParams.deviceMac}, ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+          if (this.store.devConf.transportType === 'MQTT') {
+            if (ex && typeof ex === 'object' && ex.code !== undefined) {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, ex)}`);
+            } else {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttLocalErrorLog(getErrorMessage(ex))}`);
+            }
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.readDataFail')}, ${getErrorMessage(ex)}`);
+          }
         });
       } else if (apiType === libEnum.apiType.READ_PHY) {
-        apiModule.readPhyByDevConf(this.store.devConf, apiParams.deviceMac).then((body) => {
+        // MQTT 模式显示 topic 和真实 payload
+        if (this.store.devConf.transportType === 'MQTT') {
+          const gateway = this.store.devConf.mqtt.gateway;
+          const url = '/gap/nodes/' + apiParams.deviceMac + '/phy';
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${buildMqttRequestLog(gateway, url, 'GET', {})}`);
+        } else {
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${JSON.stringify(apiParams)}`);
+        }
+        transportModule.readPhy(apiParams.deviceMac).then((body) => {
           notify(`${this.$i18n.t('message.readPhyOK')}: ${apiParams.deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.readPhyOK')}, ${JSON.stringify(body)}`);
+          if (this.store.devConf.transportType === 'MQTT') {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, { code: 200, body: body })}`);
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.readPhyOK')}, ${JSON.stringify(body)}`);
+          }
         }).catch(ex => {
-          notify(`${this.$i18n.t('message.readPhyFail')}: ${apiParams.deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.readPhyFail')}, ${JSON.stringify({ apiParams, ex })}`);
+          notify(`${this.$i18n.t('message.readPhyFail')}: ${apiParams.deviceMac}, ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+          if (this.store.devConf.transportType === 'MQTT') {
+            if (ex && typeof ex === 'object' && ex.code !== undefined) {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, ex)}`);
+            } else {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttLocalErrorLog(getErrorMessage(ex))}`);
+            }
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.readPhyFail')}, ${getErrorMessage(ex)}`);
+          }
         });
       } else if (apiType === libEnum.apiType.UPDATE_PHY) {
         let bodyParam = {
@@ -647,44 +843,145 @@ function createVueMethods(vue) {
           bodyParam.coded_option = apiParams.codedOption;
         }
 
-        apiModule.updatePhyByDevConf(this.store.devConf, apiParams.deviceMac, bodyParam).then((body) => {
+        // MQTT 模式显示 topic 和真实 payload
+        if (this.store.devConf.transportType === 'MQTT') {
+          const gateway = this.store.devConf.mqtt.gateway;
+          const url = '/gap/nodes/' + apiParams.deviceMac + '/phy';
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${buildMqttRequestLog(gateway, url, 'POST', bodyParam)}`);
+        } else {
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${JSON.stringify({ deviceMac: apiParams.deviceMac, ...bodyParam })}`);
+        }
+        transportModule.updatePhy(apiParams.deviceMac, bodyParam).then((body) => {
           notify(`${this.$i18n.t('message.updatePhyOK')}: ${apiParams.deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.updatePhyOK')}, ${JSON.stringify(bodyParam)}, ${JSON.stringify(body)}`);
+          if (this.store.devConf.transportType === 'MQTT') {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, { code: 200, body: body })}`);
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.updatePhyOK')}, ${JSON.stringify(body)}`);
+          }
         }).catch(ex => {
-          notify(`${this.$i18n.t('message.updatePhyFail')}: ${apiParams.deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.updatePhyFail')}, ${JSON.stringify(bodyParam)}, ${JSON.stringify({ ex })}`);
+          notify(`${this.$i18n.t('message.updatePhyFail')}: ${apiParams.deviceMac}, ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+          if (this.store.devConf.transportType === 'MQTT') {
+            if (ex && typeof ex === 'object' && ex.code !== undefined) {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, ex)}`);
+            } else {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttLocalErrorLog(getErrorMessage(ex))}`);
+            }
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.updatePhyFail')}, ${getErrorMessage(ex)}`);
+          }
         });
       } else if (apiType === libEnum.apiType.WRITE) {
-        apiModule.writeByHandleByDevConf(this.store.devConf, apiParams.deviceMac, apiParams.handle, apiParams.value, apiParams.noresponse).then(() => {
+        // MQTT 模式显示 topic 和真实 payload
+        if (this.store.devConf.transportType === 'MQTT') {
+          const gateway = this.store.devConf.mqtt.gateway;
+          const url = '/gatt/nodes/' + apiParams.deviceMac + '/handle/' + apiParams.handle + '/value/' + apiParams.value;
+          const body = apiParams.noresponse ? { noresponse: 1 } : {};
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${buildMqttRequestLog(gateway, url, 'GET', body)}`);
+        } else {
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${JSON.stringify(apiParams)}`);
+        }
+        transportModule.writeByHandle(apiParams.deviceMac, apiParams.handle, apiParams.value, apiParams.noresponse).then((data) => {
           notify(`${this.$i18n.t('message.writeDataOk')}: ${apiParams.deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.writeDataOk')}, ${JSON.stringify(apiParams)}`);
+          if (this.store.devConf.transportType === 'MQTT') {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, { code: 200, body: data || {} })}`);
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.writeDataOk')}, ${JSON.stringify(data || {})}`);
+          }
         }).catch(ex => {
-          notify(`${this.$i18n.t('message.writeDataFail')}: ${apiParams.deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.writeDataFail')}, ${JSON.stringify({ apiParams, ex })}`);
+          notify(`${this.$i18n.t('message.writeDataFail')}: ${apiParams.deviceMac}, ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+          if (this.store.devConf.transportType === 'MQTT') {
+            if (ex && typeof ex === 'object' && ex.code !== undefined) {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, ex)}`);
+            } else {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttLocalErrorLog(getErrorMessage(ex))}`);
+            }
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.writeDataFail')}, ${getErrorMessage(ex)}`);
+          }
         });
       } else if (apiType === libEnum.apiType.DISCONNECT) {
-        apiModule.disconnectByDevConf(this.store.devConf, apiParams.deviceMac).then(() => {
+        // MQTT 模式显示 topic 和真实 payload
+        if (this.store.devConf.transportType === 'MQTT') {
+          const gateway = this.store.devConf.mqtt.gateway;
+          const url = '/gap/nodes/' + apiParams.deviceMac + '/connection';
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${buildMqttRequestLog(gateway, url, 'DELETE', {})}`);
+        } else {
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${JSON.stringify(apiParams)}`);
+        }
+        transportModule.disconnect(apiParams.deviceMac).then((data) => {
           notify(`${this.$i18n.t('message.disconnectDeviceOk')}: ${apiParams.deviceMac}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.disconnectDeviceOk')}, ${JSON.stringify(apiParams)}`);
+          if (this.store.devConf.transportType === 'MQTT') {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, { code: 200, body: data || {} })}`);
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.disconnectDeviceOk')}, ${JSON.stringify(data || {})}`);
+          }
         }).catch(ex => {
-          notify(`${this.$i18n.t('message.disconnectDeviceFail')}: ${apiParams.deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.disconnectDeviceFail')}, ${JSON.stringify({ apiParams, ex })}`);
+          notify(`${this.$i18n.t('message.disconnectDeviceFail')}: ${apiParams.deviceMac}, ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+          if (this.store.devConf.transportType === 'MQTT') {
+            if (ex && typeof ex === 'object' && ex.code !== undefined) {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, ex)}`);
+            } else {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttLocalErrorLog(getErrorMessage(ex))}`);
+            }
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.disconnectDeviceFail')}, ${getErrorMessage(ex)}`);
+          }
         });
       } else if (apiType === libEnum.apiType.CONNECT_LIST) {
-        apiModule.getConnectedListByDevConf(this.store.devConf).then((data) => {
+        // MQTT 模式显示 topic 和真实 payload
+        if (this.store.devConf.transportType === 'MQTT') {
+          const gateway = this.store.devConf.mqtt.gateway;
+          const url = '/gap/nodes?connection_state=connected';
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${buildMqttRequestLog(gateway, url, 'GET', {})}`);
+        } else {
+          apiResult.resultList.push(`<- ${new Date().toISOString()} getConnectedList`);
+        }
+        transportModule.getConnectedList().then((data) => {
           notify(`${this.$i18n.t('message.getConnectListOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.getConnectListOk')}, ${JSON.stringify(data)}`);
+          if (this.store.devConf.transportType === 'MQTT') {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, { code: 200, body: data })}`);
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.getConnectListOk')}, ${JSON.stringify(data)}`);
+          }
         }).catch(ex => {
-          notify(`${this.$i18n.t('message.getConnectListFail')}: ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.getConnectListFail')}, ${JSON.stringify({ ex })}`);
+          notify(`${this.$i18n.t('message.getConnectListFail')}: ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+          if (this.store.devConf.transportType === 'MQTT') {
+            if (ex && typeof ex === 'object' && ex.code !== undefined) {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, ex)}`);
+            } else {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttLocalErrorLog(getErrorMessage(ex))}`);
+            }
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.getConnectListFail')}, ${getErrorMessage(ex)}`);
+          }
         });
       } else if (apiType === libEnum.apiType.DISCOVER) {
-        apiModule.getDeviceServiceListByDevConf(this.store.devConf, apiParams.deviceMac).then((data) => {
+        // MQTT 模式显示 topic 和真实 payload
+        if (this.store.devConf.transportType === 'MQTT') {
+          const gateway = this.store.devConf.mqtt.gateway;
+          const url = '/gatt/nodes/' + apiParams.deviceMac + '/services/characteristics/descriptors';
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${buildMqttRequestLog(gateway, url, 'GET', {})}`);
+        } else {
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${JSON.stringify(apiParams)}`);
+        }
+        transportModule.getDeviceServiceList(apiParams.deviceMac).then((data) => {
           notify(`${this.$i18n.t('message.getDeviceServiceListOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.getDeviceServiceListOk')}, ${JSON.stringify(data)}`);
+          if (this.store.devConf.transportType === 'MQTT') {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, { code: 200, body: data })}`);
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.getDeviceServiceListOk')}, ${JSON.stringify(data)}`);
+          }
         }).catch(ex => {
-          notify(`${this.$i18n.t('message.getDeviceServiceListFail')}: ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.getDeviceServiceListFail')}, ${JSON.stringify({ ex })}`);
+          notify(`${this.$i18n.t('message.getDeviceServiceListFail')}: ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+          if (this.store.devConf.transportType === 'MQTT') {
+            if (ex && typeof ex === 'object' && ex.code !== undefined) {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, ex)}`);
+            } else {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttLocalErrorLog(getErrorMessage(ex))}`);
+            }
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.getDeviceServiceListFail')}, ${getErrorMessage(ex)}`);
+          }
         });
       } else if (apiType === libEnum.apiType.NOTIFY) {
         const devConf = _.cloneDeep(this.store.devConf);
@@ -704,54 +1001,130 @@ function createVueMethods(vue) {
         });
         notify(`${this.$i18n.t('message.debuggerNotifyAlert')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
       } else if (apiType === libEnum.apiType.CONNECT_STATUS) {
-        apiResult.sse = apiModule.openConnectStatusSseByDevConf(this.store.devConf, (message) => {
-          this.cache.apiDebuggerResult[libEnum.apiType.CONNECT_STATUS].resultList.push(`${new Date().toISOString()}: ${message.data}`);
-        }, err => {
-          notify(`${this.$i18n.t('message.openConnectStatusFail')}`, this.$i18n.t('message.operationFail'), libEnum.messageType.SUCCESS);
-          this.cache.apiDebuggerResult[libEnum.apiType.CONNECT_STATUS].resultList.push(`${new Date().toISOString()}: ${JSON.stringify(err)}`);
-        });
-        notify(`${this.$i18n.t('message.openConnectStatusOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+        // MQTT 模式下使用 MQTT 监听连接状态
+        if (this.store.devConf.transportType === libEnum.transportType.MQTT) {
+          const self = this;
+          const mqttConnStatusCallback = function(data) {
+            self.cache.apiDebuggerResult[libEnum.apiType.CONNECT_STATUS].resultList.push(new Date().toISOString() + ': ' + JSON.stringify(data));
+          };
+          mqttModule.onConnectionState(mqttConnStatusCallback);
+          apiResult.mqttCallback = mqttConnStatusCallback;
+          notify(this.$i18n.t('message.openConnectStatusOk') + ' (MQTT)', this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+        } else {
+          apiResult.sse = apiModule.openConnectStatusSseByDevConf(this.store.devConf, (message) => {
+            this.cache.apiDebuggerResult[libEnum.apiType.CONNECT_STATUS].resultList.push(`${new Date().toISOString()}: ${message.data}`);
+          }, err => {
+            notify(`${this.$i18n.t('message.openConnectStatusFail')}`, this.$i18n.t('message.operationFail'), libEnum.messageType.SUCCESS);
+            this.cache.apiDebuggerResult[libEnum.apiType.CONNECT_STATUS].resultList.push(`${new Date().toISOString()}: ${JSON.stringify(err)}`);
+          });
+          notify(`${this.$i18n.t('message.openConnectStatusOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+        }
       } else if (apiType === libEnum.apiType.PAIR) {
-        apiModule.pairByDevConf(this.store.devConf, apiParams.deviceMac, {}).then((data) => {
+        // MQTT 模式显示 topic 和真实 payload
+        if (this.store.devConf.transportType === 'MQTT') {
+          const gateway = this.store.devConf.mqtt.gateway;
+          const url = '/management/nodes/' + apiParams.deviceMac + '/pair';
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${buildMqttRequestLog(gateway, url, 'POST', {})}`);
+        } else {
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${JSON.stringify(apiParams)}`);
+        }
+        transportModule.pair(apiParams.deviceMac, {}).then((data) => {
           notify(`${this.$i18n.t('message.pairOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairOk')}, ${JSON.stringify(data)}`);
+          if (this.store.devConf.transportType === 'MQTT') {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, { code: 200, body: data })}`);
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.pairOk')}, ${JSON.stringify(data)}`);
+          }
         }).catch(ex => {
-          notify(`${this.$i18n.t('message.pairFail')}: ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairFail')}, ${JSON.stringify({ ex })}`);
+          notify(`${this.$i18n.t('message.pairFail')}: ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+          if (this.store.devConf.transportType === 'MQTT') {
+            if (ex && typeof ex === 'object' && ex.code !== undefined) {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, ex)}`);
+            } else {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttLocalErrorLog(getErrorMessage(ex))}`);
+            }
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.pairFail')}, ${getErrorMessage(ex)}`);
+          }
         });
       } else if (apiType === libEnum.apiType.PAIR_INPUT) {
+        // MQTT 模式显示 topic 和真实 payload
+        if (this.store.devConf.transportType === 'MQTT') {
+          const gateway = this.store.devConf.mqtt.gateway;
+          const url = '/management/nodes/' + apiParams.deviceMac + '/pair-input';
+          const body = apiParams.inputType === 'Passkey' ? { passkey: apiParams.passkey } : { tk: apiParams.tk };
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${buildMqttRequestLog(gateway, url, 'POST', body)}`);
+        } else {
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${JSON.stringify(apiParams)}`);
+        }
         if (apiParams.inputType === 'Passkey') {
-          apiModule.pairByPasskeyByDevConf(this.store.devConf, apiParams.deviceMac, apiParams.passkey).then((data) => {
+          transportModule.pairByPasskey(apiParams.deviceMac, apiParams.passkey).then((data) => {
             notify(`${this.$i18n.t('message.pairOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
-            apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairOk')}, ${JSON.stringify(data)}`);
+            if (this.store.devConf.transportType === 'MQTT') {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, { code: 200, body: data })}`);
+            } else {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.pairOk')}, ${JSON.stringify(data)}`);
+            }
           }).catch(ex => {
-            notify(`${this.$i18n.t('message.pairFail')}: ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-            apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairFail')}, ${JSON.stringify({ ex })}`);
+            notify(`${this.$i18n.t('message.pairFail')}: ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+            if (this.store.devConf.transportType === 'MQTT') {
+              if (ex && typeof ex === 'object' && ex.code !== undefined) {
+                apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, ex)}`);
+              } else {
+                apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttLocalErrorLog(getErrorMessage(ex))}`);
+              }
+            } else {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.pairFail')}, ${getErrorMessage(ex)}`);
+            }
           });
         } else if (apiParams.inputType === 'LegacyOOB') {
-          apiModule.pairByLegacyOOBByDevConf(this.store.devConf, apiParams.deviceMac, tk).then((data) => {
+          transportModule.pairByLegacyOOB(apiParams.deviceMac, apiParams.tk).then((data) => {
             notify(`${this.$i18n.t('message.pairOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
-            apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairOk')}, ${JSON.stringify(data)}`);
+            if (this.store.devConf.transportType === 'MQTT') {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, { code: 200, body: data })}`);
+            } else {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.pairOk')}, ${JSON.stringify(data)}`);
+            }
           }).catch(ex => {
-            notify(`${this.$i18n.t('message.pairFail')}: ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-            apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairFail')}, ${JSON.stringify({ ex })}`);
-          });
-        } else if (apiParams.inputType === 'LegacyOOB') {
-          apiModule.pairByLegacyOOBByDevConf(this.store.devConf, apiParams.deviceMac, tk).then((data) => {
-            notify(`${this.$i18n.t('message.pairOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
-            apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairOk')}, ${JSON.stringify(data)}`);
-          }).catch(ex => {
-            notify(`${this.$i18n.t('message.pairFail')}: ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-            apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.pairFail')}, ${JSON.stringify({ ex })}`);
+            notify(`${this.$i18n.t('message.pairFail')}: ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+            if (this.store.devConf.transportType === 'MQTT') {
+              if (ex && typeof ex === 'object' && ex.code !== undefined) {
+                apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, ex)}`);
+              } else {
+                apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttLocalErrorLog(getErrorMessage(ex))}`);
+              }
+            } else {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.pairFail')}, ${getErrorMessage(ex)}`);
+            }
           });
         }
       } else if (apiType === libEnum.apiType.UNPAIR) {
-        apiModule.unpairByDevConf(this.store.devConf, apiParams.deviceMac).then((data) => {
+        // MQTT 模式显示 topic 和真实 payload
+        if (this.store.devConf.transportType === 'MQTT') {
+          const gateway = this.store.devConf.mqtt.gateway;
+          const url = '/management/nodes/' + apiParams.deviceMac + '/bond';
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${buildMqttRequestLog(gateway, url, 'DELETE', {})}`);
+        } else {
+          apiResult.resultList.push(`<- ${new Date().toISOString()} ${JSON.stringify(apiParams)}`);
+        }
+        transportModule.unpair(apiParams.deviceMac).then((data) => {
           notify(`${this.$i18n.t('message.unpairOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.unpairOk')}, ${JSON.stringify(data)}`);
+          if (this.store.devConf.transportType === 'MQTT') {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, { code: 200, body: data })}`);
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.unpairOk')}, ${JSON.stringify(data)}`);
+          }
         }).catch(ex => {
-          notify(`${this.$i18n.t('message.unpairFail')}: ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-          apiResult.resultList.push(`${new Date().toISOString()}: ${this.$i18n.t('message.unpairFail')}, ${JSON.stringify({ ex })}`);
+          notify(`${this.$i18n.t('message.unpairFail')}: ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+          if (this.store.devConf.transportType === 'MQTT') {
+            if (ex && typeof ex === 'object' && ex.code !== undefined) {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttResponseLog(this.store.devConf.mqtt.gateway, ex)}`);
+            } else {
+              apiResult.resultList.push(`-> ${new Date().toISOString()} ${buildMqttLocalErrorLog(getErrorMessage(ex))}`);
+            }
+          } else {
+            apiResult.resultList.push(`-> ${new Date().toISOString()} ${this.$i18n.t('message.unpairFail')}, ${getErrorMessage(ex)}`);
+          }
         });
       }
       this.store.devConfDisplayVars.activeApiDebugOutputMenuItem = 'output'; // 切换到调试结果页面
@@ -767,6 +1140,16 @@ function createVueMethods(vue) {
       }
       this.cache.apiDebuggerResult[this.store.devConfDisplayVars.activeApiDebugMenuItem].resultList.splice(0);
       notify(`${this.$i18n.t('message.clearApiResultOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+    },
+    scrollDebugResultToBottom() {
+      this.$nextTick(() => {
+        const container = this.$refs.debugResultContainer;
+        if (container && container.$el) {
+          container.$el.scrollTop = container.$el.scrollHeight;
+        } else if (container) {
+          container.scrollTop = container.scrollHeight;
+        }
+      });
     },
     clearNotify() {
       this.cache.notifyResultList.splice(0);
@@ -855,13 +1238,29 @@ function createVueMethods(vue) {
       let apiType = this.store.devConfDisplayVars.activeApiDebugMenuItem;
       const apiParams = this.store.devConfDisplayVars.apiDebuggerParams[apiType];
       const apiResult = this.cache.apiDebuggerResult[apiType];
-      if (apiType === libEnum.apiType.AUTH) { // auth base64
-        apiParams.base64 = Buffer.from(`${this.store.devConf.acDevKey}:${this.store.devConf.acDevSecret}`).toString('base64');
+      
+      // 使用共享的 Device MAC
+      if (apiParams && apiParams.hasOwnProperty('deviceMac')) {
+        apiParams.deviceMac = this.store.devConfDisplayVars.apiDebuggerDeviceMac;
       }
-      apiResult.code[libEnum.codeType.CURL] = codeModule.genCode(apiType, libEnum.codeType.CURL, apiParams);
-      apiResult.code[libEnum.codeType.NODEJS] = codeModule.genCode(apiType, libEnum.codeType.NODEJS, apiParams);
-      this.store.devConfDisplayVars.activeApiDebugOutputMenuItem = libEnum.codeType.CURL;
-      this.$refs.apiDebuggerOutputMenu.activeIndex = libEnum.codeType.CURL;
+      
+      // 根据通信模式生成对应代码
+      if (this.store.devConf.transportType === libEnum.transportType.MQTT) {
+        // MQTT 模式：生成 mosquitto 命令和 Node.js 代码
+        apiResult.code[libEnum.codeType.MOSQUITTO] = codeModule.genCode(apiType, libEnum.codeType.MOSQUITTO, apiParams) || '';
+        apiResult.code[libEnum.codeType.MQTT] = codeModule.genCode(apiType, libEnum.codeType.MQTT, apiParams) || '';
+        this.store.devConfDisplayVars.activeApiDebugOutputMenuItem = libEnum.codeType.MOSQUITTO;
+        this.$refs.apiDebuggerOutputMenu.activeIndex = libEnum.codeType.MOSQUITTO;
+      } else {
+        // HTTP 模式
+        if (apiType === libEnum.apiType.AUTH) { // auth base64
+          apiParams.base64 = Buffer.from(this.store.devConf.acDevKey + ':' + this.store.devConf.acDevSecret).toString('base64');
+        }
+        apiResult.code[libEnum.codeType.CURL] = codeModule.genCode(apiType, libEnum.codeType.CURL, apiParams);
+        apiResult.code[libEnum.codeType.NODEJS] = codeModule.genCode(apiType, libEnum.codeType.NODEJS, apiParams);
+        this.store.devConfDisplayVars.activeApiDebugOutputMenuItem = libEnum.codeType.CURL;
+        this.$refs.apiDebuggerOutputMenu.activeIndex = libEnum.codeType.CURL;
+      }
     },
     apiDebuggerDemoMenuSelect(key, keyPath) {
       this.store.devConfDisplayVars.activeApiDemoMenuItem = key;
@@ -875,8 +1274,15 @@ function createVueMethods(vue) {
     menuSelect(key, keyPath) {
       if (key === 'connectListMenuItem') { // 点击连接列表，重新加载连接列表，和连接SSE
         this.store.devConfDisplayVars.activeMenuItem = key;
-        connectModule.loadConnectedList();
-        connectModule.reopenConnectStatusSse();
+        // MQTT模式下，只有连接是Active时才自动获取连接列表
+        if (this.store.devConf.transportType === libEnum.transportType.MQTT) {
+          if (mqttModule.isConnected()) {
+            connectModule.loadConnectedList();
+          }
+        } else {
+          connectModule.loadConnectedList();
+          connectModule.reopenConnectStatusSse();
+        }
         this.connectVuxTableForceResize();
       } else if (key === 'notifyListMenuItem') {
         // notifyModule.reopenNotifySse(); // 手动打开
@@ -899,6 +1305,12 @@ function createVueMethods(vue) {
         this.apiLogVuxTableForceResize();
       } else if (key === 'apiDebuggerMenuItem') {
         this.store.devConfDisplayVars.activeMenuItem = key;
+        // MQTT模式下隐藏了scan和auth菜单，如果当前选中的是这些菜单，则切换到connect
+        if (this.store.devConf.transportType === libEnum.transportType.MQTT) {
+          if (['scan', 'auth'].includes(this.store.devConfDisplayVars.activeApiDebugMenuItem)) {
+            this.store.devConfDisplayVars.activeApiDebugMenuItem = 'connect';
+          }
+        }
         this.$refs.refApiDebuggerMenu.activeIndex = this.store.devConfDisplayVars.activeApiDebugMenuItem;
       } else if (key === 'apiLogListMenuItem') {
         this.store.devConfDisplayVars.activeMenuItem = key;
@@ -941,10 +1353,11 @@ function createVueMethods(vue) {
       dbModule.checkAndClearPhyParams(this.cache.model);
     },
     readDevicePhy(deviceMac) {
-      apiModule.readPhyByDevConf(this.store.devConf, deviceMac).then((rawBody) => {
+      transportModule.readPhy(deviceMac).then((rawBody) => {
         notify(rawBody, `${this.$i18n.t('message.readPhyOK')}`, libEnum.messageType.SUCCESS);
-      }).catch(function (ex) {
-        notify(`${this.$i18n.t('message.readPhyFail')}: ${deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+      }).catch((ex) => {
+        notify(`${this.$i18n.t('message.readPhyFail')}: ${deviceMac}, ${getErrorMessage(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+        connectModule.removeDeviceIfNotFound(deviceMac, ex);
       });
     },
     getDeviceServices(deviceMac) {
@@ -952,6 +1365,7 @@ function createVueMethods(vue) {
         this.cache.currentConnectedTab = deviceMac; // 点击服务激活此设备tab页面
       }).catch(ex => {
         notify(`${this.$i18n.t('message.getDeviceServiceListFail')}: ${JSON.stringify(ex)}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+        connectModule.removeDeviceIfNotFound(deviceMac, ex);
       });
     },
     exportDeviceServices(deviceMac) {
@@ -989,9 +1403,156 @@ function createVueMethods(vue) {
         this.store.devConfDisplayVars.leftConfHeight = '100%';
       }
     },
+    async controlTabChange(tab) {
+      console.log('control tab changed:', tab.name);
+      // 同步更新 transportType
+      this.store.devConf.transportType = tab.name;
+      
+      // 1. 停止扫描（同时清理HTTP SSE和MQTT回调）
+      if (this.store.devConfDisplayVars.isScanning) {
+        this.stopScan();
+      }
+      scanModule.stopReceivingMqttScanData();  // 确保MQTT回调也被清理
+      
+      // 2. 清空扫描结果列表
+      this.cache.scanResultList.splice(0);
+      this.cache.scanDisplayResultList.splice(0);
+      
+      // 3. 清空已连接设备列表
+      this.cache.connectedList.splice(0);
+      
+      // 4. 关闭连接状态SSE/MQTT监听
+      connectModule.closeConnectStatusSse();
+      
+      // 5. 停止通知监听
+      notifyModule.stopReceivingMqttNotification();
+      
+      // 6. 如果从 MQTT Tab 切换到 HTTP Tab，断开 MQTT 连接并加载 HTTP 连接列表
+      if (tab.name === 'HTTP') {
+        if (mqttModule.isConnected()) {
+          await mqttModule.disconnect();  // 等待断开完成，避免快速切换时的竞态条件
+        }
+        // P1 修复: HTTP模式下隐藏了mqtt和mosquitto输出Tab，如果当前选中的是这些，则切换到output
+        if (['mqtt', 'mosquitto'].includes(this.store.devConfDisplayVars.activeApiDebugOutputMenuItem)) {
+          this.store.devConfDisplayVars.activeApiDebugOutputMenuItem = 'output';
+          if (this.$refs.apiDebuggerOutputMenu) {
+            this.$refs.apiDebuggerOutputMenu.activeIndex = 'output';
+          }
+        }
+        // 切换到 HTTP 后自动加载连接列表
+        connectModule.loadConnectedList();
+        connectModule.reopenConnectStatusSse();
+      }
+      
+      // 7. 如果切换到 MQTT 模式，检查是否已连接，未连接则提示用户
+      if (tab.name === 'MQTT') {
+        const self = this;
+        // MQTT模式下隐藏了scan和auth菜单，如果当前选中的是这些菜单，则切换到connect
+        if (['scan', 'auth'].includes(this.store.devConfDisplayVars.activeApiDebugMenuItem)) {
+          this.store.devConfDisplayVars.activeApiDebugMenuItem = 'connect';
+        }
+        // P1 修复: MQTT模式下隐藏了curl和nodejs输出Tab，如果当前选中的是这些，则切换到output
+        if (['curl', 'nodejs'].includes(this.store.devConfDisplayVars.activeApiDebugOutputMenuItem)) {
+          this.store.devConfDisplayVars.activeApiDebugOutputMenuItem = 'output';
+          if (this.$refs.apiDebuggerOutputMenu) {
+            this.$refs.apiDebuggerOutputMenu.activeIndex = 'output';
+          }
+        }
+        if (!mqttModule.isConnected()) {
+          this.$confirm(
+            this.$i18n.t('message.mqttNotConnectedHint'),
+            this.$i18n.t('message.alert'),
+            { type: 'warning' }
+          ).then(function() {
+            self.connectMqtt();  // 自动连接
+          }).catch(function() {
+            // 用户取消，不做任何操作
+          });
+        }
+      }
+    },
+    formatGatewayMac(value) {
+      // 自动转换为大写
+      this.store.devConf.mqtt.gateway = (value || '').toUpperCase();
+    },
+    connectMqtt() {
+      const self = this;
+      const mqttConfig = this.store.devConf.mqtt;
+      const brokerUrl = this.mqttBrokerUrl;
+      
+      if (!brokerUrl) {
+        notify(this.$i18n.t('message.pleaseInput') + ' Host', this.$i18n.t('message.alert'), libEnum.messageType.WARNING);
+        return;
+      }
+      if (!mqttConfig.gateway) {
+        notify(this.$i18n.t('message.pleaseInput') + ' Gateway MAC', this.$i18n.t('message.alert'), libEnum.messageType.WARNING);
+        return;
+      }
+      // 验证 Gateway MAC 格式：大写字母和数字，以冒号分隔，如 CC:1B:E0:E3:CD:CC
+      const macPattern = /^([0-9A-F]{2}:){5}[0-9A-F]{2}$/;
+      if (!macPattern.test(mqttConfig.gateway)) {
+        notify(this.$i18n.t('message.mqttGatewayMacInvalid'), this.$i18n.t('message.alert'), libEnum.messageType.WARNING);
+        return;
+      }
+      
+      // 构建完整配置，使用拼接后的 brokerUrl
+      const connectConfig = {
+        brokerUrl: brokerUrl,
+        username: mqttConfig.username,
+        password: mqttConfig.password,
+        clientId: mqttConfig.clientId,
+        gateway: mqttConfig.gateway,
+        keepalive: mqttConfig.keepalive,
+        cleanSession: mqttConfig.cleanSession
+      };
+      
+      mqttModule.connect(connectConfig).then(function() {
+        notify(self.$i18n.t('message.mqttConnectOk'), self.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+        // 开始接收 MQTT 数据（连接成功后自动接收）
+        connectModule.startReceivingMqttConnectionState();
+        notifyModule.startReceivingMqttNotification();
+        scanModule.startReceivingMqttScanData();
+        // 加载当前网关的连接列表
+        connectModule.loadConnectedList();
+      }).catch(function(err) {
+        const errorMsg = err.message || JSON.stringify(err);
+        notify(self.$i18n.t('message.mqttConnectFail') + ': ' + errorMsg, self.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+      });
+    },
+    disconnectMqtt() {
+      const self = this;
+      // 停止接收 MQTT 数据
+      if (this.cache.isReceivingMqttScanData) {
+        scanModule.stopReceivingMqttScanData();
+      }
+      connectModule.stopReceivingMqttConnectionState();
+      notifyModule.stopReceivingMqttNotification();
+      
+      mqttModule.disconnect().then(function() {
+        notify(self.$i18n.t('message.mqttDisconnectOk'), self.$i18n.t('message.alert'), libEnum.messageType.SUCCESS);
+      });
+    },
+    toggleMqttScanDataReceiving() {
+      if (this.cache.isReceivingMqttScanData) {
+        scanModule.stopReceivingMqttScanData();
+      } else {
+        scanModule.startReceivingMqttScanData();
+      }
+    },
     stopApiScan() {
       const apiType = this.store.devConfDisplayVars.activeApiDebugMenuItem;
       const apiResult = this.cache.apiDebuggerResult[apiType];
+      // 处理 MQTT 模式下的回调清理
+      if (apiResult.mqttCallback) {
+        if (apiType === libEnum.apiType.CONNECT_STATUS) {
+          mqttModule.offConnectionState(apiResult.mqttCallback);
+        }
+        apiResult.mqttCallback = null;
+        this.store.devConfDisplayVars.isApiScanning = false;
+        notify(`${this.$i18n.t('message.alreadyStopScan')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
+        return;
+      }
+      // HTTP SSE 模式
       if (!apiResult.sse) return;
       apiResult.sse.close();
       apiResult.sse = null;
@@ -999,7 +1560,11 @@ function createVueMethods(vue) {
       notify(`${this.$i18n.t('message.alreadyStopScan')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
     },
     stopScan() {
+      // 关闭HTTP SSE
       scanModule.stopScan();
+      // 关闭MQTT扫描回调
+      scanModule.stopReceivingMqttScanData();
+      
       if (this.store.devConfDisplayVars.rssiChartSwitch) { // 如果当前开启了rssi图表，停止
         this.stopRssiChart();
       }
@@ -1008,17 +1573,18 @@ function createVueMethods(vue) {
     // 获取url参数对象
     getUrlVars(queryStr) {
       if (!queryStr) return {};
-      var paramArray = queryStr.split("&");
-      var len = paramArray.length;
-      var paramObj = {};
-      var arr = [];
-      for (var i = 0; i < len; i++) {
+      const paramArray = queryStr.split("&");
+      const len = paramArray.length;
+      const paramObj = {};
+      let arr = [];
+      for (let i = 0; i < len; i++) {
         arr = paramArray[i].split("=");
         if (arr[0] && arr[1]) paramObj[arr[0]] = arr[1];
       }
       return paramObj;
     },
     connectDeviceByRow(row, deviceMac) { // notify通过连接状态SSE通知
+      const self = this;
       main.setObjProperty(this.cache.devicesConnectLoading, deviceMac, true);
       let params = {
         discovergatt: _.get(this.store.devConf, 'discovergatt') || '1', // 优选和普通方式都支持
@@ -1040,43 +1606,48 @@ function createVueMethods(vue) {
 
       if (params.timeout < 0.2 || params.timeout > 20) params.timeout = 15; // timeout范围处理
       params.timeout = params.timeout * 1000;
+      params.chip = this.store.devConf.connChip || this.store.devConf.chip;
 
       let otherParams = this.getUrlVars(_.get(this.store.devConf, 'connParams')); // 自定义输入，用户自己保证支持
       params = _.merge(params, otherParams);
-      apiModule.connectByDevConf(this.store.devConf, deviceMac, null, this.store.devConf.connChip || this.store.devConf.chip, params).then(() => {
+      
+      // 使用 transport 适配器，自动选择 HTTP 或 MQTT
+      transportModule.connect(deviceMac, row.bdaddrType, params).then(function() {
         // notify(`连接设备 ${deviceMac} 成功`, '设备连接成功', libEnum.messageType.SUCCESS);
-        _.remove(this.cache.scanResultList, { mac: deviceMac });
-        let removedList = _.remove(this.cache.scanDisplayResultList, { mac: deviceMac }); // 连接成功从扫描列表中移除
-        this.$refs.refScanDisplayResultGrid.remove([row]);
-        this.$refs.refScanDisplayResultGrid.refreshData();
-        this.$refs.refScanDisplayResultGrid.recalculate();
-        this.$refs.refScanDisplayResultGrid.refreshScroll();
+        _.remove(self.cache.scanResultList, { mac: deviceMac });
+        const removedList = _.remove(self.cache.scanDisplayResultList, { mac: deviceMac }); // 连接成功从扫描列表中移除
+        self.$refs.refScanDisplayResultGrid.remove([row]);
+        self.$refs.refScanDisplayResultGrid.refreshData();
+        self.$refs.refScanDisplayResultGrid.recalculate();
+        self.$refs.refScanDisplayResultGrid.refreshScroll();
         if (removedList.length > 0) {
-          dbModule.listAddOrUpdate(this.cache.connectedList, { mac: removedList[0].mac }, { // 连接成功移到连接列表
+          dbModule.listAddOrUpdate(self.cache.connectedList, { mac: removedList[0].mac }, { // 连接成功移到连接列表
             mac: removedList[0].mac,
             name: removedList[0].name,
             bdaddrType: removedList[0].bdaddrType,
           });
         }
-      }).catch(ex => {
-        notify(`${this.$i18n.t('message.connectDeviceFail')}: ${deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
-      }).then(() => {
-        main.setObjProperty(this.cache.devicesConnectLoading, deviceMac, false);
+      }).catch(function(ex) {
+        notify(self.$i18n.t('message.connectDeviceFail') + ': ' + deviceMac + ', ' + getErrorMessage(ex), self.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+      }).then(function() {
+        main.setObjProperty(self.cache.devicesConnectLoading, deviceMac, false);
       });
     },
     disconnectDevice(deviceMac) {
-      apiModule.disconnectByDevConf(this.store.devConf, deviceMac).then(() => {
-        let index = _.findIndex(this.cache.connectedList, { mac: deviceMac });
+      const self = this;
+      // 使用 transport 适配器
+      transportModule.disconnect(deviceMac).then(function() {
+        const index = _.findIndex(self.cache.connectedList, { mac: deviceMac });
         if (index === -1) return;
-        this.cache.connectedList.splice(index, 1); // 删除此设备
-        let activeItem = this.cache.connectedList[index] || this.cache.connectedList[index - 1];
-        let activeItemName = activeItem ? activeItem.mac : 'connectTab0';
-        this.cache.currentConnectedTab = activeItemName;
-        this.connectVuxTableForceResize();
+        self.cache.connectedList.splice(index, 1); // 删除此设备
+        const activeItem = self.cache.connectedList[index] || self.cache.connectedList[index - 1];
+        const activeItemName = activeItem ? activeItem.mac : 'connectTab0';
+        self.cache.currentConnectedTab = activeItemName;
+        self.connectVuxTableForceResize();
         // CAUTION: 目前通过连接状态SSE发送通知，暂时不考虑SSE失败的情况
         // notify(`设备 ${deviceMac} 断开连接`, `操作成功`, libEnum.messageType.SUCCESS);
-      }).catch(function (ex) {
-        notify(`${this.$i18n.t('message.disconnectFail')}: ${deviceMac}, ${ex}`, this.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
+      }).catch(function(ex) {
+        notify(self.$i18n.t('message.disconnectFail') + ': ' + deviceMac + ', ' + getErrorMessage(ex), self.$i18n.t('message.operationFail'), libEnum.messageType.ERROR);
       });
     },
     apiScanFilterNamesHandleClose(tag) {
@@ -1196,6 +1767,60 @@ function createVueMethods(vue) {
           callback: action => { }
         });
       }
+      // 触发 token 获取
+      this.fetchAcTokenOnBlur();
+    },
+    /**
+     * AC 模式下，当 server/key/secret 输入框失焦时，尝试获取 token
+     * 条件：AC 模式 + HTTP 传输 + 三字段均非空
+     * 目的：避免输入过程中频繁获取 token 导致多次弹窗
+     */
+    fetchAcTokenOnBlur() {
+      const devConf = this.store.devConf;
+      
+      // 仅 AC 模式需要获取 token
+      if (devConf.controlStyle !== libEnum.controlStyle.AC) {
+        return;
+      }
+      
+      // MQTT 模式不需要 AC token
+      if (devConf.transportType === libEnum.transportType.MQTT) {
+        return;
+      }
+      
+      // 三字段均需非空（trim 后判断）
+      const acServerURI = (devConf.acServerURI || '').trim();
+      const acDevKey = (devConf.acDevKey || '').trim();
+      const acDevSecret = (devConf.acDevSecret || '').trim();
+      
+      if (!acServerURI || !acDevKey || !acDevSecret) {
+        return;
+      }
+      
+      // 构建 baseURI
+      const baseURI = acServerURI + '/api';
+      
+      // 获取 token
+      apiModule.getAccessToken(baseURI, acDevKey, acDevSecret).then((data) => {
+        dbModule.getStorage().accessToken = data.access_token;
+        logger.info('fetchAcTokenOnBlur: token obtained successfully');
+        
+        // 如果已选择了网关 MAC，获取网关信息更新 model
+        if (devConf.mac) {
+          apiModule.getAcGateway(data.access_token, devConf.mac).then(gatewayData => {
+            this.cache.model = _.get(gatewayData, 'model') || '';
+            dbModule.checkAndClearPhyParams(this.cache.model);
+            console.log('fetchAcTokenOnBlur: cache update model by get gateway:', this.cache.model);
+          }).catch(ex => {
+            logger.warn('fetchAcTokenOnBlur: getAcGateway failed:', ex);
+          });
+        }
+      }).catch(ex => {
+        logger.warn('fetchAcTokenOnBlur: getAccessToken failed:', ex);
+        notify(`${this.$i18n.t('message.getAccessTokenFail')}: ${getErrorMessage(ex)}`, 
+               this.$i18n.t('message.operationFail'), 
+               libEnum.messageType.ERROR);
+      });
     }
   };
 }
@@ -1294,12 +1919,164 @@ function createWatch() {
           this.store.devConfDisplayVars.toolsJsonConversion.format = `${ex}\n${val}`;
         }
       }
+    },
+    'cache.apiDebuggerResult': {
+      handler: function (val, oldVal) {
+        this.scrollDebugResultToBottom();
+      },
+      deep: true
     }
   };
 }
 
 function createComputed() {
   return {
+    // Gateway MAC 格式校验：当输入长度达到完整 MAC 长度但格式不正确时显示错误
+    gatewayMacError: function() {
+      const gateway = this.store.devConf.mqtt.gateway;
+      if (!gateway) return false; // 空值不显示错误
+      // 完整 MAC 地址长度为 17 (如 CC:1B:E0:E2:8F:2C)
+      // 只有当输入长度 >= 17 时才验证格式，避免输入过程中一直显示错误
+      if (gateway.length < 17) return false;
+      const macPattern = /^([0-9A-F]{2}:){5}[0-9A-F]{2}$/;
+      return !macPattern.test(gateway);
+    },
+    mqttConnected: function() {
+      return this.cache.mqtt && this.cache.mqtt.status === libEnum.mqttStatus.CONNECTED;
+    },
+    mqttError: function() {
+      return this.cache.mqtt && this.cache.mqtt.status === libEnum.mqttStatus.ERROR;
+    },
+    mqttStatusTagType: function() {
+      const status = this.cache.mqtt ? this.cache.mqtt.status : libEnum.mqttStatus.DISCONNECTED;
+      switch (status) {
+        case libEnum.mqttStatus.CONNECTED:
+          return 'success';
+        case libEnum.mqttStatus.CONNECTING:
+        case libEnum.mqttStatus.RECONNECTING:
+          return 'warning';
+        case libEnum.mqttStatus.ERROR:
+          return 'danger';
+        default:
+          return 'info';
+      }
+    },
+    mqttStatusText: function() {
+      const status = this.cache.mqtt ? this.cache.mqtt.status : libEnum.mqttStatus.DISCONNECTED;
+      switch (status) {
+        case libEnum.mqttStatus.CONNECTED:
+          return this.$i18n.t('message.mqttConnected');
+        case libEnum.mqttStatus.CONNECTING:
+          return this.$i18n.t('message.mqttConnecting');
+        case libEnum.mqttStatus.RECONNECTING:
+          return this.$i18n.t('message.mqttReconnecting');
+        case libEnum.mqttStatus.ERROR:
+          return this.$i18n.t('message.mqttError');
+        default:
+          return this.$i18n.t('message.mqttDisconnected');
+      }
+    },
+    mqttLastHeartbeatText: function() {
+      return mqttModule.formatLastHeartbeat();
+    },
+    mqttUptimeText: function() {
+      const uptime = this.cache.mqtt && this.cache.mqtt.gatewayInfo ? this.cache.mqtt.gatewayInfo.uptime : 0;
+      if (!uptime) return '-';
+      const days = Math.floor(uptime / 86400);
+      const hours = Math.floor((uptime % 86400) / 3600);
+      const minutes = Math.floor((uptime % 3600) / 60);
+      if (days > 0) return days + 'd ' + hours + 'h ' + minutes + 'm';
+      if (hours > 0) return hours + 'h ' + minutes + 'm';
+      return minutes + 'm';
+    },
+    mqttStatusDotClass: function() {
+      const status = this.cache.mqtt ? this.cache.mqtt.status : libEnum.mqttStatus.DISCONNECTED;
+      switch (status) {
+        case libEnum.mqttStatus.CONNECTED:
+          return 'mqtt-status-dot mqtt-status-connected';
+        case libEnum.mqttStatus.CONNECTING:
+        case libEnum.mqttStatus.RECONNECTING:
+          return 'mqtt-status-dot mqtt-status-connecting';
+        case libEnum.mqttStatus.ERROR:
+          return 'mqtt-status-dot mqtt-status-error';
+        default:
+          return 'mqtt-status-dot mqtt-status-disconnected';
+      }
+    },
+    // 判断是否正在连接中（用于按钮 loading 状态）
+    mqttConnecting: function() {
+      const status = this.cache.mqtt ? this.cache.mqtt.status : libEnum.mqttStatus.DISCONNECTED;
+      return status === libEnum.mqttStatus.CONNECTING || status === libEnum.mqttStatus.RECONNECTING;
+    },
+    // Connect 按钮类型（根据状态显示不同颜色）
+    mqttConnectButtonType: function() {
+      const status = this.cache.mqtt ? this.cache.mqtt.status : libEnum.mqttStatus.DISCONNECTED;
+      switch (status) {
+        case libEnum.mqttStatus.ERROR:
+          return 'danger';  // 错误时显示红色按钮
+        case libEnum.mqttStatus.CONNECTING:
+        case libEnum.mqttStatus.RECONNECTING:
+          return 'warning';  // 连接中显示橙色按钮
+        default:
+          return 'primary';  // 默认蓝色按钮
+      }
+    },
+    // Connect 按钮内圆点的 CSS 类（未连接不显示，其他状态显示对应颜色）
+    mqttConnectButtonDotClass: function() {
+      const status = this.cache.mqtt ? this.cache.mqtt.status : libEnum.mqttStatus.DISCONNECTED;
+      switch (status) {
+        case libEnum.mqttStatus.CONNECTED:
+          return 'mqtt-btn-dot mqtt-btn-dot-connected';
+        case libEnum.mqttStatus.CONNECTING:
+        case libEnum.mqttStatus.RECONNECTING:
+          return 'mqtt-btn-dot mqtt-btn-dot-connecting';
+        case libEnum.mqttStatus.ERROR:
+          return 'mqtt-btn-dot mqtt-btn-dot-error';
+        default:
+          return '';  // 未连接不显示圆点
+      }
+    },
+    mqttBrokerUrl: function() {
+      const mqtt = this.store.devConf.mqtt;
+      const protocol = mqtt.protocol || 'ws';
+      const server = mqtt.server || 'broker.emqx.io';
+      const port = mqtt.port || '8083';
+      let path = mqtt.path || 'mqtt';
+      if (!server) return '';
+      // 构建 URL，如果有 path 则添加（去掉用户可能输入的前导斜杠）
+      let url = protocol + '://' + server + ':' + port;
+      if (path) {
+        path = path.replace(/^\/+/, ''); // 去掉前导斜杠
+        url += '/' + path;
+      }
+      return url;
+    },
+    // API Debugger 中显示的 Router/Gateway 地址（可编辑，直接复用现有配置字段）
+    apiDebuggerRouter: {
+      get: function() {
+        // MQTT 模式
+        if (this.store.devConf.transportType === 'MQTT') {
+          return this.store.devConf.mqtt.gateway;
+        }
+        // HTTP 模式
+        if (this.store.devConf.controlStyle === 'AP') {
+          return this.store.devConf.apServerURI;
+        }
+        return this.store.devConf.mac;
+      },
+      set: function(value) {
+        // MQTT 模式
+        if (this.store.devConf.transportType === 'MQTT') {
+          this.store.devConf.mqtt.gateway = value;
+        } else if (this.store.devConf.controlStyle === 'AP') {
+          // HTTP AP 模式
+          this.store.devConf.apServerURI = value;
+        } else {
+          // HTTP AC 模式
+          this.store.devConf.mac = value;
+        }
+      }
+    },
     getComputedNotifyDisplayResultList() { // 全局搜索扫描列表
       const filterName = XEUtils.toString(this.cache.notifyDisplayFilterContent).trim().toLowerCase();
       if (filterName) {
@@ -1382,6 +2159,7 @@ function createVue() {
       dbModule.loadStorage();
     },
     mounted: function () {
+      const self = this;
       this.store.devConfDisplayVars.language = this.$i18n.locale;
       this.cache.clientHeight = document.documentElement.clientHeight;
       this.cache.vxeGridHeight = this.cache.clientHeight - 240;
@@ -1389,11 +2167,27 @@ function createVue() {
         this.cache.clientHeight = `${document.documentElement.clientHeight}`;
         this.cache.vxeGridHeight = this.cache.clientHeight - 240;
       };
-      this.$alert(this.$i18n.t('message.configOrigin'), this.$i18n.t('message.alert'), {
-        dangerouslyUseHTMLString: true,
-        confirmButtonText: this.$i18n.t('message.ok'),
-        callback: action => {}
+      
+      // 设置保存错误回调，当 AC token 获取失败时提示用户（配置仍会保存）
+      dbModule.setOnSaveError(function(errorMsg) {
+        notify(self.$i18n.t('message.configSavedButTokenFailed') || 'Config saved, but AC token fetch failed: ' + errorMsg, 
+               self.$i18n.t('message.alert'), 
+               libEnum.messageType.WARNING);
       });
+      
+      // 页面关闭前立即保存配置，避免防抖导致的配置丢失
+      window.addEventListener('beforeunload', function() {
+        dbModule.saveDevConfImmediately();
+      });
+      
+      // 只在 HTTP 模式下显示 CORS 配置提示
+      if (transportModule.isHttpMode()) {
+        this.$alert(this.$i18n.t('message.configOrigin'), this.$i18n.t('message.alert'), {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: this.$i18n.t('message.ok'),
+          callback: action => {}
+        });
+      }
     }
   };
 }

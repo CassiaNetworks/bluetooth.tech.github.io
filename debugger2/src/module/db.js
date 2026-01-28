@@ -11,6 +11,7 @@ let storage = {
   accessToken: '', // ac连接方式token
   devConf: {
     controlStyle: libEnum.controlStyle.AP, // 连接方式
+    transportType: libEnum.transportType.HTTP, // 通信方式: HTTP 或 MQTT
     apServerURI: 'http://192.168.5.100', // AP服务器地址
     acServerURI: 'http://192.168.5.100', // AC服务器地址
     baseURI: 'http://192.168.5.100', //
@@ -31,8 +32,23 @@ let storage = {
     connParams: '', // 连接接口其他参数
     autoSelectionOn: 'off', // 是否开启优选，默认不开启
     aps: [], // 优选选择的网关列表
+    // MQTT 配置
+    mqtt: {
+      protocol: 'ws',           // ws | wss
+      server: 'broker.emqx.io',  // broker server address
+      port: '8083',             // broker WebSocket port
+      tcpPort: '1883',          // broker TCP port (用于代码生成)
+      path: '/mqtt',            // WebSocket path，缺省 /mqtt
+      username: '',
+      password: '',
+      clientId: '',
+      gateway: 'CC:1B:E0:00:00:01',              // 目标网关 MAC
+      keepalive: 60,
+      cleanSession: true
+    }
   },
   devConfDisplayVars: {
+    activeControlTab: 'HTTP', // 当前激活的 Control Tab: HTTP | MQTT
     oldVersionUrl: '#', // 老版本debugger链接
     leftConfWidth: '430px', // 左侧配置栏宽度
     leftConfLabelWidth: '125px', // 左侧label宽度
@@ -118,6 +134,9 @@ let storage = {
     deviceScanDataFilterDuplicate: '1000',
     deviceScanDataTimestamp: '0',
 
+    // API Debugger 共享的 Device MAC（所有 API 使用同一个）
+    apiDebuggerDeviceMac: 'C0:00:5B:D1:AA:BC',
+
     apiDebuggerParams: { // 调试工具参数
       [libEnum.apiType.AUTH]: {},
       [libEnum.apiType.SCAN]: {
@@ -196,6 +215,25 @@ let storage = {
 };
 
 let cache = { 
+  // MQTT 运行时状态（不持久化）
+  mqtt: {
+    status: libEnum.mqttStatus.DISCONNECTED,
+    connectedAt: null,      // MQTT 连接成功的时间戳
+    lastHeartbeat: null,
+    gatewayInfo: {
+      model: '',
+      version: '',
+      uptime: 0,
+      uplink: '',
+      private_ip: ''
+    },
+    reconnectCount: 0,
+    lastError: ''
+  },
+  
+  // 是否正在接收 MQTT 扫描数据
+  isReceivingMqttScanData: false,
+  
   devConfRules: {
     'apServerURI': [
       { validator: function(rule, value, callback) {
@@ -266,7 +304,9 @@ let cache = {
       resultList: [],
       code: {
         [libEnum.codeType.CURL]: '',
-        [libEnum.codeType.NODEJS]: ''
+        [libEnum.codeType.NODEJS]: '',
+        [libEnum.codeType.MQTT]: '',
+        [libEnum.codeType.MOSQUITTO]: ''
       }
     },
     [libEnum.apiType.SCAN]: {
@@ -277,98 +317,126 @@ let cache = {
       displayResultList: [],
       code: {
         [libEnum.codeType.CURL]: '',
-        [libEnum.codeType.NODEJS]: ''
+        [libEnum.codeType.NODEJS]: '',
+        [libEnum.codeType.MQTT]: '',
+        [libEnum.codeType.MOSQUITTO]: ''
       }
     },
     [libEnum.apiType.CONNECT]: {
       resultList: [],
       code: {
         [libEnum.codeType.CURL]: '',
-        [libEnum.codeType.NODEJS]: ''
+        [libEnum.codeType.NODEJS]: '',
+        [libEnum.codeType.MQTT]: '',
+        [libEnum.codeType.MOSQUITTO]: ''
       }
     },
     [libEnum.apiType.READ]: {
       resultList: [],
       code: {
         [libEnum.codeType.CURL]: '',
-        [libEnum.codeType.NODEJS]: ''
+        [libEnum.codeType.NODEJS]: '',
+        [libEnum.codeType.MQTT]: '',
+        [libEnum.codeType.MOSQUITTO]: ''
       }
     },
     [libEnum.apiType.READ_PHY]: {
       resultList: [],
       code: {
         [libEnum.codeType.CURL]: '',
-        [libEnum.codeType.NODEJS]: ''
+        [libEnum.codeType.NODEJS]: '',
+        [libEnum.codeType.MQTT]: '',
+        [libEnum.codeType.MOSQUITTO]: ''
       }
     },
     [libEnum.apiType.UPDATE_PHY]: {
       resultList: [],
       code: {
         [libEnum.codeType.CURL]: '',
-        [libEnum.codeType.NODEJS]: ''
+        [libEnum.codeType.NODEJS]: '',
+        [libEnum.codeType.MQTT]: '',
+        [libEnum.codeType.MOSQUITTO]: ''
       }
     },
     [libEnum.apiType.WRITE]: {
       resultList: [],
       code: {
         [libEnum.codeType.CURL]: '',
-        [libEnum.codeType.NODEJS]: ''
+        [libEnum.codeType.NODEJS]: '',
+        [libEnum.codeType.MQTT]: '',
+        [libEnum.codeType.MOSQUITTO]: ''
       }
     },
     [libEnum.apiType.DISCONNECT]: {
       resultList: [],
       code: {
         [libEnum.codeType.CURL]: '',
-        [libEnum.codeType.NODEJS]: ''
+        [libEnum.codeType.NODEJS]: '',
+        [libEnum.codeType.MQTT]: '',
+        [libEnum.codeType.MOSQUITTO]: ''
       }
     },
     [libEnum.apiType.CONNECT_LIST]: {
       resultList: [],
       code: {
         [libEnum.codeType.CURL]: '',
-        [libEnum.codeType.NODEJS]: ''
+        [libEnum.codeType.NODEJS]: '',
+        [libEnum.codeType.MQTT]: '',
+        [libEnum.codeType.MOSQUITTO]: ''
       }
     },
     [libEnum.apiType.DISCOVER]: {
       resultList: [],
       code: {
         [libEnum.codeType.CURL]: '',
-        [libEnum.codeType.NODEJS]: ''
+        [libEnum.codeType.NODEJS]: '',
+        [libEnum.codeType.MQTT]: '',
+        [libEnum.codeType.MOSQUITTO]: ''
       }
     },
     [libEnum.apiType.NOTIFY]: {
       resultList: [],
       code: {
         [libEnum.codeType.CURL]: '',
-        [libEnum.codeType.NODEJS]: ''
+        [libEnum.codeType.NODEJS]: '',
+        [libEnum.codeType.MQTT]: '',
+        [libEnum.codeType.MOSQUITTO]: ''
       }
     },
     [libEnum.apiType.CONNECT_STATUS]: {
       resultList: [],
       code: {
         [libEnum.codeType.CURL]: '',
-        [libEnum.codeType.NODEJS]: ''
+        [libEnum.codeType.NODEJS]: '',
+        [libEnum.codeType.MQTT]: '',
+        [libEnum.codeType.MOSQUITTO]: ''
       }
     },
     [libEnum.apiType.PAIR]: {
       resultList: [],
       code: {
         [libEnum.codeType.CURL]: '',
-        [libEnum.codeType.NODEJS]: ''
+        [libEnum.codeType.NODEJS]: '',
+        [libEnum.codeType.MQTT]: '',
+        [libEnum.codeType.MOSQUITTO]: ''
       }
     },
     [libEnum.apiType.PAIR_INPUT]: {
       resultList: [],
       code: {
         [libEnum.codeType.CURL]: '',
-        [libEnum.codeType.NODEJS]: ''
+        [libEnum.codeType.NODEJS]: '',
+        [libEnum.codeType.MQTT]: '',
+        [libEnum.codeType.MOSQUITTO]: ''
       }
     },
     [libEnum.apiType.UNPAIR]: {
       resultList: [],
       code: {
         [libEnum.codeType.CURL]: '',
-        [libEnum.codeType.NODEJS]: ''
+        [libEnum.codeType.NODEJS]: '',
+        [libEnum.codeType.MQTT]: '',
+        [libEnum.codeType.MOSQUITTO]: ''
       }
     }
   },
@@ -446,7 +514,8 @@ function saveApDevConf(_devConf) {
   save(storageKey, JSON.stringify(storage.devConf)); // 只保存配置，其他缓存不保存
 }
 
-// 更新接口地址
+// 更新接口地址（仅持久化，不获取 token）
+// token 获取已移至 vue.js 中的 fetchAcTokenOnBlur，在输入框失焦时触发
 function saveAcDevConf(_devConf) {
   _devConf.baseURI = getBaseURI(_devConf);
 
@@ -456,16 +525,11 @@ function saveAcDevConf(_devConf) {
   });
   storage.devConf = _devConf;
   
-  // TODO: 优化定时获取token
-  return new Promise(function(resolve, reject) {
-    apiModule.getAccessToken(_devConf.baseURI, _devConf.acDevKey, _devConf.acDevSecret).then(function(data) {
-      storage.accessToken = data.access_token;
-      save(storageKey, JSON.stringify(storage.devConf)); // 只保存配置，其他缓存不保存
-      resolve(data.access_token);
-    }).catch(function(error) {
-      reject(error);
-    });
-  });
+  // 保存配置到 localStorage
+  save(storageKey, JSON.stringify(storage.devConf));
+  
+  // 不再在保存时获取 token，避免输入过程中多次弹出"获取 token 失败"
+  return Promise.resolve(null);
 }
 
 function checkAndClearPhyParams(model) {
@@ -482,24 +546,30 @@ function checkAndClearPhyParams(model) {
   storage.devConfDisplayVars.apiDebuggerParams[libEnum.apiType.CONNECT].secondaryPhy = '';
 }
 
+// 保存失败回调（可由 vue.js 设置）
+let onSaveError = null;
+
+function setOnSaveError(callback) {
+  onSaveError = callback;
+}
+
 function saveDevConf(_devConf) {
   clearTimeout(storage.devConfSaveTimer);
   storage.devConfSaveTimer = setTimeout(function() {
     logger.info('save dev conf:', _devConf);
     if (_devConf.controlStyle === libEnum.controlStyle.AC) {
-      return saveAcDevConf(_devConf).then((token) => {
-        console.log('try get model by mac:', _devConf.mac);
-        if (_devConf.mac) {
-          apiModule.getAcGateway(token, _devConf.mac).then(data => {
-            cache.model = _.get(data, 'model') || '';
-            checkAndClearPhyParams(cache.model);
-            console.log('cache update model by get gateway:', cache.model);
-          });
-        }
-      });
+      // AC 模式：仅持久化，不再获取 token（token 获取移至 blur 事件）
+      return saveAcDevConf(_devConf);
     }
     return saveApDevConf(_devConf);
-  }, 1000); // 1秒防止抖动
+  }, 500); // 减少到 500ms 防抖，加快保存响应
+}
+
+// 立即保存配置（用于 beforeunload 事件）
+function saveDevConfImmediately() {
+  clearTimeout(storage.devConfSaveTimer);
+  save(storageKey, JSON.stringify(storage.devConf));
+  logger.info('save dev conf immediately');
 }
 
 function getDevConf() {
@@ -529,10 +599,52 @@ function loadStorage() {
   if (!_.has(storage.devConf, 'scanParams')) storage.devConf.scanParams = '';
   if (!_.has(storage.devConf, 'autoSelectionOn')) storage.devConf.autoSelectionOn = 'off';
   if (!_.has(storage.devConf, 'aps')) storage.devConf.aps = storage.devConf.mac || ['*'];
+  
+  // MQTT 配置兼容性
+  if (!_.has(storage.devConf, 'transportType')) storage.devConf.transportType = libEnum.transportType.HTTP;
+  
+  // 同步 activeControlTab 与 transportType，确保 UI 和配置一致
+  storage.devConfDisplayVars.activeControlTab = storage.devConf.transportType || libEnum.transportType.HTTP;
+  
+  if (!_.has(storage.devConf, 'mqtt')) {
+    storage.devConf.mqtt = {
+      protocol: 'ws',
+      server: 'broker.emqx.io',
+      port: '8083',
+      path: '/mqtt',
+      username: '',
+      password: '',
+      clientId: '',
+      gateway: 'CC:1B:E0:00:00:01',
+      keepalive: 60,
+      cleanSession: true
+    };
+  }
+  // 兼容旧版本没有 path 字段的情况，缺省为 mqtt
+  if (!_.has(storage.devConf.mqtt, 'path')) {
+    storage.devConf.mqtt.path = 'mqtt';
+  }
+  // 兼容旧版本 brokerUrl 格式，迁移到新的 protocol/server/port 格式
+  if (_.has(storage.devConf.mqtt, 'brokerUrl') && !_.has(storage.devConf.mqtt, 'protocol')) {
+    const brokerUrl = storage.devConf.mqtt.brokerUrl || '';
+    const match = brokerUrl.match(/^(wss?):\/\/([^:\/]+):?(\d+)?/);
+    if (match) {
+      storage.devConf.mqtt.protocol = match[1] || 'ws';
+      storage.devConf.mqtt.server = match[2] || 'broker.emqx.io';
+      storage.devConf.mqtt.port = match[3] || '8083';
+    } else {
+      storage.devConf.mqtt.protocol = 'ws';
+      storage.devConf.mqtt.server = 'broker.emqx.io';
+      storage.devConf.mqtt.port = '8083';
+    }
+    delete storage.devConf.mqtt.brokerUrl;
+  }
 
-  // 如果是AC方式，则更新token
+  // 如果是AC方式 且 不是MQTT模式，则更新token
+  // MQTT 模式不需要 AC token，跳过获取
   let _devConf = storage.devConf;
-  if (storage.devConf.controlStyle === libEnum.controlStyle.AC) {
+  if (storage.devConf.controlStyle === libEnum.controlStyle.AC && 
+      storage.devConf.transportType !== libEnum.transportType.MQTT) {
     return new Promise(function(resolve, reject) {
       apiModule.getAccessToken(_devConf.baseURI, _devConf.acDevKey, _devConf.acDevSecret, false).then(function(data) {
         storage.accessToken = data.access_token;
@@ -558,6 +670,8 @@ export default {
   save,
   get,
   saveDevConf,
+  saveDevConfImmediately,
+  setOnSaveError,
   getDevConf,
   storage,
   cache,

@@ -294,6 +294,7 @@ function pairByNumbericComparison(baseURI, query, deviceMac, passkey=1) {
     logger.info('pair by numberic comparison device success:', deviceMac);
   }).catch(ex => {
     logger.error('pair by numberic comparison device error:', deviceMac, ex);
+    throw(ex);
   });
 }
 
@@ -303,6 +304,7 @@ function pairBySecurityOOB(baseURI, query, deviceMac, rand, confirm) {
     logger.info('pair by security OOB device success:', deviceMac, rand, confirm);
   }).catch(ex => {
     logger.error('pair by security OOB device error:', deviceMac, rand, confirm, ex);
+    throw(ex);
   });
 }
 
@@ -780,7 +782,7 @@ function replayApi(apiContent) {
     headers: apiContent.headers,
   });
   return new Promise((resolve, reject) => {
-    const action = instance.get;
+    let action = instance.get;
     if (apiContent.method === 'POST') action = instance.post;
     else if (apiContent.method === 'DELETE') action = instance.delete;
     action(apiContent.url, apiContent.data.body).then(function(response) {

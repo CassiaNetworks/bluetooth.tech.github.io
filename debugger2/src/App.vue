@@ -37,147 +37,258 @@
         <el-aside :style="{'width': store.devConfDisplayVars.leftConfWidth}" style="border-right: 1px solid #f2f2f2; background-color: #F2F4F8; height: 100%; ">
           <el-container :style="{'height': store.devConfDisplayVars.leftConfHeight}" style="width: 100%;">
             <el-main style="margin-bottom: 85px;">
-              <el-form ref="refConfig" :label-width="store.devConfDisplayVars.leftConfLabelWidth" size="small" :model="store.devConf" :rules="cache.devConfRules">
-                <el-row style="font-size: 16px; border-bottom: 1px solid #ddd; margin-top: 10px;">
-                  <span>{{ $t('message.configConnectParams') }}</span>
-                </el-row>
-                <el-form-item :label="$t('message.connectStyle')" style="margin-top: 15px;">
-                  <el-radio-group v-model="store.devConf.controlStyle" @change="controlStyleChange">
-                    <el-radio-button label="AP">Gateway</el-radio-button>
-                    <el-radio-button label="AC"></el-radio-button>
-                  </el-radio-group>
-                </el-form-item>
-                <el-form-item :label="$t('message.serviceURI')" prop="apServerURI" v-show="store.devConf.controlStyle === 'AP'" style="margin-top: 15px;">
-                  <el-input v-model="store.devConf.apServerURI" class="server-ip" clearable placeholder="http://192.168.0.100"></el-input>
-                </el-form-item>
-                <el-form-item :label="$t('message.serviceURI')" prop="acServerURI" v-show="store.devConf.controlStyle === 'AC'" style="margin-top: 15px;">
-                  <el-input v-model="store.devConf.acServerURI" class="server-ip" @blur="acServerURIBlur" clearable placeholder="http://192.168.0.100"></el-input>
-                </el-form-item>
-                <el-form-item :label="$t('message.devKey')" prop="acDevKey" v-show="store.devConf.controlStyle === 'AC'" style="margin-top: 15px;">
-                  <el-input v-model="store.devConf.acDevKey" class="ac-dev-key" clearable></el-input>
-                </el-form-item>
-                <el-form-item :label="$t('message.devSecret')" prop="acDevSecret" v-show="store.devConf.controlStyle === 'AC'" style="margin-top: 15px;">
-                  <el-input v-model="store.devConf.acDevSecret" class="ac-dev-secret" clearable></el-input>
-                </el-form-item>
-                <el-form-item :label="$t('message.apMac')" prop="mac" v-show="store.devConf.controlStyle === 'AC'" style="margin-top: 15px;">
-                  <el-select @focus="getAcRouterList" :remote-method="getAcRouterList" :loading="cache.isGettingAcRouterList" v-model="store.devConf.mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" filterable remote style="width: 100%" @change="routerChange">
-                    <el-option-group key="Online" label="Online">
-                      <el-option v-for="item in cache.acRouterList.filter(x => x.status === 'online')" :key="item.mac" :label="item.label" :value="item.mac">
-                        <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
-                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
-                      </el-option>
-                    </el-option-group>
+              <!-- Tab 切换: HTTP / MQTT -->
+              <el-tabs v-model="store.devConfDisplayVars.activeControlTab" @tab-click="controlTabChange" class="control-tabs">
+                <!-- HTTP Tab -->
+                <el-tab-pane name="HTTP">
+                  <span slot="label">
+                    <i class="el-icon-position" style="margin-right: 6px;"></i>HTTP
+                  </span>
+                  <el-form ref="refConfig" :label-width="store.devConfDisplayVars.leftConfLabelWidth" size="small" :model="store.devConf" :rules="cache.devConfRules">
+                    <div class="config-section-title">
+                      <span>{{ $t('message.configConnectParams') }}</span>
+                    </div>
+                    <el-form-item :label="$t('message.connectStyle')" style="margin-top: 15px;">
+                      <el-radio-group v-model="store.devConf.controlStyle" @change="controlStyleChange">
+                        <el-radio-button label="AP">Gateway</el-radio-button>
+                        <el-radio-button label="AC"></el-radio-button>
+                      </el-radio-group>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.serviceURI')" prop="apServerURI" v-show="store.devConf.controlStyle === 'AP'" style="margin-top: 15px;">
+                      <el-input v-model="store.devConf.apServerURI" class="server-ip" clearable placeholder="http://192.168.0.100"></el-input>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.serviceURI')" prop="acServerURI" v-show="store.devConf.controlStyle === 'AC'" style="margin-top: 15px;">
+                      <el-input v-model="store.devConf.acServerURI" class="server-ip" @blur="acServerURIBlur" clearable placeholder="http://192.168.0.100"></el-input>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.devKey')" prop="acDevKey" v-show="store.devConf.controlStyle === 'AC'" style="margin-top: 15px;">
+                      <el-input v-model="store.devConf.acDevKey" class="ac-dev-key" @blur="fetchAcTokenOnBlur" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.devSecret')" prop="acDevSecret" v-show="store.devConf.controlStyle === 'AC'" style="margin-top: 15px;">
+                      <el-input v-model="store.devConf.acDevSecret" class="ac-dev-secret" @blur="fetchAcTokenOnBlur" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.apMac')" prop="mac" v-show="store.devConf.controlStyle === 'AC'" style="margin-top: 15px;">
+                      <el-select @focus="getAcRouterList" :remote-method="getAcRouterList" :loading="cache.isGettingAcRouterList" v-model="store.devConf.mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" filterable remote style="width: 100%" @change="routerChange">
+                        <el-option-group key="Online" label="Online">
+                          <el-option v-for="item in cache.acRouterList.filter(x => x.status === 'online')" :key="item.mac" :label="item.label" :value="item.mac">
+                            <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+                          </el-option>
+                        </el-option-group>
 
-                    <el-option-group key="Offline" label="Offline">
-                      <el-option v-for="item in cache.acRouterList.filter(x => x.status && x.status !== 'online')" :key="item.mac" :label="item.label" :value="item.mac">
-                        <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
-                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
-                      </el-option>
-                    </el-option-group>
-                  </el-select>
-                </el-form-item>
-                <el-row style="font-size: 16px; border-bottom: 1px solid #ddd; margin-top: 30px;">
-                  <span>{{$t('message.configScanParams')}}</span>
-                </el-row>
-                <el-form-item :label="$t('message.useChip')" style="margin-top: 15px;">
-                  <el-select v-model="store.devConf.chip" style="width: 100%">
-                    <el-option :label="$t('message.chip0')" value="0"></el-option>
-                    <el-option :label="$t('message.chip1')" value="1"></el-option>
-                    <el-option :label="$t('message.chipAll')" value="all"></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$t('message.filterName')">
-                  <el-select v-model="store.devConf.filter_name" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option clearable style="width: 100%">
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$t('message.filterMac')">
-                  <el-select v-model="store.devConf.filter_mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option clearable style="width: 100%">
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$t('message.phy')" v-if="!['X1000', 'S2000'].includes(cache.model)">
-                  <el-select v-model="store.devConf.phy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option clearable style="width: 100%">
-                    <el-option label="1M" value="1M" key="1M"></el-option>
-                    <el-option label="2M" value="2M" key="2M"></el-option>
-                    <el-option label="CODED" value="CODED" key="CODED"></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$t('message.fitlerRSSI')">
-                  <el-slider v-model="store.devConf.filter_rssi" :min="-85" :max="0">
-                  </el-slider>
-                </el-form-item>
-                <el-form-item :label="$t('message.others')">
-                  <el-input v-model="store.devConf.scanParams" placeholder="key1=value1&key2=value2"></el-input>
-                </el-form-item>
-                <el-row style="font-size: 16px; border-bottom: 1px solid #ddd; margin-top: 30px;">
-                  <span>{{$t('message.configConnParams')}}</span>
-                </el-row>
-                <el-form-item :label="$t('message.autoSelectionOn')" style="margin-top: 15px;" v-show="store.devConf.controlStyle === 'AC'">
-                  <el-select v-model="store.devConf.autoSelectionOn" style="width: 100%" @change="autoSelectionChanged">
-                    <el-option :label="$t('message.on')" value="on"></el-option>
-                    <el-option :label="$t('message.off')" value="off"></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$t('message.aps')" prop="mac" v-show="store.devConf.controlStyle === 'AC' && store.devConf.autoSelectionOn === 'on'" style="margin-top: 15px;">
-                  <el-select @focus="getAcRouterListWillAll" :remote-method="getAcRouterListWillAll" :loading="cache.isGettingAcRouterList" v-model="store.devConf.aps" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" placeholder="" multiple filterable clearable remote style="width: 100%" @change="autoSelectionRouterChanged">
-                    <el-option-group key="All" label="All">
-                      <el-option v-for="item in cache.acRouterList.filter(x => x.mac === '*')" :key="item.mac" :label="item.label" :value="item.mac">
-                        <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
-                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
-                      </el-option>
-                    </el-option-group>
+                        <el-option-group key="Offline" label="Offline">
+                          <el-option v-for="item in cache.acRouterList.filter(x => x.status && x.status !== 'online')" :key="item.mac" :label="item.label" :value="item.mac">
+                            <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+                          </el-option>
+                        </el-option-group>
+                      </el-select>
+                    </el-form-item>
+                    <div class="config-section-title">
+                      <span>{{$t('message.configScanParams')}}</span>
+                    </div>
+                    <el-form-item :label="$t('message.useChip')" style="margin-top: 15px;">
+                      <el-select v-model="store.devConf.chip" style="width: 100%">
+                        <el-option :label="$t('message.chip0')" value="0"></el-option>
+                        <el-option :label="$t('message.chip1')" value="1"></el-option>
+                        <el-option :label="$t('message.chipAll')" value="all"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.filterName')">
+                      <el-select v-model="store.devConf.filter_name" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option clearable style="width: 100%">
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.filterMac')">
+                      <el-select v-model="store.devConf.filter_mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option clearable style="width: 100%">
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.phy')" v-if="!['X1000', 'S2000'].includes(cache.model)">
+                      <el-select v-model="store.devConf.phy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" multiple filterable allow-create default-first-option clearable style="width: 100%">
+                        <el-option label="1M" value="1M" key="1M"></el-option>
+                        <el-option label="2M" value="2M" key="2M"></el-option>
+                        <el-option label="CODED" value="CODED" key="CODED"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.fitlerRSSI')">
+                      <el-slider v-model="store.devConf.filter_rssi" :min="-85" :max="0">
+                      </el-slider>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.others')">
+                      <el-input v-model="store.devConf.scanParams" placeholder="key1=value1&key2=value2"></el-input>
+                    </el-form-item>
+                    <div class="config-section-title">
+                      <span>{{$t('message.configConnParams')}}</span>
+                    </div>
+                    <el-form-item :label="$t('message.autoSelectionOn')" style="margin-top: 15px;" v-show="store.devConf.controlStyle === 'AC'">
+                      <el-select v-model="store.devConf.autoSelectionOn" style="width: 100%" @change="autoSelectionChanged">
+                        <el-option :label="$t('message.on')" value="on"></el-option>
+                        <el-option :label="$t('message.off')" value="off"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.aps')" prop="mac" v-show="store.devConf.controlStyle === 'AC' && store.devConf.autoSelectionOn === 'on'" style="margin-top: 15px;">
+                      <el-select @focus="getAcRouterListWillAll" :remote-method="getAcRouterListWillAll" :loading="cache.isGettingAcRouterList" v-model="store.devConf.aps" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" placeholder="" multiple filterable clearable remote style="width: 100%" @change="autoSelectionRouterChanged">
+                        <el-option-group key="All" label="All">
+                          <el-option v-for="item in cache.acRouterList.filter(x => x.mac === '*')" :key="item.mac" :label="item.label" :value="item.mac">
+                            <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+                          </el-option>
+                        </el-option-group>
 
-                    <el-option-group key="Online" label="Online">
-                      <el-option v-for="item in cache.acRouterList.filter(x => x.status === 'online')" :key="item.mac" :label="item.label" :value="item.mac">
-                        <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
-                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
-                      </el-option>
-                    </el-option-group>
+                        <el-option-group key="Online" label="Online">
+                          <el-option v-for="item in cache.acRouterList.filter(x => x.status === 'online')" :key="item.mac" :label="item.label" :value="item.mac">
+                            <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+                          </el-option>
+                        </el-option-group>
 
-                    <el-option-group key="Offline" label="Offline">
-                      <el-option v-for="item in cache.acRouterList.filter(x => x.status && x.status !== 'online')" :key="item.mac" :label="item.label" :value="item.mac">
-                        <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
-                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
-                      </el-option>
-                    </el-option-group>
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$t('message.useChip')" v-show="store.devConf.autoSelectionOn === 'off'" style="margin-top: 15px;">
-                  <el-select v-model="store.devConf.connChip" style="width: 100%">
-                    <el-option :label="$t('message.chip0')" value="0"></el-option>
-                    <el-option :label="$t('message.chip1')" value="1"></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$t('message.discovergatt')" style="margin-top: 15px;">
-                  <el-select v-model="store.devConf.discovergatt" style="width: 100%">
-                    <el-option :label="$t('message.open')" value="1"></el-option>
-                    <el-option :label="$t('message.close')" value="0"></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$t('message.connTimeout')" prop="connTimeout">
-                  <el-input v-model="store.devConf.connTimeout"></el-input>
-                </el-form-item>
-                <el-form-item :label="$t('message.phy')" v-show="store.devConf.autoSelectionOn === 'off' && !['X1000', 'S2000'].includes(cache.model)">
-                  <el-select v-model="store.devConf.connPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
-                    <el-option label="1M" value="1M" key="1M"></el-option>
-                    <el-option label="CODED" value="CODED" key="CODED"></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$t('message.secondaryPhy')" v-show="store.devConf.autoSelectionOn === 'off' && !['X1000', 'S2000'].includes(cache.model)">
-                  <el-select v-model="store.devConf.secondaryPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
-                    <el-option label="1M" value="1M" key="1M"></el-option>
-                    <el-option label="2M" value="2M" key="2M"></el-option>
-                    <el-option label="CODED" value="CODED" key="CODED"></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$t('message.others')">
-                  <el-input v-model="store.devConf.connParams" placeholder="key1=value1&key2=value2"></el-input>
-                </el-form-item>
-              </el-form>
+                        <el-option-group key="Offline" label="Offline">
+                          <el-option v-for="item in cache.acRouterList.filter(x => x.status && x.status !== 'online')" :key="item.mac" :label="item.label" :value="item.mac">
+                            <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 15px">{{ item.mac }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+                          </el-option>
+                        </el-option-group>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.useChip')" v-show="store.devConf.autoSelectionOn === 'off'" style="margin-top: 15px;">
+                      <el-select v-model="store.devConf.connChip" style="width: 100%">
+                        <el-option :label="$t('message.chip0')" value="0"></el-option>
+                        <el-option :label="$t('message.chip1')" value="1"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.discovergatt')" style="margin-top: 15px;">
+                      <el-select v-model="store.devConf.discovergatt" style="width: 100%">
+                        <el-option :label="$t('message.open')" value="1"></el-option>
+                        <el-option :label="$t('message.close')" value="0"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.connTimeout')" prop="connTimeout">
+                      <el-input v-model="store.devConf.connTimeout"></el-input>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.phy')" v-show="store.devConf.autoSelectionOn === 'off' && !['X1000', 'S2000'].includes(cache.model)">
+                      <el-select v-model="store.devConf.connPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
+                        <el-option label="1M" value="1M" key="1M"></el-option>
+                        <el-option label="CODED" value="CODED" key="CODED"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.secondaryPhy')" v-show="store.devConf.autoSelectionOn === 'off' && !['X1000', 'S2000'].includes(cache.model)">
+                      <el-select v-model="store.devConf.secondaryPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
+                        <el-option label="1M" value="1M" key="1M"></el-option>
+                        <el-option label="2M" value="2M" key="2M"></el-option>
+                        <el-option label="CODED" value="CODED" key="CODED"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.others')">
+                      <el-input v-model="store.devConf.connParams" placeholder="key1=value1&key2=value2"></el-input>
+                    </el-form-item>
+                  </el-form>
+                </el-tab-pane>
+
+                <!-- MQTT Tab -->
+                <el-tab-pane name="MQTT">
+                  <span slot="label">
+                    <i class="el-icon-cloudy" style="margin-right: 6px;"></i>MQTT
+                  </span>
+                  <el-form :label-width="store.devConfDisplayVars.leftConfLabelWidth" size="small">
+                    <div class="config-section-title">
+                      <span>{{ $t('message.mqttConfig') }}</span>
+                    </div>
+                    <!-- Host -->
+                    <el-form-item :label="$t('message.mqttBrokerUrl')" style="margin-top: 10px;">
+                      <el-input v-model="store.devConf.mqtt.server" clearable placeholder="broker.emqx.io">
+                        <template slot="prepend">ws://</template>
+                      </el-input>
+                    </el-form-item>
+                    <!-- Broker Port -->
+                    <el-form-item :label="$t('message.mqttPort')">
+                      <el-input v-model="store.devConf.mqtt.port" clearable placeholder="8083"></el-input>
+                    </el-form-item>
+                    <!-- Broker Path -->
+                    <el-form-item :label="$t('message.mqttPath')">
+                      <el-input v-model="store.devConf.mqtt.path" clearable placeholder="mqtt"></el-input>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.mqttGateway')">
+                      <el-input v-model="store.devConf.mqtt.gateway" clearable placeholder="CC:1B:E0:E2:8F:2C" @input="formatGatewayMac" :class="{ 'input-error': gatewayMacError }"></el-input>
+                      <div v-if="gatewayMacError" class="input-error-hint">
+                        <span>Eg: CC:1B:E0:E2:8F:2C</span>
+                      </div>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.mqttUsername')">
+                      <el-input v-model="store.devConf.mqtt.username" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.mqttPassword')">
+                      <el-input v-model="store.devConf.mqtt.password" type="password" clearable show-password></el-input>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.mqttKeepalive')">
+                      <el-select v-model="store.devConf.mqtt.keepalive" style="width: 100%;">
+                        <el-option :label="'10s'" :value="10"></el-option>
+                        <el-option :label="'30s'" :value="30"></el-option>
+                        <el-option :label="'60s'" :value="60"></el-option>
+                      </el-select>
+                    </el-form-item>
+
+                    <!-- Scan Setting -->
+                    <div class="config-section-title">
+                      <span>{{$t('message.configScanParams')}}</span>
+                    </div>
+                    <div style="margin-top: 10px; padding: 10px 12px; background-color: #f5f7fa; border-radius: 4px; color: #909399; font-size: 12px; display: flex; align-items: flex-start;">
+                      <i class="el-icon-info" style="margin-right: 8px; margin-top: 1px; flex-shrink: 0;"></i>
+                      <span>{{$t('message.mqttScanConfigHint')}}</span>
+                    </div>
+
+                    <!-- Connect Setting -->
+                    <div class="config-section-title">
+                      <span>{{$t('message.configConnParams')}}</span>
+                    </div>
+                    <el-form-item :label="$t('message.useChip')" style="margin-top: 10px;">
+                      <el-select v-model="store.devConf.connChip" style="width: 100%">
+                        <el-option :label="$t('message.chip0')" value="0"></el-option>
+                        <el-option :label="$t('message.chip1')" value="1"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.discovergatt')">
+                      <el-select v-model="store.devConf.discovergatt" style="width: 100%">
+                        <el-option :label="$t('message.open')" value="1"></el-option>
+                        <el-option :label="$t('message.close')" value="0"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.connTimeout')" prop="connTimeout">
+                      <el-input v-model="store.devConf.connTimeout"></el-input>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.phy')" v-if="!['X1000', 'S2000'].includes(cache.model)">
+                      <el-select v-model="store.devConf.connPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
+                        <el-option label="1M" value="1M" key="1M"></el-option>
+                        <el-option label="CODED" value="CODED" key="CODED"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.secondaryPhy')" v-if="!['X1000', 'S2000'].includes(cache.model)">
+                      <el-select v-model="store.devConf.secondaryPhy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
+                        <el-option label="1M" value="1M" key="1M"></el-option>
+                        <el-option label="2M" value="2M" key="2M"></el-option>
+                        <el-option label="CODED" value="CODED" key="CODED"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('message.others')">
+                      <el-input v-model="store.devConf.connParams" placeholder="key1=value1&key2=value2"></el-input>
+                    </el-form-item>
+                  </el-form>
+                </el-tab-pane>
+              </el-tabs>
             </el-main>
             <el-footer :style="{'width': store.devConfDisplayVars.leftConfWidth}" style="z-index: 999; border-top: 1px solid #ddd; background-color: #F2F4F8; height: 85px; line-height: 85px; vertial-align: middle; text-align: center; position: fixed; bottom: 0; left: 0;">
-              <el-button size="small" @click="reboot" style="margin-right: 15px;">{{$t('message.restartAP')}}</el-button>
-              <el-button size="small" style="margin-left: 15px;" type="primary" @click="startScan" v-show="!store.devConfDisplayVars.isScanning">{{$t('message.startScan')}}</el-button>
-              <el-button size="small" style="margin-left: 15px;" type="primary" @click="stopScan" v-show="store.devConfDisplayVars.isScanning">{{$t('message.stopScan')}}</el-button>
+              <!-- HTTP Tab: Reboot + Start/Stop Scan -->
+              <template v-if="store.devConfDisplayVars.activeControlTab === 'HTTP'">
+                <el-button size="small" @click="reboot" style="margin-right: 15px;">{{$t('message.restartAP')}}</el-button>
+                <el-button size="small" style="margin-left: 15px;" type="primary" @click="startScan" v-show="!store.devConfDisplayVars.isScanning">{{$t('message.startScan')}}</el-button>
+                <el-button size="small" style="margin-left: 15px;" type="primary" @click="stopScan" v-show="store.devConfDisplayVars.isScanning">{{$t('message.stopScan')}}</el-button>
+              </template>
+              <!-- MQTT Tab: Connect/Disconnect -->
+              <template v-if="store.devConfDisplayVars.activeControlTab === 'MQTT'">
+                <el-button size="small" type="primary" @click="connectMqtt" :disabled="mqttConnected || mqttConnecting" :loading="mqttConnecting" style="margin-right: 15px;">
+                  <span>{{ $t('message.mqttConnect') }}</span>
+                  <i v-if="mqttConnected" class="el-icon-check" style="margin-left: 4px; font-size: 12px;"></i>
+                  <i v-else-if="mqttError" class="el-icon-close" style="margin-left: 4px; font-size: 12px;"></i>
+                </el-button>
+                <el-button size="small" @click="disconnectMqtt" :disabled="!mqttConnected">{{ $t('message.mqttDisconnect') }}</el-button>
+              </template>
             </el-footer>
           </el-container>
         </el-aside>
@@ -211,7 +322,7 @@
                 <i class="icon-api-debugger" :style="{'font-size': '16px', 'color': store.devConfDisplayVars.activeMenuItem === 'apiDebuggerMenuItem' ? '#0089ff' : '#232635', 'margin-right': '10px'}"></i>
                 <span slot="title">{{$t('message.apiDebugger')}}</span>
               </el-menu-item>
-              <el-menu-item index="apiDemoMenuItem" :style="{'color': store.devConfDisplayVars.activeMenuItem === 'apiDemoMenuItem' ? '#0089ff' : '#232635'}">
+              <el-menu-item index="apiDemoMenuItem" v-show="store.devConf.transportType !== 'MQTT'" :style="{'color': store.devConfDisplayVars.activeMenuItem === 'apiDemoMenuItem' ? '#0089ff' : '#232635'}">
                 <i class="icon-API-demo" :style="{'font-size': '16px', 'color': store.devConfDisplayVars.activeMenuItem === 'apiDemoMenuItem' ? '#0089ff' : '#232635', 'margin-right': '10px'}"></i>
                 <span slot="title">{{$t('message.apiDemo')}}</span>
               </el-menu-item>
@@ -223,8 +334,8 @@
                 <i class="icon-API-log" :style="{'font-size': '16px', 'color': store.devConfDisplayVars.activeMenuItem === 'resourcesMenuItem' ? '#0089ff' : '#232635', 'margin-right': '10px'}"></i>
                 <span slot="title">{{$t('message.resources')}}</span>
               </el-menu-item>
-              <el-menu-item style="position: absolute; bottom: 50px; padding: 0; width: 152px; text-align: center; border-top: 0px solid #e8eaed;">
-                <span>v2.0.8</span>
+              <el-menu-item class="version-item" style="position: absolute; bottom: 50px; padding: 0; width: 152px; text-align: center; border-top: 0px solid #e8eaed; cursor: default;">
+                <span>v2.1.0</span>
               </el-menu-item>
             </el-menu>
           </el-aside>
@@ -234,10 +345,10 @@
             <el-aside class="apiDebuggerMenu" :width="store.devConfDisplayVars.language === 'cn' ? '180px' : '180px'" style="height: 100%; background-color: #FFF; box-shadow:-1px 0px 6px 0px rgba(195,212,227,0.28); position: fixed; z-index: 999; border-right: 1px solid #ebedf2">
               <!-- API调试菜单 -->
               <el-menu :collapse="false" @select="apiDebuggerMenuSelect" background-color="#fff" text-color="#505050" active-text-color="#0089ff" :default-active="store.devConfDisplayVars.activeApiDebugMenuItem" ref="refApiDebuggerMenu" class="el-menu-api-debugger">
-                <el-menu-item index="auth" v-show="store.devConf.controlStyle === 'AC'">
+                <el-menu-item index="auth" v-show="store.devConf.controlStyle === 'AC' && store.devConf.transportType !== 'MQTT'">
                   <span slot="title">{{$t('message.auth')}}</span>
                 </el-menu-item>
-                <el-menu-item index="scan">
+                <el-menu-item index="scan" v-show="store.devConf.transportType !== 'MQTT'">
                   <span slot="title">{{$t('message.scanDevices')}}</span>
                 </el-menu-item>
                 <el-menu-item index="connect">
@@ -258,10 +369,10 @@
                 <el-menu-item index="discover">
                   <span slot="title">{{$t('message.deviceServices')}}</span>
                 </el-menu-item>
-                <el-menu-item index="notify">
+                <el-menu-item index="notify" v-if="false">
                   <span slot="title">{{$t('message.openNotify')}}</span>
                 </el-menu-item>
-                <el-menu-item index="connectStatus">
+                <el-menu-item index="connectStatus" v-if="false">
                   <span slot="title">{{$t('message.connectStatus')}}</span>
                 </el-menu-item>
                 <el-menu-item index="pair">
@@ -289,13 +400,13 @@
                     <span slot="label"> {{$t('message.auth')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.serviceURI')">
-                        <el-input v-model="store.devConf.acServerURI"></el-input>
+                        <el-input v-model="store.devConf.acServerURI" @blur="fetchAcTokenOnBlur"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.devKey')">
-                        <el-input v-model="store.devConf.acDevKey"></el-input>
+                        <el-input v-model="store.devConf.acDevKey" @blur="fetchAcTokenOnBlur"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.devSecret')">
-                        <el-input v-model="store.devConf.acDevSecret"></el-input>
+                        <el-input v-model="store.devConf.acDevSecret" @blur="fetchAcTokenOnBlur"></el-input>
                       </el-form-item>
                       <el-form-item align="right">
                         <el-button size="small" @click="genCode">{{$t('message.genCode')}}</el-button>
@@ -309,7 +420,7 @@
                     <span slot="label"> {{$t('message.scanDevices')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
+                        <el-input v-model="apiDebuggerRouter" clearable :disabled="store.devConf.transportType === 'MQTT'"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.useChip')">
                         <el-radio-group v-model="store.devConfDisplayVars.apiDebuggerParams['scan'].chip" size="small">
@@ -359,7 +470,7 @@
                     <span slot="label"> {{$t('message.connectDevice')}}</span>
                     <el-form label-width="150px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
+                        <el-input v-model="apiDebuggerRouter" clearable :disabled="store.devConf.transportType === 'MQTT'"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.useChip')">
                         <el-radio-group v-model="store.devConfDisplayVars.apiDebuggerParams['connect'].chip" size="small">
@@ -374,7 +485,7 @@
                         </el-radio-group>
                       </el-form-item>
                       <el-form-item :label="$t('message.deviceAddr')">
-                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['connect'].deviceMac"></el-input>
+                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerDeviceMac"></el-input>
                       </el-form-item>
                       <el-collapse>
                         <el-collapse-item>
@@ -420,13 +531,13 @@
                     <span slot="label"> {{$t('message.readData')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
+                        <el-input v-model="apiDebuggerRouter" clearable :disabled="store.devConf.transportType === 'MQTT'"></el-input>
                       </el-form-item>
                       <el-form-item label="HANDLE">
                         <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['read'].handle"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.deviceAddr')">
-                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['read'].deviceMac"></el-input>
+                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerDeviceMac"></el-input>
                       </el-form-item>
                       <el-form-item align="right">
                         <el-button size="small" @click="genCode">{{$t('message.genCode')}}</el-button>
@@ -440,10 +551,10 @@
                     <span slot="label"> {{$t('message.readPhy')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
+                        <el-input v-model="apiDebuggerRouter" clearable :disabled="store.devConf.transportType === 'MQTT'"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.deviceAddr')">
-                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['readPhy'].deviceMac"></el-input>
+                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerDeviceMac"></el-input>
                       </el-form-item>
                       <el-form-item align="right">
                         <el-button size="small" @click="genCode">{{$t('message.genCode')}}</el-button>
@@ -457,20 +568,20 @@
                     <span slot="label"> {{$t('message.updatePhy')}}</span>
                     <el-form label-width="150px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
+                        <el-input v-model="apiDebuggerRouter" clearable :disabled="store.devConf.transportType === 'MQTT'"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.deviceAddr')">
-                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['updatePhy'].deviceMac"></el-input>
+                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerDeviceMac"></el-input>
                       </el-form-item>
                       <el-form-item label="TX PHY">
-                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['updatePhy'].tx" clearable multiple filterable style="width: 100%">
+                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['updatePhy'].tx" clearable multiple filterable style="width: 100%" :placeholder="$t('message.pleaseSelect')">
                           <el-option label="1M" value="1M" key="1M"></el-option>
                           <el-option label="2M" value="2M" key="2M"></el-option>
                           <el-option label="CODED" value="CODED" key="CODED"></el-option>
                         </el-select>
                       </el-form-item>
                       <el-form-item label="RX PHY">
-                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['updatePhy'].rx" clearable multiple filterable style="width: 100%">
+                        <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['updatePhy'].rx" clearable multiple filterable style="width: 100%" :placeholder="$t('message.pleaseSelect')">
                           <el-option label="1M" value="1M" key="1M"></el-option>
                           <el-option label="2M" value="2M" key="2M"></el-option>
                           <el-option label="CODED" value="CODED" key="CODED"></el-option>
@@ -495,7 +606,7 @@
                     <span slot="label"> {{$t('message.writeData')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
+                        <el-input v-model="apiDebuggerRouter" clearable :disabled="store.devConf.transportType === 'MQTT'"></el-input>
                       </el-form-item>
                       <el-form-item label="HANDLE">
                         <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['write'].handle"></el-input>
@@ -510,7 +621,7 @@
                         </el-radio-group>
                       </el-form-item>
                       <el-form-item :label="$t('message.deviceAddr')">
-                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['write'].deviceMac"></el-input>
+                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerDeviceMac"></el-input>
                       </el-form-item>
                       <el-form-item align="right">
                         <el-button size="small" @click="genCode">{{$t('message.genCode')}}</el-button>
@@ -524,10 +635,10 @@
                     <span slot="label"> {{$t('message.disConnect')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
+                        <el-input v-model="apiDebuggerRouter" clearable :disabled="store.devConf.transportType === 'MQTT'"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.deviceAddr')">
-                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['disconnect'].deviceMac"></el-input>
+                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerDeviceMac"></el-input>
                       </el-form-item>
                       <el-form-item align="right">
                         <el-button size="small" @click="genCode">{{$t('message.genCode')}}</el-button>
@@ -541,7 +652,7 @@
                     <span slot="label"> {{$t('message.connectList')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
+                        <el-input v-model="apiDebuggerRouter" clearable :disabled="store.devConf.transportType === 'MQTT'"></el-input>
                       </el-form-item>
                       <el-form-item align="right">
                         <el-button size="small" @click="genCode">{{$t('message.genCode')}}</el-button>
@@ -555,10 +666,10 @@
                     <span slot="label"> {{$t('message.deviceServices')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
+                        <el-input v-model="apiDebuggerRouter" clearable :disabled="store.devConf.transportType === 'MQTT'"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.deviceAddr')">
-                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['discover'].deviceMac"></el-input>
+                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerDeviceMac"></el-input>
                       </el-form-item>
                       <el-form-item align="right">
                         <el-button size="small" @click="genCode">{{$t('message.genCode')}}</el-button>
@@ -567,12 +678,12 @@
                     </el-form>
                   </el-tab-pane>
                 </el-tabs>
-                <el-tabs v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'notify'" style="min-height: 380px;">
+                <el-tabs v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'notify'" v-if="false" style="min-height: 380px;">
                   <el-tab-pane>
                     <span slot="label"> {{$t('message.openNotify')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
+                        <el-input v-model="apiDebuggerRouter" clearable :disabled="store.devConf.transportType === 'MQTT'"></el-input>
                       </el-form-item>
 
                       <el-form-item :label="$t('message.timestamp')">
@@ -600,12 +711,12 @@
                     </el-form>
                   </el-tab-pane>
                 </el-tabs>
-                <el-tabs v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'connectStatus'" style="min-height: 380px;">
+                <el-tabs v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'connectStatus'" v-if="false" style="min-height: 380px;">
                   <el-tab-pane>
                     <span slot="label"> {{$t('message.connectStatus')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
+                        <el-input v-model="apiDebuggerRouter" clearable :disabled="store.devConf.transportType === 'MQTT'"></el-input>
                       </el-form-item>
                       <el-form-item align="right">
                         <el-button size="small" @click="genCode">{{$t('message.genCode')}}</el-button>
@@ -619,10 +730,10 @@
                     <span slot="label"> {{$t('message.pair')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
+                        <el-input v-model="apiDebuggerRouter" clearable :disabled="store.devConf.transportType === 'MQTT'"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.deviceAddr')">
-                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['pair'].deviceMac"></el-input>
+                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerDeviceMac"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.ioCap')">
                         <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['pair'].iocapability" style="width: 100%">
@@ -645,10 +756,10 @@
                     <span slot="label"> {{$t('message.pairInput')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
+                        <el-input v-model="apiDebuggerRouter" clearable :disabled="store.devConf.transportType === 'MQTT'"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.deviceAddr')">
-                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['pairInput'].deviceMac"></el-input>
+                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerDeviceMac"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.inputType')">
                         <el-select v-model="store.devConfDisplayVars.apiDebuggerParams['pairInput'].inputType" style="width: 100%">
@@ -681,10 +792,10 @@
                     <span slot="label"> {{$t('message.unpair')}}</span>
                     <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
                       <el-form-item :label="$t('message.router')">
-                        <el-input v-model="store.devConf.controlStyle === 'AP' ? store.devConf.apServerURI : store.devConf.mac"></el-input>
+                        <el-input v-model="apiDebuggerRouter" clearable :disabled="store.devConf.transportType === 'MQTT'"></el-input>
                       </el-form-item>
                       <el-form-item :label="$t('message.deviceAddr')">
-                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerParams['unpair'].deviceMac"></el-input>
+                        <el-input clearable v-model="store.devConfDisplayVars.apiDebuggerDeviceMac"></el-input>
                       </el-form-item>
                       <el-form-item align="right">
                         <el-button size="small" @click="genCode">{{$t('message.genCode')}}</el-button>
@@ -698,15 +809,21 @@
                     <el-menu-item index="output">
                       <span slot="title">{{$t('message.debugResult')}}</span>
                     </el-menu-item>
-                    <el-menu-item index="curl">
+                    <el-menu-item index="curl" v-show="store.devConf.transportType !== 'MQTT'">
                       <span slot="title">cURL</span>
                     </el-menu-item>
-                    <el-menu-item index="nodejs">
+                    <el-menu-item index="nodejs" v-show="store.devConf.transportType !== 'MQTT'">
+                      <span slot="title">NodeJS</span>
+                    </el-menu-item>
+                    <el-menu-item index="mosquitto" v-show="store.devConf.transportType === 'MQTT'">
+                      <span slot="title">mosquitto</span>
+                    </el-menu-item>
+                    <el-menu-item index="mqtt" v-show="store.devConf.transportType === 'MQTT'">
                       <span slot="title">NodeJS</span>
                     </el-menu-item>
                   </el-menu>
-                  <el-row v-if="store.devConfDisplayVars.activeApiDebugOutputMenuItem === 'output'" style="padding: 15px; min-height: 240px; background-color: #f0f0f0; width: 100%;">
-                    <div class="code" lang="javascript" style="color: #505050; font-size: 12px; min-height: 240px; background-color: #f0f0f0; word-break: break-all;" v-if="cache.apiDebuggerResult[store.devConfDisplayVars.activeApiDebugMenuItem].resultList">
+                  <el-row v-if="store.devConfDisplayVars.activeApiDebugOutputMenuItem === 'output'" style="padding: 15px; min-height: 240px; max-height: 400px; overflow-y: auto; background-color: #f0f0f0; width: 100%;" ref="debugResultContainer">
+                    <div class="code" lang="javascript" style="color: #505050; font-size: 12px; min-height: 210px; background-color: #f0f0f0; word-break: break-all;" v-if="cache.apiDebuggerResult[store.devConfDisplayVars.activeApiDebugMenuItem].resultList">
                       <p v-for="item in (cache.apiDebuggerResult[store.devConfDisplayVars.activeApiDebugMenuItem].resultList || [' '])">{{item}}</p>
                     </div>
                   </el-row>
@@ -718,6 +835,16 @@
                   <el-row v-if="store.devConfDisplayVars.activeApiDebugOutputMenuItem === 'nodejs'" style="min-height: 240px; background-color: #f0f0f0;">
                     <highlight-code class="code" lang="js" v-if="cache.apiDebuggerResult[store.devConfDisplayVars.activeApiDebugMenuItem].code['nodejs'].length > 0">
                       {{ cache.apiDebuggerResult[store.devConfDisplayVars.activeApiDebugMenuItem].code['nodejs'] }}
+                    </highlight-code>
+                  </el-row>
+                  <el-row v-if="store.devConfDisplayVars.activeApiDebugOutputMenuItem === 'mosquitto'" style="min-height: 240px; background-color: #f0f0f0;">
+                    <highlight-code class="code" lang="bash" v-if="cache.apiDebuggerResult[store.devConfDisplayVars.activeApiDebugMenuItem].code['mosquitto'] && cache.apiDebuggerResult[store.devConfDisplayVars.activeApiDebugMenuItem].code['mosquitto'].length > 0">
+                      {{ cache.apiDebuggerResult[store.devConfDisplayVars.activeApiDebugMenuItem].code['mosquitto'] }}
+                    </highlight-code>
+                  </el-row>
+                  <el-row v-if="store.devConfDisplayVars.activeApiDebugOutputMenuItem === 'mqtt'" style="min-height: 240px; background-color: #f0f0f0;">
+                    <highlight-code class="code" lang="js" v-if="cache.apiDebuggerResult[store.devConfDisplayVars.activeApiDebugMenuItem].code['mqtt'] && cache.apiDebuggerResult[store.devConfDisplayVars.activeApiDebugMenuItem].code['mqtt'].length > 0">
+                      {{ cache.apiDebuggerResult[store.devConfDisplayVars.activeApiDebugMenuItem].code['mqtt'] }}
                     </highlight-code>
                   </el-row>
                 </el-row>
@@ -755,7 +882,7 @@
                   <el-tab-pane>
                     <span slot="label"> {{$t('message.apiDescription')}}</span>
                     <el-row class="apiHelp">
-                      {{$t('message.scanDevicesInfo')}}
+                      {{$t('message.readDataInfo')}}
                       <p><a href="https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/RESTful-API#readwrite-the-value-of-a-specific-characteristic" target="_blank">{{$t('message.more')}}</a></p>
                     </el-row>
                   </el-tab-pane>
@@ -796,7 +923,7 @@
                     </el-row>
                   </el-tab-pane>
                 </el-tabs>
-                <el-tabs v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'notify'">
+                <el-tabs v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'notify'" v-if="false">
                   <el-tab-pane>
                     <span slot="label"> {{$t('message.apiDescription')}}</span>
                     <el-row class="apiHelp">
@@ -805,7 +932,7 @@
                     </el-row>
                   </el-tab-pane>
                 </el-tabs>
-                <el-tabs v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'connectStatus'">
+                <el-tabs v-show="store.devConfDisplayVars.activeApiDebugMenuItem === 'connectStatus'" v-if="false">
                   <el-tab-pane>
                     <span slot="label"> {{$t('message.apiDescription')}}</span>
                     <el-row class="apiHelp">
@@ -887,12 +1014,12 @@
                         <el-button @click="apiDemoConnectTest" style="float: right; padding: 3px 0" type="text">{{$t('message.test')}}</el-button>
                       </div>
                       <el-form label-width="100px" size="small" style="width: 70%;">
-                        <el-form-item :label="$t('message.historyApi')">
+                        <el-form-item :label="$t('message.historyApi')" v-show="store.devConf.transportType !== 'MQTT'">
                           <el-select @change="apiDemoConnectChanged" v-model="store.devConfDisplayVars.apiDemoParams.connectWriteNotify.connect.tempFromApiLogUrl" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseSelect')" style="width: 100%">
                             <el-option v-for="(logItem, index) in getApiLogListByFilter({apiName: $t('message.apiConnect')})" :label="JSON.stringify(logItem.apiContent)" :value="logItem.apiContentJson" :key="index"></el-option>
                           </el-select>
                         </el-form-item>
-                        <el-form-item :label="$t('message.useChip')">
+                        <el-form-item :label="$t('message.useChip')"  v-show="store.devConf.transportType !== 'MQTT'">
                           <el-radio-group v-model="store.devConfDisplayVars.apiDemoParams.connectWriteNotify.connect.chip" size="small">
                             <el-radio-button label="0">{{$t('message.chip0')}}</el-radio-button>
                             <el-radio-button label="1">{{$t('message.chip1')}}</el-radio-button>
@@ -915,7 +1042,7 @@
                         <el-button @click="apiDemoWriteTest" style="float: right; padding: 3px 0" type="text">{{$t('message.test')}}</el-button>
                       </div>
                       <el-form label-width="100px" size="small" style="width: 70%;">
-                        <el-form-item :label="$t('message.historyApi')">
+                        <el-form-item :label="$t('message.historyApi')" v-show="store.devConf.transportType !== 'MQTT'">
                           <el-select @change="apiDemoWriteChanged" v-model="store.devConfDisplayVars.apiDemoParams.connectWriteNotify.write.tempFromApiLogUrl" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseSelect')" style="width: 100%">
                             <el-option v-for="(logItem, index) in getApiLogListByFilter({apiName: $t('message.apiWrite')})" :label="JSON.stringify(logItem.apiContent)" :value="logItem.apiContentJson" :key="index"></el-option>
                           </el-select>
@@ -957,30 +1084,38 @@
                         <el-button @click="apiDemoScanTest" style="float: right; padding: 3px 0" type="text">{{$t('message.test')}}</el-button>
                       </div>
                       <el-form label-width="100px" style="margin-top: 15px; width: 70%;" size="small">
-                        <el-form-item :label="$t('message.historyApi')">
+                        <el-alert
+                          v-if="store.devConf.transportType === 'MQTT'"
+                          :title="$t('message.mqttScanConfigHint')"
+                          type="info"
+                          :closable="false"
+                          show-icon
+                          style="margin-bottom: 10px;">
+                        </el-alert>
+                        <el-form-item :label="$t('message.historyApi')" v-show="store.devConf.transportType !== 'MQTT'">
                           <el-select @change="apiDemoScanChanged" v-model="store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan.tempFromApiLogUrl" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" style="width: 100%">
                             <el-option v-for="(logItem, index) in getApiLogListByFilter({apiName: $t('message.apiScan')})" :label="JSON.stringify(logItem.apiContent)" :value="logItem.apiContentJson" :key="index"></el-option>
                           </el-select>
                         </el-form-item>
-                        <el-form-item :label="$t('message.useChip')">
+                        <el-form-item :label="$t('message.useChip')" v-show="store.devConf.transportType !== 'MQTT'">
                           <el-radio-group v-model="store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan.chip" size="small">
                             <el-radio-button :label="0">{{$t('message.chip0')}}</el-radio-button>
                             <el-radio-button :label="1">{{$t('message.chip1')}}</el-radio-button>
                           </el-radio-group>
                         </el-form-item>
-                        <el-form-item :label="$t('message.filterName')">
+                        <el-form-item :label="$t('message.filterName')" v-show="store.devConf.transportType !== 'MQTT'">
                           <el-select v-model="store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan.filter_name" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                           </el-select>
                         </el-form-item>
-                        <el-form-item :label="$t('message.filterMac')">
+                        <el-form-item :label="$t('message.filterMac')" v-show="store.devConf.transportType !== 'MQTT'">
                           <el-select v-model="store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan.filter_mac" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                           </el-select>
                         </el-form-item>
-                        <el-form-item :label="$t('message.phy')">
+                        <el-form-item :label="$t('message.phy')" v-show="store.devConf.transportType !== 'MQTT'">
                           <el-select v-model="store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan.phy" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseInput')" clearable multiple filterable allow-create default-first-option style="width: 100%">
                           </el-select>
                         </el-form-item>
-                        <el-form-item :label="$t('message.fitlerRSSI')">
+                        <el-form-item :label="$t('message.fitlerRSSI')" v-show="store.devConf.transportType !== 'MQTT'">
                           <el-slider v-model="store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan.filter_rssi" show-input :min="-85" :max="0">
                           </el-slider>
                         </el-form-item>
@@ -999,7 +1134,7 @@
                         <span>3.{{$t('message.writeCmd')}}</span>
                       </div>
                       <el-form label-width="100px" size="small" style="width: 70%;">
-                        <el-form-item :label="$t('message.historyApi')">
+                        <el-form-item :label="$t('message.historyApi')" v-show="store.devConf.transportType !== 'MQTT'">
                           <el-select @change="apiDemoWriteChanged" v-model="store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.write.tempFromApiLogUrl" :no-data-text="$t('message.noData')" :no-match-text="$t('message.noMatchData')" :placeholder="$t('message.pleaseSelect')" style="width: 100%">
                             <el-option v-for="(logItem, index) in getApiLogListByFilter({apiName: $t('message.apiWrite')})" :label="JSON.stringify(logItem.apiContent)" :value="logItem.apiContentJson" :key="index"></el-option>
                           </el-select>
@@ -1114,7 +1249,7 @@
                 </el-row>
                 <v-chart :options="chartOptions" ref="rssiChart" :autoresize="true" :style="{width: '100%', height: cache.vxeGridHeight + 'px'}"></v-chart>
               </el-tab-pane>
-              <el-tab-pane name="deviceScanData" style="width: 100%;">
+              <el-tab-pane name="deviceScanData" style="width: 100%;" v-if="store.devConf.transportType !== 'MQTT'">
                 <span slot="label"> {{$t('message.deviceScanData')}}</span>
                 <el-row>
                   <el-form inline size="small">
@@ -1166,11 +1301,11 @@
                 </vxe-toolbar>
                 <!-- 注意设置为固定高度，否则页面在过多的数据时候会造成卡顿，TODO: 是否考虑使用分页优化? -->
                 <vxe-grid border="none" show-overflow stripe highlight-hover-row :height="cache.vxeGridHeight + 'px'" :header-row-style="{'background-color': '#f4f5f6'}" ref="refConnectDisplayResultGrid" :sort-config="{trigger: 'cell'}" :data="getComputedConnectDisplayResultList()">
-                  <vxe-table-column field="name" :title="$t('message.name')" type="html" width="15%" sortable></vxe-table-column>
-                  <vxe-table-column field="mac" :title="$t('message.addr')" type="html" width="15%" show-overflow></vxe-table-column>
-                  <vxe-table-column field="chip" :title="$t('message.chip')" type="html" width="10%" sortable></vxe-table-column>
-                  <vxe-table-column field="bdaddrType" :title="$t('message.type')" width="10%" sortable></vxe-table-column>
-                  <vxe-table-column :title="$t('message.operation')" width="50%">
+                  <vxe-table-column field="name" :title="$t('message.name')" type="html" width="12%" sortable></vxe-table-column>
+                  <vxe-table-column field="mac" :title="$t('message.addr')" type="html" width="14%" show-overflow></vxe-table-column>
+                  <vxe-table-column field="chip" :title="$t('message.chip')" type="html" width="8%" sortable></vxe-table-column>
+                  <vxe-table-column field="bdaddrType" :title="$t('message.type')" width="8%" sortable></vxe-table-column>
+                  <vxe-table-column :title="$t('message.operation')" width="58%">
                     <template v-slot="{ row }">
                       <el-button-group>
                         <el-button plain type="primary" size="small" @click="getDeviceServices(row.mac)">{{$t('message.services')}}</el-button>
@@ -1193,14 +1328,14 @@
               <el-tab-pane :closable="true" v-for="(device, index) in cache.connectedList" :key="device.mac" :name="device.mac">
                 <span slot="label"> {{ device.mac }}</span>
                 <el-row style="background-color: #0089ff; font-size: 14px; font-style: normal; border-radius: 3px; color: #fff; height: 60px; display: flex; align-items: center; padding-left: 15px; padding-right: 15px;">
-                  <el-col :span="6">
+                  <el-col :span="5">
                     <el-row>{{ device.name }}</el-row>
                     <el-row style="font-style:normal">{{ device.mac }}</el-row>
                   </el-col>
-                  <el-col :span="3">{{ device.bdaddrType }}</el-col>
+                  <el-col :span="2">{{ device.bdaddrType }}</el-col>
                   <el-col :span="1">chip{{ device.chip }}</el-col>
-                  <el-col :span="12">
-                    <el-button-group style="float: right; ">
+                  <el-col :span="16">
+                    <el-button-group style="float: right;">
                       <el-button size="small" @click="getDeviceServices(device.mac)" style="color: #2897ff">{{$t('message.services')}}</el-button>
                       <el-button size="small" @click="disconnectDevice(device.mac)" style="color: #2897ff">{{$t('message.disconnect')}}</el-button>
                       <el-button size="small" @click="showPairDialog(device.mac)" style="color: #2897ff">{{$t('message.pair')}}</el-button>
@@ -1289,34 +1424,40 @@
                       <span>{{$t('message.receivedNotifys')}}: <span style="font-weight: bold; color: #409eff; margin-right: 20px;">{{ getComputedNotifyDisplayResultList.length }} </span></span>
                       <vxe-input v-model="cache.notifyDisplayFilterContent" type="search" :placeholder="$t('message.searchMac')" size="small" style="margin-right: 20px;"></vxe-input>
                       
-                      <el-tooltip class="item" effect="light" :content="$t('message.timestampInfo')">
+                      <el-tooltip class="item" effect="light" :content="$t('message.timestampInfo')" v-if="store.devConf.transportType !== 'MQTT'">
                         <span style="margin-right: 8px;">{{$t('message.timestamp')}}<i class="el-icon-info el-icon--right"></i></span>
                       </el-tooltip>
-                      <el-select v-model="cache.notifyDisplayTimestamp" :placeholder="$t('message.timestamp')" size="small" @change="deviceNotificationDataFilterChange" style="width: 110px; margin-right: 20px;">
+                      <el-select v-if="store.devConf.transportType !== 'MQTT'" v-model="cache.notifyDisplayTimestamp" :placeholder="$t('message.timestamp')" size="small" @change="deviceNotificationDataFilterChange" style="width: 110px; margin-right: 20px;">
                         <el-option label="OFF" value="0"></el-option>
                         <el-option label="Local Time" value="1"></el-option>
                         <el-option label="ISO 8601" value="2"></el-option>
                         <el-option label="Timestamp" value="3"></el-option>
                       </el-select>
 
-                      <el-tooltip class="item" effect="light" :content="$t('message.timestampInfo')">
+                      <el-tooltip class="item" effect="light" :content="$t('message.timestampInfo')" v-if="store.devConf.transportType !== 'MQTT'">
                         <span style="margin-right: 8px;">{{$t('message.notificationSequence')}}<i class="el-icon-info el-icon--right"></i></span>
                       </el-tooltip>
-                      <el-select v-model="cache.notifyDisplaySequence" :placeholder="$t('message.notificationSequence')" size="small" @change="deviceNotificationDataFilterChange" style="width: 90px; margin-right: 20px;">
+                      <el-select v-if="store.devConf.transportType !== 'MQTT'" v-model="cache.notifyDisplaySequence" :placeholder="$t('message.notificationSequence')" size="small" @change="deviceNotificationDataFilterChange" style="width: 90px; margin-right: 20px;">
                         <el-option label="OFF" value="0"></el-option>
                         <el-option label="Global" value="1"></el-option>
                         <el-option label="Device" value="2"></el-option>
                       </el-select>
 
-                      <el-tooltip class="item" effect="light" :content="$t('message.notificationDetailInfo')">
+                      <el-tooltip class="item" effect="light" :content="$t('message.notificationDetailInfo')" v-if="store.devConf.transportType !== 'MQTT'">
                         <vxe-button @click="openNotify" status="primary" size="small" v-show="!store.devConfDisplayVars.isNotifyOn">{{$t('message.open')}}<i class="el-icon-info el-icon--right"></i></vxe-button>
                       </el-tooltip>
-                      <el-tooltip class="item" effect="light" :content="$t('message.notificationDetailInfo')">
+                      <el-tooltip class="item" effect="light" :content="$t('message.notificationDetailInfo')" v-if="store.devConf.transportType !== 'MQTT'">
                         <vxe-button @click="closeNotify" size="small" v-show="store.devConfDisplayVars.isNotifyOn">{{$t('message.close')}}<i class="el-icon-info el-icon--right"></i></vxe-button>
                       </el-tooltip>
-                      <vxe-button @click="notifyDisplayResultExport" status="primary" size="small">{{$t('message.export')}}</vxe-button>
-                      <vxe-button @click="notifyDisplayResultClear" size="small" style="margin-right: 10px">{{$t('message.clear')}}</vxe-button>
-                      <vxe-button type="primary" @click="showDeviceNotificationDataRealTimeNewTab" size="small">{{$t('message.deviceScanDataRealTime')}}</vxe-button>
+                      <el-tooltip class="item" effect="light" :content="$t('message.export')">
+                        <vxe-button @click="notifyDisplayResultExport" status="primary" size="small" class="icon-only-btn"><i class="el-icon-download"></i></vxe-button>
+                      </el-tooltip>
+                      <el-tooltip class="item" effect="light" :content="$t('message.clear')">
+                        <vxe-button @click="notifyDisplayResultClear" size="small" class="icon-only-btn"><i class="el-icon-delete"></i></vxe-button>
+                      </el-tooltip>
+                      <el-tooltip class="item" effect="light" :content="$t('message.deviceScanDataRealTime')" v-if="store.devConf.transportType !== 'MQTT'">
+                        <vxe-button type="primary" @click="showDeviceNotificationDataRealTimeNewTab" size="small" class="icon-only-btn"><i class="el-icon-data-line"></i></vxe-button>
+                      </el-tooltip>
                     </template>
                   </vxe-toolbar>
                   <!-- 注意设置为固定高度，否则页面在过多的数据时候会造成卡顿，TODO: 是否考虑使用分页优化? -->
@@ -1349,12 +1490,13 @@
                   </vxe-toolbar>
                   <!-- 注意设置为固定高度，否则页面在过多的数据时候会造成卡顿，TODO: 是否考虑使用分页优化? -->
                   <vxe-grid class="apiLog" border="none" stripe :height="cache.vxeGridHeight + 'px'" highlight-hover-row :header-row-style="{'background-color': '#f4f5f6'}" ref="refApiLogDisplayResultGrid" :sort-config="{trigger: 'cell'}" :data="getComputedApiLogDisplayResultList()">
-                    <vxe-table-column field="timeStr" :title="$t('message.time')" type="html" width="20%" sortable></vxe-table-column>
-                    <vxe-table-column field="apiName" :title="$t('message.apiName')" type="html" width="15%" sortable></vxe-table-column>
-                    <vxe-table-column field="apiContentJson" :title="$t('message.reqContent')" type="html" width="55%" sortable></vxe-table-column>
+                    <vxe-table-column field="timeStr" :title="$t('message.time')" type="html" width="18%" sortable></vxe-table-column>
+                    <vxe-table-column field="apiName" :title="$t('message.apiName')" type="html" :width="store.devConf.transportType === 'MQTT' ? '12%' : '15%'" sortable></vxe-table-column>
+                    <vxe-table-column field="topic" :title="$t('message.topic')" type="html" width="15%" sortable v-if="store.devConf.transportType === 'MQTT'"></vxe-table-column>
+                    <vxe-table-column field="apiContentJson" :title="$t('message.reqContent')" type="html" :width="store.devConf.transportType === 'MQTT' ? '45%' : '57%'" sortable></vxe-table-column>
                     <vxe-table-column :title="$t('message.operation')" width="10%">
                       <template v-slot="{ row }">
-                        <vxe-button status="primary" size="small" @click="replayApi(row)">{{$t('message.replayApiOperation')}}</vxe-button>
+                        <vxe-button v-if="row.replayable !== false" status="primary" size="small" @click="replayApi(row)">{{$t('message.replayApiOperation')}}</vxe-button>
                       </template>
                     </vxe-table-column>
                     <template v-slot:empty>
@@ -1445,6 +1587,7 @@
                 <ul>
                   <li><a target="_blank" href="https://www.cassianetworks.com/knowledge-base/general-documents/">Cassia User Manual</a></li>
                   <li><a target="_blank" href="https://github.com/CassiaNetworks/CassiaSDKGuide/wiki">Cassia SDK & RESTful API</a></li>
+                  <li><a target="_blank" href="https://github.com/CassiaNetworks/CassiaSDKGuide/wiki/MQTT-API-%E2%80%90-Invocation">Cassia MQTT API</a></li>
                   <li><a target="_blank" href="https://github.com/CassiaNetworks/CassiaSDKGuide">Cassia RESTful API Sample Code</a></li>
                   <li><a target="_blank" href="https://www.cassianetworks.com/support/">Contact Cassia Support</a></li>
                 </ul>
@@ -1536,14 +1679,14 @@
         <el-input v-model="store.devConfDisplayVars.updatePhy.deviceMac" disabled></el-input>
       </el-form-item>
       <el-form-item label="TX PHY">
-        <el-select v-model="store.devConfDisplayVars.updatePhy.tx" clearable multiple filterable style="width: 100%">
+        <el-select v-model="store.devConfDisplayVars.updatePhy.tx" clearable multiple filterable style="width: 100%" :placeholder="$t('message.pleaseSelect')">
           <el-option label="1M" value="1M" key="1M"></el-option>
           <el-option label="2M" value="2M" key="2M"></el-option>
           <el-option label="CODED" value="CODED" key="CODED"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="RX PHY">
-        <el-select v-model="store.devConfDisplayVars.updatePhy.rx" clearable multiple filterable style="width: 100%">
+        <el-select v-model="store.devConfDisplayVars.updatePhy.rx" clearable multiple filterable style="width: 100%" :placeholder="$t('message.pleaseSelect')">
           <el-option label="1M" value="1M" key="1M"></el-option>
           <el-option label="2M" value="2M" key="2M"></el-option>
           <el-option label="CODED" value="CODED" key="CODED"></el-option>
@@ -1572,6 +1715,124 @@ export default vueModule.createVue();
 
 <style>
 HTML {}
+
+/* 仅图标按钮样式 - 确保左右 padding 对称 */
+.icon-only-btn {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+.icon-only-btn i {
+  margin: 0 !important;
+}
+
+/* MQTT 连接状态指示器 */
+.mqtt-status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-top: -2px;
+}
+.mqtt-status-connected {
+  background-color: #67C23A;
+}
+.mqtt-status-disconnected {
+  background-color: #909399;
+}
+.mqtt-status-connecting {
+  background-color: #E6A23C;
+}
+.mqtt-status-error {
+  background-color: #F56C6C;
+}
+
+/* MQTT Connect 按钮内状态圆点 */
+.mqtt-btn-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.mqtt-btn-dot-connected {
+  background-color: #67C23A;
+}
+.mqtt-btn-dot-connecting {
+  background-color: #fff;
+  animation: mqtt-dot-pulse 1s ease-in-out infinite;
+}
+.mqtt-btn-dot-error {
+  background-color: #fff;
+}
+@keyframes mqtt-dot-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* Control Setting Tabs 样式 - 与 header 对齐 */
+.control-tabs {
+  margin-top: 0;
+}
+.control-tabs > .el-tabs__header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 430px;
+  height: 50px;
+  z-index: 1000;
+  background-color: #F2F4F8;
+  padding: 0 20px;
+  margin: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid #e4e7ed;
+}
+.control-tabs > .el-tabs__header .el-tabs__nav-wrap {
+  margin-bottom: 0;
+}
+.control-tabs > .el-tabs__header .el-tabs__nav-scroll {
+  padding-bottom: 0;
+}
+.control-tabs > .el-tabs__header .el-tabs__item {
+  padding: 0 30px;
+  padding-bottom: 2px;
+  font-size: 15px;
+  font-weight: 500;
+  height: 50px;
+  line-height: 48px;
+}
+.control-tabs > .el-tabs__header .el-tabs__item i {
+  vertical-align: middle;
+  margin-top: -2px;
+}
+.control-tabs .el-tabs__item,
+.control-tabs .el-tabs__item:focus,
+.control-tabs .el-tabs__item:active,
+.control-tabs .el-tabs__item:focus:active,
+.control-tabs .el-tabs__item:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+.control-tabs .el-tabs__item *:focus,
+.control-tabs .el-tabs__item *:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+.control-tabs > .el-tabs__header .el-tabs__active-bar {
+  bottom: 0;
+}
+.control-tabs > .el-tabs__content {
+  padding-top: 68px;
+}
 
 @font-face {
   font-family: 'icomoon';
@@ -1787,6 +2048,13 @@ code {
   background-color: #f2f8ff !important;
 }
 
+.version-item,
+.version-item:hover,
+.version-item:focus {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
 .configMenuItem {
   border-bottom: 1px solid #eef1fa;
 }
@@ -1822,4 +2090,35 @@ code {
 .el-radio-button__inner {
   width: 80px;
 }
+/* Enhanced Section Title */
+.config-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #606266;
+  margin-top: 36px;
+  margin-bottom: 14px;
+  padding-left: 8px;
+  border-left: 3px solid #0089ff;
+  line-height: 1.4;
+}
+.config-section-title:first-child {
+  margin-top: 0;
+}
+
+/* 输入框错误状态样式 - 红色边框 */
+.input-error .el-input__inner {
+  border-color: #F56C6C !important;
+}
+.input-error .el-input__inner:focus {
+  border-color: #F56C6C !important;
+}
+
+/* 输入框错误提示文字 */
+.input-error-hint {
+  font-size: 12px;
+  color: #F56C6C;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
 </style>
