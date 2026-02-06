@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Cassia BLE Interference Monitor</title>
@@ -19,7 +20,9 @@
             background: unset;
         }
 
-        table, th, td {
+        table,
+        th,
+        td {
             border: unset;
         }
 
@@ -44,11 +47,12 @@
             background: #EFF2F6;
         }
 
-        thead tr:nth-child(n+1) > th:nth-child(1) {
+        thead tr:nth-child(n+1)>th:nth-child(1) {
             border-left: 0;
         }
 
-        table th, table td {
+        table th,
+        table td {
             font-size: .9rem;
             text-align: center;
         }
@@ -163,101 +167,1163 @@
             top: 0;
             bottom: 0;
             left: 0;
-            right: 0; /* Increase/Decrease this value for cross-browser compatibility */
+            right: 0;
+            /* Increase/Decrease this value for cross-browser compatibility */
             overflow-y: scroll;
         }
+
         .error {
             color: red;
             margin-left: 10px;
         }
+
         .input-error {
             border-color: red;
         }
+
+        /* Drawer Styles */
+        .drawer-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .drawer-overlay.active {
+            display: block;
+        }
+
+        .drawer {
+            position: fixed;
+            left: -400px;
+            top: 0;
+            width: 400px;
+            height: 100%;
+            background: white;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .drawer.active {
+            left: 0;
+        }
+
+        .drawer-header {
+            padding: 20px;
+            border-bottom: 1px solid #DDDFE6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .drawer-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .drawer-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .drawer-close:hover {
+            color: #333;
+        }
+
+        .drawer-content {
+            padding: 20px;
+        }
+
+        .mode-selector {
+            margin-bottom: 20px;
+        }
+
+        .mode-selector label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .mode-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mode-button {
+            flex: 1;
+            padding: 10px 16px;
+            border: 1px solid #BFC4CD;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #606266;
+            transition: all 0.3s ease;
+        }
+
+        .mode-button.active {
+            background: #0089FF;
+            color: white;
+            border-color: #0089FF;
+        }
+
+        .mode-button:hover {
+            border-color: #0089FF;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #BFC4CD;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #BFC4CD;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+            background: white;
+            cursor: pointer;
+        }
+
+        .form-group select:focus {
+            outline: none;
+            border-color: #0089FF;
+            box-shadow: 0 0 0 2px rgba(0, 137, 255, 0.2);
+        }
+
+        .form-group select.error {
+            border-color: #e4514b;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0089FF;
+            box-shadow: 0 0 0 2px rgba(0, 137, 255, 0.2);
+        }
+
+        .form-group input.error {
+            border-color: #e4514b;
+        }
+
+        .form-error {
+            color: #e4514b;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .drawer-footer {
+            padding: 20px;
+            border-top: 1px solid #DDDFE6;
+            display: flex;
+            gap: 10px;
+        }
+
+        .drawer-footer button {
+            flex: 1;
+            padding: 10px 16px;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            font-weight: 700;
+        }
+
+        .btn-cancel {
+            background: #F2F3F5;
+            color: #606266;
+        }
+
+        .btn-cancel:hover {
+            background: #E5E7EB;
+        }
+
+        .btn-confirm {
+            background: #0089FF;
+            color: white;
+        }
+
+        .btn-confirm:hover {
+            background: #0073CC;
+        }
+
+        .config-btn {
+            width: 64px !important;
+            height: 32px;
+            margin-left: 10px;
+        }
+
+        .mode-fields {
+            display: none;
+        }
+
+        .mode-fields.active {
+            display: block;
+        }
+
+        /* Toast Notification Styles */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            max-width: 400px;
+        }
+
+        .toast {
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+            padding: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+            min-width: 300px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .toast.removing {
+            animation: slideOut 0.3s ease;
+        }
+
+        .toast-icon {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .toast-message {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .toast.success {
+            border-left: 4px solid #90cc7d;
+        }
+
+        .toast.success .toast-icon {
+            color: #90cc7d;
+        }
+
+        .toast.error {
+            border-left: 4px solid #e4514b;
+        }
+
+        .toast.error .toast-icon {
+            color: #e4514b;
+        }
+
+        .toast.warning {
+            border-left: 4px solid #f3aa3d;
+        }
+
+        .toast.warning .toast-icon {
+            color: #f3aa3d;
+        }
+
+        .toast.info {
+            border-left: 4px solid #7599e4;
+        }
+
+        .toast.info .toast-icon {
+            color: #7599e4;
+        }
+
+        .btn-test-connection {
+            width: 100%;
+            padding: 10px 16px;
+            background: #EFF2F6;
+            color: #0089FF;
+            border: 1px solid #BFC4CD;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-test-connection:hover {
+            background: #E5E7EB;
+            border-color: #0089FF;
+        }
+
+        .btn-test-connection:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Loading Animation Styles */
+        #loadingOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #loadingOverlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0089FF;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            margin-top: 16px;
+            color: #333;
+            font-size: 14px;
+        }
     </style>
 </head>
+
 <body>
-<div id="container content">
-    <div class="main">
-        <div style="padding-left: 2rem; padding-top: 2rem;">
-            <div style="position: absolute;top: 45px;">
-                <span style="color: gray;">tips: This feature can only be run for 3 minutes. Then it will revert to worked normally status.</span>
-            </div>
-            <button id="btnTable" style="width: 64px; height: 32px">Table</button>
-            <button id="btnChart" style="width: 64px; height: 32px">Chart</button>
-            <div style="display: inline-block; margin-left: 1rem; font-size: 0">
-                <button id="timeBtn"
-                        disabled
-                        style="padding: 0; width: 42px;height: 32px;background: #FFFFFF;border: 1px solid rgba(191,196,205,1);border-radius: 16px 0 0 16px; font-size: 14px;color: #606266;text-align: center;font-weight: 400; cursor: text">
-                    0s
-                </button>
-                <button id="btnClear"
-                        style="width: 64px;height: 32px;background: #1F90FF;border-radius: 0 16px 16px 0;">Clear
-                </button>
-            </div>
-            <label for="gateway_ip">Local Gateway IP: </label>
-            <input type="text" id="gateway_ip" placeholder="192.168.0.100">
-            <span id="error" class="error"></span>
-            <!--            <button id="control" class="icomoon icon-pause a" style="display: "";"></button>-->
-        </div>
-        <div id="chartView" class="chartWrapper" style="display: none;">
-            <!-- <div class="chartAreaWrapper"> -->
-            <div id="chart"></div>
-            <!-- </div>  -->
-            <!-- <canvas id="myChartAxis" height="300" width="0"></canvas>-->
-        </div>
-        <div id="tableView" style="margin-left: 2rem; margin-right: 2rem; margin-top: 1rem;">
-            <div style="display: inline-flex;">
-                <button id="btnBle" class="table_switch_btn active">Bluetooth</button>
-                <button id="btnWifi" class="table_switch_btn">Wi-Fi</button>
-            </div>
-            <table id="ble_table">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th colspan="3" style="border-left: 0">RSSI</th>
-                    <th rowspan="2" style="width: 15rem">Packet retransmission rate</th>
-                    <th rowspan="2" style="width: 15rem">Channel Quality</th>
-                </tr>
-                <tr>
-                    <th></th>
-                    <th style="border-left: 0">Max</th>
-                    <th>Current</th>
-                    <th>Average</th>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-            <table id="wifi_table" class="hidden">
-                <thead style="height: 40px;">
-                <tr>
-                    <th>#</th>
-                    <th>Address</th>
-                    <th>SSID</th>
-                    <th>Channel</th>
-                    <th>Mode</th>
-                    <th>Signal</th>
-                    <th>Encryption</th>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loadingText">Loading...</div>
     </div>
 
-    <div class="pure-topnav">
-        <h1>
-            <i class="icomoon icon-icon-logo" style="font-weight: normal;font-size: 160%;vertical-align: middle"></i>
-            <span i18n="navbar.title">Cassia BLE Interference Monitor</span>
-            <small></small>
-        </h1>
+    <div id="container content">
+        <div class="main">
+            <div style="padding-left: 2rem; padding-top: 2rem;">
+                <div style="position: absolute;top: 45px;">
+                    <span style="color: gray;">tips: This feature can only be run for 3 minutes. Then it will revert to
+                        worked normally status.</span>
+                </div>
+                <button id="btnTable" style="width: 64px; height: 32px">Table</button>
+                <button id="btnChart" style="width: 64px; height: 32px">Chart</button>
+                <button id="btnConfig" class="config-btn">Config</button>
+                <div style="display: inline-block; margin-left: 1rem; font-size: 0">
+                    <button id="timeBtn" disabled
+                        style="padding: 0; width: 42px;height: 32px;background: #FFFFFF;border: 1px solid rgba(191,196,205,1);border-radius: 16px 0 0 16px; font-size: 14px;color: #606266;text-align: center;font-weight: 400; cursor: text">
+                        0s
+                    </button>
+                    <button id="btnClear"
+                        style="width: 64px;height: 32px;background: #1F90FF;border-radius: 0 16px 16px 0;">Clear
+                    </button>
+                </div>
+                <!-- <label for="gateway_ip">Local Gateway IP: </label> -->
+                <!-- <input type="text" id="gateway_ip" placeholder="192.168.0.100"> -->
+                <!-- <span id="error" class="error"></span> -->
+                <!--            <button id="control" class="icomoon icon-pause a" style="display: "";"></button>-->
+            </div>
+            <div id="chartView" class="chartWrapper" style="display: none;">
+                <!-- <div class="chartAreaWrapper"> -->
+                <div id="chart"></div>
+                <!-- </div>  -->
+                <!-- <canvas id="myChartAxis" height="300" width="0"></canvas>-->
+            </div>
+            <div id="tableView" style="margin-left: 2rem; margin-right: 2rem; margin-top: 1rem;">
+                <div style="display: inline-flex;">
+                    <button id="btnBle" class="table_switch_btn active">Bluetooth</button>
+                    <button id="btnWifi" class="table_switch_btn">Wi-Fi</button>
+                </div>
+                <table id="ble_table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th colspan="3" style="border-left: 0">RSSI</th>
+                            <th rowspan="2" style="width: 15rem">Packet retransmission rate</th>
+                            <th rowspan="2" style="width: 15rem">Channel Quality</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th style="border-left: 0">Max</th>
+                            <th>Current</th>
+                            <th>Average</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <table id="wifi_table" class="hidden">
+                    <thead style="height: 40px;">
+                        <tr>
+                            <th>#</th>
+                            <th>Address</th>
+                            <th>SSID</th>
+                            <th>Channel</th>
+                            <th>Mode</th>
+                            <th>Signal</th>
+                            <th>Encryption</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Configuration Drawer -->
+        <div id="configDrawerOverlay" class="drawer-overlay"></div>
+        <div id="configDrawer" class="drawer">
+            <div class="drawer-header">
+                <div class="drawer-title">Configuration</div>
+                <button class="drawer-close" id="drawerClose">×</button>
+            </div>
+            <div class="drawer-content">
+                <div class="mode-selector">
+                    <label>Connection Mode:</label>
+                    <div class="mode-buttons">
+                        <button class="mode-button active" data-mode="local">Local</button>
+                        <button class="mode-button" data-mode="ac">AC Server</button>
+                    </div>
+                </div>
+
+                <!-- Local Mode Fields -->
+                <div id="localModeFields" class="mode-fields active">
+                    <div class="form-group">
+                        <label for="localIp">Gateway IP Address:</label>
+                        <input type="text" id="localIp" placeholder="e.g., 192.168.0.100">
+                        <div class="form-error" id="localIpError"></div>
+                    </div>
+                    <button class="btn-test-connection" id="testLocalConnection" type="button">Test Connection</button>
+                </div>
+
+                <!-- AC Mode Fields -->
+                <div id="acModeFields" class="mode-fields">
+                    <div class="form-group">
+                        <label for="acAddress">AC Server Address:</label>
+                        <input type="text" id="acAddress" placeholder="e.g., https://api.example.com">
+                        <div class="form-error" id="acAddressError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="acUsername">Developer Account:</label>
+                        <input type="text" id="acUsername" placeholder="Enter your account">
+                        <div class="form-error" id="acUsernameError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="acPassword">Password:</label>
+                        <input type="password" id="acPassword" placeholder="Enter your password">
+                        <div class="form-error" id="acPasswordError"></div>
+                    </div>
+                    <button class="btn-test-connection" id="testAcConnection" type="button">Test Connection</button>
+                    <div class="form-group" id="gatewaySelectGroup" style="display: none;">
+                        <label for="acGateway">Select Gateway:</label>
+                        <select id="acGateway">
+                            <option value="">-- Please select a gateway --</option>
+                        </select>
+                        <div class="form-error" id="acGatewayError"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="drawer-footer">
+                <button class="btn-cancel" id="drawerCancel">Cancel</button>
+                <button class="btn-confirm" id="drawerConfirm">Save</button>
+            </div>
+        </div>
+
+        <!-- Toast Container for Notifications -->
+        <div id="toastContainer" class="toast-container"></div>
+
+        <div class="pure-topnav">
+            <h1>
+                <i class="icomoon icon-icon-logo"
+                    style="font-weight: normal;font-size: 160%;vertical-align: middle"></i>
+                <span i18n="navbar.title">Cassia BLE Interference Monitor</span>
+                <small></small>
+            </h1>
+        </div>
     </div>
-</div>
-<script src="js/utils.js"></script>
-<script src="js/echarts.min.js"></script>
-<script src="js/jquery-3.5.1.min.js"></script>
-<script src="js/lodash.min.js"></script>
-<script src="js/assessment.js?v=202102251539"></script>
-</body>
-</html>
+    <script src="js/utils.js"></script>
+    <script src="js/echarts.min.js"></script>
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/lodash.min.js"></script>
+    <script src="js/assessment.js?v=202102251539"></script>
+    <script>
+        // Toast Notification System
+        const notificationManager = {
+            container: document.getElementById('toastContainer'),
+
+            show: function (type, title, message, duration = 3000) {
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+
+                const iconMap = {
+                    success: '✓',
+                    error: '✕',
+                    warning: '⚠',
+                    info: 'ℹ'
+                };
+
+                toast.innerHTML = `
+                <div class="toast-icon">${iconMap[type]}</div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+            `;
+
+                this.container.appendChild(toast);
+
+                if (duration > 0) {
+                    setTimeout(() => {
+                        toast.classList.add('removing');
+                        setTimeout(() => toast.remove(), 300);
+                    }, duration);
+                }
+
+                return toast;
+            },
+
+            success: function (title, message, duration = 3000) {
+                return this.show('success', title, message, duration);
+            },
+
+            error: function (title, message, duration = 3000) {
+                return this.show('error', title, message, duration);
+            },
+
+            warning: function (title, message, duration = 3000) {
+                return this.show('warning', title, message, duration);
+            },
+
+            info: function (title, message, duration = 3000) {
+                return this.show('info', title, message, duration);
+            }
+        };
+
+        // Configuration Drawer Logic
+        const drawer = {
+            overlay: document.getElementById('configDrawerOverlay'),
+            drawer: document.getElementById('configDrawer'),
+            openBtn: document.getElementById('btnConfig'),
+            closeBtn: document.getElementById('drawerClose'),
+            cancelBtn: document.getElementById('drawerCancel'),
+            confirmBtn: document.getElementById('drawerConfirm'),
+            testLocalBtn: document.getElementById('testLocalConnection'),
+            testAcBtn: document.getElementById('testAcConnection'),
+            currentMode: 'local',
+            testingInProgress: false,
+            acAuthToken: null,
+            acHubs: [],
+
+            init: function () {
+                this.openBtn.addEventListener('click', () => this.open());
+                this.closeBtn.addEventListener('click', () => this.close());
+                this.cancelBtn.addEventListener('click', () => this.close());
+                this.confirmBtn.addEventListener('click', () => this.save());
+                this.overlay.addEventListener('click', () => this.close());
+                this.testLocalBtn.addEventListener('click', () => this.testLocalConnection());
+                this.testAcBtn.addEventListener('click', () => this.testAcConnection());
+
+                // Mode switch
+                document.querySelectorAll('.mode-button').forEach(btn => {
+                    btn.addEventListener('click', (e) => this.switchMode(e.target.dataset.mode));
+                });
+
+                // Real-time validation on input change
+                document.getElementById('localIp').addEventListener('change', () => this.validateLocalIp());
+                document.getElementById('acAddress').addEventListener('change', () => this.validateAcAddress());
+                document.getElementById('acUsername').addEventListener('change', () => this.validateAcUsername());
+                document.getElementById('acPassword').addEventListener('change', () => this.validateAcPassword());
+
+                // Load saved config
+                this.loadConfig();
+            },
+
+            open: function () {
+                this.overlay.classList.add('active');
+                this.drawer.classList.add('active');
+            },
+
+            close: function () {
+                this.overlay.classList.remove('active');
+                this.drawer.classList.remove('active');
+            },
+
+            switchMode: function (mode) {
+                this.currentMode = mode;
+
+                // Update button states
+                document.querySelectorAll('.mode-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+
+                // Update form fields visibility
+                document.getElementById('localModeFields').classList.remove('active');
+                document.getElementById('acModeFields').classList.remove('active');
+
+                if (mode === 'local') {
+                    document.getElementById('localModeFields').classList.add('active');
+                } else {
+                    document.getElementById('acModeFields').classList.add('active');
+                }
+
+                // Clear previous errors
+                this.clearErrors();
+            },
+
+            validateLocalIp: function () {
+                const localIp = document.getElementById('localIp').value.trim();
+                const errorEl = document.getElementById('localIpError');
+                const inputEl = document.getElementById('localIp');
+
+                if (!localIp) {
+                    errorEl.textContent = 'Gateway IP is required';
+                    inputEl.classList.add('input-error');
+                    return false;
+                } else if (!this.isValidIP(localIp)) {
+                    errorEl.textContent = 'Invalid IP address format (e.g., 192.168.0.100)';
+                    inputEl.classList.add('input-error');
+                    return false;
+                } else {
+                    errorEl.textContent = '';
+                    inputEl.classList.remove('input-error');
+                    return true;
+                }
+            },
+
+            validateAcAddress: function () {
+                const acAddress = document.getElementById('acAddress').value.trim();
+                const errorEl = document.getElementById('acAddressError');
+                const inputEl = document.getElementById('acAddress');
+
+                if (!acAddress) {
+                    errorEl.textContent = 'AC Server Address is required';
+                    inputEl.classList.add('input-error');
+                    return false;
+                } else if (!this.isValidURL(acAddress)) {
+                    errorEl.textContent = 'Invalid URL format (e.g., https://api.example.com)';
+                    inputEl.classList.add('input-error');
+                    return false;
+                } else {
+                    errorEl.textContent = '';
+                    inputEl.classList.remove('input-error');
+                    return true;
+                }
+            },
+
+            validateAcUsername: function () {
+                const acUsername = document.getElementById('acUsername').value.trim();
+                const errorEl = document.getElementById('acUsernameError');
+                const inputEl = document.getElementById('acUsername');
+
+                if (!acUsername) {
+                    errorEl.textContent = 'Account is required';
+                    inputEl.classList.add('input-error');
+                    return false;
+                } else {
+                    errorEl.textContent = '';
+                    inputEl.classList.remove('input-error');
+                    return true;
+                }
+            },
+
+            validateAcPassword: function () {
+                const acPassword = document.getElementById('acPassword').value.trim();
+                const errorEl = document.getElementById('acPasswordError');
+                const inputEl = document.getElementById('acPassword');
+
+                if (!acPassword) {
+                    errorEl.textContent = 'Password is required';
+                    inputEl.classList.add('input-error');
+                    return false;
+                } else {
+                    errorEl.textContent = '';
+                    inputEl.classList.remove('input-error');
+                    return true;
+                }
+            },
+
+            validateAcGateway: function () {
+                const acGateway = document.getElementById('acGateway').value.trim();
+                const errorEl = document.getElementById('acGatewayError');
+                const selectEl = document.getElementById('acGateway');
+
+                if (!acGateway) {
+                    errorEl.textContent = 'Gateway selection is required';
+                    selectEl.classList.add('error');
+                    return false;
+                } else {
+                    errorEl.textContent = '';
+                    selectEl.classList.remove('error');
+                    return true;
+                }
+            },
+
+            validate: function () {
+                this.clearErrors();
+                let isValid = true;
+
+                if (this.currentMode === 'local') {
+                    isValid = this.validateLocalIp() && isValid;
+                } else {
+                    isValid = this.validateAcAddress() && isValid;
+                    isValid = this.validateAcUsername() && isValid;
+                    isValid = this.validateAcPassword() && isValid;
+                    // Check if gateway selection is visible (meaning auth was successful)
+                    if (document.getElementById('gatewaySelectGroup').style.display !== 'none') {
+                        isValid = this.validateAcGateway() && isValid;
+                    }
+                }
+
+                return isValid;
+            },
+
+            isValidIP: function (ip) {
+                const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
+                if (!ipRegex.test(ip)) return false;
+
+                const parts = ip.split('.');
+                return parts.every(part => {
+                    const num = parseInt(part, 10);
+                    return num >= 0 && num <= 255;
+                });
+            },
+
+            isValidURL: function (url) {
+                try {
+                    new URL(url);
+                    return true;
+                } catch {
+                    return false;
+                }
+            },
+
+            clearErrors: function () {
+                document.getElementById('localIpError').textContent = '';
+                document.getElementById('acAddressError').textContent = '';
+                document.getElementById('acUsernameError').textContent = '';
+                document.getElementById('acPasswordError').textContent = '';
+                document.getElementById('acGatewayError').textContent = '';
+
+                document.getElementById('localIp').classList.remove('input-error');
+                document.getElementById('acAddress').classList.remove('input-error');
+                document.getElementById('acUsername').classList.remove('input-error');
+                document.getElementById('acPassword').classList.remove('input-error');
+                document.getElementById('acGateway').classList.remove('error');
+            },
+
+            testLocalConnection: function () {
+                if (!this.validateLocalIp()) {
+                    notificationManager.warning('Validation Error', 'Please enter a valid IP address');
+                    return;
+                }
+
+                if (this.testingInProgress) {
+                    notificationManager.warning('Testing', 'Connection test already in progress');
+                    return;
+                }
+
+                this.testingInProgress = true;
+                this.testLocalBtn.disabled = true;
+                const originalText = this.testLocalBtn.textContent;
+                this.testLocalBtn.textContent = 'Testing...';
+
+                const localIp = document.getElementById('localIp').value.trim();
+                const self = this;
+
+                // Test multiple endpoints to ensure gateway is accessible
+                const tests = [
+                    { url: `http://${localIp}/cassia/login`, name: 'Gateway Health Check', timeout: 5000 },
+                ];
+
+                let successCount = 0;
+                let testResults = [];
+
+                const performTest = (testIndex) => {
+                    if (testIndex >= tests.length) {
+                        // All tests completed
+                        self.testLocalBtn.disabled = false;
+                        self.testLocalBtn.textContent = originalText;
+                        self.testingInProgress = false;
+
+                        if (successCount > 0) {
+                            notificationManager.success(
+                                'Connection Successful',
+                                `Successfully connected to gateway at ${localIp}. (${successCount}/${tests.length} checks passed)`
+                            );
+                        } else {
+                            notificationManager.error(
+                                'Connection Failed',
+                                `Failed to connect to ${localIp}. Please verify:\n- Gateway IP is correct\n- Gateway is powered on and online\n- Network connectivity is working\n- Firewall rules allow access`
+                            );
+                        }
+                        return;
+                    }
+
+                    const test = tests[testIndex];
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), test.timeout);
+
+                    fetch(test.url, {
+                        method: 'GET',
+                        signal: controller.signal,
+                        mode: 'cors'
+                    })
+                        .then(response => {
+                            clearTimeout(timeoutId);
+                            if (response.ok) {
+                                successCount++;
+                                testResults.push({ name: test.name, status: 'success' });
+                            } else {
+                                testResults.push({ name: test.name, status: 'failed', code: response.status });
+                            }
+                            performTest(testIndex + 1);
+                        })
+                        .catch((error) => {
+                            clearTimeout(timeoutId);
+                            const errorType = error.name === 'AbortError' ? 'timeout' : 'connection_error';
+                            testResults.push({ name: test.name, status: 'error', error: errorType });
+                            performTest(testIndex + 1);
+                        });
+                };
+
+                notificationManager.info('Testing Connection', `Testing gateway at ${localIp}...`);
+                performTest(0);
+            },
+
+            testAcConnection: function () {
+                if (!this.validateAcAddress() || !this.validateAcUsername() || !this.validateAcPassword()) {
+                    notificationManager.warning('Validation Error', 'Please fill in all required fields correctly');
+                    return;
+                }
+
+                if (this.testingInProgress) {
+                    notificationManager.warning('Testing', 'Connection test already in progress');
+                    return;
+                }
+
+                this.testingInProgress = true;
+                this.testAcBtn.disabled = true;
+                const originalText = this.testAcBtn.textContent;
+                this.testAcBtn.textContent = 'Testing...';
+
+                const acAddress = document.getElementById('acAddress').value.trim();
+                const acUsername = document.getElementById('acUsername').value.trim();
+                const acPassword = document.getElementById('acPassword').value.trim();
+                const self = this;
+
+                // Step 1: Request token directly (server connectivity + authentication)
+                const step1TestServerReachability = () => {
+                    notificationManager.info('Step 1/2', 'Requesting authentication token...');
+
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+                    // Create Basic Auth header
+                    const basicAuth = btoa(`${acUsername}:${acPassword}`);
+
+                    fetch(`${acAddress}/api/oauth2/token`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8',
+                            'Authorization': `Basic ${basicAuth}`
+                        },
+                        body: JSON.stringify({
+                            grant_type: 'client_credentials'
+                        }),
+                        signal: controller.signal,
+                        mode: 'cors'
+                    })
+                        .then(response => {
+                            clearTimeout(timeoutId);
+                            if (response.ok) {
+                                return response.json().then(data => {
+                                    return step2FetchGateways(data.access_token || data.token || data.accessToken || '');
+                                });
+                            } else if (response.status === 401 || response.status === 403) {
+                                throw new Error('Invalid credentials');
+                            } else {
+                                throw new Error(`Server error: ${response.status}`);
+                            }
+                        })
+                        .catch(error => {
+                            clearTimeout(timeoutId);
+                            self.testAcBtn.disabled = false;
+                            self.testAcBtn.textContent = originalText;
+                            self.testingInProgress = false;
+                            notificationManager.error(
+                                'Connection Failed',
+                                `Failed to connect to AC Server. Please verify:\n- Server address is correct (${acAddress})\n- Server is online\n- Username and password are correct\n- Account has API access enabled`
+                            );
+                        });
+                };
+
+                // Step 2: Fetch gateways
+                const step2FetchGateways = (token) => {
+                    notificationManager.info('Step 2/2', 'Fetching available gateways...');
+
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+                    fetch(`${acAddress}/api/cassia/hubs?access_token=${token}`, {
+                        method: 'GET',
+                        signal: controller.signal,
+                        mode: 'cors'
+                    })
+                        .then(response => {
+                            clearTimeout(timeoutId);
+                            if (response.ok) {
+                                return response.json().then(gatewaysData => {
+                                    self.testAcBtn.disabled = false;
+                                    self.testAcBtn.textContent = originalText;
+                                    self.testingInProgress = false;
+
+                                    // Save token and hubs for later use
+                                    self.acAuthToken = token;
+                                    self.acHubs = gatewaysData;
+
+                                    // Populate gateway dropdown
+                                    const gatewaySelect = document.getElementById('acGateway');
+                                    gatewaySelect.innerHTML = '<option value="">-- Please select a gateway --</option>';
+
+                                    if (Array.isArray(gatewaysData)) {
+                                        gatewaysData.forEach(hub => {
+                                            const option = document.createElement('option');
+                                            const mac = hub.mac || hub.id || hub.uuid;
+                                            const name = hub.name || hub.ip || 'Unknown Hub';
+                                            option.value = mac;
+                                            option.textContent = `${name} (${mac})`;
+                                            gatewaySelect.appendChild(option);
+                                        });
+                                    }
+
+                                    // Show gateway selection
+                                    document.getElementById('gatewaySelectGroup').style.display = 'block';
+
+                                    notificationManager.success(
+                                        'Connection Successful',
+                                        `Successfully connected to AC Server. Found ${gatewaysData.length || 0} gateway(s).\nPlease select a gateway below.`
+                                    );
+                                });
+                            } else {
+                                throw new Error(`Failed to fetch gateways: ${response.status}`);
+                            }
+                        })
+                        .catch(error => {
+                            clearTimeout(timeoutId);
+                            self.testAcBtn.disabled = false;
+                            self.testAcBtn.textContent = originalText;
+                            self.testingInProgress = false;
+                            notificationManager.error(
+                                'Gateway Fetch Failed',
+                                'Authentication successful but failed to fetch gateway list. Please check API access.'
+                            );
+                        });
+                };
+
+                notificationManager.info('Testing Connection', `Testing AC Server at ${acAddress}...`);
+                step1TestServerReachability();
+            },
+
+            save: function () {
+                if (!this.validate()) {
+                    notificationManager.error('Validation Failed', 'Please fix all errors before saving');
+                    return;
+                }
+
+                const config = {
+                    mode: this.currentMode,
+                    timestamp: new Date().toISOString()
+                };
+
+                if (this.currentMode === 'local') {
+                    config.localIp = document.getElementById('localIp').value.trim();
+                } else {
+                    config.acAddress = document.getElementById('acAddress').value.trim();
+                    config.acUsername = document.getElementById('acUsername').value.trim();
+                    config.acPassword = document.getElementById('acPassword').value.trim();
+                    config.acAuthToken = this.acAuthToken;
+                    config.acGateway = document.getElementById('acGateway').value.trim();
+
+                    // Also save the model of the selected gateway
+                    if (this.acHubs && Array.isArray(this.acHubs)) {
+                        const selectedHub = this.acHubs.find(hub => (hub.mac || hub.id || hub.uuid) === config.acGateway);
+                        if (selectedHub) {
+                            config.acModel = selectedHub.model || '';
+                        }
+                    }
+                }
+
+                try {
+                    // Save to localStorage
+                    localStorage.setItem('interferenceMonitorConfig', JSON.stringify(config));
+
+                    // For local mode, also update gateway_ip and trigger business logic
+                    if (this.currentMode === 'local') {
+                        const localIp = config.localIp;
+                        localStorage.setItem('gatewayIP', localIp);
+
+                        // Update gateway_ip input field using jQuery
+                        const $gatewayIpInput = $('#gateway_ip');
+                        if ($gatewayIpInput.length > 0) {
+                            $gatewayIpInput.val(localIp);
+                        }
+
+                        notificationManager.success('Configuration Saved', 'Interference assessment starting...');
+                        this.close();
+
+                        // Execute business logic after drawer closes
+                        setTimeout(() => {
+                            try {
+                                // Call startAssessment function from assessment.js
+                                if (typeof startAssessment === 'function') {
+                                    startAssessment();
+                                } else {
+                                    console.error('startAssessment function not available');
+                                }
+                            } catch (error) {
+                                console.error('Error calling startAssessment:', error);
+                            }
+                        }, 300);
+                    } else {
+                        // For AC mode, also trigger assessment
+                        notificationManager.success('Configuration Saved', 'Interference assessment starting...');
+                        this.close();
+
+                        // Execute business logic after drawer closes
+                        setTimeout(() => {
+                            try {
+                                // Call startAssessment function from assessment.js
+                                if (typeof startAssessment === 'function') {
+                                    startAssessment();
+                                } else {
+                                    console.error('startAssessment function not available');
+                                }
+                            } catch (error) {
+                                console.error('Error calling startAssessment:', error);
+                            }
+                        }, 300);
+                    }
+                } catch (error) {
+                    notificationManager.error('Save Failed', `Failed to save configuration: ${error.message}`);
+                    console.error('Save error:', error);
+                }
+            },
+
+            loadConfig: function () {
+                try {
+                    const configStr = localStorage.getItem('interferenceMonitorConfig');
+                    if (!configStr) {
+                        return;
+                    }
+
+                    const config = JSON.parse(configStr);
+
+                    if (config.mode === 'local') {
+                        this.switchMode('local');
+                        document.getElementById('localIp').value = config.localIp || '';
+                        const gatewayIpInput = document.getElementById('gateway_ip');
+                        if (config.localIp && gatewayIpInput) {
+                            gatewayIpInput.value = config.localIp;
+                        }
+                    } else if (config.mode === 'ac') {
+                        this.switchMode('ac');
+                        document.getElementById('acAddress').value = config.acAddress || '';
+                        document.getElementById('acUsername').value = config.acUsername || '';
+                        document.getElementById('acPassword').value = config.acPassword || '';
+                    }
+                } catch (e) {
+                    console.error('Error loading configuration:', e);
+                    notificationManager.error('Load Error', 'Failed to load saved configuration');
+                }
+            }
+        };
+
+        // Initialize drawer when DOM is ready
+        document.addEventListener('DOMContentLoaded', function () {
+            drawer.init();
+        });
+    </script>

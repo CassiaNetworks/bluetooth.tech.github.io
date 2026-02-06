@@ -75,6 +75,8 @@ let columnsHidden = true;
 let color_mapping = {};
 const table = $("table");
 const ids = {};
+let updateInterval = null;
+let currentConfig = null;
 
 $(document).ready(function() {
     function isValidIP(ip) {
@@ -781,8 +783,33 @@ $(document).ready(function() {
     }
 
     function getSpeedAndInterference() {
-        // let deviceRateArr = mystorage.get('deviceRateArr');
-        // var d = {"EF:F4:F8:F6:B7:F0": "8.6", "EF:F4:F8:F6:B7:F1": "20.2"}
+        const configStr = localStorage.getItem('throughputMonitorConfig');
+        let config = {};
+        if (configStr) {
+            config = JSON.parse(configStr);
+        }
+        const mode = config.mode || 'local';
+        const ip = config.localIp || localStorage.getItem('gatewayIP') || ''; // Local IP from config or storage
+        
+        let interferenceUrl, rateUrl;
+        
+        if (mode === 'ac') {
+            const acAddress = config.acAddress;
+            const acToken = config.acAuthToken;
+            const acGateway = config.acGateway;
+            
+            if (!acAddress || !acToken || !acGateway) {
+                console.error('AC configuration incomplete');
+                return;
+            }
+            
+            interferenceUrl = `${acAddress}/api/gap/connection/interference?mac=${acGateway}&access_token=${acToken}`;
+            rateUrl = `${acAddress}/api/gatt/nodes/rate?mac=${acGateway}&access_token=${acToken}`;
+        } else {
+            interferenceUrl = `http://${ip}/gap/connection/interference`;
+            rateUrl = `http://${ip}/gatt/nodes/rate`;
+        }
+
         let now = Date.now();
         for (let i in conn0) {
             conn0[i] = 0;
@@ -793,8 +820,9 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: `http://${ip}/gap/connection/interference`,
+            url: interferenceUrl,
             type: "get",
+            timeout: 5000,
             success: (connections) => {
                 if (
                     connections === null ||
@@ -847,8 +875,9 @@ $(document).ready(function() {
                         updateTable(item);
                     });
                 $.ajax({
-                    url: `http://${ip}/gatt/nodes/rate`,
+                    url: rateUrl,
                     type: "get",
+                    timeout: 5000,
                     success: function(d) {
                         // if (Object.keys(d).length === 0) {
                         //     return;
@@ -953,8 +982,30 @@ $(document).ready(function() {
     //     }
     //     return alert(errorMessage)
     // });
-    getSpeedAndInterference();
-    setInterval(() => {
-        if (fetchData) getSpeedAndInterference();
-    }, FETCH_DATA_INTERVAL);
+    function startThroughputUpdates() {
+        if (updateInterval) clearInterval(updateInterval);
+        
+        getSpeedAndInterference();
+        updateInterval = setInterval(() => {
+            if (fetchData) getSpeedAndInterference();
+        }, FETCH_DATA_INTERVAL);
+    }
+
+    window.restartThroughput = function() {
+        // Reset everything
+        index = 1;
+        conn0 = {};
+        conn1 = {};
+        connAll = {};
+        ids.length = 0; // Clear keys
+        for (let key in ids) delete ids[key];
+        color_mapping = {};
+        $("table tbody").empty();
+        removeData(chart);
+        removeData(chart2);
+        
+        startThroughputUpdates();
+    };
+
+    startThroughputUpdates();
 })
