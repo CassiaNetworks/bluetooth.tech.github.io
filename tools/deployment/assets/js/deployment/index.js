@@ -118,17 +118,64 @@ document.addEventListener('DOMContentLoaded', () => {
 		$('#connTimes').val(filterXSS($('#connTimes').val()));
 	}
 
-	// 自动填充 hubIP
-	if (localStorage.getItem('hubIP')) {
-		$('#hubIP').val(localStorage.getItem('hubIP'));
+	// Config fields to persist
+	const configFields = [
+		'hubIP',
+		'deviceMacArr',
+		'deviceName',
+		'chip',
+		'phy',
+		'scanTimeout',
+		'connTimeout',
+		'connTimes',
+	];
+
+	function saveConfig() {
+		const config = {};
+		configFields.forEach((id) => {
+			const $el = $('#' + id);
+			if ($el.length) {
+				config[id] = $el.val();
+			}
+		});
+		localStorage.setItem('deployment_tool_config', JSON.stringify(config));
 	}
 
-	let chipVal = 0;
+	function loadConfig() {
+		const stored = localStorage.getItem('deployment_tool_config');
+		if (stored) {
+			try {
+				const config = JSON.parse(stored);
+				configFields.forEach((id) => {
+					if (config[id] !== undefined) {
+						$('#' + id).val(config[id]);
+					}
+				});
+			} catch (e) {
+				console.error('Failed to parse stored config', e);
+			}
+		} else {
+			// Backward compatibility for hubIP if it exists separately
+			if (localStorage.getItem('hubIP')) {
+				$('#hubIP').val(localStorage.getItem('hubIP'));
+			}
+		}
+	}
+
+	// Load config on startup
+	loadConfig();
+
+	// Bind save events
+	configFields.forEach((id) => {
+		$('#' + id).on('input change', saveConfig);
+	});
+
+	let chipVal = $('#chip').val();
 	$('#chip').on('change', function () {
 		chipVal = $(this).val();
 	});
 
-	let phyVal = '1M';
+	let phyVal = $('#phy').val();
 	$('#phy').on('change', function () {
 		phyVal = $(this).val();
 	});
