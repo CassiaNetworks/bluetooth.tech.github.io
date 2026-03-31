@@ -226,7 +226,7 @@
                 <span slot="title">{{$t('message.resources')}}</span>
               </el-menu-item>
               <el-menu-item style="position: absolute; bottom: 50px; padding: 0; width: 152px; text-align: center; border-top: 0px solid #e8eaed;">
-                <span>v2.0.8</span>
+                <span>v2.0.9</span>
               </el-menu-item>
             </el-menu>
           </el-aside>

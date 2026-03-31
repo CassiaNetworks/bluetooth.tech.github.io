@@ -440,8 +440,22 @@ function getBaseURI(devConf) {
   return url;
 }
 
+function filterXSSFields(obj) {
+  _.forEach(obj, (v, k) => {
+    if (_.isString(v)) {
+      obj[k] = filterXSS(v);
+    } else if (_.isArray(v)) {
+      const filtered = v.map(item => _.isString(item) ? filterXSS(item) : item);
+      if (!_.isEqual(v, filtered)) {
+        obj[k] = filtered;
+      }
+    }
+  });
+}
+
 function saveApDevConf(_devConf) {
   _devConf.baseURI = getBaseURI(_devConf);
+  filterXSSFields(_devConf);
   storage.devConf = _devConf;
   save(storageKey, JSON.stringify(storage.devConf)); // 只保存配置，其他缓存不保存
 }
@@ -451,9 +465,7 @@ function saveAcDevConf(_devConf) {
   _devConf.baseURI = getBaseURI(_devConf);
 
   // XSS过滤
-  _.forEach(_devConf, (v, k) => {
-    if (_.isString(v)) _devConf[k] = filterXSS(v);
-  });
+  filterXSSFields(_devConf);
   storage.devConf = _devConf;
   
   // TODO: 优化定时获取token
@@ -530,6 +542,8 @@ function loadStorage() {
   if (!_.has(storage.devConf, 'autoSelectionOn')) storage.devConf.autoSelectionOn = 'off';
   if (!_.has(storage.devConf, 'aps')) storage.devConf.aps = storage.devConf.mac || ['*'];
 
+  filterXSSFields(storage.devConf);
+
   // 如果是AC方式，则更新token
   let _devConf = storage.devConf;
   if (storage.devConf.controlStyle === libEnum.controlStyle.AC) {
@@ -567,4 +581,5 @@ export default {
   getDevConfDisplayVars,
   listAddOrUpdate,
   checkAndClearPhyParams,
+  filterXSSFields,
 }

@@ -400,6 +400,7 @@ function createVueMethods(vue) {
     },
     apiDemoScanTest() {
       const scanParams = this.store.devConfDisplayVars.apiDemoParams.scanConnectWriteNotify.scan;
+      dbModule.filterXSSFields(scanParams);
       let sse = apiModule.startScanByUserParams(this.store.devConf, scanParams.chip, scanParams.filter_mac, scanParams.phy, scanParams.filter_name, scanParams.filter_rssi, '', () => {
         notify(`${this.$i18n.t('message.testScanOk')}`, this.$i18n.t('message.operationOk'), libEnum.messageType.SUCCESS);
         sse.close();
@@ -560,9 +561,7 @@ function createVueMethods(vue) {
       const apiParams = this.store.devConfDisplayVars.apiDebuggerParams[apiType];
 
       console.log('startDebugApi apiParams before filter xss:', this.store.devConf.mac, JSON.stringify(apiParams));
-      _.forEach(apiParams, (v, k) => {
-        if (_.isString(v)) apiParams[k] = filterXSS(v);
-      });
+      dbModule.filterXSSFields(apiParams);
       this.store.devConf.mac = filterXSS(this.store.devConf.mac);
       console.log('startDebugApi apiParams after filter xss:', this.store.devConf.mac, JSON.stringify(apiParams));
 

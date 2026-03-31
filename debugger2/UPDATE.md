@@ -2,6 +2,14 @@
 
 ---
 
+## v2.0.9 <Badge type="warning" text="2025-03-31" />
+- 安全更新
+    - 修复Select Box（filter_name, filter_mac, phy等）XSS漏洞
+    - 修复AP直连模式缺少XSS过滤
+    - 加载localStorage时增加XSS过滤
+
+---
+
 ## v2.0.8 <Badge type="warning" text="2025-03-28" />
 - 支持BLE5
     - 扫描配置
