@@ -6,6 +6,10 @@ yarn-debug.log*
 yarn-error.log*
 
 # Runtime data
+.claude
+local
+
+# Runtime data
 pids
 *.pid
 *.seed

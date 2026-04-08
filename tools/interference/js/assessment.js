@@ -1,3 +1,20 @@
+// Constants
+const EXCLUDE_MODEL = ['S2000', 'X2000', 'M500', 'M1000', 'M1500', 'M2000'];
+const WIFI_CHANNEL_INDEX = [
+	0, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75,
+];
+const QUALITY_THRESHOLDS = {
+	highest: [-100, -70],
+	high: [-70, -60],
+	medium: [-60, -50],
+	low: [-50, -30],
+};
+const RSSI_NO_DATA = -100;
+const PERIODIC_UPDATE_INTERVAL = 3000;
+const UPDATE_DELAY = 500;
+const ASSESSMENT_DURATION = 180000; // 3 minutes in milliseconds
+
+// Global state
 let max = [],
 	avg,
 	current = [],
@@ -10,20 +27,76 @@ let max = [],
 	wifiTableData = [],
 	myChart,
 	option;
-let excludeModel = ['S2000', 'X2000', 'M500', 'M1000', 'M1500', 'M2000'];
+
 let timeBtn = $('#timeBtn');
 const hash = $(location).prop('hash');
 let getwayIpInput; // Will be initialized in document.ready
+let localModelSelect; // Will be initialized in document.ready
 let updateInterval = null; // Global interval reference for periodic updates
+let assessmentTimeout = null; // Global timeout reference for 3-minute auto-stop
 let isInitialLoad = true; // Flag to track first data load
 let isInitialLoadAC = true; // Flag to track first AC data load
+let currentMode = 'local'; // Track current mode
+let elapsedSeconds = 0; // Timer seconds counter
+
+// Timer display helpers
+function formatTime(totalSeconds) {
+	const minutes = Math.floor(totalSeconds / 60);
+	const seconds = totalSeconds % 60;
+	return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+}
+
+function updateTimerDisplay(seconds) {
+	elapsedSeconds = seconds;
+	timeBtn.html(formatTime(seconds));
+
+	// Update progress bar
+	const progressFill = document.getElementById('timerProgressFill');
+	const timerDisplay = document.getElementById('timerDisplay');
+	if (progressFill) {
+		const percent = Math.min((seconds / 180) * 100, 100);
+		progressFill.style.width = percent + '%';
+	}
+
+	// Update color state based on remaining time
+	if (timerDisplay) {
+		timerDisplay.classList.remove('warning', 'danger', 'stopped');
+		if (seconds >= 150) {
+			timerDisplay.classList.add('danger');
+		} else if (seconds >= 120) {
+			timerDisplay.classList.add('warning');
+		}
+	}
+}
+
+function resetTimerDisplay() {
+	elapsedSeconds = 0;
+	timeBtn.html('0:00');
+	const progressFill = document.getElementById('timerProgressFill');
+	const timerDisplay = document.getElementById('timerDisplay');
+	if (progressFill) {
+		progressFill.style.width = '0%';
+	}
+	if (timerDisplay) {
+		timerDisplay.classList.remove('warning', 'danger', 'stopped');
+	}
+}
+
+function stopTimerDisplay() {
+	const timerDisplay = document.getElementById('timerDisplay');
+	if (timerDisplay) {
+		timerDisplay.classList.add('stopped');
+	}
+}
 
 // Loading overlay helpers
 function showLoading(text = 'Loading...') {
 	const overlay = document.getElementById('loadingOverlay');
 	const loadingText = document.getElementById('loadingText');
 	if (overlay) {
-		loadingText.textContent = text;
+		if (loadingText) {
+			loadingText.textContent = text;
+		}
 		overlay.classList.add('active');
 	}
 }
@@ -35,131 +108,262 @@ function hideLoading() {
 	}
 }
 
+// Helper: Get quality level based on RSSI average
+function getQualityLevel(avg) {
+	if (
+		avg >= QUALITY_THRESHOLDS.highest[0] &&
+		avg < QUALITY_THRESHOLDS.highest[1]
+	)
+		return 'highest';
+	if (avg >= QUALITY_THRESHOLDS.high[0] && avg < QUALITY_THRESHOLDS.high[1])
+		return 'high';
+	if (avg >= QUALITY_THRESHOLDS.medium[0] && avg < QUALITY_THRESHOLDS.medium[1])
+		return 'medium';
+	if (avg >= QUALITY_THRESHOLDS.low[0] && avg < QUALITY_THRESHOLDS.low[1])
+		return 'low';
+	return '-';
+}
+
+// Helper: Check if model uses single chip
+function isSingleChipModel(model) {
+	return model && EXCLUDE_MODEL.includes(model);
+}
+
+// Helper: Get config from localStorage
+function getConfig() {
+	try {
+		const savedConfig = localStorage.getItem('interferenceMonitorConfig');
+		return savedConfig ? JSON.parse(savedConfig) : {};
+	} catch (e) {
+		console.error('Error parsing config:', e);
+		return {};
+	}
+}
+
+// Helper: Get current model
+function getCurrentModel(mode = currentMode) {
+	const config = getConfig();
+	let model = '';
+	if (mode === 'ac' && config.acModel) {
+		model = config.acModel.toUpperCase();
+	} else if (hash) {
+		model = hash.replaceAll('#', '').toUpperCase();
+	}
+	return model;
+}
+
+// Helper: Process and rearrange channels
+function processChannels(data, model) {
+	let channels;
+	if (isSingleChipModel(model)) {
+		channels = _.concat(data?.chip0?.channels.map((item) => item));
+	} else {
+		channels = _.concat(
+			data?.chip0?.channels.slice(0, 20).map((item) => item),
+			data?.chip1?.channels.slice(20).map((item) => item),
+		);
+	}
+
+	// Rearrange channels: move 37, 38, 39 to their correct positions
+	channels.splice(0, 0, channels[37]);
+	channels.splice(38, 1);
+	channels.splice(12, 0, channels[38]);
+	channels.splice(39, 1);
+
+	return channels;
+}
+
+// Helper: Get display index for channel
+function getChannelDisplayIndex(k) {
+	if (k === 0) return 37;
+	if (k === 12) return 38;
+	if (k === 39) return 39;
+	if (k < 13) return k - 1;
+	return k - 2;
+}
+
+// Helper: Check if PRR should be shown for channel
+function shouldShowPRR(k, data, model) {
+	if (k < 20) {
+		return data.chip0.mode === 1 && ![0, 12, 18, 19].includes(k);
+	} else {
+		const chipData = isSingleChipModel(model) ? data.chip0 : data.chip1;
+		return chipData.mode === 1 && ![22, 39].includes(k);
+	}
+}
+
+// Helper: Format cell value (handle -100 as no data)
+function formatCellValue(value) {
+	return value === RSSI_NO_DATA ? '-' : value;
+}
+
+// Helper: Clear all assessment data
+function clearAssessmentData() {
+	max = [];
+	avg = undefined;
+	current = [];
+	table_mapping = {};
+	wifiRaw = {};
+	wifiData = [];
+	wifiTableData = [];
+	fetchData = 1;
+	isInitialLoad = true;
+	isInitialLoadAC = true;
+	// Clear timers
+	if (updateInterval) {
+		clearInterval(updateInterval);
+		updateInterval = null;
+	}
+	if (assessmentTimeout) {
+		clearTimeout(assessmentTimeout);
+		assessmentTimeout = null;
+	}
+	// Clear table DOM so rows don't accumulate on re-config
+	$('#ble_table tbody').empty();
+	$('#wifi_table tbody').empty();
+	resetTimerDisplay();
+}
+
+// Stop assessment: clear interval and send disable commands
+function stopAssessment() {
+	if (updateInterval) {
+		clearInterval(updateInterval);
+		updateInterval = null;
+	}
+	if (assessmentTimeout) {
+		clearTimeout(assessmentTimeout);
+		assessmentTimeout = null;
+	}
+	fetchData = 0;
+
+	const config = getConfig();
+	const mode = config.mode || 'local';
+
+	if (mode === 'ac') {
+		const acAddress = config.acAddress || sessionStorage.getItem('acAddress');
+		const token = config.acAuthToken || sessionStorage.getItem('acToken');
+		const gatewayMac = config.acGateway || sessionStorage.getItem('acGateway');
+		const model = sessionStorage.getItem('acModel') || '';
+		const chipCount = isSingleChipModel(model) ? 1 : 2;
+
+		if (acAddress && token && gatewayMac) {
+			for (let i = 0; i < chipCount; i++) {
+				$.ajax({
+					url: `${acAddress}/api/gap/channel/assessment?mac=${gatewayMac}&access_token=${token}`,
+					method: 'POST',
+					timeout: 5000,
+					headers: { 'Content-Type': 'application/json' },
+					data: JSON.stringify({ chip: i + '', enable: '0', mode: '0' }),
+				}).fail((error) => {
+					console.error(`Failed to disable assessment for chip ${i}:`, error);
+				});
+			}
+		}
+	} else {
+		const currentIp = (getwayIpInput && getwayIpInput.val()) || localStorage.getItem('gatewayIP');
+		const model = localStorage.getItem('localModel') || '';
+		const chipCount = isSingleChipModel(model) ? 1 : 2;
+
+		if (currentIp) {
+			for (let i = 0; i < chipCount; i++) {
+				$.ajax({
+					url: `http://${currentIp}/gap/channel/assessment`,
+					method: 'POST',
+					timeout: 5000,
+					headers: { 'Content-Type': 'application/json' },
+					data: JSON.stringify({ chip: i + '', enable: '0', mode: '0' }),
+				}).fail((error) => {
+					console.error(`Failed to disable assessment for chip ${i}:`, error);
+				});
+			}
+		}
+	}
+
+	console.log('Assessment stopped (3-minute duration reached)');
+	if (typeof notificationManager !== 'undefined') {
+		notificationManager.info('Assessment Stopped', 'The 3-minute assessment period has completed. The gateway has reverted to normal status.');
+	}
+	stopTimerDisplay();
+}
+
+// Loading overlay helpers
+
 // Global function for starting assessment - accessible from outside
 function startAssessment() {
+	// Show pre-assessment warning dialog
+	const overlay = document.getElementById('preAssessmentDialogOverlay');
+	const confirmBtn = document.getElementById('preAssessmentConfirmBtn');
+	const cancelBtn = document.getElementById('preAssessmentCancelBtn');
+
+	if (!overlay) {
+		// Fallback: proceed directly if dialog not found
+		executeAssessment();
+		return;
+	}
+
+	overlay.classList.add('active');
+
+	// Remove previous listeners to avoid duplicates
+	const newConfirmBtn = confirmBtn.cloneNode(true);
+	confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+	const newCancelBtn = cancelBtn.cloneNode(true);
+	cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
+	newConfirmBtn.addEventListener('click', function () {
+		overlay.classList.remove('active');
+		executeAssessment();
+	});
+
+	newCancelBtn.addEventListener('click', function () {
+		overlay.classList.remove('active');
+	});
+}
+
+// Internal function that actually starts the assessment
+function executeAssessment() {
 	// Reset any existing data
 	clearAssessmentData();
 
 	// Get configuration from localStorage
-	let config = {};
-	try {
-		const savedConfig = localStorage.getItem('interferenceMonitorConfig');
-		if (savedConfig) {
-			config = JSON.parse(savedConfig);
-		}
-	} catch (e) {
-		console.error('Error parsing config:', e);
-	}
+	const config = getConfig();
 
 	// Determine if AC mode or local mode
 	const mode = config.mode || 'local';
+	currentMode = mode;
 
 	if (mode === 'ac') {
 		// AC Server mode - requires authentication
-		startAssessmentWithAC(config);
+		if (!config.acAddress || !config.acAuthToken || !config.acGateway) {
+			console.error('AC configuration incomplete');
+			alert(
+				'AC Server configuration is incomplete. Please test connection and select a gateway.',
+			);
+			return;
+		}
+		proceedWithAssessmentAC(
+			config.acAddress,
+			config.acAuthToken,
+			config.acGateway,
+		);
 	} else {
 		// Local mode
 		startAssessmentLocal();
 	}
 }
 
-// Function to clear all assessment data
-function clearAssessmentData() {
-	max = [];
-	avg = [];
-	current = [];
-	wifiData = [];
-	wifiTableData = [];
-	table_mapping = {};
-	wifiRaw = {};
-	wifi2g = undefined;
-	
-	// Reset initial load flags
-	isInitialLoad = true;
-	isInitialLoadAC = true;
-	
-	// Reset time display
-	if (timeBtn) {
-		timeBtn.html('1s');
-	}
-	
-	// Clear assessment tables
-	$('#ble_table tbody').empty();
-	$('#wifi_table tbody').empty();
-	
-	// Reset UI state to BLE tab and Table view
-	$('#btnBle').addClass('active');
-	$('#btnWifi').removeClass('active');
-	$('#ble_table').removeClass('hidden');
-	$('#wifi_table').addClass('hidden');
-	currentTable = 'ble_table';
-	
-	$('#chartView').hide();
-	$('#tableView').show();
-	$('#control').show();
-	$('#btnChart').removeAttr('disabled');
-	
-	// Clear chart if it exists
-	if (myChart && option) {
-		for (let i = 0; i < option.series.length; i++) {
-			option.series[i].data = [];
-		}
-		myChart.setOption(option, true);
-	}
-}
-
-// AC Server mode assessment
-function startAssessmentWithAC(config) {
-	const acAddress = config.acAddress;
-	const acAuthToken = config.acAuthToken;
-	const acGateway = config.acGateway;
-
-	if (!acAddress || !acAuthToken || !acGateway) {
-		console.error('AC configuration incomplete');
-		alert(
-			'AC Server configuration is incomplete. Please test connection and select a gateway.',
-		);
-		return;
-	}
-
-	// Show loading
-	showLoading('Starting interference assessment on AC Server...');
-
-	// Use saved token to proceed with assessment
-	proceedWithAssessmentAC(acAddress, acAuthToken, acGateway);
-}
-
 // Proceed with assessment on AC Server
 function proceedWithAssessmentAC(acAddress, token, gatewayMac) {
 	showLoading('Starting interference assessment on AC Server...');
 
-	// Get config to access acModel
-	let config = {};
-	try {
-		const savedConfig = localStorage.getItem('interferenceMonitorConfig');
-		if (savedConfig) {
-			config = JSON.parse(savedConfig);
-		}
-	} catch (e) {
-		console.error('Error parsing config:', e);
-	}
+	const model = getCurrentModel('ac');
+	const chipCount = isSingleChipModel(model) ? 1 : 2;
 
-	// Determine if we should use single chip mode based on model
-	let model = '';
-	if (config && config.acModel) {
-		model = config.acModel.toUpperCase();
-	} else if (hash) {
-		model = hash.replaceAll('#', '').toUpperCase();
-	}
-
-	let chipCount = 2; // Default to 2 chips for models like E1000, S2000, etc. (unless excluded)
-	if (model && _.includes(excludeModel, model)) {
-		chipCount = 1;
-	}
-
-	// Store chip count for periodic updates if needed
+	// Store chip count and model for periodic updates
 	sessionStorage.setItem('acChipCount', chipCount);
 	sessionStorage.setItem('acModel', model);
+
+	// Reset AC initial load flag
+	isInitialLoadAC = true;
 
 	// Stop any existing update interval
 	if (updateInterval) {
@@ -167,7 +371,13 @@ function proceedWithAssessmentAC(acAddress, token, gatewayMac) {
 		updateInterval = null;
 	}
 
+	// Track how many chip requests have completed
+	let completedChips = 0;
+	let hasError = false;
+
+	// Start assessment on each chip
 	for (let i = 0; i < chipCount; i++) {
+		const chipIndex = i;
 		const settings = {
 			url: `${acAddress}/api/gap/channel/assessment?mac=${gatewayMac}&access_token=${token}`,
 			method: 'POST',
@@ -176,7 +386,7 @@ function proceedWithAssessmentAC(acAddress, token, gatewayMac) {
 				'Content-Type': 'application/json',
 			},
 			data: JSON.stringify({
-				chip: i + '',
+				chip: chipIndex + '',
 				enable: '1',
 				mode: '0',
 			}),
@@ -184,22 +394,36 @@ function proceedWithAssessmentAC(acAddress, token, gatewayMac) {
 
 		$.ajax(settings)
 			.fail((error) => {
-				hideLoading();
-				console.error(`AC Assessment start failed for chip ${i}:`, error);
-				alert(
-					`Failed to start assessment for chip ${i} on AC Server: ${error.statusText || 'Unknown error'}`,
+				completedChips++;
+				hasError = true;
+				console.error(
+					`AC Assessment start failed for chip ${chipIndex}:`,
+					error,
 				);
+				// Only hide loading when all chips have responded
+				if (completedChips >= chipCount) {
+					hideLoading();
+					alert(
+						`Failed to start assessment on AC Server: ${error.statusText || 'Unknown error'}`,
+					);
+				}
 			})
 			.done(function (response) {
-				console.log(`Assessment started on AC Server for chip ${i}:`, response);
-				hideLoading();
+				completedChips++;
+				console.log(
+					`Assessment started on AC Server for chip ${chipIndex}:`,
+					response,
+				);
 				// Store token and address for future requests
 				sessionStorage.setItem('acToken', token);
 				sessionStorage.setItem('acAddress', acAddress);
 				sessionStorage.setItem('acGateway', gatewayMac);
-				// Start periodic update (only once)
-				if (i === chipCount - 1) {
-					startPeriodicUpdateAC(acAddress, token);
+				// Only proceed when all chips have responded
+				if (completedChips >= chipCount) {
+					hideLoading();
+					if (!hasError) {
+						startPeriodicUpdateAC(acAddress, token);
+					}
 				}
 			});
 	}
@@ -211,9 +435,15 @@ function startAssessmentLocal() {
 	if (!getwayIpInput) {
 		getwayIpInput = $('#gateway_ip');
 	}
+	if (!localModelSelect) {
+		localModelSelect = $('#localModel');
+	}
 
 	// Get the current IP from input field
 	const currentIp = getwayIpInput.val() || localStorage.getItem('gatewayIP');
+	const model =
+		localModelSelect.val() ||
+		(hash ? hash.replaceAll('#', '').toUpperCase() : '');
 
 	if (!currentIp) {
 		console.error('Gateway IP not configured');
@@ -228,32 +458,33 @@ function startAssessmentLocal() {
 				alert("Can't use this feature when the gateway has connected devices");
 				return;
 			}
-
 			// No connected devices, proceed with assessment
-			proceedWithAssessment(currentIp);
+			proceedWithAssessment(currentIp, model);
 		})
 		.fail((error) => {
 			console.error('Error checking connected devices:', error);
 			// If check fails, still proceed with assessment
-			proceedWithAssessment(currentIp);
+			proceedWithAssessment(currentIp, model);
 		});
 }
 
 // Helper function to actually start the assessment
-function proceedWithAssessment(currentIp) {
-	// Determine if we should use single chip mode based on model (from hash in local mode)
-	let model = '';
+function proceedWithAssessment(currentIp = '', model = '') {
+	// Determine model from hash if not provided (for local mode)
 	if (hash) {
 		model = hash.replaceAll('#', '').toUpperCase();
 	}
 
-	let chipCount = 2;
-	if (model && _.includes(excludeModel, model)) {
-		chipCount = 1;
-	}
+	const chipCount = isSingleChipModel(model) ? 1 : 2;
 
 	// Store model for periodic updates
-	sessionStorage.setItem('localModel', model);
+	localStorage.setItem('localModel', model);
+
+	// Reset initial load flag
+	isInitialLoad = true;
+
+	// Show loading while starting assessment
+	showLoading('Starting interference assessment...');
 
 	// Stop any existing update interval
 	if (updateInterval) {
@@ -261,7 +492,12 @@ function proceedWithAssessment(currentIp) {
 		updateInterval = null;
 	}
 
+	// Track how many chip requests have completed
+	let completedChips = 0;
+	let hasError = false;
+
 	for (let i = 0; i < chipCount; i++) {
+		const chipIndex = i;
 		const settings = {
 			url: `http://${currentIp}/gap/channel/assessment`,
 			method: 'POST',
@@ -270,7 +506,7 @@ function proceedWithAssessment(currentIp) {
 				'Content-Type': 'application/json',
 			},
 			data: JSON.stringify({
-				chip: i + '',
+				chip: chipIndex + '',
 				enable: '1',
 				mode: '0',
 			}),
@@ -278,17 +514,26 @@ function proceedWithAssessment(currentIp) {
 
 		$.ajax(settings)
 			.fail((error) => {
+				completedChips++;
+				hasError = true;
 				console.error(error);
+				if (completedChips >= chipCount) {
+					hideLoading();
+				}
 				if (error.status === 404)
 					alert(
 						"Please open the local API on AC, or else the data can't be loaded",
 					);
 			})
 			.done(function (response) {
+				completedChips++;
 				console.log('Assessment started:', response);
-				// Start periodic update after assessment is started (only once)
-				if (i === chipCount - 1) {
-					startPeriodicUpdate();
+				// Start periodic update after all chips have responded
+				if (completedChips >= chipCount) {
+					hideLoading();
+					if (!hasError) {
+						startPeriodicUpdate();
+					}
 				}
 			});
 	}
@@ -299,17 +544,15 @@ function startPeriodicUpdate() {
 	if (updateInterval) {
 		clearInterval(updateInterval);
 	}
+	if (assessmentTimeout) {
+		clearTimeout(assessmentTimeout);
+	}
 
-	console.log(
-		'startPeriodicUpdate called, fetchData:',
-		fetchData,
-		'getwayIpInput:',
-		getwayIpInput?.val(),
-	);
+	console.log('startPeriodicUpdate called, fetchData:', fetchData);
 
-	// Initial update after 500ms
+	// Initial update after delay
 	setTimeout(() => {
-		console.log('Executing initial update, fetchData:', fetchData);
+		console.log('Executing initial update');
 		if (fetchData === 1) {
 			try {
 				updateAssessmentData();
@@ -317,10 +560,8 @@ function startPeriodicUpdate() {
 			} catch (error) {
 				console.error('Error during initial update:', error);
 			}
-		} else {
-			console.log('Update skipped - fetchData:', fetchData);
 		}
-	}, 500);
+	}, UPDATE_DELAY);
 
 	// Then update every 3 seconds
 	updateInterval = setInterval(() => {
@@ -332,9 +573,14 @@ function startPeriodicUpdate() {
 				console.error('Error during periodic update:', error);
 			}
 		}
-	}, 3000);
+	}, PERIODIC_UPDATE_INTERVAL);
 
-	console.log('Periodic update started - updating every 3 seconds');
+	// Auto-stop after 3 minutes
+	assessmentTimeout = setTimeout(() => {
+		stopAssessment();
+	}, ASSESSMENT_DURATION);
+
+	console.log('Periodic update started - updating every 3 seconds, auto-stop in 3 minutes');
 }
 
 // Periodic update for AC Server
@@ -342,12 +588,15 @@ function startPeriodicUpdateAC(acAddress, token) {
 	if (updateInterval) {
 		clearInterval(updateInterval);
 	}
+	if (assessmentTimeout) {
+		clearTimeout(assessmentTimeout);
+	}
 
 	console.log('startPeriodicUpdateAC called, fetchData:', fetchData);
 
-	// Initial update after 500ms
+	// Initial update after delay
 	setTimeout(() => {
-		console.log('Executing initial AC update, fetchData:', fetchData);
+		console.log('Executing initial AC update');
 		if (fetchData === 1) {
 			try {
 				updateAssessmentDataAC(acAddress, token);
@@ -355,10 +604,8 @@ function startPeriodicUpdateAC(acAddress, token) {
 			} catch (error) {
 				console.error('Error during initial AC update:', error);
 			}
-		} else {
-			console.log('AC update skipped - fetchData:', fetchData);
 		}
-	}, 500);
+	}, UPDATE_DELAY);
 
 	// Then update every 3 seconds
 	updateInterval = setInterval(() => {
@@ -370,9 +617,14 @@ function startPeriodicUpdateAC(acAddress, token) {
 				console.error('Error during periodic AC update:', error);
 			}
 		}
-	}, 3000);
+	}, PERIODIC_UPDATE_INTERVAL);
 
-	console.log('Periodic AC update started - updating every 3 seconds');
+	// Auto-stop after 3 minutes
+	assessmentTimeout = setTimeout(() => {
+		stopAssessment();
+	}, ASSESSMENT_DURATION);
+
+	console.log('Periodic AC update started - updating every 3 seconds, auto-stop in 3 minutes');
 }
 
 // Global update function for assessment data
@@ -391,14 +643,8 @@ function updateAssessmentData() {
 
 	console.log('updateAssessmentData executing with IP:', currentIp);
 
-	if (_.isEmpty(timeBtn.html())) {
-		timeBtn.html('1s');
-	} else {
-		let time = timeBtn.html().replace('s', '');
-		time = parseInt(time);
-		time += 3;
-		timeBtn.html(time + 's');
-	}
+	elapsedSeconds += 3;
+	updateTimerDisplay(elapsedSeconds);
 
 	// Only show loading on initial load, not on periodic updates
 	if (isInitialLoad) {
@@ -416,11 +662,9 @@ function updateAssessmentData() {
 			}
 
 			let channels;
-			const model = sessionStorage.getItem('localModel') || '';
+			const model = localStorage.getItem('localModel') || '';
 
-			if (
-				model && _.includes(excludeModel, model)
-			) {
+			if (isSingleChipModel(model)) {
 				channels = _.concat(
 					data?.chip0?.channels.map((item) => {
 						return item;
@@ -484,9 +728,7 @@ function updateAssessmentData() {
 							quality = '-';
 						}
 					} else {
-						if (
-							model && _.includes(excludeModel, model)
-						) {
+						if (model && _.includes(EXCLUDE_MODEL, model)) {
 							if (data.chip0.mode === 1 && k !== 22 && k !== 39) {
 								prr = Math.abs(currentData[k]) + '%';
 								currentText = '-';
@@ -657,7 +899,7 @@ function updateAssessmentDataAC(acAddress, token) {
 	// Fallback to sessionStorage if arguments are not provided
 	if (!acAddress) acAddress = sessionStorage.getItem('acAddress');
 	if (!token) token = sessionStorage.getItem('acToken');
-	
+
 	if (!acAddress || !token) {
 		console.error('AC address or token missing in updateAssessmentDataAC');
 		return;
@@ -665,15 +907,9 @@ function updateAssessmentDataAC(acAddress, token) {
 
 	const model = sessionStorage.getItem('acModel') || '';
 	const gatewayMac = sessionStorage.getItem('acGateway') || '';
-	
-	if (_.isEmpty(timeBtn.html())) {
-		timeBtn.html('1s');
-	} else {
-		let time = timeBtn.html().replace('s', '');
-		time = parseInt(time);
-		time += 3;
-		timeBtn.html(time + 's');
-	}
+
+	elapsedSeconds += 3;
+	updateTimerDisplay(elapsedSeconds);
 
 	const assessmentUrl = `${acAddress}/api/gap/channel/assessment?mac=${gatewayMac}&access_token=${token}`;
 
@@ -694,9 +930,7 @@ function updateAssessmentDataAC(acAddress, token) {
 
 			let channels;
 
-			if (
-				model && _.includes(excludeModel, model)
-			) {
+			if (model && _.includes(EXCLUDE_MODEL, model)) {
 				channels = _.concat(
 					data?.chip0?.channels.map((item) => {
 						return item;
@@ -760,9 +994,7 @@ function updateAssessmentDataAC(acAddress, token) {
 							quality = '-';
 						}
 					} else {
-						if (
-							model && _.includes(excludeModel, model)
-						) {
+						if (model && _.includes(EXCLUDE_MODEL, model)) {
 							if (data.chip0.mode === 1 && k !== 22 && k !== 39) {
 								prr = Math.abs(currentData[k]) + '%';
 								currentText = '-';
@@ -927,7 +1159,7 @@ function updateAssessmentDataAC(acAddress, token) {
 			}
 		});
 }
-// if (hash && hash.toUpperCase().includes(excludeModel)) {
+// if (hash && hash.toUpperCase().includes(EXCLUDE_MODEL)) {
 //     $("#chartView").hide();
 //     $("#btnChart").hide();
 // }
@@ -951,11 +1183,16 @@ $(document).ready(function () {
 	}
 
 	getwayIpInput = $('#gateway_ip'); // Initialize global variable
+	localModelSelect = $('#localModel');
 
 	// 页面加载时从 localStorage 加载内容到输入框
 	const gatewayIpls = localStorage.getItem('gatewayIP');
 	if (gatewayIpls !== null) {
 		getwayIpInput.val(gatewayIpls);
+	}
+	const localModelValue = localStorage.getItem('localModel');
+	if (localModelValue) {
+		localModelSelect.val(localModelValue);
 	}
 
 	getwayIpInput.on('blur', function () {
@@ -999,7 +1236,7 @@ $(document).ready(function () {
 		getWiFiData();
 		$('#tableView').hide();
 		$('#chartView').show();
-		
+
 		// Determine which update function to call based on mode
 		const savedConfig = localStorage.getItem('interferenceMonitorConfig');
 		let mode = 'local';
@@ -1011,7 +1248,7 @@ $(document).ready(function () {
 				console.error('Error parsing config for chart update:', e);
 			}
 		}
-		
+
 		if (mode === 'ac') {
 			updateAssessmentDataAC();
 		} else {
@@ -1038,7 +1275,7 @@ $(document).ready(function () {
 			option.series[i].data = [];
 		}
 		myChart && myChart.setOption(option, true);
-		timeBtn.html('1s');
+		resetTimerDisplay();
 
 		// Clear any existing update interval when clearing data
 		if (updateInterval) {
@@ -1110,7 +1347,8 @@ $(document).ready(function () {
 				method: 'GET',
 			};
 		} else {
-			const currentIp = getwayIpInput.val() || localStorage.getItem('gatewayIP');
+			const currentIp =
+				getwayIpInput.val() || localStorage.getItem('gatewayIP');
 			if (!currentIp) {
 				console.error('Gateway IP not configured');
 				return;
@@ -1124,7 +1362,7 @@ $(document).ready(function () {
 		if (_.isEmpty(wifiRaw) || _.isEmpty(wifi2g)) {
 			// Show loading animation
 			showLoading('Fetching Wi-Fi data...');
-			
+
 			// Ensure we have a timeout and error handling
 			if (!settings.timeout) settings.timeout = 5000;
 

@@ -529,6 +529,190 @@
             cursor: not-allowed;
         }
 
+        /* Tips Dialog Styles */
+        .tips-dialog-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 8000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tips-dialog-overlay.active {
+            display: flex;
+        }
+
+        .tips-dialog {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+            width: 420px;
+            max-width: 90vw;
+            overflow: hidden;
+        }
+
+        .tips-dialog-header {
+            padding: 20px 24px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tips-dialog-icon {
+            color: #f3aa3d;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .tips-dialog-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .tips-dialog-body {
+            padding: 16px 24px 20px;
+            color: #606266;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .tips-dialog-footer {
+            padding: 0 24px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tips-dialog-footer label {
+            font-size: 13px;
+            color: #909399;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+        }
+
+        .tips-dialog-footer label input[type="checkbox"] {
+            cursor: pointer;
+        }
+
+        .tips-dialog-confirm {
+            padding: 8px 24px;
+            background: #0089FF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .tips-dialog-confirm:hover {
+            background: #0073CC;
+        }
+
+        /* Timer Group Styles */
+        .timer-group {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 1rem;
+            gap: 0;
+            vertical-align: middle;
+        }
+
+        .timer-display {
+            display: inline-flex;
+            align-items: center;
+            background: #FFFFFF;
+            border: 1px solid #BFC4CD;
+            border-right: none;
+            border-radius: 16px 0 0 16px;
+            padding: 0 12px;
+            height: 32px;
+            font-size: 14px;
+            color: #606266;
+            gap: 4px;
+            min-width: 120px;
+            position: relative;
+        }
+
+        .timer-icon {
+            font-size: 14px;
+            color: #909399;
+        }
+
+        .timer-text {
+            font-weight: 600;
+            color: #333;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timer-separator {
+            color: #C0C4CC;
+            font-size: 12px;
+        }
+
+        .timer-total {
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .timer-progress-bar {
+            width: 80px;
+            height: 32px;
+            background: #F2F3F5;
+            border-top: 1px solid #BFC4CD;
+            border-bottom: 1px solid #BFC4CD;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timer-progress-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 0%;
+            background: linear-gradient(90deg, #90cc7d 0%, #f3aa3d 60%, #e4514b 100%);
+            transition: width 1s linear;
+        }
+
+        .timer-clear-btn {
+            width: 56px;
+            height: 32px;
+            background: #0089FF;
+            border: 1px solid #0089FF;
+            border-radius: 0 16px 16px 0;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .timer-clear-btn:hover {
+            background: #0073CC;
+        }
+
+        .timer-display.warning .timer-text {
+            color: #f3aa3d;
+        }
+
+        .timer-display.danger .timer-text {
+            color: #e4514b;
+        }
+
+        .timer-display.stopped .timer-icon {
+            color: #e4514b;
+        }
+
         /* Loading Animation Styles */
         #loadingOverlay {
             display: none;
@@ -582,24 +766,64 @@
         <div class="loading-text" id="loadingText">Loading...</div>
     </div>
 
+    <!-- Tips Dialog -->
+    <div id="tipsDialogOverlay" class="tips-dialog-overlay">
+        <div class="tips-dialog">
+            <div class="tips-dialog-header">
+                <span class="tips-dialog-icon">&#9888;</span>
+                <span class="tips-dialog-title">Notice</span>
+            </div>
+            <div class="tips-dialog-body">
+                This feature can only be run for 3 minutes. Then the gateway will revert to normal working status.
+            </div>
+            <div class="tips-dialog-footer">
+                <label>
+                    <input type="checkbox" id="tipsDoNotRemind">
+                    Do not remind again
+                </label>
+                <button class="tips-dialog-confirm" id="tipsConfirmBtn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pre-assessment Warning Dialog -->
+    <div id="preAssessmentDialogOverlay" class="tips-dialog-overlay">
+        <div class="tips-dialog">
+            <div class="tips-dialog-header">
+                <span class="tips-dialog-icon">&#9888;</span>
+                <span class="tips-dialog-title">Before You Start</span>
+            </div>
+            <div class="tips-dialog-body">
+                Please make sure you have completed the following before starting the interference assessment:
+                <ul style="margin: 12px 0 0; padding-left: 20px; line-height: 2;">
+                    <li>Stop all <b>scanning</b> operations on the gateway</li>
+                    <li>Disconnect all <b>connected devices</b> from the gateway</li>
+                </ul>
+            </div>
+            <div class="tips-dialog-footer" style="justify-content: flex-end; gap: 10px;">
+                <button class="btn-cancel" id="preAssessmentCancelBtn" style="flex: unset; padding: 8px 20px; border-radius: 4px;">Cancel</button>
+                <button class="tips-dialog-confirm" id="preAssessmentConfirmBtn">Continue</button>
+            </div>
+        </div>
+    </div>
+
     <div id="container content">
         <div class="main">
             <div style="padding-left: 2rem; padding-top: 2rem;">
-                <div style="position: absolute;top: 45px;">
-                    <span style="color: gray;">tips: This feature can only be run for 3 minutes. Then it will revert to
-                        worked normally status.</span>
-                </div>
                 <button id="btnTable" style="width: 64px; height: 32px">Table</button>
                 <button id="btnChart" style="width: 64px; height: 32px">Chart</button>
                 <button id="btnConfig" class="config-btn">Config</button>
-                <div style="display: inline-block; margin-left: 1rem; font-size: 0">
-                    <button id="timeBtn" disabled
-                        style="padding: 0; width: 42px;height: 32px;background: #FFFFFF;border: 1px solid rgba(191,196,205,1);border-radius: 16px 0 0 16px; font-size: 14px;color: #606266;text-align: center;font-weight: 400; cursor: text">
-                        0s
-                    </button>
-                    <button id="btnClear"
-                        style="width: 64px;height: 32px;background: #1F90FF;border-radius: 0 16px 16px 0;">Clear
-                    </button>
+                <div class="timer-group">
+                    <div class="timer-display" id="timerDisplay">
+                        <span class="timer-icon" id="timerIcon">&#9201;</span>
+                        <span class="timer-text" id="timeBtn">0:00</span>
+                        <span class="timer-separator">/</span>
+                        <span class="timer-total">3:00</span>
+                    </div>
+                    <div class="timer-progress-bar">
+                        <div class="timer-progress-fill" id="timerProgressFill"></div>
+                    </div>
+                    <button id="btnClear" class="timer-clear-btn">Clear</button>
                 </div>
                 <!-- <label for="gateway_ip">Local Gateway IP: </label> -->
                 <!-- <input type="text" id="gateway_ip" placeholder="192.168.0.100"> -->
@@ -675,6 +899,19 @@
                         <label for="localIp">Gateway IP Address:</label>
                         <input type="text" id="localIp" placeholder="e.g., 192.168.0.100">
                         <div class="form-error" id="localIpError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="localModel">Model:</label>
+                        <!-- <input type="text" id="localModel" placeholder="e.g., E1000"> -->
+                        <select id="localModel">
+                            <option value="">-- Please select a model --</option>
+                            <option value="E1000">E1000</option>
+                            <option value="X2000">X2000</option>
+                            <option value="M1000">M1000</option>
+                            <option value="M1500">M1500</option>
+                            <option value="M2000">M2000</option>
+                        </select>
+                        <div class="form-error" id="localModelError"></div>
                     </div>
                     <button class="btn-test-connection" id="testLocalConnection" type="button">Test Connection</button>
                 </div>
@@ -1325,5 +1562,22 @@
         // Initialize drawer when DOM is ready
         document.addEventListener('DOMContentLoaded', function () {
             drawer.init();
+
+            // Tips dialog logic
+            const tipsOverlay = document.getElementById('tipsDialogOverlay');
+            const tipsConfirmBtn = document.getElementById('tipsConfirmBtn');
+            const tipsDoNotRemind = document.getElementById('tipsDoNotRemind');
+
+            // Show tips dialog if user hasn't dismissed it
+            if (localStorage.getItem('interferenceMonitorTipsDismissed') !== 'true') {
+                tipsOverlay.classList.add('active');
+            }
+
+            tipsConfirmBtn.addEventListener('click', function () {
+                if (tipsDoNotRemind.checked) {
+                    localStorage.setItem('interferenceMonitorTipsDismissed', 'true');
+                }
+                tipsOverlay.classList.remove('active');
+            });
         });
     </script>
