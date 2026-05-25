@@ -1,0 +1,30 @@
+==============================
+MicroPython-specific libraries
+==============================
+MicroPython特有模块支持情况与示例， `Micropython官网链接 <https://docs.micropython.org/en/v1.24.0/library/index.html#micropython-specific-libraries>`_。
+
+.. csv-table:: 
+        :header: 模块,是否支持,说明
+
+        bluetooth,❌,low-level Bluetooth
+        btree,❌,simple BTree database
+        cryptolib,✅,cryptographic ciphers
+        deflate,⏳,deflate compression & decompression
+        framebuf,✅,frame buffer manipulation
+        machine,❌,functions related to the hardware
+        micropython,✅,access and control MicroPython internals
+        neopixel,❌,control of WS2812 / NeoPixel LEDs
+        network,❌,network configuration
+        openamp,❌,provides standard Asymmetric Multiprocessing (AMP) support
+        uctypes,✅,access binary data in a structured way
+        vfs,✅,virtual filesystem control
+
+.. toctree::
+    :maxdepth: 2
+    :glob:
+
+    cryptolib
+    framebuf
+    micropython
+    uctypes
+    vfs

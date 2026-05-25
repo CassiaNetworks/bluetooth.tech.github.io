@@ -1,0 +1,74 @@
+=======================
+调试模式
+=======================
+
+通过调试模式，开发者可以使用 Thonny 通过 WebREPL 远程连接网关，
+在网关上实时执行 MicroPython 代码、调试 APP 逻辑或交互式调用 API。
+
+进入调试模式
+=======================
+
+1. 进入 ``Other`` 页面，移动到 ``Micro APP`` 部分
+2. 选择 ``Debug Mode`` 为 ``Yes``
+3. 点击 ``Apply`` 按钮，保存配置
+
+.. caution::
+    - 调试模式仅用于开发联调，请勿在生产环境长期开启
+
+.. image::  image-1.png
+
+
+配置 Thonny
+=======================
+
+Thonny 是一款轻量级的 Python IDE，内置了对 MicroPython 的支持，可通过 WebREPL 直接连接网关。
+
+1. 打开 Thonny，选择 ``Run`` → ``Configure interpreter`` → ``Interpreter`` 选项卡
+2. ``Which kind of interpreter should Thonny use for running your code?`` 选择 ``MicroPython (ESP32)``
+3. ``Port or WebREPL`` 选择 ``< WebREPL >``
+4. ``URL`` 填写 ``ws://<网关IP>:8266/``，``Password`` 默认 ``cassia``
+5. 点击 ``OK`` 保存配置
+
+.. note::
+    ``<网关IP>`` 为网关在本地局域网中的 IP 地址，请根据实际情况填写。
+
+.. image::  image-2.png
+
+
+代码调试
+=======================
+
+通过 Thonny 编辑器编写 Python 脚本，可直接在网关上执行并查看输出。
+
+1. 在编辑器中编写代码，例如 ``hello.py``，内容如下
+
+   .. code-block:: python
+
+       print("hello")
+
+2. 点击工具栏上的 ``Run`` 按钮（绿色三角形）运行脚本
+3. 在 ``Shell`` 面板查看运行结果，``WebREPL connected`` 表示连接成功，``hello`` 为脚本输出
+
+.. image::  image-3.png
+
+
+交互式
+=======================
+
+在 Thonny 的 ``Shell`` 面板可以直接输入 MicroPython 语句，逐行执行并立即查看返回结果，便于快速验证 API。
+
+1. 在 ``>>>`` 提示符后直接输入语句，例如 ``print("hello")``
+2. 导入 SDK 模块调用 API 并查看返回值，例如
+
+   .. code-block:: python
+
+       >>> import cassiasys
+       >>> print(cassiasys.gateway_mac())
+       CC:1B:E0:E4:C8:94
+
+.. image::  image-4.png
+
+
+.. toctree::
+    :maxdepth: 2
+    :glob:

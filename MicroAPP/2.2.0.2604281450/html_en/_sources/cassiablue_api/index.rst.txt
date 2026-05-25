@@ -1,0 +1,19 @@
+==============
+Cassiablue API
+==============
+
+网关内部提供了Cassiablue API，用于网关和BLE设备交互。
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
+    scan
+    connect
+    get_connected_devices
+    gatt_discover
+    gatt_read
+    gatt_write
+    notify
+    state
+    send_cmd
