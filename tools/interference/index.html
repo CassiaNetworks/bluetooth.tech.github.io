@@ -3,9 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cassia BLE Interference Monitor</title>
     <link href="css/main.min.css?v=202102201720" rel="stylesheet" type="text/css">
     <style type="text/css">
+        html,
+        body {
+            min-width: 0;
+            overflow-x: hidden;
+        }
+
         #chart {
             width: 100%;
             height: 100%;
@@ -18,6 +25,9 @@
         .main {
             margin-top: 3.2em;
             background: unset;
+            min-height: calc(100vh - 3.2em);
+            padding: 1rem 2rem 2rem;
+            box-sizing: border-box;
         }
 
         table,
@@ -28,6 +38,7 @@
 
         table {
             width: 100%;
+            min-width: 760px;
             border-collapse: collapse;
             position: unset;
         }
@@ -55,6 +66,8 @@
         table td {
             font-size: .9rem;
             text-align: center;
+            padding: 8px 10px;
+            white-space: nowrap;
         }
 
         table thead {
@@ -137,9 +150,227 @@
         .chartWrapper {
             position: relative;
             margin: auto;
+            width: 100%;
+            height: min(680px, calc(100vh - 128px));
+            min-height: 420px;
+            overflow: hidden;
             /*margin: auto;*/
             /*height: 90%;*/
             /*width: 80vw;*/
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px 12px;
+            padding-top: 1rem;
+        }
+
+        .view-toggle {
+            display: inline-flex;
+            gap: 8px;
+        }
+
+        .view-button {
+            width: 64px;
+            height: 32px;
+            flex: 0 0 auto;
+        }
+
+        .table-panel {
+            margin-top: 1rem;
+            min-width: 0;
+        }
+
+        .table-tabs {
+            display: inline-flex;
+            max-width: 100%;
+        }
+
+        .table-scroll {
+            width: 100%;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            background: #FFFFFF;
+        }
+
+        .config-btn {
+            width: 72px;
+            height: 32px;
+            flex: 0 0 auto;
+        }
+
+        .drawer-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 7000;
+        }
+
+        .drawer-overlay.active {
+            display: block;
+        }
+
+        .drawer {
+            position: fixed;
+            left: -420px;
+            top: 0;
+            width: 400px;
+            max-width: calc(100vw - 32px);
+            height: 100%;
+            background: #FFFFFF;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+            z-index: 7001;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .drawer.active {
+            left: 0;
+        }
+
+        .drawer-header {
+            padding: 20px;
+            border-bottom: 1px solid #DDDFE6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .drawer-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .drawer-close {
+            width: 32px;
+            height: 32px;
+            background: transparent;
+            color: #606266;
+            border-radius: 4px;
+            font-size: 24px;
+        }
+
+        .drawer-content {
+            padding: 20px;
+        }
+
+        .mode-selector label,
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .mode-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mode-button {
+            flex: 1;
+            height: 36px;
+            border: 1px solid #BFC4CD;
+            background: white;
+            border-radius: 4px;
+            color: #606266;
+            font-size: 14px;
+        }
+
+        .mode-button.active {
+            background: #0089FF;
+            color: white;
+            border-color: #0089FF;
+        }
+
+        .mode-fields {
+            display: none;
+        }
+
+        .mode-fields.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #BFC4CD;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #0089FF;
+            box-shadow: 0 0 0 2px rgba(0, 137, 255, 0.2);
+        }
+
+        .form-group input.input-error,
+        .form-group select.error {
+            border-color: #e4514b;
+        }
+
+        .form-error {
+            color: #e4514b;
+            font-size: 12px;
+            margin-top: 4px;
+            min-height: 16px;
+        }
+
+        .btn-test-connection {
+            width: 100%;
+            height: 36px;
+            background: #EFF2F6;
+            color: #0089FF;
+            border: 1px solid #BFC4CD;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 700;
+            margin: 4px 0 16px;
+        }
+
+        .btn-test-connection:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .drawer-footer {
+            padding: 20px;
+            border-top: 1px solid #DDDFE6;
+            display: flex;
+            gap: 10px;
+        }
+
+        .drawer-footer button {
+            flex: 1;
+            min-height: 36px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .btn-cancel {
+            background: #F2F3F5;
+            color: #606266;
+        }
+
+        .btn-confirm {
+            background: #0089FF;
+            color: white;
         }
 
         .a::before {
@@ -181,228 +412,12 @@
             border-color: red;
         }
 
-        /* Drawer Styles */
-        .drawer-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-
-        .drawer-overlay.active {
-            display: block;
-        }
-
-        .drawer {
-            position: fixed;
-            left: -400px;
-            top: 0;
-            width: 400px;
-            height: 100%;
-            background: white;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            transition: left 0.3s ease;
-            overflow-y: auto;
-        }
-
-        .drawer.active {
-            left: 0;
-        }
-
-        .drawer-header {
-            padding: 20px;
-            border-bottom: 1px solid #DDDFE6;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .drawer-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #333;
-        }
-
-        .drawer-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #999;
-            padding: 0;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .drawer-close:hover {
-            color: #333;
-        }
-
-        .drawer-content {
-            padding: 20px;
-        }
-
-        .mode-selector {
-            margin-bottom: 20px;
-        }
-
-        .mode-selector label {
-            display: block;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .mode-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .mode-button {
-            flex: 1;
-            padding: 10px 16px;
-            border: 1px solid #BFC4CD;
-            background: white;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            color: #606266;
-            transition: all 0.3s ease;
-        }
-
-        .mode-button.active {
-            background: #0089FF;
-            color: white;
-            border-color: #0089FF;
-        }
-
-        .mode-button:hover {
-            border-color: #0089FF;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #333;
-            font-size: 14px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #BFC4CD;
-            border-radius: 4px;
-            font-size: 14px;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #BFC4CD;
-            border-radius: 4px;
-            font-size: 14px;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
-            background: white;
-            cursor: pointer;
-        }
-
-        .form-group select:focus {
-            outline: none;
-            border-color: #0089FF;
-            box-shadow: 0 0 0 2px rgba(0, 137, 255, 0.2);
-        }
-
-        .form-group select.error {
-            border-color: #e4514b;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #0089FF;
-            box-shadow: 0 0 0 2px rgba(0, 137, 255, 0.2);
-        }
-
-        .form-group input.error {
-            border-color: #e4514b;
-        }
-
-        .form-error {
-            color: #e4514b;
-            font-size: 12px;
-            margin-top: 4px;
-        }
-
-        .drawer-footer {
-            padding: 20px;
-            border-top: 1px solid #DDDFE6;
-            display: flex;
-            gap: 10px;
-        }
-
-        .drawer-footer button {
-            flex: 1;
-            padding: 10px 16px;
-            font-size: 14px;
-            border-radius: 4px;
-            cursor: pointer;
-            border: none;
-            font-weight: 700;
-        }
-
-        .btn-cancel {
-            background: #F2F3F5;
-            color: #606266;
-        }
-
-        .btn-cancel:hover {
-            background: #E5E7EB;
-        }
-
-        .btn-confirm {
-            background: #0089FF;
-            color: white;
-        }
-
-        .btn-confirm:hover {
-            background: #0073CC;
-        }
-
-        .config-btn {
-            width: 64px !important;
-            height: 32px;
-            margin-left: 10px;
-        }
-
-        .mode-fields {
-            display: none;
-        }
-
-        .mode-fields.active {
-            display: block;
-        }
-
         /* Toast Notification Styles */
         .toast-container {
             position: fixed;
             top: 20px;
             right: 20px;
+            left: auto;
             z-index: 2000;
             max-width: 400px;
         }
@@ -418,6 +433,7 @@
             gap: 12px;
             animation: slideIn 0.3s ease;
             min-width: 300px;
+            max-width: calc(100vw - 40px);
         }
 
         @keyframes slideIn {
@@ -505,30 +521,6 @@
             color: #7599e4;
         }
 
-        .btn-test-connection {
-            width: 100%;
-            padding: 10px 16px;
-            background: #EFF2F6;
-            color: #0089FF;
-            border: 1px solid #BFC4CD;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        .btn-test-connection:hover {
-            background: #E5E7EB;
-            border-color: #0089FF;
-        }
-
-        .btn-test-connection:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
         /* Tips Dialog Styles */
         .tips-dialog-overlay {
             display: none;
@@ -541,6 +533,8 @@
             z-index: 8000;
             justify-content: center;
             align-items: center;
+            padding: 16px;
+            box-sizing: border-box;
         }
 
         .tips-dialog-overlay.active {
@@ -552,8 +546,11 @@
             border-radius: 8px;
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
             width: 420px;
-            max-width: 90vw;
+            max-width: 100%;
+            max-height: calc(100vh - 32px);
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .tips-dialog-header {
@@ -580,6 +577,7 @@
             color: #606266;
             font-size: 14px;
             line-height: 1.6;
+            overflow: auto;
         }
 
         .tips-dialog-footer {
@@ -622,9 +620,9 @@
         .timer-group {
             display: inline-flex;
             align-items: center;
-            margin-left: 1rem;
             gap: 0;
             vertical-align: middle;
+            flex: 0 0 auto;
         }
 
         .timer-display {
@@ -634,12 +632,12 @@
             border: 1px solid #BFC4CD;
             border-right: none;
             border-radius: 16px 0 0 16px;
-            padding: 0 12px;
-            height: 32px;
+            padding: 0 14px;
+            height: 36px;
             font-size: 14px;
             color: #606266;
-            gap: 4px;
-            min-width: 120px;
+            gap: 6px;
+            min-width: 90px;
             position: relative;
         }
 
@@ -649,24 +647,15 @@
         }
 
         .timer-text {
-            font-weight: 600;
+            font-weight: 700;
             color: #333;
             font-variant-numeric: tabular-nums;
-        }
-
-        .timer-separator {
-            color: #C0C4CC;
-            font-size: 12px;
-        }
-
-        .timer-total {
-            color: #909399;
-            font-size: 12px;
+            font-size: 16px;
         }
 
         .timer-progress-bar {
             width: 80px;
-            height: 32px;
+            height: 36px;
             background: #F2F3F5;
             border-top: 1px solid #BFC4CD;
             border-bottom: 1px solid #BFC4CD;
@@ -684,29 +673,51 @@
             transition: width 1s linear;
         }
 
-        .timer-clear-btn {
-            width: 56px;
-            height: 32px;
-            background: #0089FF;
-            border: 1px solid #0089FF;
+        .timer-play-pause-btn {
+            width: 36px;
+            height: 36px;
+            background: #FFFFFF;
+            border: 1px solid #BFC4CD;
+            border-left: none;
             border-radius: 0 16px 16px 0;
-            color: white;
-            font-size: 13px;
+            color: #606266;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.2s, color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: -3px;
+            padding: 0;
         }
 
-        .timer-clear-btn:hover {
-            background: #0073CC;
+        .timer-play-pause-btn:hover {
+            background: #F2F3F5;
+            color: #333;
+        }
+
+        .timer-play-pause-btn.paused {
+            color: #0089FF;
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .timer-display.running .timer-text {
+            animation: breathe 2s ease-in-out infinite;
         }
 
         .timer-display.warning .timer-text {
             color: #f3aa3d;
+            animation: breathe 1.5s ease-in-out infinite;
         }
 
         .timer-display.danger .timer-text {
             color: #e4514b;
+            animation: breathe 1s ease-in-out infinite;
         }
 
         .timer-display.stopped .timer-icon {
@@ -755,6 +766,121 @@
             margin-top: 16px;
             color: #333;
             font-size: 14px;
+            max-width: calc(100vw - 32px);
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .main {
+                padding: .75rem;
+            }
+
+            .pure-topnav h1 {
+                max-width: calc(100vw - 1rem);
+                padding-left: .75rem;
+                font-size: 1rem;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .toolbar {
+                align-items: stretch;
+            }
+
+            .view-toggle,
+            .timer-group,
+            .config-btn {
+                width: 100%;
+            }
+
+            .view-button {
+                flex: 1 1 0;
+                width: auto;
+            }
+
+            .drawer {
+                max-width: 100vw;
+                width: 100vw;
+                left: -100vw;
+            }
+
+            .timer-display {
+                flex: 1 1 auto;
+                min-width: 0;
+                justify-content: center;
+            }
+
+            .timer-progress-bar {
+                flex: 0 0 84px;
+            }
+
+            .table-panel {
+                margin-top: .75rem;
+            }
+
+            .table-tabs {
+                width: 100%;
+            }
+
+            .table_switch_btn {
+                flex: 1 1 0;
+                width: auto;
+            }
+
+            .chartWrapper {
+                height: calc(100vh - 132px);
+                min-height: 360px;
+            }
+
+            .toast-container {
+                top: 12px;
+                right: 12px;
+                left: 12px;
+                max-width: none;
+            }
+
+            .toast {
+                min-width: 0;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .tips-dialog-footer {
+                align-items: stretch;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .tips-dialog-confirm,
+            .btn-cancel {
+                width: 100%;
+                min-height: 36px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            table th,
+            table td {
+                font-size: .82rem;
+                padding: 7px 8px;
+            }
+
+            .timer-progress-bar {
+                flex-basis: 64px;
+            }
+
+            .tips-dialog-header {
+                padding: 16px 18px 0;
+            }
+
+            .tips-dialog-body {
+                padding: 14px 18px 18px;
+            }
+
+            .tips-dialog-footer {
+                padding: 0 18px 18px;
+            }
         }
     </style>
 </head>
@@ -763,7 +889,7 @@
     <!-- Loading Overlay -->
     <div id="loadingOverlay">
         <div class="spinner"></div>
-        <div class="loading-text" id="loadingText">Loading...</div>
+        <div class="loading-text" id="loadingText">Preparing assessment...</div>
     </div>
 
     <!-- Tips Dialog -->
@@ -774,7 +900,8 @@
                 <span class="tips-dialog-title">Notice</span>
             </div>
             <div class="tips-dialog-body">
-                This feature can only be run for 3 minutes. Then the gateway will revert to normal working status.
+                <p style="margin: 0 0 8px;">Evaluating environmental interference... This process will take approximately <b>three minutes</b>.</p>
+                <p style="margin: 0; color: #909399; font-size: 13px;">During the assessment, the gateway dedicates its radio to scanning interference. Once complete, it will automatically revert to normal working status.</p>
             </div>
             <div class="tips-dialog-footer">
                 <label>
@@ -794,40 +921,38 @@
                 <span class="tips-dialog-title">Before You Start</span>
             </div>
             <div class="tips-dialog-body">
-                Please make sure you have completed the following before starting the interference assessment:
+                To ensure accurate interference assessment results, please confirm the following:
                 <ul style="margin: 12px 0 0; padding-left: 20px; line-height: 2;">
-                    <li>Stop all <b>scanning</b> operations on the gateway</li>
-                    <li>Disconnect all <b>connected devices</b> from the gateway</li>
+                    <li>All <b>scanning</b> operations on the gateway have been stopped</li>
+                    <li>All <b>connected devices</b> have been disconnected from the gateway</li>
                 </ul>
+                <p style="margin: 10px 0 0; color: #909399; font-size: 13px;">The assessment will run for approximately 3 minutes and the gateway will automatically return to normal operation afterward.</p>
             </div>
             <div class="tips-dialog-footer" style="justify-content: flex-end; gap: 10px;">
-                <button class="btn-cancel" id="preAssessmentCancelBtn" style="flex: unset; padding: 8px 20px; border-radius: 4px;">Cancel</button>
+                <button class="btn-cancel" id="preAssessmentCancelBtn" style="flex: unset; padding: 8px 20px; border-radius: 4px; background: #F2F3F5; color: #606266; border: none; font-size: 14px; font-weight: 700; cursor: pointer;">Cancel</button>
                 <button class="tips-dialog-confirm" id="preAssessmentConfirmBtn">Continue</button>
             </div>
         </div>
     </div>
 
-    <div id="container content">
+    <div id="container-content">
         <div class="main">
-            <div style="padding-left: 2rem; padding-top: 2rem;">
-                <button id="btnTable" style="width: 64px; height: 32px">Table</button>
-                <button id="btnChart" style="width: 64px; height: 32px">Chart</button>
+            <div class="toolbar">
+                <div class="view-toggle">
+                    <button id="btnTable" class="view-button">Table</button>
+                    <button id="btnChart" class="view-button">Chart</button>
+                </div>
                 <button id="btnConfig" class="config-btn">Config</button>
                 <div class="timer-group">
                     <div class="timer-display" id="timerDisplay">
                         <span class="timer-icon" id="timerIcon">&#9201;</span>
-                        <span class="timer-text" id="timeBtn">0:00</span>
-                        <span class="timer-separator">/</span>
-                        <span class="timer-total">3:00</span>
+                        <span class="timer-text" id="timeBtn">3:00</span>
                     </div>
                     <div class="timer-progress-bar">
                         <div class="timer-progress-fill" id="timerProgressFill"></div>
                     </div>
-                    <button id="btnClear" class="timer-clear-btn">Clear</button>
+                    <button id="btnPlayPause" class="timer-play-pause-btn" title="Pause">&#9646;&#9646;</button>
                 </div>
-                <!-- <label for="gateway_ip">Local Gateway IP: </label> -->
-                <!-- <input type="text" id="gateway_ip" placeholder="192.168.0.100"> -->
-                <!-- <span id="error" class="error"></span> -->
                 <!--            <button id="control" class="icomoon icon-pause a" style="display: "";"></button>-->
             </div>
             <div id="chartView" class="chartWrapper" style="display: none;">
@@ -836,44 +961,46 @@
                 <!-- </div>  -->
                 <!-- <canvas id="myChartAxis" height="300" width="0"></canvas>-->
             </div>
-            <div id="tableView" style="margin-left: 2rem; margin-right: 2rem; margin-top: 1rem;">
-                <div style="display: inline-flex;">
+            <div id="tableView" class="table-panel">
+                <div class="table-tabs">
                     <button id="btnBle" class="table_switch_btn active">Bluetooth</button>
                     <button id="btnWifi" class="table_switch_btn">Wi-Fi</button>
                 </div>
-                <table id="ble_table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th colspan="3" style="border-left: 0">RSSI</th>
-                            <th rowspan="2" style="width: 15rem">Packet retransmission rate</th>
-                            <th rowspan="2" style="width: 15rem">Channel Quality</th>
-                        </tr>
-                        <tr>
-                            <th></th>
-                            <th style="border-left: 0">Max</th>
-                            <th>Current</th>
-                            <th>Average</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-                <table id="wifi_table" class="hidden">
-                    <thead style="height: 40px;">
-                        <tr>
-                            <th>#</th>
-                            <th>Address</th>
-                            <th>SSID</th>
-                            <th>Channel</th>
-                            <th>Mode</th>
-                            <th>Signal</th>
-                            <th>Encryption</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+                <div class="table-scroll">
+                    <table id="ble_table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th colspan="3" style="border-left: 0">RSSI</th>
+                                <th rowspan="2" style="width: 15rem">Packet retransmission rate</th>
+                                <th rowspan="2" style="width: 15rem">Channel Quality</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th style="border-left: 0">Max</th>
+                                <th>Current</th>
+                                <th>Average</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <table id="wifi_table" class="hidden">
+                        <thead style="height: 40px;">
+                            <tr>
+                                <th>#</th>
+                                <th>Address</th>
+                                <th>SSID</th>
+                                <th>Channel</th>
+                                <th>Mode</th>
+                                <th>Signal</th>
+                                <th>Encryption</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -882,60 +1009,45 @@
         <div id="configDrawer" class="drawer">
             <div class="drawer-header">
                 <div class="drawer-title">Configuration</div>
-                <button class="drawer-close" id="drawerClose">×</button>
+                <button class="drawer-close" id="drawerClose" type="button">×</button>
             </div>
             <div class="drawer-content">
                 <div class="mode-selector">
-                    <label>Connection Mode:</label>
+                    <label>Connection Mode</label>
                     <div class="mode-buttons">
-                        <button class="mode-button active" data-mode="local">Local</button>
-                        <button class="mode-button" data-mode="ac">AC Server</button>
+                        <button class="mode-button active" data-mode="local" type="button">Local</button>
+                        <button class="mode-button" data-mode="ac" type="button">AC Server</button>
                     </div>
                 </div>
 
-                <!-- Local Mode Fields -->
                 <div id="localModeFields" class="mode-fields active">
                     <div class="form-group">
-                        <label for="localIp">Gateway IP Address:</label>
+                        <label for="localIp">Gateway IP Address</label>
                         <input type="text" id="localIp" placeholder="e.g., 192.168.0.100">
                         <div class="form-error" id="localIpError"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="localModel">Model:</label>
-                        <!-- <input type="text" id="localModel" placeholder="e.g., E1000"> -->
-                        <select id="localModel">
-                            <option value="">-- Please select a model --</option>
-                            <option value="E1000">E1000</option>
-                            <option value="X2000">X2000</option>
-                            <option value="M1000">M1000</option>
-                            <option value="M1500">M1500</option>
-                            <option value="M2000">M2000</option>
-                        </select>
-                        <div class="form-error" id="localModelError"></div>
                     </div>
                     <button class="btn-test-connection" id="testLocalConnection" type="button">Test Connection</button>
                 </div>
 
-                <!-- AC Mode Fields -->
                 <div id="acModeFields" class="mode-fields">
                     <div class="form-group">
-                        <label for="acAddress">AC Server Address:</label>
+                        <label for="acAddress">AC Server Address</label>
                         <input type="text" id="acAddress" placeholder="e.g., https://api.example.com">
                         <div class="form-error" id="acAddressError"></div>
                     </div>
                     <div class="form-group">
-                        <label for="acUsername">Developer Account:</label>
+                        <label for="acUsername">Developer Account</label>
                         <input type="text" id="acUsername" placeholder="Enter your account">
                         <div class="form-error" id="acUsernameError"></div>
                     </div>
                     <div class="form-group">
-                        <label for="acPassword">Password:</label>
+                        <label for="acPassword">Password</label>
                         <input type="password" id="acPassword" placeholder="Enter your password">
                         <div class="form-error" id="acPasswordError"></div>
                     </div>
                     <button class="btn-test-connection" id="testAcConnection" type="button">Test Connection</button>
                     <div class="form-group" id="gatewaySelectGroup" style="display: none;">
-                        <label for="acGateway">Select Gateway:</label>
+                        <label for="acGateway">Select Gateway</label>
                         <select id="acGateway">
                             <option value="">-- Please select a gateway --</option>
                         </select>
@@ -944,8 +1056,8 @@
                 </div>
             </div>
             <div class="drawer-footer">
-                <button class="btn-cancel" id="drawerCancel">Cancel</button>
-                <button class="btn-confirm" id="drawerConfirm">Save</button>
+                <button class="btn-cancel" id="drawerCancel" type="button">Cancel</button>
+                <button class="btn-confirm" id="drawerConfirm" type="button">Save</button>
             </div>
         </div>
 
@@ -965,7 +1077,7 @@
     <script src="js/echarts.min.js"></script>
     <script src="js/jquery-3.5.1.min.js"></script>
     <script src="js/lodash.min.js"></script>
-    <script src="js/assessment.js?v=202602061943"></script>
+    <script src="js/assessment.js?v=202604271124"></script>
     <script>
         // Toast Notification System
         const notificationManager = {
@@ -1032,6 +1144,8 @@
             currentMode: 'local',
             testingInProgress: false,
             acAuthToken: null,
+            acSavedGateway: '',
+            acSavedModel: '',
             acHubs: [],
 
             init: function () {
@@ -1043,18 +1157,22 @@
                 this.testLocalBtn.addEventListener('click', () => this.testLocalConnection());
                 this.testAcBtn.addEventListener('click', () => this.testAcConnection());
 
-                // Mode switch
                 document.querySelectorAll('.mode-button').forEach(btn => {
                     btn.addEventListener('click', (e) => this.switchMode(e.target.dataset.mode));
                 });
 
-                // Real-time validation on input change
                 document.getElementById('localIp').addEventListener('change', () => this.validateLocalIp());
-                document.getElementById('acAddress').addEventListener('change', () => this.validateAcAddress());
-                document.getElementById('acUsername').addEventListener('change', () => this.validateAcUsername());
-                document.getElementById('acPassword').addEventListener('change', () => this.validateAcPassword());
+                document.getElementById('acAddress').addEventListener('change', () => {
+                    this.clearAcSession();
+                    this.validateAcAddress();
+                });
+                document.getElementById('acUsername').addEventListener('change', () => {
+                    this.clearAcSession();
+                    this.validateAcUsername();
+                });
+                document.getElementById('acPassword').addEventListener('change', () => this.validateAcPassword(true));
+                document.getElementById('acGateway').addEventListener('change', () => this.validateAcGateway());
 
-                // Load saved config
                 this.loadConfig();
             },
 
@@ -1070,24 +1188,12 @@
 
             switchMode: function (mode) {
                 this.currentMode = mode;
-
-                // Update button states
                 document.querySelectorAll('.mode-button').forEach(btn => {
                     btn.classList.remove('active');
                 });
                 document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
-
-                // Update form fields visibility
-                document.getElementById('localModeFields').classList.remove('active');
-                document.getElementById('acModeFields').classList.remove('active');
-
-                if (mode === 'local') {
-                    document.getElementById('localModeFields').classList.add('active');
-                } else {
-                    document.getElementById('acModeFields').classList.add('active');
-                }
-
-                // Clear previous errors
+                document.getElementById('localModeFields').classList.toggle('active', mode === 'local');
+                document.getElementById('acModeFields').classList.toggle('active', mode === 'ac');
                 this.clearErrors();
             },
 
@@ -1096,19 +1202,15 @@
                 const errorEl = document.getElementById('localIpError');
                 const inputEl = document.getElementById('localIp');
 
-                if (!localIp) {
-                    errorEl.textContent = 'Gateway IP is required';
-                    inputEl.classList.add('input-error');
-                    return false;
-                } else if (!this.isValidIP(localIp)) {
+                if (localIp && !this.isValidIP(localIp)) {
                     errorEl.textContent = 'Invalid IP address format (e.g., 192.168.0.100)';
                     inputEl.classList.add('input-error');
                     return false;
-                } else {
-                    errorEl.textContent = '';
-                    inputEl.classList.remove('input-error');
-                    return true;
                 }
+
+                errorEl.textContent = '';
+                inputEl.classList.remove('input-error');
+                return true;
             },
 
             validateAcAddress: function () {
@@ -1124,11 +1226,11 @@
                     errorEl.textContent = 'Invalid URL format (e.g., https://api.example.com)';
                     inputEl.classList.add('input-error');
                     return false;
-                } else {
-                    errorEl.textContent = '';
-                    inputEl.classList.remove('input-error');
-                    return true;
                 }
+
+                errorEl.textContent = '';
+                inputEl.classList.remove('input-error');
+                return true;
             },
 
             validateAcUsername: function () {
@@ -1140,27 +1242,27 @@
                     errorEl.textContent = 'Account is required';
                     inputEl.classList.add('input-error');
                     return false;
-                } else {
-                    errorEl.textContent = '';
-                    inputEl.classList.remove('input-error');
-                    return true;
                 }
+
+                errorEl.textContent = '';
+                inputEl.classList.remove('input-error');
+                return true;
             },
 
-            validateAcPassword: function () {
+            validateAcPassword: function (requirePassword = false) {
                 const acPassword = document.getElementById('acPassword').value.trim();
                 const errorEl = document.getElementById('acPasswordError');
                 const inputEl = document.getElementById('acPassword');
 
-                if (!acPassword) {
+                if (!acPassword && (requirePassword || !this.acAuthToken)) {
                     errorEl.textContent = 'Password is required';
                     inputEl.classList.add('input-error');
                     return false;
-                } else {
-                    errorEl.textContent = '';
-                    inputEl.classList.remove('input-error');
-                    return true;
                 }
+
+                errorEl.textContent = '';
+                inputEl.classList.remove('input-error');
+                return true;
             },
 
             validateAcGateway: function () {
@@ -1172,38 +1274,31 @@
                     errorEl.textContent = 'Gateway selection is required';
                     selectEl.classList.add('error');
                     return false;
-                } else {
-                    errorEl.textContent = '';
-                    selectEl.classList.remove('error');
-                    return true;
                 }
+
+                errorEl.textContent = '';
+                selectEl.classList.remove('error');
+                return true;
             },
 
             validate: function () {
                 this.clearErrors();
-                let isValid = true;
-
                 if (this.currentMode === 'local') {
-                    isValid = this.validateLocalIp() && isValid;
-                } else {
-                    isValid = this.validateAcAddress() && isValid;
-                    isValid = this.validateAcUsername() && isValid;
-                    isValid = this.validateAcPassword() && isValid;
-                    // Check if gateway selection is visible (meaning auth was successful)
-                    if (document.getElementById('gatewaySelectGroup').style.display !== 'none') {
-                        isValid = this.validateAcGateway() && isValid;
-                    }
+                    return this.validateLocalIp();
                 }
 
-                return isValid;
+                return (
+                    this.validateAcAddress() &&
+                    this.validateAcUsername() &&
+                    this.validateAcPassword(false) &&
+                    this.validateAcGateway()
+                );
             },
 
             isValidIP: function (ip) {
                 const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
                 if (!ipRegex.test(ip)) return false;
-
-                const parts = ip.split('.');
-                return parts.every(part => {
+                return ip.split('.').every(part => {
                     const num = parseInt(part, 10);
                     return num >= 0 && num <= 255;
                 });
@@ -1219,16 +1314,12 @@
             },
 
             clearErrors: function () {
-                document.getElementById('localIpError').textContent = '';
-                document.getElementById('acAddressError').textContent = '';
-                document.getElementById('acUsernameError').textContent = '';
-                document.getElementById('acPasswordError').textContent = '';
-                document.getElementById('acGatewayError').textContent = '';
-
-                document.getElementById('localIp').classList.remove('input-error');
-                document.getElementById('acAddress').classList.remove('input-error');
-                document.getElementById('acUsername').classList.remove('input-error');
-                document.getElementById('acPassword').classList.remove('input-error');
+                ['localIpError', 'acAddressError', 'acUsernameError', 'acPasswordError', 'acGatewayError'].forEach(id => {
+                    document.getElementById(id).textContent = '';
+                });
+                ['localIp', 'acAddress', 'acUsername', 'acPassword'].forEach(id => {
+                    document.getElementById(id).classList.remove('input-error');
+                });
                 document.getElementById('acGateway').classList.remove('error');
             },
 
@@ -1238,211 +1329,102 @@
                     return;
                 }
 
-                if (this.testingInProgress) {
-                    notificationManager.warning('Testing', 'Connection test already in progress');
-                    return;
-                }
-
-                this.testingInProgress = true;
-                this.testLocalBtn.disabled = true;
-                const originalText = this.testLocalBtn.textContent;
-                this.testLocalBtn.textContent = 'Testing...';
-
                 const localIp = document.getElementById('localIp').value.trim();
-                const self = this;
-
-                // Test multiple endpoints to ensure gateway is accessible
-                const tests = [
-                    { url: `http://${localIp}/cassia/login`, name: 'Gateway Health Check', timeout: 5000 },
-                ];
-
-                let successCount = 0;
-                let testResults = [];
-
-                const performTest = (testIndex) => {
-                    if (testIndex >= tests.length) {
-                        // All tests completed
-                        self.testLocalBtn.disabled = false;
-                        self.testLocalBtn.textContent = originalText;
-                        self.testingInProgress = false;
-
-                        if (successCount > 0) {
-                            notificationManager.success(
-                                'Connection Successful',
-                                `Successfully connected to gateway at ${localIp}. (${successCount}/${tests.length} checks passed)`
-                            );
-                        } else {
-                            notificationManager.error(
-                                'Connection Failed',
-                                `Failed to connect to ${localIp}. Please verify:\n- Gateway IP is correct\n- Gateway is powered on and online\n- Network connectivity is working\n- Firewall rules allow access`
-                            );
-                        }
-                        return;
-                    }
-
-                    const test = tests[testIndex];
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), test.timeout);
-
-                    fetch(test.url, {
-                        method: 'GET',
-                        signal: controller.signal,
-                        mode: 'cors'
-                    })
+                const url = localIp ? `http://${localIp}/cassia/info` : '/cassia/info';
+                this.runTestButton(this.testLocalBtn, 'Testing...', () => {
+                    return fetch(url, { method: 'GET', mode: 'cors' })
                         .then(response => {
-                            clearTimeout(timeoutId);
-                            if (response.ok) {
-                                successCount++;
-                                testResults.push({ name: test.name, status: 'success' });
-                            } else {
-                                testResults.push({ name: test.name, status: 'failed', code: response.status });
-                            }
-                            performTest(testIndex + 1);
-                        })
-                        .catch((error) => {
-                            clearTimeout(timeoutId);
-                            const errorType = error.name === 'AbortError' ? 'timeout' : 'connection_error';
-                            testResults.push({ name: test.name, status: 'error', error: errorType });
-                            performTest(testIndex + 1);
+                            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                            notificationManager.success('Connection Successful', 'Successfully connected to the gateway.');
                         });
-                };
-
-                notificationManager.info('Testing Connection', `Testing gateway at ${localIp}...`);
-                performTest(0);
+                }, 'Failed to connect to the gateway. Please verify the IP address and network.');
             },
 
             testAcConnection: function () {
-                if (!this.validateAcAddress() || !this.validateAcUsername() || !this.validateAcPassword()) {
+                if (!this.validateAcAddress() || !this.validateAcUsername() || !this.validateAcPassword(true)) {
                     notificationManager.warning('Validation Error', 'Please fill in all required fields correctly');
                     return;
                 }
 
-                if (this.testingInProgress) {
-                    notificationManager.warning('Testing', 'Connection test already in progress');
-                    return;
-                }
-
-                this.testingInProgress = true;
-                this.testAcBtn.disabled = true;
-                const originalText = this.testAcBtn.textContent;
-                this.testAcBtn.textContent = 'Testing...';
-
-                const acAddress = document.getElementById('acAddress').value.trim();
+                const acAddress = document.getElementById('acAddress').value.trim().replace(/\/+$/, '');
                 const acUsername = document.getElementById('acUsername').value.trim();
                 const acPassword = document.getElementById('acPassword').value.trim();
-                const self = this;
+                const basicAuth = btoa(`${acUsername}:${acPassword}`);
 
-                // Step 1: Request token directly (server connectivity + authentication)
-                const step1TestServerReachability = () => {
+                this.runTestButton(this.testAcBtn, 'Testing...', () => {
                     notificationManager.info('Step 1/2', 'Requesting authentication token...');
-
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-                    // Create Basic Auth header
-                    const basicAuth = btoa(`${acUsername}:${acPassword}`);
-
-                    fetch(`${acAddress}/api/oauth2/token`, {
+                    return fetch(`${acAddress}/api/oauth2/token`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json; charset=utf-8',
                             'Authorization': `Basic ${basicAuth}`
                         },
-                        body: JSON.stringify({
-                            grant_type: 'client_credentials'
-                        }),
-                        signal: controller.signal,
+                        body: JSON.stringify({ grant_type: 'client_credentials' }),
                         mode: 'cors'
                     })
                         .then(response => {
-                            clearTimeout(timeoutId);
-                            if (response.ok) {
-                                return response.json().then(data => {
-                                    return step2FetchGateways(data.access_token || data.token || data.accessToken || '');
-                                });
-                            } else if (response.status === 401 || response.status === 403) {
-                                throw new Error('Invalid credentials');
-                            } else {
-                                throw new Error(`Server error: ${response.status}`);
-                            }
+                            if (!response.ok) throw new Error(`Token request failed: ${response.status}`);
+                            return response.json();
                         })
-                        .catch(error => {
-                            clearTimeout(timeoutId);
-                            self.testAcBtn.disabled = false;
-                            self.testAcBtn.textContent = originalText;
-                            self.testingInProgress = false;
-                            notificationManager.error(
-                                'Connection Failed',
-                                `Failed to connect to AC Server. Please verify:\n- Server address is correct (${acAddress})\n- Server is online\n- Username and password are correct\n- Account has API access enabled`
-                            );
-                        });
-                };
-
-                // Step 2: Fetch gateways
-                const step2FetchGateways = (token) => {
-                    notificationManager.info('Step 2/2', 'Fetching available gateways...');
-
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-                    fetch(`${acAddress}/api/cassia/hubs?access_token=${token}`, {
-                        method: 'GET',
-                        signal: controller.signal,
-                        mode: 'cors'
-                    })
+                        .then(data => {
+                            const token = data.access_token || data.token || data.accessToken || '';
+                            if (!token) throw new Error('Missing access token');
+                            this.acAuthToken = token;
+                            notificationManager.info('Step 2/2', 'Fetching available gateways...');
+                            return fetch(`${acAddress}/api/cassia/hubs?access_token=${encodeURIComponent(token)}`, {
+                                method: 'GET',
+                                mode: 'cors'
+                            });
+                        })
                         .then(response => {
-                            clearTimeout(timeoutId);
-                            if (response.ok) {
-                                return response.json().then(gatewaysData => {
-                                    self.testAcBtn.disabled = false;
-                                    self.testAcBtn.textContent = originalText;
-                                    self.testingInProgress = false;
-
-                                    // Save token and hubs for later use
-                                    self.acAuthToken = token;
-                                    self.acHubs = gatewaysData;
-
-                                    // Populate gateway dropdown
-                                    const gatewaySelect = document.getElementById('acGateway');
-                                    gatewaySelect.innerHTML = '<option value="">-- Please select a gateway --</option>';
-
-                                    if (Array.isArray(gatewaysData)) {
-                                        gatewaysData.forEach(hub => {
-                                            const option = document.createElement('option');
-                                            const mac = hub.mac || hub.id || hub.uuid;
-                                            const name = hub.name || hub.ip || 'Unknown Hub';
-                                            option.value = mac;
-                                            option.textContent = `${name} (${mac})`;
-                                            gatewaySelect.appendChild(option);
-                                        });
-                                    }
-
-                                    // Show gateway selection
-                                    document.getElementById('gatewaySelectGroup').style.display = 'block';
-
-                                    notificationManager.success(
-                                        'Connection Successful',
-                                        `Successfully connected to AC Server. Found ${gatewaysData.length || 0} gateway(s).\nPlease select a gateway below.`
-                                    );
-                                });
-                            } else {
-                                throw new Error(`Failed to fetch gateways: ${response.status}`);
-                            }
+                            if (!response.ok) throw new Error(`Gateway fetch failed: ${response.status}`);
+                            return response.json();
                         })
-                        .catch(error => {
-                            clearTimeout(timeoutId);
-                            self.testAcBtn.disabled = false;
-                            self.testAcBtn.textContent = originalText;
-                            self.testingInProgress = false;
-                            notificationManager.error(
-                                'Gateway Fetch Failed',
-                                'Authentication successful but failed to fetch gateway list. Please check API access.'
+                        .then(gatewaysData => {
+                            this.acHubs = Array.isArray(gatewaysData) ? gatewaysData : [];
+                            const gatewaySelect = document.getElementById('acGateway');
+                            gatewaySelect.innerHTML = '<option value="">-- Please select a gateway --</option>';
+
+                            this.acHubs.forEach(hub => {
+                                const option = document.createElement('option');
+                                const mac = hub.mac || hub.id || hub.uuid || '';
+                                const name = hub.name || hub.ip || hub.model || 'Unknown Hub';
+                                option.value = mac;
+                                option.textContent = `${name} (${mac})`;
+                                gatewaySelect.appendChild(option);
+                            });
+
+                            document.getElementById('gatewaySelectGroup').style.display = 'block';
+                            notificationManager.success(
+                                'Connection Successful',
+                                `Successfully connected to AC Server. Found ${this.acHubs.length} gateway(s).`
                             );
                         });
-                };
+                }, 'Failed to connect to AC Server. Please verify the server address, account, and API access.');
+            },
 
-                notificationManager.info('Testing Connection', `Testing AC Server at ${acAddress}...`);
-                step1TestServerReachability();
+            runTestButton: function (button, testingText, task, errorMessage) {
+                if (this.testingInProgress) {
+                    notificationManager.warning('Testing', 'Connection test already in progress');
+                    return;
+                }
+
+                this.testingInProgress = true;
+                button.disabled = true;
+                const originalText = button.textContent;
+                button.textContent = testingText;
+
+                Promise.resolve()
+                    .then(task)
+                    .catch(error => {
+                        console.error(error);
+                        notificationManager.error('Connection Failed', errorMessage);
+                    })
+                    .finally(() => {
+                        button.disabled = false;
+                        button.textContent = originalText;
+                        this.testingInProgress = false;
+                    });
             },
 
             save: function () {
@@ -1458,108 +1440,92 @@
 
                 if (this.currentMode === 'local') {
                     config.localIp = document.getElementById('localIp').value.trim();
+                    localStorage.setItem('gatewayIP', config.localIp);
                 } else {
-                    config.acAddress = document.getElementById('acAddress').value.trim();
+                    const previousConfig = this.getSavedConfig();
+                    config.acAddress = document.getElementById('acAddress').value.trim().replace(/\/+$/, '');
                     config.acUsername = document.getElementById('acUsername').value.trim();
-                    config.acPassword = document.getElementById('acPassword').value.trim();
-                    config.acAuthToken = this.acAuthToken;
+                    config.acAuthToken = this.acAuthToken || previousConfig.acAuthToken || null;
                     config.acGateway = document.getElementById('acGateway').value.trim();
 
-                    // Also save the model of the selected gateway
-                    if (this.acHubs && Array.isArray(this.acHubs)) {
-                        const selectedHub = this.acHubs.find(hub => (hub.mac || hub.id || hub.uuid) === config.acGateway);
-                        if (selectedHub) {
-                            config.acModel = selectedHub.model || '';
-                        }
-                    }
-                }
-
-                try {
-                    // Save to localStorage
-                    localStorage.setItem('interferenceMonitorConfig', JSON.stringify(config));
-
-                    // For local mode, also update gateway_ip and trigger business logic
-                    if (this.currentMode === 'local') {
-                        const localIp = config.localIp;
-                        localStorage.setItem('gatewayIP', localIp);
-
-                        // Update gateway_ip input field using jQuery
-                        const $gatewayIpInput = $('#gateway_ip');
-                        if ($gatewayIpInput.length > 0) {
-                            $gatewayIpInput.val(localIp);
-                        }
-
-                        notificationManager.success('Configuration Saved', 'Interference assessment starting...');
-                        this.close();
-
-                        // Execute business logic after drawer closes
-                        setTimeout(() => {
-                            try {
-                                // Call startAssessment function from assessment.js
-                                if (typeof startAssessment === 'function') {
-                                    startAssessment();
-                                } else {
-                                    console.error('startAssessment function not available');
-                                }
-                            } catch (error) {
-                                console.error('Error calling startAssessment:', error);
-                            }
-                        }, 300);
+                    const selectedHub = this.acHubs.find(hub => (hub.mac || hub.id || hub.uuid) === config.acGateway);
+                    if (selectedHub) {
+                        config.acModel = selectedHub.model || '';
                     } else {
-                        // For AC mode, also trigger assessment
-                        notificationManager.success('Configuration Saved', 'Interference assessment starting...');
-                        this.close();
-
-                        // Execute business logic after drawer closes
-                        setTimeout(() => {
-                            try {
-                                // Call startAssessment function from assessment.js
-                                if (typeof startAssessment === 'function') {
-                                    startAssessment();
-                                } else {
-                                    console.error('startAssessment function not available');
-                                }
-                            } catch (error) {
-                                console.error('Error calling startAssessment:', error);
-                            }
-                        }, 300);
+                        config.acModel = this.acSavedGateway === config.acGateway ? this.acSavedModel : previousConfig.acModel || '';
                     }
-                } catch (error) {
-                    notificationManager.error('Save Failed', `Failed to save configuration: ${error.message}`);
-                    console.error('Save error:', error);
                 }
+
+                localStorage.setItem('interferenceMonitorConfig', JSON.stringify(config));
+                notificationManager.success('Configuration Saved', 'Interference assessment starting...');
+                this.close();
+
+                setTimeout(() => {
+                    if (typeof startAssessment === 'function') {
+                        startAssessment();
+                    }
+                }, 300);
             },
 
             loadConfig: function () {
                 try {
-                    const configStr = localStorage.getItem('interferenceMonitorConfig');
-                    if (!configStr) {
+	                    const config = this.getSavedConfig();
+	                    if (config.acPassword) {
+	                        delete config.acPassword;
+	                        localStorage.setItem('interferenceMonitorConfig', JSON.stringify(config));
+	                    }
+	                    if (!config.mode) {
+                        const gatewayIp = localStorage.getItem('gatewayIP') || '';
+                        document.getElementById('localIp').value = gatewayIp;
                         return;
                     }
 
-                    const config = JSON.parse(configStr);
+                    this.switchMode(config.mode || 'local');
 
-                    if (config.mode === 'local') {
-                        this.switchMode('local');
-                        document.getElementById('localIp').value = config.localIp || '';
-                        const gatewayIpInput = document.getElementById('gateway_ip');
-                        if (config.localIp && gatewayIpInput) {
-                            gatewayIpInput.value = config.localIp;
-                        }
-                    } else if (config.mode === 'ac') {
-                        this.switchMode('ac');
+                    if ((config.mode || 'local') === 'local') {
+                        document.getElementById('localIp').value = config.localIp || localStorage.getItem('gatewayIP') || '';
+                    } else {
                         document.getElementById('acAddress').value = config.acAddress || '';
                         document.getElementById('acUsername').value = config.acUsername || '';
-                        document.getElementById('acPassword').value = config.acPassword || '';
+                        document.getElementById('acPassword').value = '';
+                        this.acAuthToken = config.acAuthToken || null;
+                        this.acSavedGateway = config.acGateway || '';
+                        this.acSavedModel = config.acModel || '';
+                        if (config.acGateway) {
+                            document.getElementById('gatewaySelectGroup').style.display = 'block';
+                            const gatewaySelect = document.getElementById('acGateway');
+                            const label = config.acModel ? `${config.acGateway} (${config.acModel})` : config.acGateway;
+                            gatewaySelect.innerHTML = `<option value="${config.acGateway}">${label}</option>`;
+                        }
                     }
                 } catch (e) {
                     console.error('Error loading configuration:', e);
                     notificationManager.error('Load Error', 'Failed to load saved configuration');
                 }
+            },
+
+            getSavedConfig: function () {
+                try {
+                    const configStr = localStorage.getItem('interferenceMonitorConfig');
+                    return configStr ? JSON.parse(configStr) : {};
+                } catch (e) {
+                    console.error('Error reading saved configuration:', e);
+                    return {};
+                }
+            },
+
+            clearAcSession: function () {
+                this.acAuthToken = null;
+                this.acHubs = [];
+                this.acSavedGateway = '';
+                this.acSavedModel = '';
+                const gatewaySelect = document.getElementById('acGateway');
+                gatewaySelect.innerHTML = '<option value="">-- Please select a gateway --</option>';
+                document.getElementById('gatewaySelectGroup').style.display = 'none';
             }
         };
 
-        // Initialize drawer when DOM is ready
+        // Initialize when DOM is ready
         document.addEventListener('DOMContentLoaded', function () {
             drawer.init();
 

@@ -33,11 +33,109 @@ const hash = $(location).prop('hash');
 let getwayIpInput; // Will be initialized in document.ready
 let localModelSelect; // Will be initialized in document.ready
 let updateInterval = null; // Global interval reference for periodic updates
+let wifiUpdateInterval = null; // Global interval reference for Wi-Fi periodic updates
+let wifiRequestInFlight = false; // Prevent overlapping Wi-Fi polling requests
 let assessmentTimeout = null; // Global timeout reference for 3-minute auto-stop
 let isInitialLoad = true; // Flag to track first data load
-let isInitialLoadAC = true; // Flag to track first AC data load
-let currentMode = 'local'; // Track current mode
-let elapsedSeconds = 0; // Timer seconds counter
+let elapsedSeconds = 0; // Timer seconds counter (counts up internally)
+const TOTAL_SECONDS = 180; // 3 minutes total
+
+function getInterferenceConfig() {
+	try {
+		const savedConfig = localStorage.getItem('interferenceMonitorConfig');
+		if (savedConfig) {
+			return JSON.parse(savedConfig);
+		}
+	} catch (e) {
+		console.error('Error parsing interference monitor config:', e);
+	}
+	return { mode: 'local' };
+}
+
+function getHashModel() {
+	return hash ? hash.replaceAll('#', '').toUpperCase() : '';
+}
+
+function getConfiguredLocalIp() {
+	const inputValue =
+		getwayIpInput && getwayIpInput.length ? getwayIpInput.val() : '';
+	const config = getInterferenceConfig();
+	return inputValue || config.localIp || localStorage.getItem('gatewayIP') || '';
+}
+
+function getConfiguredModel(config = getInterferenceConfig()) {
+	if (config.mode === 'ac') {
+		return (config.acModel || sessionStorage.getItem('acModel') || getHashModel()).toUpperCase();
+	}
+	const inputValue =
+		localModelSelect && localModelSelect.length ? localModelSelect.val() : '';
+	return (
+		inputValue ||
+		localStorage.getItem('localModel') ||
+		sessionStorage.getItem('localModel') ||
+		getHashModel()
+	).toUpperCase();
+}
+
+function normalizeAcAddress(address) {
+	return (address || '').replace(/\/+$/, '');
+}
+
+function getAssessmentRequest(wifi = false) {
+	const config = getInterferenceConfig();
+	const mode = config.mode || 'local';
+
+	if (mode === 'ac') {
+		const acAddress = normalizeAcAddress(
+			config.acAddress || sessionStorage.getItem('acAddress'),
+		);
+		const token = config.acAuthToken || sessionStorage.getItem('acToken');
+		const gatewayMac = config.acGateway || sessionStorage.getItem('acGateway');
+
+		if (!acAddress || !token || !gatewayMac) {
+			console.error('AC configuration incomplete');
+			if (typeof notificationManager !== 'undefined') {
+				notificationManager.error(
+					'Configuration Required',
+					'Please configure the AC Server, test the connection, and select a gateway.',
+					5000,
+				);
+			}
+			return null;
+		}
+
+		sessionStorage.setItem('acAddress', acAddress);
+		sessionStorage.setItem('acToken', token);
+		sessionStorage.setItem('acGateway', gatewayMac);
+
+		let url = `${acAddress}/api/gap/channel/assessment?mac=${encodeURIComponent(
+			gatewayMac,
+		)}&access_token=${encodeURIComponent(token)}`;
+		if (wifi) {
+			url += '&wifi=1';
+		}
+
+		return {
+			mode,
+			url,
+			model: getConfiguredModel(config),
+		};
+	}
+
+	const currentIp = getConfiguredLocalIp();
+	const baseUrl = currentIp ? `http://${currentIp}` : '';
+	if (currentIp) {
+		localStorage.setItem('gatewayIP', currentIp);
+	}
+
+	return {
+		mode,
+		url: `${baseUrl}/gap/channel/assessment${wifi ? '?wifi=1' : ''}`,
+		nodesUrl: `${baseUrl}/gap/nodes/?connection_state=connected`,
+		model: getConfiguredModel(config),
+		currentIp,
+	};
+}
 
 // Timer display helpers
 function formatTime(totalSeconds) {
@@ -48,22 +146,24 @@ function formatTime(totalSeconds) {
 
 function updateTimerDisplay(seconds) {
 	elapsedSeconds = seconds;
-	timeBtn.html(formatTime(seconds));
+	const remaining = Math.max(TOTAL_SECONDS - seconds, 0);
+	timeBtn.html(formatTime(remaining));
 
 	// Update progress bar
 	const progressFill = document.getElementById('timerProgressFill');
 	const timerDisplay = document.getElementById('timerDisplay');
 	if (progressFill) {
-		const percent = Math.min((seconds / 180) * 100, 100);
+		const percent = Math.min((seconds / TOTAL_SECONDS) * 100, 100);
 		progressFill.style.width = percent + '%';
 	}
 
 	// Update color state based on remaining time
 	if (timerDisplay) {
 		timerDisplay.classList.remove('warning', 'danger', 'stopped');
-		if (seconds >= 150) {
+		timerDisplay.classList.add('running');
+		if (remaining <= 30) {
 			timerDisplay.classList.add('danger');
-		} else if (seconds >= 120) {
+		} else if (remaining <= 60) {
 			timerDisplay.classList.add('warning');
 		}
 	}
@@ -71,21 +171,30 @@ function updateTimerDisplay(seconds) {
 
 function resetTimerDisplay() {
 	elapsedSeconds = 0;
-	timeBtn.html('0:00');
+	timeBtn.html(formatTime(TOTAL_SECONDS));
 	const progressFill = document.getElementById('timerProgressFill');
 	const timerDisplay = document.getElementById('timerDisplay');
 	if (progressFill) {
 		progressFill.style.width = '0%';
 	}
 	if (timerDisplay) {
-		timerDisplay.classList.remove('warning', 'danger', 'stopped');
+		timerDisplay.classList.remove('warning', 'danger', 'stopped', 'running');
 	}
 }
 
 function stopTimerDisplay() {
 	const timerDisplay = document.getElementById('timerDisplay');
 	if (timerDisplay) {
+		timerDisplay.classList.remove('running');
 		timerDisplay.classList.add('stopped');
+	}
+	timeBtn.html('0:00');
+	// Switch play/pause button to play (stopped) state
+	const playPauseBtn = $('#btnPlayPause');
+	if (playPauseBtn.length) {
+		playPauseBtn.html('&#9654;');
+		playPauseBtn.addClass('paused');
+		playPauseBtn.attr('title', 'Resume');
 	}
 }
 
@@ -108,6 +217,20 @@ function hideLoading() {
 	}
 }
 
+function resizeAssessmentChart() {
+	const chartWrapper = document.querySelector('.chartWrapper');
+	if (chartWrapper) {
+		const viewportHeight =
+			window.innerHeight || document.documentElement.clientHeight;
+		const minHeight = window.matchMedia('(max-width: 768px)').matches
+			? 360
+			: 420;
+		const targetHeight = Math.max(viewportHeight - 128, minHeight);
+		chartWrapper.style.height = targetHeight + 'px';
+	}
+	myChart && myChart.resize();
+}
+
 // Helper: Get quality level based on RSSI average
 function getQualityLevel(avg) {
 	if (
@@ -127,29 +250,6 @@ function getQualityLevel(avg) {
 // Helper: Check if model uses single chip
 function isSingleChipModel(model) {
 	return model && EXCLUDE_MODEL.includes(model);
-}
-
-// Helper: Get config from localStorage
-function getConfig() {
-	try {
-		const savedConfig = localStorage.getItem('interferenceMonitorConfig');
-		return savedConfig ? JSON.parse(savedConfig) : {};
-	} catch (e) {
-		console.error('Error parsing config:', e);
-		return {};
-	}
-}
-
-// Helper: Get current model
-function getCurrentModel(mode = currentMode) {
-	const config = getConfig();
-	let model = '';
-	if (mode === 'ac' && config.acModel) {
-		model = config.acModel.toUpperCase();
-	} else if (hash) {
-		model = hash.replaceAll('#', '').toUpperCase();
-	}
-	return model;
 }
 
 // Helper: Process and rearrange channels
@@ -197,31 +297,49 @@ function formatCellValue(value) {
 	return value === RSSI_NO_DATA ? '-' : value;
 }
 
-// Helper: Clear all assessment data
+// Helper: Clear all assessment data (but preserve Wi-Fi data)
 function clearAssessmentData() {
+	// Preserve Wi-Fi data by saving it before clearing
+	const preservedWifiRaw = wifiRaw;
+	const preservedWifiData = wifiData;
+	const preservedWifiTableData = wifiTableData;
+
+	// Clear Bluetooth assessment data only
 	max = [];
 	avg = undefined;
 	current = [];
 	table_mapping = {};
-	wifiRaw = {};
-	wifiData = [];
-	wifiTableData = [];
 	fetchData = 1;
 	isInitialLoad = true;
-	isInitialLoadAC = true;
+
+	// Restore preserved Wi-Fi data
+	wifiRaw = preservedWifiRaw;
+	wifiData = preservedWifiData;
+	wifiTableData = preservedWifiTableData;
+
 	// Clear timers
 	if (updateInterval) {
 		clearInterval(updateInterval);
 		updateInterval = null;
 	}
+	if (wifiUpdateInterval) {
+		clearInterval(wifiUpdateInterval);
+		wifiUpdateInterval = null;
+	}
 	if (assessmentTimeout) {
 		clearTimeout(assessmentTimeout);
 		assessmentTimeout = null;
 	}
-	// Clear table DOM so rows don't accumulate on re-config
+	// Clear Bluetooth table DOM only (preserve Wi-Fi table data)
 	$('#ble_table tbody').empty();
-	$('#wifi_table tbody').empty();
 	resetTimerDisplay();
+	// Reset play/pause button to pause state (running)
+	const playPauseBtn = $('#btnPlayPause');
+	if (playPauseBtn.length) {
+		playPauseBtn.html('&#9646;&#9646;');
+		playPauseBtn.removeClass('paused');
+		playPauseBtn.attr('title', 'Pause');
+	}
 }
 
 // Stop assessment: clear interval and send disable commands
@@ -230,63 +348,47 @@ function stopAssessment() {
 		clearInterval(updateInterval);
 		updateInterval = null;
 	}
+	if (wifiUpdateInterval) {
+		clearInterval(wifiUpdateInterval);
+		wifiUpdateInterval = null;
+	}
 	if (assessmentTimeout) {
 		clearTimeout(assessmentTimeout);
 		assessmentTimeout = null;
 	}
 	fetchData = 0;
+	wifiRequestInFlight = false;
 
-	const config = getConfig();
-	const mode = config.mode || 'local';
+	const request = getAssessmentRequest();
+	if (!request) {
+		stopTimerDisplay();
+		return;
+	}
+	const model = request.model || '';
+	const chipCount = isSingleChipModel(model) ? 1 : 2;
 
-	if (mode === 'ac') {
-		const acAddress = config.acAddress || sessionStorage.getItem('acAddress');
-		const token = config.acAuthToken || sessionStorage.getItem('acToken');
-		const gatewayMac = config.acGateway || sessionStorage.getItem('acGateway');
-		const model = sessionStorage.getItem('acModel') || '';
-		const chipCount = isSingleChipModel(model) ? 1 : 2;
-
-		if (acAddress && token && gatewayMac) {
-			for (let i = 0; i < chipCount; i++) {
-				$.ajax({
-					url: `${acAddress}/api/gap/channel/assessment?mac=${gatewayMac}&access_token=${token}`,
-					method: 'POST',
-					timeout: 5000,
-					headers: { 'Content-Type': 'application/json' },
-					data: JSON.stringify({ chip: i + '', enable: '0', mode: '0' }),
-				}).fail((error) => {
-					console.error(`Failed to disable assessment for chip ${i}:`, error);
-				});
-			}
-		}
-	} else {
-		const currentIp = (getwayIpInput && getwayIpInput.val()) || localStorage.getItem('gatewayIP');
-		const model = localStorage.getItem('localModel') || '';
-		const chipCount = isSingleChipModel(model) ? 1 : 2;
-
-		if (currentIp) {
-			for (let i = 0; i < chipCount; i++) {
-				$.ajax({
-					url: `http://${currentIp}/gap/channel/assessment`,
-					method: 'POST',
-					timeout: 5000,
-					headers: { 'Content-Type': 'application/json' },
-					data: JSON.stringify({ chip: i + '', enable: '0', mode: '0' }),
-				}).fail((error) => {
-					console.error(`Failed to disable assessment for chip ${i}:`, error);
-				});
-			}
-		}
+	for (let i = 0; i < chipCount; i++) {
+		$.ajax({
+			url: request.url,
+			method: 'POST',
+			timeout: 5000,
+			headers: { 'Content-Type': 'application/json' },
+			data: JSON.stringify({ chip: i + '', enable: '0', mode: '0' }),
+		}).fail((error) => {
+			console.error(`Failed to disable assessment for chip ${i}:`, error);
+		});
 	}
 
-	console.log('Assessment stopped (3-minute duration reached)');
+	console.log('Assessment complete (3-minute duration reached)');
 	if (typeof notificationManager !== 'undefined') {
-		notificationManager.info('Assessment Stopped', 'The 3-minute assessment period has completed. The gateway has reverted to normal status.');
+		notificationManager.info(
+			'Assessment Complete',
+			'The interference assessment has finished. The gateway has returned to normal working status.',
+			10000,
+		);
 	}
 	stopTimerDisplay();
 }
-
-// Loading overlay helpers
 
 // Global function for starting assessment - accessible from outside
 function startAssessment() {
@@ -324,105 +426,77 @@ function executeAssessment() {
 	// Reset any existing data
 	clearAssessmentData();
 
-	// Get configuration from localStorage
-	const config = getConfig();
-
-	// Determine if AC mode or local mode
-	const mode = config.mode || 'local';
-	currentMode = mode;
-
-	if (mode === 'ac') {
-		// AC Server mode - requires authentication
-		if (!config.acAddress || !config.acAuthToken || !config.acGateway) {
-			console.error('AC configuration incomplete');
-			alert(
-				'AC Server configuration is incomplete. Please test connection and select a gateway.',
-			);
-			return;
-		}
-		proceedWithAssessmentAC(
-			config.acAddress,
-			config.acAuthToken,
-			config.acGateway,
-		);
-	} else {
-		// Local mode
-		startAssessmentLocal();
+	const config = getInterferenceConfig();
+	if ((config.mode || 'local') === 'ac') {
+		startAssessmentWithAC(config);
+		return;
 	}
+
+	startAssessmentLocal();
 }
 
-// Proceed with assessment on AC Server
-function proceedWithAssessmentAC(acAddress, token, gatewayMac) {
-	showLoading('Starting interference assessment on AC Server...');
+function startAssessmentWithAC(config) {
+	const request = getAssessmentRequest();
+	if (!request) {
+		stopTimerDisplay();
+		return;
+	}
 
-	const model = getCurrentModel('ac');
-	const chipCount = isSingleChipModel(model) ? 1 : 2;
-
-	// Store chip count and model for periodic updates
-	sessionStorage.setItem('acChipCount', chipCount);
+	const model = getConfiguredModel(config);
 	sessionStorage.setItem('acModel', model);
+	showLoading('Starting interference assessment on AC Server...');
+	proceedWithAssessmentAC(request.url, model);
+}
 
-	// Reset AC initial load flag
-	isInitialLoadAC = true;
+function proceedWithAssessmentAC(assessmentUrl, model = '') {
+	const chipCount = isSingleChipModel(model) ? 1 : 2;
+	isInitialLoad = true;
 
-	// Stop any existing update interval
 	if (updateInterval) {
 		clearInterval(updateInterval);
 		updateInterval = null;
 	}
 
-	// Track how many chip requests have completed
 	let completedChips = 0;
 	let hasError = false;
 
-	// Start assessment on each chip
 	for (let i = 0; i < chipCount; i++) {
-		const chipIndex = i;
-		const settings = {
-			url: `${acAddress}/api/gap/channel/assessment?mac=${gatewayMac}&access_token=${token}`,
+		$.ajax({
+			url: assessmentUrl,
 			method: 'POST',
 			timeout: 5000,
 			headers: {
 				'Content-Type': 'application/json',
 			},
 			data: JSON.stringify({
-				chip: chipIndex + '',
+				chip: i + '',
 				enable: '1',
 				mode: '0',
 			}),
-		};
-
-		$.ajax(settings)
+		})
 			.fail((error) => {
 				completedChips++;
 				hasError = true;
-				console.error(
-					`AC Assessment start failed for chip ${chipIndex}:`,
-					error,
-				);
-				// Only hide loading when all chips have responded
+				console.error(`AC Assessment start failed for chip ${i}:`, error);
 				if (completedChips >= chipCount) {
 					hideLoading();
-					alert(
-						`Failed to start assessment on AC Server: ${error.statusText || 'Unknown error'}`,
+					stopTimerDisplay();
+				}
+				if (typeof notificationManager !== 'undefined') {
+					notificationManager.error(
+						'AC Assessment Failed',
+						error.statusText || 'Failed to start assessment on AC Server.',
+						5000,
 					);
 				}
 			})
-			.done(function (response) {
+			.done((response) => {
 				completedChips++;
-				console.log(
-					`Assessment started on AC Server for chip ${chipIndex}:`,
-					response,
-				);
-				// Store token and address for future requests
-				sessionStorage.setItem('acToken', token);
-				sessionStorage.setItem('acAddress', acAddress);
-				sessionStorage.setItem('acGateway', gatewayMac);
-				// Only proceed when all chips have responded
+				console.log(`Assessment started on AC Server for chip ${i}:`, response);
 				if (completedChips >= chipCount) {
 					hideLoading();
 					if (!hasError) {
-						startPeriodicUpdateAC(acAddress, token);
+						startPeriodicUpdate();
 					}
 				}
 			});
@@ -439,40 +513,76 @@ function startAssessmentLocal() {
 		localModelSelect = $('#localModel');
 	}
 
-	// Get the current IP from input field
-	const currentIp = getwayIpInput.val() || localStorage.getItem('gatewayIP');
+	// Get the current IP from input field (empty means use relative URL on gateway)
+	const currentIp = getConfiguredLocalIp();
 	const model =
 		localModelSelect.val() ||
-		(hash ? hash.replaceAll('#', '').toUpperCase() : '');
+		getConfiguredModel();
 
-	if (!currentIp) {
-		console.error('Gateway IP not configured');
-		alert('Please configure gateway IP in settings');
-		return;
-	}
+	// Build base URL: use relative path if no IP configured (running on gateway)
+	const baseUrl = currentIp ? `http://${currentIp}` : '';
 
-	// Check if there are connected devices before starting assessment
-	$.get(`http://${currentIp}/gap/nodes/?connection_state=connected`)
-		.done((response) => {
-			if (response?.nodes.length > 0) {
-				alert("Can't use this feature when the gateway has connected devices");
-				return;
-			}
-			// No connected devices, proceed with assessment
-			proceedWithAssessment(currentIp, model);
+	// First check local API availability, then check connected devices
+	$.ajax({
+		url: `${baseUrl}/gap/channel/assessment`,
+		method: 'GET',
+		timeout: 5000,
+	})
+		.done(() => {
+			// Local API is available, now check connected devices
+			$.get(`${baseUrl}/gap/nodes/?connection_state=connected`)
+				.done((response) => {
+					if (response?.nodes.length > 0) {
+						// Show the pre-assessment warning dialog so user can fix and retry
+						stopTimerDisplay();
+						startAssessment();
+						return;
+					}
+					proceedWithAssessment(currentIp, model);
+				})
+				.fail((error) => {
+					console.error('Error checking connected devices:', error);
+					// Connected devices check failed but API is up, proceed
+					proceedWithAssessment(currentIp, model);
+				});
 		})
 		.fail((error) => {
-			console.error('Error checking connected devices:', error);
-			// If check fails, still proceed with assessment
-			proceedWithAssessment(currentIp, model);
+			console.error('Local API check failed:', error);
+			hideLoading();
+			stopTimerDisplay();
+			if (error.status === 404) {
+				notificationManager.error(
+					'API Not Enabled',
+					'The gateway local API is not enabled. Please enable it in the gateway settings.',
+					5000,
+				);
+			} else if (error.status === 500) {
+				const respText = error.responseText || '';
+				if (respText.indexOf('incorrect mode') !== -1) {
+					// Show the pre-assessment warning dialog so user can fix and retry
+					startAssessment();
+				} else {
+					notificationManager.error(
+						'Gateway Error',
+						'The gateway returned an error: ' + respText,
+						5000,
+					);
+				}
+			} else {
+				notificationManager.error(
+					'Connection Failed',
+					'Cannot connect to the gateway. Please verify it is powered on and accessible.',
+					5000,
+				);
+			}
 		});
 }
 
 // Helper function to actually start the assessment
 function proceedWithAssessment(currentIp = '', model = '') {
 	// Determine model from hash if not provided (for local mode)
-	if (hash) {
-		model = hash.replaceAll('#', '').toUpperCase();
+	if (!model) {
+		model = getConfiguredModel();
 	}
 
 	const chipCount = isSingleChipModel(model) ? 1 : 2;
@@ -484,7 +594,7 @@ function proceedWithAssessment(currentIp = '', model = '') {
 	isInitialLoad = true;
 
 	// Show loading while starting assessment
-	showLoading('Starting interference assessment...');
+	showLoading('Evaluating environmental interference...');
 
 	// Stop any existing update interval
 	if (updateInterval) {
@@ -498,8 +608,9 @@ function proceedWithAssessment(currentIp = '', model = '') {
 
 	for (let i = 0; i < chipCount; i++) {
 		const chipIndex = i;
+		const baseUrl = currentIp ? `http://${currentIp}` : '';
 		const settings = {
-			url: `http://${currentIp}/gap/channel/assessment`,
+			url: `${baseUrl}/gap/channel/assessment`,
 			method: 'POST',
 			timeout: 5000,
 			headers: {
@@ -519,11 +630,28 @@ function proceedWithAssessment(currentIp = '', model = '') {
 				console.error(error);
 				if (completedChips >= chipCount) {
 					hideLoading();
+					stopTimerDisplay();
 				}
-				if (error.status === 404)
-					alert(
-						"Please open the local API on AC, or else the data can't be loaded",
+				if (error.status === 404) {
+					notificationManager.error(
+						'API Not Enabled',
+						'The gateway local API is not enabled. Please enable it in the gateway settings.',
+						5000,
 					);
+				} else if (error.status === 500) {
+					// "incorrect mode" means gateway is scanning or has connected devices
+					const respText = error.responseText || '';
+					if (respText.indexOf('incorrect mode') !== -1) {
+						// Show the pre-assessment warning dialog so user can fix and retry
+						startAssessment();
+					} else {
+						notificationManager.error(
+							'Gateway Error',
+							'The gateway returned an error: ' + respText,
+							5000,
+						);
+					}
+				}
 			})
 			.done(function (response) {
 				completedChips++;
@@ -580,51 +708,61 @@ function startPeriodicUpdate() {
 		stopAssessment();
 	}, ASSESSMENT_DURATION);
 
-	console.log('Periodic update started - updating every 3 seconds, auto-stop in 3 minutes');
+	console.log(
+		'Periodic update started - updating every 3 seconds, auto-stop in 3 minutes',
+	);
+
+	// Start Wi-Fi data periodic update
+	startWiFiPeriodicUpdate();
 }
 
-// Periodic update for AC Server
-function startPeriodicUpdateAC(acAddress, token) {
-	if (updateInterval) {
-		clearInterval(updateInterval);
-	}
-	if (assessmentTimeout) {
-		clearTimeout(assessmentTimeout);
+// Function to start periodic Wi-Fi data updates every 3 seconds
+function startWiFiPeriodicUpdate() {
+	if (wifiUpdateInterval) {
+		clearInterval(wifiUpdateInterval);
 	}
 
-	console.log('startPeriodicUpdateAC called, fetchData:', fetchData);
+	console.log('startWiFiPeriodicUpdate called');
 
-	// Initial update after delay
+	// Initial Wi-Fi data fetch after delay
 	setTimeout(() => {
-		console.log('Executing initial AC update');
-		if (fetchData === 1) {
+		if (typeof window.refreshWiFiData === 'function') {
+			console.log('Executing initial Wi-Fi data fetch');
 			try {
-				updateAssessmentDataAC(acAddress, token);
-				console.log('Initial AC update executed successfully');
+				window.refreshWiFiData();
 			} catch (error) {
-				console.error('Error during initial AC update:', error);
+				console.error('Error during initial Wi-Fi data fetch:', error);
 			}
 		}
 	}, UPDATE_DELAY);
 
-	// Then update every 3 seconds
-	updateInterval = setInterval(() => {
-		console.log('Executing periodic AC update, fetchData:', fetchData);
-		if (fetchData === 1) {
+	// Then update Wi-Fi data every 3 seconds
+	wifiUpdateInterval = setInterval(() => {
+		console.log('Executing periodic Wi-Fi data update');
+		if (typeof window.refreshWiFiData === 'function') {
 			try {
-				updateAssessmentDataAC(acAddress, token);
+				window.refreshWiFiData();
 			} catch (error) {
-				console.error('Error during periodic AC update:', error);
+				console.error('Error during periodic Wi-Fi data update:', error);
 			}
 		}
 	}, PERIODIC_UPDATE_INTERVAL);
 
-	// Auto-stop after 3 minutes
-	assessmentTimeout = setTimeout(() => {
-		stopAssessment();
-	}, ASSESSMENT_DURATION);
+	console.log('Wi-Fi periodic update started - updating every 3 seconds');
+}
 
-	console.log('Periodic AC update started - updating every 3 seconds, auto-stop in 3 minutes');
+function isTableViewActive() {
+	return $('#tableView').is(':visible');
+}
+
+function shouldFetchBleAssessment() {
+	if (!isTableViewActive()) return true;
+	return currentTable === 'ble_table';
+}
+
+function shouldFetchWifiAssessment() {
+	if (!isTableViewActive()) return true;
+	return currentTable === 'wifi_table';
 }
 
 // Global update function for assessment data
@@ -634,25 +772,31 @@ function updateAssessmentData() {
 		getwayIpInput = $('#gateway_ip');
 	}
 
-	const currentIp = getwayIpInput.val() || localStorage.getItem('gatewayIP');
-
-	if (!currentIp) {
-		console.error('Gateway IP not configured in updateAssessmentData()');
+	const request = getAssessmentRequest();
+	if (!request) {
+		stopTimerDisplay();
 		return;
 	}
 
-	console.log('updateAssessmentData executing with IP:', currentIp);
+	console.log(
+		'updateAssessmentData executing in mode:',
+		request.mode,
+	);
 
 	elapsedSeconds += 3;
 	updateTimerDisplay(elapsedSeconds);
 
+	if (!shouldFetchBleAssessment()) {
+		return;
+	}
+
 	// Only show loading on initial load, not on periodic updates
 	if (isInitialLoad) {
-		showLoading('Fetching Bluetooth data...');
+		showLoading('Collecting interference data...');
 	}
 
 	$.ajax({
-		url: `http://${currentIp}/gap/channel/assessment`,
+		url: request.url,
 		method: 'GET',
 		timeout: 5000,
 	})
@@ -662,7 +806,7 @@ function updateAssessmentData() {
 			}
 
 			let channels;
-			const model = localStorage.getItem('localModel') || '';
+			const model = request.model || '';
 
 			if (isSingleChipModel(model)) {
 				channels = _.concat(
@@ -670,15 +814,32 @@ function updateAssessmentData() {
 						return item;
 					}),
 				);
-			} else {
+			} else if (
+				Array.isArray(data?.chip0?.channels) &&
+				data.chip0.channels.length > 0 &&
+				Array.isArray(data?.chip1?.channels) &&
+				data.chip1.channels.length > 0
+			) {
 				channels = _.concat(
-					data?.chip0?.channels.slice(0, 20).map((item) => {
+					data.chip0.channels.slice(0, 20).map((item) => {
 						return item;
 					}),
-					data?.chip1?.channels.slice(20).map((item) => {
+					data.chip1.channels.slice(20).map((item) => {
 						return item;
 					}),
 				);
+			} else if (
+				Array.isArray(data?.chip0?.channels) &&
+				data.chip0.channels.length > 0
+			) {
+				channels = [...data.chip0.channels];
+			} else if (
+				Array.isArray(data?.chip1?.channels) &&
+				data.chip1.channels.length > 0
+			) {
+				channels = [...data.chip1.channels];
+			} else {
+				channels = [];
 			}
 
 			channels.splice(0, 0, channels[37]);
@@ -715,7 +876,8 @@ function updateAssessmentData() {
 						avgText;
 					if (k < 20) {
 						if (
-							data.chip0.mode === 1 &&
+							((data.chip0 && data.chip0.mode === 1) ||
+								(data.chip1 && data.chip1.mode === 1)) &&
 							k !== 0 &&
 							k !== 12 &&
 							k !== 18 &&
@@ -729,7 +891,7 @@ function updateAssessmentData() {
 						}
 					} else {
 						if (model && _.includes(EXCLUDE_MODEL, model)) {
-							if (data.chip0.mode === 1 && k !== 22 && k !== 39) {
+							if (data.chip0 && data.chip0.mode === 1 && k !== 22 && k !== 39) {
 								prr = Math.abs(currentData[k]) + '%';
 								currentText = '-';
 								maxText = '-';
@@ -737,7 +899,7 @@ function updateAssessmentData() {
 								quality = '-';
 							}
 						} else {
-							if (data.chip1.mode === 1 && k !== 22 && k !== 39) {
+							if (data.chip1 && data.chip1.mode === 1 && k !== 22 && k !== 39) {
 								prr = Math.abs(currentData[k]) + '%';
 								currentText = '-';
 								maxText = '-';
@@ -887,6 +1049,48 @@ function updateAssessmentData() {
 		})
 		.fail(function (error) {
 			console.error('Error fetching assessment data:', error);
+			if (error.status === 404) {
+				if (request.mode === 'local') {
+					notificationManager.error(
+						'API Not Enabled',
+						'The gateway local API is not enabled. Please enable it in the gateway settings.',
+						5000,
+					);
+				} else {
+					notificationManager.error(
+						'AC Request Failed',
+						'The AC Server did not return interference assessment data for the selected gateway.',
+						5000,
+					);
+				}
+				// Stop periodic updates since API is not available
+				if (updateInterval) {
+					clearInterval(updateInterval);
+					updateInterval = null;
+				}
+				if (assessmentTimeout) {
+					clearTimeout(assessmentTimeout);
+					assessmentTimeout = null;
+				}
+				stopTimerDisplay();
+			} else if (request.mode === 'local' && error.status === 500) {
+				const respText = error.responseText || '';
+				if (respText.indexOf('incorrect mode') !== -1) {
+					// Stop assessment since gateway state changed
+					if (updateInterval) {
+						clearInterval(updateInterval);
+						updateInterval = null;
+					}
+					if (assessmentTimeout) {
+						clearTimeout(assessmentTimeout);
+						assessmentTimeout = null;
+					}
+					fetchData = 0;
+					stopTimerDisplay();
+					// Show the pre-assessment warning dialog so user can fix and retry
+					startAssessment();
+				}
+			}
 			if (isInitialLoad) {
 				hideLoading();
 				isInitialLoad = false;
@@ -894,337 +1098,29 @@ function updateAssessmentData() {
 		});
 }
 
-// Global update function for AC Server assessment data
-function updateAssessmentDataAC(acAddress, token) {
-	// Fallback to sessionStorage if arguments are not provided
-	if (!acAddress) acAddress = sessionStorage.getItem('acAddress');
-	if (!token) token = sessionStorage.getItem('acToken');
-
-	if (!acAddress || !token) {
-		console.error('AC address or token missing in updateAssessmentDataAC');
-		return;
-	}
-
-	const model = sessionStorage.getItem('acModel') || '';
-	const gatewayMac = sessionStorage.getItem('acGateway') || '';
-
-	elapsedSeconds += 3;
-	updateTimerDisplay(elapsedSeconds);
-
-	const assessmentUrl = `${acAddress}/api/gap/channel/assessment?mac=${gatewayMac}&access_token=${token}`;
-
-	// Only show loading on initial load, not on periodic updates
-	if (isInitialLoadAC) {
-		showLoading('Fetching Bluetooth data...');
-	}
-
-	$.ajax({
-		url: assessmentUrl,
-		method: 'GET',
-		timeout: 5000,
-	})
-		.done(function (data) {
-			if (current.length >= 20) {
-				current.shift();
-			}
-
-			let channels;
-
-			if (model && _.includes(EXCLUDE_MODEL, model)) {
-				channels = _.concat(
-					data?.chip0?.channels.map((item) => {
-						return item;
-					}),
-				);
-			} else {
-				channels = _.concat(
-					data?.chip0?.channels.slice(0, 20).map((item) => {
-						return item;
-					}),
-					data?.chip1?.channels.slice(20).map((item) => {
-						return item;
-					}),
-				);
-			}
-
-			channels.splice(0, 0, channels[37]);
-			channels.splice(38, 1);
-			channels.splice(12, 0, channels[38]);
-			channels.splice(39, 1);
-			current.push(channels);
-
-			avg = _.zipWith(...current, (...items) => {
-				return _.ceil(_.sum(items) / items.length);
-			});
-			max = _.zipWith(...current, (...items) => {
-				return _.max(items);
-			});
-			let tableView = $(`#${currentTable} tbody`);
-			if (currentTable === 'ble_table') {
-				let quality = '',
-					currentData = _.last(current);
-				for (let k in currentData) {
-					k = Number(k);
-					if (avg[k] >= -100 && avg[k] < -70) {
-						quality = 'highest';
-					} else if (avg[k] >= -70 && avg[k] < -60) {
-						quality = 'high';
-					} else if (avg[k] >= -60 && avg[k] < -50) {
-						quality = 'medium';
-					} else if (avg[k] >= -50 && avg[k] < -30) {
-						quality = 'low';
-					}
-
-					let prr = '-',
-						currentText,
-						maxText,
-						avgText;
-					if (k < 20) {
-						if (
-							data.chip0.mode === 1 &&
-							k !== 0 &&
-							k !== 12 &&
-							k !== 18 &&
-							k !== 19
-						) {
-							prr = Math.abs(currentData[k]) + '%';
-							currentText = '-';
-							maxText = '-';
-							avgText = '-';
-							quality = '-';
-						}
-					} else {
-						if (model && _.includes(EXCLUDE_MODEL, model)) {
-							if (data.chip0.mode === 1 && k !== 22 && k !== 39) {
-								prr = Math.abs(currentData[k]) + '%';
-								currentText = '-';
-								maxText = '-';
-								avgText = '-';
-								quality = '-';
-							}
-						} else {
-							if (data.chip1.mode === 1 && k !== 22 && k !== 39) {
-								prr = Math.abs(currentData[k]) + '%';
-								currentText = '-';
-								maxText = '-';
-								avgText = '-';
-								quality = '-';
-							}
-						}
-					}
-
-					if (currentData[k] === -100) {
-						currentText = '-';
-					} else {
-						currentText = currentData[k];
-					}
-					if (max[k] === -100) {
-						maxText = '-';
-					} else {
-						maxText = max[k];
-					}
-
-					if (avg[k] === -100) {
-						avgText = '-';
-						quality = '-';
-					} else {
-						avgText = avg[k];
-					}
-
-					let index = '';
-					if (k === 0) {
-						index = 37;
-					} else if (k === 12) {
-						index = 38;
-					} else if (k === 39) {
-						index = 39;
-					} else {
-						if (k < 13) index = k - 1;
-						else index = k - 2;
-					}
-					let rawHtml = `<tr>
-                        <td>${index}</td>
-                        <td>${maxText}</td>
-                        <td>${currentText}</td>
-                        <td>${avgText}</td>
-                        <td>${prr}</td>
-                        <td><div class="${
-													quality === '-' ? '' : quality
-												}">${quality}</div></td>
-                    </tr>`;
-					if (table_mapping[k] !== undefined) {
-						let qualityView = $(
-							`#ble_table > tbody > tr:nth-child(${k + 1}) > td:nth-child(6)`,
-						);
-						tableView[0].rows[k].cells[1].innerText = maxText;
-
-						tableView[0].rows[k].cells[2].innerText = currentText;
-
-						tableView[0].rows[k].cells[3].innerText = avgText;
-
-						tableView[0].rows[k].cells[4].innerText = prr;
-
-						qualityView.text('');
-						qualityView.append(
-							`<div class="${quality === '-' ? '' : quality}">${quality}</div>`,
-						);
-					} else {
-						tableView.append(rawHtml);
-						table_mapping[k] = max[k];
-					}
-				}
-			}
-
-			myChart &&
-				myChart.setOption({
-					yAxis: {
-						max: -30,
-						type: 'value',
-						interval: 5,
-					},
-					series: [
-						{
-							data: max,
-							stack: stack,
-							smooth: true,
-						},
-						{
-							data: avg,
-							stack: stack,
-							smooth: true,
-							areaStyle: {
-								origin: 'start',
-								color: {
-									type: 'linear',
-									x: 0,
-									y: 1,
-									x2: 0,
-									y2: 0,
-									colorStops: [
-										{
-											offset: 0,
-											color: '#4C84FF',
-										},
-										{
-											offset: 0.4,
-											color: '#90cc7d',
-										},
-										{
-											offset: 0.6,
-											color: '#f3aa3d',
-										},
-										{
-											offset: 1,
-											color: '#e4514b',
-										},
-									],
-									globalCoord: false,
-								},
-							},
-						},
-						{
-							data: _.last(current),
-							stack: stack,
-							smooth: true,
-						},
-						{
-							type: 'scatter',
-							name: 'Wi-Fi AP',
-							xAxisIndex: 1,
-							data: wifiData,
-							symbolSize: 12,
-							colorBy: 'data',
-							symbol:
-								'image://data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAADFw8lbAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAKqADAAQAAAABAAAAKgAAAADUGqULAAAGbElEQVRYCe1YaWxUVRS+5810I5RSYiBlsWqJsiRGBSOyuEAAUUNCf5RoAqE8OqWSahsTF1yCS+ISlyKEtsPMlIAxsT/EIBRKBYzUuqIEExGCAakBQ4iKQIGZee/6nenc6Xtv3iwtaUIiN5l59571u+eeuwpxvfxPI0BX0++ampriyxHzEWGKuZLEjULI0SRoNNuUQp4Sgk6RFCeFJjryc7QdjY2Nfw/U34CALq9auUiaZi2AzJJSerNxTkRRwN9PmrYutLFpazY6Vpl+AdX1lTNMab4thZhuNdLfOpx2aaQ9Eww2fZWtblZAW1tbPTvb97yL6D2VreFs5BDltQvmz3m6oqLCyCSfEWhdXd3wc+cvtQLk3EzGBsIH2I6iwoKKhoaGf9LppwXaC7KnS0oxMZ2Rq+URicNFhUOmpwOrpXLCw90bycEFyf45EOyLfabCk5IxdNiI9zHcj6dSHAR62bHfjhcd/OnALjfbrkPPs9uQZqebwmDTPKTNdFsNXIeel6DBBpTKfirfSRHlxdw0zE9SGUqm0wkY+VKQ7CZJfxDJP02iAuRdMWZ0sZDmJCnpfmTimGRdd4rm0cqdm0LSrtK747gbsFB/1TQR0IS3LRDYcNhCT1n1+XxlEUNbiLx/EqBvSikIRhyDbfeyRTS2d4fNMzCW1AE2jH38F+zbr5eOLfl4zZo1ptMZ9Ki+vr7owgWZN2/ejLNuC3ls89i9ZxFkX8CB4A6njZgfbLf5udpI69nABhSTaAkm0WanMta5CGCuLh1X8p4VYGV19SQy5AIM833AOA1yNwCAynsD7dPQQ8RpJ9KiLRRqPKJsw4739+7TqxG/F6Gfo+jqi0m1FJNqi2rbgC7TfZvRyyWKGfuSOOklz+JAoPEbbnPUVqyoftgQVI/GHJtshgacdeH3Sijk361EK32+u4RBH8HubYoW+5LYsinoX6poqvfxNo1TDPXVpFivQOr6qtLl+srPDSm2u4HE5LmC/DgOMD8jTbph46Kyw18+zCBf2pfp1Z26/sR4prX4/T8i4s1ctxc7FmdEj8DarXYFYWjCUy7JKAZ9HYapUPEBLAr5zzDj23I8Yndzc3M3aMDTVzCJJkQMMRNy5WA8BE7cJ/1LmvAJoovSMD8F3b75kDiKiCaibANaqVefxxAM7XPTW+McteZRrE0UzPfSW01NTSec8qnaHEVTRJ+FLR0yMd9O20oXHb7QEmxOBMV1dith9XWAPIaJ8RiM/KD4tbW1eT094XtwVrsX7seQlMMQwXOIVjcmRefYsaO+40kYDG44Bp2qyqqaD4VpBGB3vNW2stf7BcdSbBHFZHIb+oQ456CHciYGAuuPMxHDWhI2qR7AdJgdkRB0VBC1s+CvL8jzfKCWnKqqVZOjZvSQZZWwa6UbeiT5PkySB+wa9hZ69n1Bvnf25bCx2DTlO+AO75VAzpH4FoBOQoYn6Wjk7jS0i5QF8P8CQ8/Pz9l/8VKkE/QJipf0JfpiU7D5QUV3DL3kmZq2YDzu7rkSPYqhLYkJkjioadqrXjK3+/1+rLd9hRf3XR17F6JDWNzlFI460mNrz+UILn7oSJoSuxRa+DagHqF1GMJcYuG7V+MgkQpv4CrxktsOxIpx+lYA3oarzPMY5teYDsBpQbIM31xj3/ifDagQBTuIeqIw6KBbVax1WahALltRMwubNHfyFgz9EMA5QJqnLbSxcSfLVC73xVPEqu9eRwCifL22cmHTXip13170OJEbdq5r600s7nfiHj/fjYu83IaV6CA6/7Ib340GnX0tQf9sKy8pcnzvxgLcH6DPAWTMJhxEpKBDWAWAnSYDXB46vRDRxS/7whic0o4tVAg+ByLMXU7BTG0M19fYnUoxU6e2hPxTcjzyZqDdm0nPyWffzrMoyyQBjRHxOOA0kKmN6N0ejVLicIw0H4U4T82k5+Tzw4STxm10wL1gO22A834+ONCZXK+cjuXKwJtUV2IJc3eRRMWorMWOV5fEAME1oizILxhQtC0RbgbsNDkybIj2KxG5awAgO9in3V5fKyVQXlL4BQMTJKurRsKkFGUYicSpJ0FPU2Ef7EstdW6iKYGyML9c8AtG/yPr5sqdxrYzvZKwZsoctZqN3XOu9UcyK+Br/tnRCpbr1/xDrhMwX6/DYfkoDjJ4kuQ7TvLTOGjdfNjJzaXt6izqtHO9fT0CaSLwH/hOrkjjL5MnAAAAAElFTkSuQmCC',
-							label: {
-								show: true,
-								position: 'right',
-								formatter: (params) => params.name,
-								color: '#636466',
-								fontSize: 12,
-							},
-						},
-					],
-				});
-			if (isInitialLoadAC) {
-				hideLoading();
-				isInitialLoadAC = false;
-			}
-		})
-		.fail((error) => {
-			console.error('Error fetching AC assessment data:', error);
-			if (isInitialLoadAC) {
-				hideLoading();
-				isInitialLoadAC = false;
-			}
-		});
-}
-// if (hash && hash.toUpperCase().includes(EXCLUDE_MODEL)) {
-//     $("#chartView").hide();
-//     $("#btnChart").hide();
-// }
-// $.ajax({
-//     url: "/cassia/info",
-//     type: "GET",
-//     dataType: "json", // or the data type you expect (e.g., "xml", "html", "text")
-//     success: function (data) {},
-//     error: function (jqXHR) {
-//         console.error(
-//             "Request failed: " + jqXHR.status + ", " + jqXHR.statusText
-//         );
-//         window.location = "/cassia/login";
-//     },
-// });
 $(document).ready(function () {
-	function isValidIP(ip) {
-		const ipPattern =
-			/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-		return ipPattern.test(ip);
-	}
+	getwayIpInput = $('#gateway_ip'); // Initialize global variable (may not exist in DOM)
+	localModelSelect = $('#localModel'); // Initialize global variable (may not exist in DOM)
 
-	getwayIpInput = $('#gateway_ip'); // Initialize global variable
-	localModelSelect = $('#localModel');
+	// Gateway login check - redirect to login page if not authenticated
+	// $.ajax({
+	// 	url: '/cassia/info',
+	// 	type: 'GET',
+	// 	dataType: 'json',
+	// 	success: function (data) {},
+	// 	error: function (jqXHR) {
+	// 		console.error(
+	// 			'Request failed: ' + jqXHR.status + ', ' + jqXHR.statusText,
+	// 		);
+	// 		window.location = '/cassia/login';
+	// 	},
+	// });
 
-	// 页面加载时从 localStorage 加载内容到输入框
-	const gatewayIpls = localStorage.getItem('gatewayIP');
-	if (gatewayIpls !== null) {
-		getwayIpInput.val(gatewayIpls);
-	}
-	const localModelValue = localStorage.getItem('localModel');
-	if (localModelValue) {
-		localModelSelect.val(localModelValue);
-	}
-
-	getwayIpInput.on('blur', function () {
-		const ip = $(this).val();
-		const $error = $('#error');
-
-		// 清除之前的错误信息
-		$error.text('');
-		getwayIpInput.removeClass('input-error');
-
-		if (!isValidIP(ip)) {
-			$error.text('Invalid IP address.');
-			getwayIpInput.addClass('input-error');
-		} else {
-			const inputValue = getwayIpInput.val();
-			localStorage.setItem('gatewayIP', inputValue);
-		}
-	});
-
-	// Define ip as a getter to always use the current value from input
-	Object.defineProperty(window, 'gatewayIp', {
-		get: function () {
-			return getwayIpInput.val() || localStorage.getItem('gatewayIP') || '';
-		},
-		set: function (value) {
-			getwayIpInput.val(value);
-			localStorage.setItem('gatewayIP', value);
-		},
-		configurable: true,
-	});
-
-	let ip = getwayIpInput.val();
+	// Auto-start assessment on page load
+	setTimeout(() => {
+		console.log('Auto-starting assessment on page load');
+		executeAssessment();
+	}, 500);
 
 	$('#btnTable').bind('click', function () {
 		$('#chartView').hide();
@@ -1237,25 +1133,9 @@ $(document).ready(function () {
 		$('#tableView').hide();
 		$('#chartView').show();
 
-		// Determine which update function to call based on mode
-		const savedConfig = localStorage.getItem('interferenceMonitorConfig');
-		let mode = 'local';
-		if (savedConfig) {
-			try {
-				const config = JSON.parse(savedConfig);
-				mode = config.mode || 'local';
-			} catch (e) {
-				console.error('Error parsing config for chart update:', e);
-			}
-		}
+		updateAssessmentData();
 
-		if (mode === 'ac') {
-			updateAssessmentDataAC();
-		} else {
-			updateAssessmentData();
-		}
-
-		$('.chartWrapper').height(window.innerHeight - 120);
+		resizeAssessmentChart();
 		if (!myChart) myChart = echarts.init(document.querySelector('#chart'));
 		myChart && myChart.setOption(option);
 		myChart.resize();
@@ -1269,21 +1149,6 @@ $(document).ready(function () {
 		$('#control').show();
 		$('#btnTable').removeAttr('disabled');
 	});
-	$('#btnClear').bind('click', () => {
-		((max = []), (avg = []), (current = []));
-		for (let i = 0; i < option.series.length; i++) {
-			option.series[i].data = [];
-		}
-		myChart && myChart.setOption(option, true);
-		resetTimerDisplay();
-
-		// Clear any existing update interval when clearing data
-		if (updateInterval) {
-			clearInterval(updateInterval);
-			updateInterval = null;
-			console.log('Update interval cleared');
-		}
-	});
 	$('#control').bind('click', function () {
 		if ($('#control').hasClass('a')) {
 			fetchData = 0;
@@ -1293,6 +1158,33 @@ $(document).ready(function () {
 			fetchData = 1;
 			$('#control').removeClass('b');
 			$('#control').addClass('a');
+		}
+	});
+	$('#btnPlayPause').bind('click', function () {
+		const btn = $(this);
+		if (fetchData === 1 && updateInterval) {
+			// Pause (assessment is running)
+			fetchData = 0;
+			btn.html('&#9654;'); // play triangle
+			btn.addClass('paused');
+			btn.attr('title', 'Resume');
+			const timerDisplay = document.getElementById('timerDisplay');
+			if (timerDisplay) {
+				timerDisplay.classList.remove('running');
+			}
+		} else if (!updateInterval) {
+			// Assessment has stopped — restart
+			startAssessment();
+		} else {
+			// Resume (assessment is paused)
+			fetchData = 1;
+			btn.html('&#9646;&#9646;'); // pause bars
+			btn.removeClass('paused');
+			btn.attr('title', 'Pause');
+			const timerDisplay = document.getElementById('timerDisplay');
+			if (timerDisplay) {
+				timerDisplay.classList.add('running');
+			}
 		}
 	});
 
@@ -1320,107 +1212,105 @@ $(document).ready(function () {
 	let wifi2g;
 
 	function getWiFiData() {
-		let config = {};
-		try {
-			const savedConfig = localStorage.getItem('interferenceMonitorConfig');
-			if (savedConfig) {
-				config = JSON.parse(savedConfig);
-			}
-		} catch (e) {
-			console.error('Error parsing config:', e);
+		if (!shouldFetchWifiAssessment()) {
+			return;
 		}
 
-		const mode = config.mode || 'local';
-		let settings;
+		if (wifiRequestInFlight) {
+			return;
+		}
+		wifiRequestInFlight = true;
 
-		if (mode === 'ac') {
-			const acAddress = config.acAddress;
-			const acToken = config.acAuthToken;
-			const acGateway = config.acGateway;
+		const request = getAssessmentRequest(true);
+		if (!request) {
+			wifiRequestInFlight = false;
+			return;
+		}
+		const settings = {
+			url: request.url,
+			method: 'GET',
+			timeout: 5000,
+		};
 
-			if (!acAddress || !acToken || !acGateway) {
-				console.error('AC configuration incomplete for WiFi data');
-				return;
-			}
-			settings = {
-				url: `${acAddress}/api/gap/channel/assessment?mac=${acGateway}&access_token=${acToken}&wifi=1`,
-				method: 'GET',
-			};
-		} else {
-			const currentIp =
-				getwayIpInput.val() || localStorage.getItem('gatewayIP');
-			if (!currentIp) {
-				console.error('Gateway IP not configured');
-				return;
-			}
-			settings = {
-				url: `http://${currentIp}/gap/channel/assessment?wifi=1`,
-				method: 'GET',
-			};
+		// Show loading only on first fetch
+		const isFirstFetch = _.isEmpty(wifiRaw) || _.isEmpty(wifi2g);
+		if (isFirstFetch) {
+			showLoading('Scanning for Wi-Fi interference...');
 		}
 
-		if (_.isEmpty(wifiRaw) || _.isEmpty(wifi2g)) {
-			// Show loading animation
-			showLoading('Fetching Wi-Fi data...');
-
-			// Ensure we have a timeout and error handling
-			if (!settings.timeout) settings.timeout = 5000;
-
-			$.ajax(settings)
-				.done(function (response) {
-					wifiRaw = response;
-					wifi2g = wifiRaw.wifi.results.filter((item) => {
-						return item.channel < 14;
-					});
-
-					wifi2g.forEach((item) => {
-						// {value: [2,9.8] , name: 'value1'},
-						wifiData.push({
-							value: [wifiChannelIndex[item.channel], item.signal],
-							name: item.ssid,
-						});
-						let wpaStr =
-							'WPA' +
-							(item?.encryption?.wpa && item.encryption?.wpa.length >= 2
-								? '/WPA2'
-								: '');
-						let authenticationStr = `${
-							(item.encryption?.authentication &&
-								item.encryption?.authentication[0]) ||
-							''
-						} ${
-							(item.encryption?.authentication &&
-								item.encryption?.authentication[1]) ||
-							''
-						}`.toUpperCase();
-						let ciphersStr = `${
-							(item.encryption?.ciphers && item.encryption.ciphers[0]) || ''
-						} ${
-							(item.encryption?.ciphers && item.encryption.ciphers[1]) || ''
-						}`.toUpperCase();
-
-						wifiTableData.push({
-							bssid: item.bssid,
-							ssid: item.ssid || 'unknown',
-							channel: item.channel,
-							mode: item.mode,
-							signal: item.signal,
-							encryption: `${wpaStr} ${authenticationStr} (${ciphersStr})`,
-						});
-					});
-					render();
-
-					// Hide loading animation
-					hideLoading();
-				})
-				.fail(function (error) {
-					console.error('Error fetching Wi-Fi data:', error);
-					hideLoading();
+		$.ajax(settings)
+			.done(function (response) {
+				wifiRaw = response;
+				wifi2g = wifiRaw.wifi.results.filter((item) => {
+					return item.channel < 14;
 				});
-		} else {
-			render();
-		}
+
+				// Clear previous data for fresh update
+				wifiData.length = 0;
+				wifiTableData.length = 0;
+
+				wifi2g.forEach((item) => {
+					// {value: [2,9.8] , name: 'value1'},
+					wifiData.push({
+						value: [wifiChannelIndex[item.channel], item.signal],
+						name: item.ssid,
+					});
+					let wpaStr =
+						'WPA' +
+						(item?.encryption?.wpa && item.encryption?.wpa.length >= 2
+							? '/WPA2'
+							: '');
+					let authenticationStr = `${
+						(item.encryption?.authentication &&
+							item.encryption?.authentication[0]) ||
+						''
+					} ${
+						(item.encryption?.authentication &&
+							item.encryption?.authentication[1]) ||
+						''
+					}`.toUpperCase();
+					let ciphersStr = `${
+						(item.encryption?.ciphers && item.encryption.ciphers[0]) || ''
+					} ${
+						(item.encryption?.ciphers && item.encryption.ciphers[1]) || ''
+					}`.toUpperCase();
+
+					wifiTableData.push({
+						bssid: item.bssid,
+						ssid: item.ssid || 'unknown',
+						channel: item.channel,
+						mode: item.mode,
+						signal: item.signal,
+						encryption: `${wpaStr} ${authenticationStr} (${ciphersStr})`,
+					});
+				});
+				render();
+
+				// Hide loading animation on first fetch
+				if (isFirstFetch) {
+					hideLoading();
+				}
+			})
+			.fail(function (error) {
+				console.error('Error fetching Wi-Fi data:', error);
+				if (isFirstFetch) {
+					hideLoading();
+				}
+				if (request.mode === 'local' && error.status === 404) {
+					notificationManager.error(
+						'API Not Enabled',
+						'The gateway local API is not enabled. Please enable it in the gateway settings.',
+						5000,
+					);
+				}
+			})
+			.always(function () {
+				wifiRequestInFlight = false;
+			});
 	}
+
+	// Expose getWiFiData globally for periodic updates
+	window.refreshWiFiData = getWiFiData;
 
 	function render() {
 		if (currentTable === 'ble_table') return;
@@ -1989,6 +1879,6 @@ koDjJ4kuQ7TvLTOGjdfNjJzaXt6izqtHO9fT0CaSLwH/hOrkjjL5MnAAAAAElFTkSuQmCC" alt="" /
 	};
 
 	window.onresize = function () {
-		myChart && myChart.resize();
+		resizeAssessmentChart();
 	};
 });
