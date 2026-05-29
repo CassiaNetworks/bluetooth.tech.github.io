@@ -399,7 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		// deviceInfo.children('p').eq(7).html("duration:" + connDevice[node].times);
 		let deviceInfo = $('#conn_tab tbody');
 		$('#' + mac).html(
-			`<div style="position: relative;width: 700px; overflow: auto; white-space:nowrap;">${connDevice[
+			`<div style="position: relative;width: 100%; max-width: 100%; overflow: auto; white-space:nowrap;">${connDevice[
 				node
 			].times.join(',')}</div>`,
 		);
@@ -460,7 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		// deviceInfo.children('p').eq(7).html("duration:" + connDevice[node].times);
 		let deviceInfo = $('#conn_tab tbody');
 		$('#' + mac).html(
-			`<div style="position: relative;width: 700px; overflow: auto; white-space:nowrap;">${connDevice[
+			`<div style="position: relative;width: 100%; max-width: 100%; overflow: auto; white-space:nowrap;">${connDevice[
 				node
 			].times.join(',')}</div>`,
 		);
@@ -576,7 +576,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		rssiDiv.style.position = 'relative';
 		rssiDiv.style.width = '100%';
 		rssiDiv.style.overflow = 'auto';
-		rssiDiv.style['max-width'] = '800px';
+		rssiDiv.style['max-width'] = '100%';
 		rssiDiv.style['white-space'] = 'nowrap';
 		rssiDiv.innerHTML = deviceData.rssiArr.join(',');
 
@@ -611,7 +611,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${val}</td>
                 <td>${deviceMac}</td>
                 <td>${type === 'scan' ? _escape(name) : ''}</td>
-                <td></td
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>

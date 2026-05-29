@@ -3,19 +3,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width， initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Cassia Deployment Tool</title>
     <style type="text/css">
         .btn {
             cursor: pointer;
             margin-top: .5em;
             margin-bottom: .5em;
-            width: 29%;
+            min-width: 8.5rem;
             background: #0089FF;
             color: white;
             border: none;
             border-radius: .3em;
             font-size: 1.2em;
+            padding: .45em 1em;
         }
 
         button[disabled]{
@@ -25,6 +26,52 @@
 
         #scan_tab{
             width: 100%;
+            min-width: 640px;
+        }
+
+        body {
+            margin: 0;
+            color: #333;
+            font-family: 'PingFang SC', Arial, 'Hiragino Sans GB', sans-serif;
+            background: #f5f7fa;
+        }
+
+        input,
+        select,
+        button {
+            box-sizing: border-box;
+            max-width: 100%;
+        }
+
+        .mobile-controls {
+            width: min(720px, calc(100% - 24px));
+            margin: 1.5em auto 1em;
+            text-align: center;
+            background: #fff;
+            border: 1px solid #DFE6EE;
+            border-radius: 8px;
+            padding: 1em;
+            box-sizing: border-box;
+        }
+
+        .mobile-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: .5em;
+            margin-top: .5em;
+        }
+
+        .mobile-row input,
+        .mobile-row select {
+            min-height: 2.3em;
+        }
+
+        .mobile-table {
+            width: min(100%, 100vw);
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            background: #fff;
         }
 
         table.center {
@@ -50,16 +97,33 @@
             border: none;
         }*/
         table tbody {
-            display: row;
             width: calc(100% + 1px);
-            height: 300px;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
+        }
+
+        @media (max-width: 520px) {
+            .mobile-controls {
+                width: calc(100% - 16px);
+                margin-top: .75em;
+                padding: .75em;
+            }
+
+            .mobile-row {
+                align-items: stretch;
+            }
+
+            .mobile-row input,
+            .mobile-row select,
+            .btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div style="height: 20%; width: 100%; margin-top: 1.5em; text-align: center;">
+    <div class="mobile-controls">
+        <div class="mobile-row">
         <select id="devtype">
             <option value="tBeacon">T100</option>
             <option value="cgm">CGM</option>
@@ -67,16 +131,17 @@
             <option value="cmac" i18n="deployment.deviceMac">Device MAC</option>
         </select>
         <input id="rule" type="text" value="tBeacon" placeholder="mac or name support *" readonly>
-        <div style="margin-top: .5em">
+        </div>
+        <div class="mobile-row">
             <select id="select_route">
             </select>
             <input id="hubMac" type="text" value="" readonly>        
         </div>
-        <div style="margin-top: 1.2em"><label i18n='deployment.scanDuration'>Scan Time </label><input id="scanTimeout" type="text" value="60" style="width: 3.6em;text-align: center;"></div>
+        <div class="mobile-row"><label i18n='deployment.scanDuration'>Scan Time </label><input id="scanTimeout" type="text" value="60" style="width: 3.6em;text-align: center;"></div>
         <button class="btn" id="startScan" i18n="deployment.startScan">Start Scan</button>
     </div>
 
-    <div style="height: 80%;">
+    <div class="mobile-table">
         <table id="scan_tab">
             <thead>
                 <tr>
