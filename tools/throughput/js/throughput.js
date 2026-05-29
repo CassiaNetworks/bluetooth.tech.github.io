@@ -78,6 +78,15 @@ const ids = {};
 let updateInterval = null;
 let currentConfig = null;
 
+function isStackedLayout() {
+    return window.matchMedia("(max-width: 1100px)").matches;
+}
+
+function resizeCharts() {
+    chart && chart.resize();
+    chart2 && chart2.resize();
+}
+
 $(document).ready(function() {
     function isValidIP(ip) {
         const ipPattern = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
@@ -191,9 +200,13 @@ $(document).ready(function() {
                 "src",
                 "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAACCklEQVRYCe2WP0gCcRTH70xrCnRrSAKzCIKg3CKCIB0MbspBHIxamlpaC5zb+jMLDrVYgVuY4OTc5qZLtAWOSqDX95nv+N3d7y5v6Bzy4Hh37/e+7/vxh7/HKcr0+u87oFo3IJVKHeq6ng2Hw9lyufxlXZe9Q5MbDAapSCRyDE1fVuOUmxEX0OgE5iXc671ebyuRSDw2m03XhmROGvTZhGYZmgo0utjX7dkASCaT52h0h+LASLD6GwSbQ8d9NrxCsJmCJmEJ6UGn03nOZDKzkjVKzUFn9BjV5KApQcNQDtKftFHUbrfrsVgsiPSuReG4E61W6y0ej78DQoNG/D+NvRMGAJlOAsIEMAkIG4DfEFIAPyEcAfyCcAXwA8J6hsnTdtVqtUtVVa9sC4pCc+IJx1A8gsOyarVaDAQCpxINzYki58cC0DRtHoIdFokRJlXA2UZvoVAIAmxfrKVn1PZJw3kbOS9wJPNut/uCZtuc44hGZ/ilt/zOkcwbjcYDNBnOUSRz3Hlo7jnvCvDX5kMoJrFGP8wdAfwylwL4aW4D8NvcBDAJcwIwJmE0Gq3gfY+S4uV01KgmFArd4KgdifWyoyauW5+NQQSjCyx+igVu5qO6a8QP1ng1J51pDuAbbw2/6BX34hjmQ198S66gvg7zBeuQYTBPMZ1OLwEk70VEELhNU8+Lflr7v3fgG29qB1D+remzAAAAAElFTkSuQmCC"
             );
-            chartContainerEle.css("flex", "4");
+            if (!isStackedLayout()) {
+                chartContainerEle.css("flex", "4");
+            }
         } else {
-            chartContainerEle.css("flex", "9");
+            if (!isStackedLayout()) {
+                chartContainerEle.css("flex", "9");
+            }
             // 隐藏需要隐藏的列
             const columnsToHide = [5, 6, 7, 8, 9];
 
@@ -213,8 +226,7 @@ $(document).ready(function() {
             );
             columnsHidden = true;
         }
-        chart.resize();
-        chart2.resize();
+        resizeCharts();
     });
 
     function toggleCheckboxes(checked) {
@@ -300,8 +312,12 @@ $(document).ready(function() {
 
     window.addEventListener("resize", function() {
         // 更新图表的大小
-        chart.resize();
-        chart2.resize();
+        if (isStackedLayout()) {
+            $(".chartContainer").css("flex", "");
+        } else {
+            $(".chartContainer").css("flex", columnsHidden ? "9" : "4");
+        }
+        resizeCharts();
         console.log("window resize event triggered");
     });
 
