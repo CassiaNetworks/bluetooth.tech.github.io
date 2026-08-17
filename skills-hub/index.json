@@ -1,0 +1,90 @@
+{
+  "format": 1,
+  "generated_at": "2026-08-17T16:22:03.850Z",
+  "skills": [
+    {
+      "name": "gdb",
+      "version": "1.0.0",
+      "description": "Bundled gdb debugger for the gateway, focused on live processes—attach to a running pid, capture a backtrace after a crash/segfault, or snapshot a hung/unresponsive process. Use when the user says \"process crashed / segfault / stuck and not responding / no idea why it died / get a backtrace / attach to pid / dump the stack\".",
+      "when_to_use": "When you need to debug a process that is currently running on the gateway—attach by pid to grab a stack trace, inspect threads of a hung process, or take a core snapshot for offline analysis.",
+      "author": "Cassia Networks <https://www.cassianetworks.com>",
+      "tags": [
+        "debug"
+      ],
+      "env": [
+        "gateway"
+      ],
+      "sha256": "99dce95d87e54a5d4389439b72b4dc658b1844240dc4585121c73800d13a6a4f",
+      "size": 1482486,
+      "url": "skill-packages/gdb.zip",
+      "icon": "skill-icons/gdb.png"
+    },
+    {
+      "name": "mbpoll",
+      "version": "1.2.0",
+      "description": "Bundled mbpoll command-line client for reading, writing, and verifying any Modbus TCP slave (coils and registers) from the shell. Use when the user says \"Modbus reads nothing / values are all zero / register addresses don't line up / verify port 502 / read or write coils and registers\".",
+      "when_to_use": "When you need to read, write, or verify Modbus TCP coils and registers from the command line on a gateway or in a container—checking slave address, addressing base (0- vs 1-based), or 32-bit byte/word order.",
+      "author": "Cassia Networks <https://www.cassianetworks.com>",
+      "tags": [
+        "tool"
+      ],
+      "env": [
+        "gateway",
+        "container"
+      ],
+      "sha256": "572499d4d0c24d1fdd0c141bb45146b308a6ecc9eecd202272fb2f03c78276f5",
+      "size": 108396,
+      "url": "skill-packages/mbpoll.zip",
+      "icon": "skill-icons/mbpoll.png"
+    },
+    {
+      "name": "skill-creator",
+      "version": "1.0.1",
+      "description": "Scaffold a new agent skill the right way — generate SKILL.md frontmatter + router body, references/ and scripts/ layout, least-privilege allowed-tools, and run the authoring checklist. Use when the user says \"create/write/author a new skill\", \"add a skill for X\", or asks how to structure a skill.",
+      "when_to_use": "The user wants to create, scaffold, or review a new skill (SKILL.md), or asks how skills should be structured and what frontmatter to use.",
+      "author": "Cassia Networks <https://www.cassianetworks.com>",
+      "tags": [
+        "meta"
+      ],
+      "sha256": "1c8680f522c034d2a08a1350ff8e90f9a08873588881dd7c744f318913ad9518",
+      "size": 76365,
+      "url": "skill-packages/skill-creator.zip",
+      "icon": "skill-icons/skill-creator.png"
+    },
+    {
+      "name": "strace",
+      "version": "1.0.0",
+      "description": "Bundled strace syscall tracer for the gateway. Trace the system calls a process makes—which files/config/sockets it touches and why a call fails (ENOENT, EACCES, connection refused). Use when the user says \"can't find the file / permission denied / can't connect / what is it doing / which config does it read / stuck on some syscall / trace syscalls / attach strace to pid\".",
+      "when_to_use": "When you need to see the system calls and signals of a running or launched process on the gateway—diagnosing missing files, permission errors, network failures, or a process hung in a syscall. Complements gdb (which inspects the stack/crash).",
+      "author": "Cassia Networks <https://www.cassianetworks.com>",
+      "tags": [
+        "debug"
+      ],
+      "env": [
+        "gateway"
+      ],
+      "sha256": "133e1835d2bb0f0ac0ad4d5521080ad27c50b6d36eacf0acee486531305679f5",
+      "size": 169134,
+      "url": "skill-packages/strace.zip",
+      "icon": "skill-icons/strace.png"
+    },
+    {
+      "name": "ua",
+      "version": "1.2.0",
+      "description": "Bundled ua command-line client (open62541 ua-cli) to browse, read/write, and verify any OPC UA server from the shell. Use when the user says \"OPC UA won't connect / read a node / browse the address space / verify endpoint security policy / getting BadSecurityChecksFailed or BadNoMatch\".",
+      "when_to_use": "When you need to browse the address space, read or write nodes, or check an OPC UA server's endpoints and encryption/authentication config on a gateway or in a container without a GUI.",
+      "author": "Cassia Networks <https://www.cassianetworks.com>",
+      "tags": [
+        "tool"
+      ],
+      "env": [
+        "gateway",
+        "container"
+      ],
+      "sha256": "31a40ba0aaadc0ec377240cb9af5b1ae8fadc9749cc8de188c4608f8d9efa8a3",
+      "size": 616025,
+      "url": "skill-packages/ua.zip",
+      "icon": "skill-icons/ua.png"
+    }
+  ]
+}

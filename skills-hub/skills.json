@@ -1,0 +1,138 @@
+[
+  {
+    "id": "gdb",
+    "name": "gdb",
+    "description": "Bundled gdb debugger for the gateway, focused on live processes—attach to a running pid, capture a backtrace after a crash/segfault, or snapshot a hung/unresponsive process. Use when the user says \"process crashed / segfault / stuck and not responding / no idea why it died / get a backtrace / attach to pid / dump the stack\".",
+    "whenToUse": "When you need to debug a process that is currently running on the gateway—attach by pid to grab a stack trace, inspect threads of a hung process, or take a core snapshot for offline analysis.",
+    "category": "debug",
+    "version": "1.0.0",
+    "env": [
+      "gateway"
+    ],
+    "allowedTools": [
+      "read_file",
+      "search_files",
+      "run_shell"
+    ],
+    "author": "Cassia Networks <https://www.cassianetworks.com>",
+    "icon": "skill-icons/gdb.png",
+    "assetsBase": "skill-assets/gdb/",
+    "changelog": "# Changelog\n\n## 1.0.0 - 2026-07-17\n\n- Initial release: bundled armhf `gdb` for the gateway, focused on live process debugging (attach by pid, backtraces, `gcore` snapshots).\n- Note: the binary is dynamically linked (`ld-linux-armhf.so.3`) and relies on the gateway's own glibc/ncurses runtime; it only runs on the gateway.\n- Documented the non-obvious pitfalls: mandatory `-batch` for scripting, ptrace permission (`ptrace_scope`), stripped-target backtraces, and snapshotting with `gcore` to avoid freezing production processes.",
+    "frontmatterRaw": "---\nname: gdb\ncategory: debug\ndescription: Bundled gdb debugger for the gateway, focused on live processes—attach to a running pid, capture a backtrace after a crash/segfault, or snapshot a hung/unresponsive process. Use when the user says \"process crashed / segfault / stuck and not responding / no idea why it died / get a backtrace / attach to pid / dump the stack\".\nwhen_to_use: When you need to debug a process that is currently running on the gateway—attach by pid to grab a stack trace, inspect threads of a hung process, or take a core snapshot for offline analysis.\nallowed-tools: [read_file, search_files, run_shell]\nenv: gateway\nversion: 1.0.0\nauthor: Cassia Networks <https://www.cassianetworks.com>\nicon: assets/icon.png\npublic: true\n---",
+    "public": true,
+    "packageUrl": "skill-packages/gdb.zip",
+    "packageSize": 1482486,
+    "size": 2914464,
+    "updated": "2026-08-17T16:21:45.547Z",
+    "readme": "# gdb — live process debugger (gateway)\n\nBundled `scripts/gdb` (armhf, dynamically linked, **gateway only**). First use: `chmod +x scripts/gdb`.\nIf `./scripts/gdb --version` fails with a missing `.so`, the gateway lacks that runtime lib—stop and report it.\n\nEnvironment-specific notes (standard gdb usage assumed):\n\n- Always run non-interactively with `-batch`, or gdb sits at a prompt and hangs the shell:\n\n```bash\n./scripts/gdb -p <pid> -batch -ex \"bt\" -ex \"thread apply all bt\"\n```\n\n- Attach needs ptrace rights (same user as target, or root); a non-zero `ptrace_scope` can block it.\n- For long analysis, snapshot with `gcore` instead of holding a production process frozen:\n\n```bash\n./scripts/gdb -p <pid> -batch -ex \"gcore /tmp/proc.core\"   # process keeps running\n./scripts/gdb -c /tmp/proc.core -batch -ex \"bt\"\n```"
+  },
+  {
+    "id": "mbpoll",
+    "name": "mbpoll",
+    "description": "Bundled mbpoll command-line client for reading, writing, and verifying any Modbus TCP slave (coils and registers) from the shell. Use when the user says \"Modbus reads nothing / values are all zero / register addresses don't line up / verify port 502 / read or write coils and registers\".",
+    "whenToUse": "When you need to read, write, or verify Modbus TCP coils and registers from the command line on a gateway or in a container—checking slave address, addressing base (0- vs 1-based), or 32-bit byte/word order.",
+    "category": "tool",
+    "version": "1.2.0",
+    "env": [
+      "gateway",
+      "container"
+    ],
+    "allowedTools": [
+      "read_file",
+      "search_files",
+      "run_shell"
+    ],
+    "author": "Cassia Networks <https://www.cassianetworks.com>",
+    "icon": "skill-icons/mbpoll.png",
+    "assetsBase": "skill-assets/mbpoll/",
+    "changelog": "# Changelog\n\n## 1.2.0 - 2026-07-16\n\n- Recategorized as `tool` and repositioned as a general-purpose Modbus TCP command-line client (read/write/verify), not debug-only.\n- Removed RTU/serial positioning: RTU is not supported in this deployment; the skill now targets Modbus TCP only.\n- Corrected the slave-address pitfall: unit id `0` is broadcast/reserved in Modbus (TCP-to-RTU gateways often remap it to slave `1`), and `-Q` (MAX_SLAVE quirk) is needed to allow the full `0-255` range.\n\n## 1.1.0 - 2026-07-16\n\n- Rebuilt `scripts/mbpoll` as a fully static armv7 musl binary (no system library dependencies).\n- Documented the non-obvious pitfalls: reversed `-t` function-code mapping, addressing base (`-0`), and 32-bit word order (`-B`).\n- Clarified RTU limitations (standard baud rates only; TCP recommended for link verification).\n\n## 1.0.0 - 2026-05-20\n\n- Initial release: bundled mbpoll client for command-line Modbus TCP/RTU debugging.",
+    "frontmatterRaw": "---\nname: mbpoll\ncategory: tool\ndescription: Bundled mbpoll command-line client for reading, writing, and verifying any Modbus TCP slave (coils and registers) from the shell. Use when the user says \"Modbus reads nothing / values are all zero / register addresses don't line up / verify port 502 / read or write coils and registers\".\nwhen_to_use: When you need to read, write, or verify Modbus TCP coils and registers from the command line on a gateway or in a container—checking slave address, addressing base (0- vs 1-based), or 32-bit byte/word order.\nallowed-tools: [read_file, search_files, run_shell]\nenv: gateway, container\nversion: 1.2.0\nauthor: Cassia Networks <https://www.cassianetworks.com>\nicon: assets/icon.png\npublic: true\n---",
+    "public": true,
+    "packageUrl": "skill-packages/mbpoll.zip",
+    "packageSize": 108396,
+    "size": 162202,
+    "updated": "2026-08-17T16:21:45.587Z",
+    "readme": "# mbpoll — Modbus TCP command-line tool\n\nThe skill bundles the binary `scripts/mbpoll` ([epsilonrt/mbpoll](https://github.com/epsilonrt/mbpoll) v1.5.4,\narmv7 musl, fully static, no system libraries), which only runs on the gateway/container (ARM). Run\n`chmod +x scripts/mbpoll` before first use. Run `./scripts/mbpoll -h` for the full option list; below are only the non-obvious pitfalls.\n\n## Minimal example\n\n```bash\n# Read 3 holding registers from slave 1 at <host>:502 (PDU address base 0), read once and exit\n./scripts/mbpoll -m tcp -a 1 -0 -r 0 -c 3 -1 <host>\n```\n\n## Non-obvious pitfalls\n\n- **The `-t` numbers are the reverse of the classic Modbus function codes** (intentional by the author): `-t 3`\n  is input registers (FC04), `-t 4` is holding registers (FC03, the default). Don't pick by FC number intuition.\n- **Two main causes of all-zero / off-by-one reads**:\n  - The slave address defaults to `-a 1`; set it explicitly if the target differs. Over Modbus TCP the unit id is\n    often ignored, but many TCP-to-RTU gateways remap unit id `0` to serial slave `1`. mbpoll limits the slave-id\n    range by default—pass `-Q` (MAX_SLAVE quirk) to allow the full `0-255` range.\n  - `-r` defaults to 1-based numbering; add `-0` for 0-based PDU addresses. Device docs in 4xxxx style use\n    1-based; protocol addresses use `-0`.\n- **32-bit values (`-t 4:int` / `4:float`) span 2 registers**, and word order has no universal standard: if the\n  magnitude looks wildly off, add `-B` (high word first) and read again.\n- Writing = put the value right after `host` (prefix negative numbers with `--` as a separator); an `Illegal function`\n  reply from the peer means the function code is unsupported or read-only — that's peer behavior.\n- Always pass `-1` when scripting, otherwise it keeps polling and won't exit."
+  },
+  {
+    "id": "skill-creator",
+    "name": "skill-creator",
+    "description": "Scaffold a new agent skill the right way — generate SKILL.md frontmatter + router body, references/ and scripts/ layout, least-privilege allowed-tools, and run the authoring checklist. Use when the user says \"create/write/author a new skill\", \"add a skill for X\", or asks how to structure a skill.",
+    "whenToUse": "The user wants to create, scaffold, or review a new skill (SKILL.md), or asks how skills should be structured and what frontmatter to use.",
+    "category": "meta",
+    "version": "1.0.1",
+    "env": [],
+    "allowedTools": [
+      "read_file",
+      "search_files",
+      "write_file",
+      "run_shell"
+    ],
+    "author": "Cassia Networks <https://www.cassianetworks.com>",
+    "icon": "skill-icons/skill-creator.png",
+    "assetsBase": "skill-assets/skill-creator/",
+    "changelog": "# Changelog\n\n## 1.0.1 - 2026-07-17\n\n- Imported into Skills Hub from the agent-core builtin (`skills-builtin/skill-creator`).\n- Adapted frontmatter to hub conventions: added `category: meta` and `author`, switched the icon to a hub-style PNG. `env` is intentionally left empty—this is a general authoring skill with no runtime dependency.\n- Body and `references/skill-authoring.md` are unchanged from the builtin.",
+    "frontmatterRaw": "---\nname: skill-creator\ncategory: meta\ndescription: Scaffold a new agent skill the right way — generate SKILL.md frontmatter + router body, references/ and scripts/ layout, least-privilege allowed-tools, and run the authoring checklist. Use when the user says \"create/write/author a new skill\", \"add a skill for X\", or asks how to structure a skill.\nwhen_to_use: The user wants to create, scaffold, or review a new skill (SKILL.md), or asks how skills should be structured and what frontmatter to use.\nallowed-tools: [read_file, search_files, write_file, run_shell]\nargument-hint: \"[skill-name]\"\nversion: 1.0.1\nauthor: Cassia Networks <https://www.cassianetworks.com>\nicon: assets/icon.png\npublic: true\n---",
+    "public": true,
+    "packageUrl": "skill-packages/skill-creator.zip",
+    "packageSize": 76365,
+    "size": 85136,
+    "updated": "2026-08-17T16:21:45.591Z",
+    "readme": "# Create a New Skill (Scaffold)\n\nThis skill turns the best practices in `references/skill-authoring.md` into an executable\nset of steps. **Read the guide first, then act.**\n\nStep 0: `read_file references/skill-authoring.md` (the full best practices). To look up a single\npoint, use `search_files` to search for keywords in that file.\n\n## Steps\n\n1. **Confirm goal and naming**\n   - Ask in one sentence: what scenario does this skill solve? What would the user say (trigger terms)?\n   - Set `name`: `^[a-z0-9-]{1,64}$`, prefer `domain-action-object` (e.g. `ontrak-query-status`).\n   - Decide the target directory: `skills/<category>/<name>/` (diagnosis `diagnose/`, operation `operate/`, or top level).\n\n2. **Snapshot key parameters**: gather and record the fixed values you will use (device / channel / path / threshold) once up front and reuse them, to avoid repeated re-asking.\n\n3. **Write `SKILL.md`** (use the template below). Key points:\n   - Write `description` as a **router**: trigger terms + symptoms + scenarios; use `when_to_use` for complementary info.\n   - Write the body as a **router**: what to do / order / interpretation / when to hand off to another skill. Keep it under 300 lines; if longer, split into `references/`.\n   - Declare `allowed-tools` **on demand** (escalation gate): read-only diagnosis → `[read_file, search_files, run_shell]`;\n     add `write_file`/`edit_file` only when writes are needed. Safe tools outside the list still work, while risky\n     tools interrupt the flow to wait for user confirmation, so list everything you expect to use.\n   - Declare `env` **only when it depends on a specific runtime** (dedicated CLI / local service / fixed path, e.g. `env: container`);\n     for general skills (doc generation, pure knowledge Q&A) **leave it empty = any environment**. Once declared, an environment mismatch is hard-blocked when installing from an online repo.\n\n4. **Split Tier-3 (on demand)**\n   - Detail docs → `references/<topic>.md`, with one line in the body on \"when to read which\".\n   - Fixed actions → `scripts/<action>.sh`, satisfying the four principles: **self-healing / structured output / idempotent / safety boundaries**.\n\n5. **Persist**: use `write_file` to write `SKILL.md` (and `references/`, `scripts/` resources).\n   - Note: the target directory must be within a writable `os_allow_roots`. If rejected, confirm the write location with the user first.\n\n6. **Self-check (see Checklist below), then have the user reload the skill** (hot reload or restart), then `GET /api/skills` to see\n   whether `diagnostics` has `parse_error`/`shadowed`/`lint` warnings, and fix them if so.\n\n7. **Publishing to the Skills Hub (this repo)**: also set `category`, `author`, `icon` (a 256x256 PNG at\n   `assets/icon.png`), and `public` in frontmatter, and optionally add a `CHANGELOG.md` at the skill root.\n   Then run `node scripts/generate-skills.js` from the repo root to rebuild `public/skills.json`. See the\n   \"Skills Hub Publishing Fields\" section in `references/skill-authoring.md` for details.\n\n## SKILL.md Template\n\n```markdown\n---\nname: <lower-hyphen-name>\ndescription: <trigger terms + symptoms + scenarios, one line so the model knows when to pick it>\nwhen_to_use: <when to use, complementary to description>\nallowed-tools: [read_file, search_files]\nversion: 0.1.0\n# Skills Hub publishing fields (this repo; see references/skill-authoring.md §7a):\ncategory: tool                 # home-page grouping\nauthor: Name <email or link>\nicon: assets/icon.png          # 256x256 PNG\npublic: true                   # include in the public whitelist build\n---\n\n# <Title>\n\n<Router body: goal / steps / interpretation / handoff>\n\n## Interpretation\n- <Result A> → <conclusion / hand off to some skill>\n\n## Notes\n- <pitfalls / safety boundaries / read-only vs needs confirmation>\n```\n\n## Checklist (verify each before delivery)\n\n- [ ] `name` is valid (`^[a-z0-9-]{1,64}$`) and does not collide with an existing skill (avoid shadowed).\n- [ ] `description` contains trigger terms and scenarios, not vague; `when_to_use` does not duplicate it.\n- [ ] Body is a router, line count < 300 (hard limit 500); long detail moved into `references/`.\n- [ ] `allowed-tools` is a minimal set (do not leave empty for skills with side effects).\n- [ ] `env`: declare only when it depends on a specific runtime; leave empty for general skills (= any environment).\n- [ ] Scripts (if any) satisfy self-healing / structured output / idempotent / safety boundaries.\n- [ ] After reload, `/api/skills` `diagnostics` has no warnings for this skill.\n- [ ] Skills Hub: `category` set, `icon` present (256x256 PNG), `public` set as intended, optional `CHANGELOG.md` added, and `generate-skills.js` re-run.\n\nFor details and complete field descriptions, always defer to `references/skill-authoring.md`."
+  },
+  {
+    "id": "strace",
+    "name": "strace",
+    "description": "Bundled strace syscall tracer for the gateway. Trace the system calls a process makes—which files/config/sockets it touches and why a call fails (ENOENT, EACCES, connection refused). Use when the user says \"can't find the file / permission denied / can't connect / what is it doing / which config does it read / stuck on some syscall / trace syscalls / attach strace to pid\".",
+    "whenToUse": "When you need to see the system calls and signals of a running or launched process on the gateway—diagnosing missing files, permission errors, network failures, or a process hung in a syscall. Complements gdb (which inspects the stack/crash).",
+    "category": "debug",
+    "version": "1.0.0",
+    "env": [
+      "gateway"
+    ],
+    "allowedTools": [
+      "read_file",
+      "search_files",
+      "run_shell"
+    ],
+    "author": "Cassia Networks <https://www.cassianetworks.com>",
+    "icon": "skill-icons/strace.png",
+    "assetsBase": "skill-assets/strace/",
+    "changelog": "# Changelog\n\n## 1.0.0 - 2026-07-17\n\n- Initial release: bundled armhf `strace` for the gateway, for tracing a process's system calls and signals (missing files, permission/network failures, syscall hangs).\n- Note: the binary is dynamically linked (`ld-linux-armhf.so.3`) and relies on the gateway's own runtime libraries; it only runs on the gateway.\n- Documented the non-obvious pitfalls: `-p` attach streams until interrupted (bound it with `timeout`), trace output goes to stderr (use `-o`), and ptrace permission (`ptrace_scope`).",
+    "frontmatterRaw": "---\nname: strace\ncategory: debug\ndescription: Bundled strace syscall tracer for the gateway. Trace the system calls a process makes—which files/config/sockets it touches and why a call fails (ENOENT, EACCES, connection refused). Use when the user says \"can't find the file / permission denied / can't connect / what is it doing / which config does it read / stuck on some syscall / trace syscalls / attach strace to pid\".\nwhen_to_use: When you need to see the system calls and signals of a running or launched process on the gateway—diagnosing missing files, permission errors, network failures, or a process hung in a syscall. Complements gdb (which inspects the stack/crash).\nallowed-tools: [read_file, search_files, run_shell]\nenv: gateway\nversion: 1.0.0\nauthor: Cassia Networks <https://www.cassianetworks.com>\nicon: assets/icon.png\npublic: true\n---",
+    "public": true,
+    "packageUrl": "skill-packages/strace.zip",
+    "packageSize": 169134,
+    "size": 287376,
+    "updated": "2026-08-17T16:21:45.591Z",
+    "readme": "# strace — syscall tracer (gateway)\n\nBundled `scripts/strace` (armhf, dynamically linked, **gateway only**). First use: `chmod +x scripts/strace`.\nIf `./scripts/strace -V` fails with a missing `.so`, the gateway lacks that runtime lib—stop and report it.\n\nEnvironment-specific notes (standard strace usage assumed):\n\n- Attaching with `-p <pid>` streams until interrupted—always bound it (e.g. `timeout`) or it hangs the shell:\n\n```bash\ntimeout 5 ./scripts/strace -f -p <pid> -e trace=file,network -o /tmp/trace.log\n```\n\n- Trace output goes to stderr; use `-o <file>` to capture it cleanly (don't mix with the target's own output).\n- Attach needs ptrace rights (same user as target, or root); a non-zero `ptrace_scope` can block it."
+  },
+  {
+    "id": "ua",
+    "name": "ua",
+    "description": "Bundled ua command-line client (open62541 ua-cli) to browse, read/write, and verify any OPC UA server from the shell. Use when the user says \"OPC UA won't connect / read a node / browse the address space / verify endpoint security policy / getting BadSecurityChecksFailed or BadNoMatch\".",
+    "whenToUse": "When you need to browse the address space, read or write nodes, or check an OPC UA server's endpoints and encryption/authentication config on a gateway or in a container without a GUI.",
+    "category": "tool",
+    "version": "1.2.0",
+    "env": [
+      "gateway",
+      "container"
+    ],
+    "allowedTools": [
+      "read_file",
+      "search_files",
+      "run_shell"
+    ],
+    "author": "Cassia Networks <https://www.cassianetworks.com>",
+    "icon": "skill-icons/ua.png",
+    "assetsBase": "skill-assets/ua/",
+    "changelog": "# Changelog\n\n## 1.2.0 - 2026-07-16\n\n- Recategorized as `tool` and repositioned as a general-purpose OPC UA command-line client (browse/read/write/verify), not debug-only.\n- Translated `references/tls-certs.md` to English for consistency with the rest of the skill docs.\n- Clarified pitfall wording: noted the `--`-before-URL rule is open62541 ua-cli's parser behavior, and framed the None-endpoint empty-nonce issue as an observed server-side deviation.\n\n## 1.1.0 - 2026-07-16\n\n- Rebuilt `scripts/ua` as a fully static armv7 musl binary with mbedTLS (open62541 v1.5.5).\n- Documented the non-obvious pitfalls: `--` options must precede the URL, `BadNoMatch` namespace handling, and the None-endpoint `BadSecurityChecksFailed` server defect.\n- Added `references/tls-certs.md` with a DER certificate-generation template.\n\n## 1.0.0 - 2026-05-20\n\n- Initial release: bundled ua (open62541 ua-cli) client for command-line OPC UA debugging.",
+    "frontmatterRaw": "---\nname: ua\ncategory: tool\ndescription: Bundled ua command-line client (open62541 ua-cli) to browse, read/write, and verify any OPC UA server from the shell. Use when the user says \"OPC UA won't connect / read a node / browse the address space / verify endpoint security policy / getting BadSecurityChecksFailed or BadNoMatch\".\nwhen_to_use: When you need to browse the address space, read or write nodes, or check an OPC UA server's endpoints and encryption/authentication config on a gateway or in a container without a GUI.\nallowed-tools: [read_file, search_files, run_shell]\nenv: gateway, container\nversion: 1.2.0\nauthor: Cassia Networks <https://www.cassianetworks.com>\nicon: assets/icon.png\npublic: true\n---",
+    "public": true,
+    "packageUrl": "skill-packages/ua.zip",
+    "packageSize": 616025,
+    "size": 1165162,
+    "updated": "2026-08-17T16:21:45.595Z",
+    "readme": "# ua — OPC UA command-line tool\n\nThe skill bundles the binary `scripts/ua` ([open62541](https://github.com/open62541/open62541) v1.5.5\n`ua-cli` client, with mbedTLS, armv7 musl, fully static), which only runs on the gateway/container (ARM).\nRun `chmod +x scripts/ua` before first use. Run `./scripts/ua --help` for the services and options; below are\nonly the non-obvious pitfalls.\n\n## Minimal example\n\n```bash\n# First troubleshooting step: list endpoints (no session; any output means TCP is up; shows security policy and auth methods)\n./scripts/ua opc.tcp://<host>:<port> getendpoints\n\n# Read a node\n./scripts/ua opc.tcp://<host>:<port> read 'ns=2;s=Some/Node'\n```\n\n## Non-obvious pitfalls\n\n- **All `--` options must come before the URL** (open62541 ua-cli's argument parser): after the URL only the\n  service name and its arguments are allowed. If the command prints usage and exits immediately, this is almost\n  always why.\n- **`BadNoMatch` on a browse path**: the leading number is the namespace index of the BrowseName (many servers\n  create nodes with the BrowseName in ns 0, so write `0:`); and the starting point is already the Objects folder,\n  so **don't write `/Objects` again**. When unsure, run `explore '/0:Xxx' --depth 2` to see the structure, or read\n  by NodeId directly.\n- **A None endpoint returns `BadSecurityChecksFailed` (log contains `nonce that is too short`)**: observed with\n  some server implementations (e.g. async-opcua) that return an empty serverNonce under the None policy, which\n  appears to violate OPC UA Part 4 §5.7.3; open62541 v1.5+ clients reject it per spec (UAExpert etc. don't\n  validate, so it \"works\" there). This appears to be a server-side deviation; the workaround is to use an\n  encrypted endpoint.\n- **Certificates/private keys are DER only**; PEM fails to load. On a plaintext (None) channel the client refuses\n  to send the password by default, so password auth must go over an encrypted endpoint. See `references/tls-certs.md`\n  for a certificate-generation template.\n- The ns index isn't guaranteed consistent across servers; read `i=2255` (NamespaceArray) to confirm, don't\n  hard-code and reuse."
+  }
+]
