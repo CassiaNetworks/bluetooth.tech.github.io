@@ -1,0 +1,89 @@
+====================
+GPS定位
+====================
+
+M2000网关支持GPS定位，使用 :doc:`send_cmd` 调用GPS相关接口：
+
+- 读取定位状态：``GET /cassia/info`` 响应中的 ``gps`` 字段，参考 :doc:`cassia_info`
+- 开机启用GPS：``POST /cassia/info`` 设置 ``dongle.gps_startup`` 为 ``"1"``
+- 请求定位：``GET /cassia/gps/request``，等待定位成功后返回
+
+.. note::
+
+   - 需要网关支持 ``gps`` 功能（``/cassia/info`` 响应的 ``features`` 包含 ``gps``）
+   - 网关刚启动时GPS模块初始化中，接口可能返回 ``gps is starting``
+   - 无卫星信号时 ``/cassia/gps/request`` 会长时间阻塞，务必配合 ``asyncio.wait_for()`` 设置超时
+
+示例
+=====
+
+.. literalinclude:: ../../../../../../example/cassiablue/gps.py
+   :language: python
+   :linenos:
+
+API
+=====
+
+请求定位
+------------------
+
+.. code-block:: python
+
+   ok, result = await asyncio.wait_for(cassiablue.send_cmd("/cassia/gps/request"), 30)
+
+定位成功响应示例：
+
+.. code-block:: json
+
+   {
+     "gps": {
+       "TIME": "07:40:09",
+       "LON": "117.14.18",
+       "LAT": "32.47.21",
+       "NS": "N",
+       "WE": "E",
+       "SATELLITE1": 8,
+       "SATELLITE1_SNR": 37,
+       "SATELLITE2": 26,
+       "SATELLITE2_SNR": 44,
+       "SATELLITE3": 31,
+       "SATELLITE3_SNR": 46
+     }
+   }
+
+.. csv-table:: gps字段说明
+   :header: 字段,类型,说明,示例
+
+   TIME,str,UTC时间,``07:40:09``
+   LON,str,经度（度.分.秒格式）,``117.14.18``
+   LAT,str,纬度（度.分.秒格式）,``32.47.21``
+   NS,str,南北半球（``N`` 北纬 ``S`` 南纬）,``N``
+   WE,str,东西半球（``E`` 东经 ``W`` 西经）,``E``
+   SATELLITE1~3,int,卫星编号（0表示无）,8
+   SATELLITE1~3_SNR,int,卫星信噪比,37
+
+坐标格式
+------------------
+
+``LAT`` / ``LON`` 为 ``度.分.秒`` 格式，非十进制度，换算方式：
+
+.. code-block:: text
+
+   32.47.21 = 32 + 47/60 + 21/3600 = 32.789167
+
+``NS`` 为 ``S`` 或 ``WE`` 为 ``W`` 时，对应坐标取负值。
+
+读取定位状态
+------------------
+
+``GET /cassia/info`` 响应中的 ``gps`` 字段为最近一次定位状态，字段与上表一致，未定位时 ``LAT`` / ``LON`` 为空字符串。
+
+开机启用GPS
+------------------
+
+.. code-block:: python
+
+   body = json.dumps({"dongle": {"gps_startup": "1"}})
+   ok, result = await cassiablue.send_cmd("/cassia/info", "POST", None, body)
+
+设置方式参考 :doc:`cassia_info`，配置变更后网关会重启，重启后自动开启GPS。

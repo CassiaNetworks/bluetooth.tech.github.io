@@ -16,4 +16,6 @@ Cassiablue API
     gatt_write
     notify
     state
+    cassia_info
+    gps
     send_cmd

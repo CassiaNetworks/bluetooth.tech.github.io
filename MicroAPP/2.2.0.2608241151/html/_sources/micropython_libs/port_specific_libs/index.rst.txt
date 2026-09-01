@@ -1,0 +1,14 @@
+=======================
+Port-specific libraries
+=======================
+MicroPython特定开发板模块支持情况与示例， `Micropython官网链接 <https://docs.micropython.org/en/v1.24.0/library/index.html#micropython-specific-libraries>`_。
+
+.. csv-table:: 
+        :header: 模块,是否支持,说明
+
+        esp,❌,functions related to the ESP8266 and ESP32
+        esp32,❌,functions related to the ESP8266 and ESP32
+
+.. toctree::
+    :maxdepth: 2
+    :glob:

@@ -1,0 +1,32 @@
+========
+microdot
+========
+
+提供HTTP服务可以使用开源的 ``microdot`` 库。具体参考 `microdot <https://github.com/miguelgrinberg/microdot>`_。
+
+.. note:: 
+    - 网关内默认没有集成此库，需要自己选择合并到脚本中使用。
+    - 静态页面比较大的话，可以考虑使用云端静态资源方式。
+
+
+示例
+=====
+
+-----
+说明
+-----
+
+示例使用microdot在60000端口提供了HTTP服务，并注册了3个路由。
+
+- ``/``: 输出静态页面响应
+- ``/hello``: 输出JSON响应
+- ``/api/app/config/meta``: 输出JSON响应，用于静态页面请求的RESTful接口
+
+
+-----
+代码
+-----
+
+.. literalinclude:: ../../../../../../example/python_ecosys/microdot_test.py
+   :language: python
+   :linenos:

@@ -1,0 +1,78 @@
+========================
+网关信息获取/设置
+========================
+
+通过 ``/cassia/info`` 接口获取或设置网关信息，使用 :doc:`send_cmd` 调用。
+
+- ``GET /cassia/info``：获取网关整体状态，包括型号、固件版本、功能列表、蜂窝模块（dongle）配置、GPS定位状态等
+- ``POST /cassia/info``：设置网关配置，body仅需提交变更字段，其余字段保持不变
+
+.. note::
+
+   - 配置发生变更时网关会重启，重启后配置生效；提交与当前相同的配置不会触发重启
+   - 网关重启后，APP需开启 ``Run at Startup`` 才会自动恢复运行
+
+示例
+=====
+
+.. literalinclude:: ../../../../../../example/cassiablue/cassia_info.py
+   :language: python
+   :linenos:
+
+API
+=====
+
+获取网关信息
+------------------
+
+.. code-block:: python
+
+   ok, result = await cassiablue.send_cmd("/cassia/info")
+   info = json.loads(result)
+
+响应为网关整体状态，下面为节选（省略无关字段）：
+
+.. code-block:: json
+
+   {
+     "model": "M2000",
+     "version": "2.2.0.2604281450",
+     "features": ["gps", "microapp"],
+     "dongle": {
+       "imsi": "",
+       "operator": "",
+       "band": "",
+       "ICCID": "",
+       "signal": 0,
+       "apn": "",
+       "gps_startup": "1"
+     },
+     "gps": {
+       "TIME": "",
+       "LON": "",
+       "LAT": "",
+       "NS": "",
+       "WE": "",
+       "SATELLITE1": 0,
+       "SATELLITE1_SNR": 0
+     }
+   }
+
+.. csv-table:: 常用字段说明
+   :header: 字段,类型,说明
+
+   model,str,网关型号
+   version,str,网关固件版本号
+   features,list,网关支持的功能列表（如 ``gps`` ``microapp``）
+   dongle,dict,蜂窝模块配置与状态（含 ``gps_startup`` 等）
+   gps,dict,GPS定位状态（参考 :doc:`gps`）
+
+设置网关信息
+------------------
+
+.. code-block:: python
+
+   body = json.dumps({"dongle": {"gps_startup": "1"}})
+   ok, result = await cassiablue.send_cmd("/cassia/info", "POST", None, body)
+
+body仅需包含变更字段，设置成功时 ``result`` 返回 ``OK``。

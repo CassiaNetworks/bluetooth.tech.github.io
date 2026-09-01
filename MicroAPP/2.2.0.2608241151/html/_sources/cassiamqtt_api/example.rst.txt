@@ -1,0 +1,79 @@
+=====
+示例
+=====
+
+
+测试工具
+=======================
+使用 ``mosquitto_sub/mosquitto_pub``，您也可以使用 ``MQTTX`` 或者测试脚本进行。
+
+.. code-block:: bash
+    
+    # Subscribe test topic
+    mosquitto_sub -h test.mosquitto.org -p 1884 -u rw -P readwrite -t '/cassia/test/up' 
+
+    # Publish test message
+    mosquitto_pub -h test.mosquitto.org -p 1884 -u rw -P readwrite -t '/cassia/test/down' -m '{"hello":"world"}'
+
+
+发布
+=====
+
+.. literalinclude:: ../../../../../../example/cassiamqtt/pub_test.py
+   :language: python
+   :linenos:
+
+
+订阅
+=====
+
+.. literalinclude:: ../../../../../../example/cassiamqtt/sub_test.py
+   :language: python
+   :linenos:
+
+重连
+=====
+
+.. literalinclude:: ../../../../../../example/cassiamqtt/reconnect.py
+   :language: python
+   :linenos:
+
+TLS/SSL
+==========
+
+标准MQTT over TLS
+--------------------
+
+仅服务器（server）有证书，客户端验证服务器证书以保证通道被加密和服务器可信。客户端不需要在 TLS 层提供证书（客户端可以用用户名/密码做 MQTT 层认证，或根本不做）。
+
+从 `test.mosquitto.org <https://test.mosquitto.org/ssl/mosquitto.org.crt>`_ 下载Server证书，设置 ``ca`` 参数为 ``mosquitto.org.crt`` 文件内容
+
+.. literalinclude:: ../../../../../../example/cassiamqtt/tls_ssl_1.py
+   :language: python
+   :linenos:   
+
+双向 TLS / mTLS（mutual TLS）
+------------------------------
+
+服务器要求客户端也提供证书，服务端会验证客户端证书以确认客户端身份（比单向 TLS 更强的身份验证）。
+
+根据 `Generate a TLS client certificate for test.mosquitto.org <https://test.mosquitto.org/ssl/>`_ 生成测试Client证书并上传
+
+.. note:: 
+
+   - 生成 CSR 时，请勿使用默认值。CSR 至少必须包含国家、组织和通用名称字段。
+   - 本部分内容和上面链接内容不一致时，请以上述链接内容为准并及时反馈
+
+.. code-block:: bash
+    
+    # 生成客户端证书
+    openssl genrsa -out client.key
+    openssl req -out client.csr -key client.key -new
+
+    # 将client.csr文件内容提交
+    # 下载新生成的client.crt
+
+
+.. literalinclude:: ../../../../../../example/cassiamqtt/tls_ssl_2.py
+   :language: python
+   :linenos:      

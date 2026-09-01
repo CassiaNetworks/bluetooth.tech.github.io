@@ -1,0 +1,7 @@
+========
+binascii
+========
+
+.. literalinclude:: ../../../../../../../example/python_standard_libs/binascii_test.py
+   :language: python
+   :linenos:

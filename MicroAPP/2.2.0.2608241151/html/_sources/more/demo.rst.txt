@@ -1,0 +1,15 @@
+=======================
+完整示例
+=======================
+
+基于 Cassia M2000 网关的 MicroPython 环境，提供 BLE、MQTT、HTTP 三类常见
+能力的完整示例，开发者可在此基础上快速搭建自己的 APP。
+
+- BLE：基于 ``cassiablue`` API 扫描广播、连接设备并完成 GATT 读写与通知订阅
+- MQTT：基于 ``micropython-mqtt`` 异步连接 MQTT Broker，订阅命令、上报数据
+- HTTP client / server：基于 ``aiohttp`` 与 ``microdot`` 实现 HTTP 客户端
+  请求与本地 HTTP 服务（含 RESTful API 与静态页面）
+
+完整代码与构建脚本请参考 GitHub：
+
+`Cassia SDK Guide - Micro APP <https://github.com/CassiaNetworks/CassiaSDKGuide/tree/master/MicroAPP>`_
